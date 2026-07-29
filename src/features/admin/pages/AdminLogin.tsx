@@ -8,8 +8,7 @@ import { apiClient } from "@/lib/api/client";
 
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/form/FormInput";
-
-import brandLogo from "@/assets/Gainday logo.png";
+import spinner from "@/assets/Spinner.svg";
 import brandLogo2 from "@/assets/gainday icon.svg";
 
 
@@ -41,7 +40,7 @@ const AdminLogin = () => {
     }
 
     return (
-        <div className="flex flex-col min-h-screen items-center justify-center gap-y-10 bg-background-admin">
+        <div className="flex flex-col min-h-screen items-center justify-center gap-y-10 bg-background-admin ">
             <div>
                 <img
                     src={brandLogo2}
@@ -49,7 +48,7 @@ const AdminLogin = () => {
                     alt="gainday logo"
                 />
             </div>
-            <div className="w-100 p-10 space-y-5 bg-white">
+            <div className="w-100 p-10 space-y-5 bg-white rounded-md">
                 <h1 className="text-2xl font-semibold text-foreground-admin">
                     Gainday Admin
                 </h1>
@@ -91,7 +90,16 @@ const AdminLogin = () => {
                         </p>
                     )}
 
-                    <Button type="submit" className="w-full bg-[#1B17FF]" disabled={isSubmitting}>
+                    <Button type="submit" className="w-full flex items-center justify-center gap-x-2 bg-[#1B17FF] hover:bg-[#1B17FF] hover:opacity-80" disabled={isSubmitting}>
+                        {isSubmitting && (
+                            <span>
+                            <img
+                                src={spinner}
+                                alt="spinner"
+                                className="w-4 h-4 animate-spin"
+                            />
+                        </span>
+                        )}
                         {isSubmitting ? "Signing in ..." : "Sign In"}
                     </Button>
                 </form>
