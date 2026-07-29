@@ -25,6 +25,12 @@ const AdminLogin = () => {
     const loginMutation = useMutation({
         mutationFn : (values : AdminLoginFormValues) => 
             apiClient.post("/admin/auth/login", values),
+        onSuccess : (res) => {
+            //assume session token gets stored as adminToken by the backend
+
+            localStorage.setItem("adminToken", res.data.token);
+            navigate("/admin/dashboard");
+        }
     })
 
     return (
