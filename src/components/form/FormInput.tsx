@@ -27,7 +27,7 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
         const describedby = [hintId, errorId].filter(Boolean).join(" ") || undefined;
 
         return (
-            <div className="space-y-1.5">
+            <div className="space-y-2">
                 <Label htmlFor={inputId} className={cn(hideLabel && "sr-only")}>
                     {label}
                     {required && (

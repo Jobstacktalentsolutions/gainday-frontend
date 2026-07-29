@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
-import { zodResolver} from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { AlertCircle } from "lucide-react";
 import { type AdminLoginFormValues, adminLoginSchema } from "../schemas/loginSchema";
@@ -8,6 +8,9 @@ import { apiClient } from "@/lib/api/client";
 
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/form/FormInput";
+
+import brandLogo from "@/assets/Gainday logo.png";
+import brandLogo2 from "@/assets/gainday icon.svg";
 
 
 const AdminLogin = () => {
@@ -17,15 +20,15 @@ const AdminLogin = () => {
     const {
         register,
         handleSubmit,
-        formState : { errors, isSubmitting },
+        formState: { errors, isSubmitting },
     } = useForm<AdminLoginFormValues>({
         resolver: zodResolver(adminLoginSchema),
     })
 
     const loginMutation = useMutation({
-        mutationFn : (values : AdminLoginFormValues) => 
+        mutationFn: (values: AdminLoginFormValues) =>
             apiClient.post("/admin/auth/login", values),
-        onSuccess : (res) => {
+        onSuccess: (res) => {
             //assume session token gets stored as adminToken by the backend
 
             localStorage.setItem("adminToken", res.data.token);
@@ -33,12 +36,71 @@ const AdminLogin = () => {
         }
     })
 
+    const onSubmit = (values: AdminLoginFormValues) => {
+        loginMutation.mutate(values);
+    }
+
     return (
-        <div>
+        <div className="flex flex-col min-h-screen items-center justify-center gap-y-10 bg-background-admin">
+            <div>
+                <img
+                    src={brandLogo2}
+                    className="h-15 "
+                    alt="gainday logo"
+                />
+            </div>
+            <div className="w-100 p-10 space-y-5 bg-white">
+                <h1 className="text-2xl font-semibold text-foreground-admin">
+                    Gainday Admin
+                </h1>
+                <p className="mt-1 text-muted-foreground text-sm">
+                    Sign in to manage jobs, users, and moderation
+                </p>
+
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    noValidate
+                    className="mt-6 space-y-5"
+                >
+
+                    <FormInput
+                        label="Email address"
+                        type="email"
+                        placeholder="admin@gainday.com"
+                        required
+                        autoComplete="email"
+                        error={errors.email?.message}
+                        {...register("email")}
+                    />
+
+                    <FormInput
+                        label="Password"
+                        type="password"
+                        placeholder="********"
+                        required
+                        autoComplete="current-password"
+                        error={errors.password?.message}
+                        {...register("password")}
+                    />
+
+                    {loginMutation.isError && (
+                        <p role="alert"
+                            className="flex items-center gap-1.5 text-sm text-destructive">
+                            <AlertCircle aria-hidden="true" className="h-4 w-4 shrink-0" />
+                            Invalid email or password. Please try again
+                        </p>
+                    )}
+
+                    <Button type="submit" className="w-full bg-[#1B17FF]" disabled={isSubmitting}>
+                        {isSubmitting ? "Signing in ..." : "Sign In"}
+                    </Button>
+                </form>
+
+            </div>
 
         </div>
     );
 }
 
-AdminLogin.displayName  = "AdminLogin";
+AdminLogin.displayName = "AdminLogin";
 export default AdminLogin;

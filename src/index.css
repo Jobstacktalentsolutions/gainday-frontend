@@ -5,6 +5,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --color-background-admin : #F7F7F8;
+  --color-foreground-admin : #16181D;
+}
+
 @theme inline {
     --font-heading: var(--font-sans);
     --font-sans: 'Inter Variable', sans-serif;
