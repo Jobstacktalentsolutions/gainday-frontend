@@ -9,7 +9,7 @@ const navItems = [
 
 const AdminSidebar = () => {
     return (
-        <nav className = "flex h-225 w-60 shrink-0 flex-col gap-1 overflow-clip bg-neutral-900 px-4 py-6 ">
+        <nav className = "sticky top-0 flex h-screen w-60 shrink-0 flex-col gap-1 overflow-y-auto bg-neutral-900 px-4 py-6 ">
             <p className = "text-base font-semibold text-neutral-100">Gainday Admin</p>
             <div className = "h-5 w-full shrink-0" />
             {navItems.map((item) => (
