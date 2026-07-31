@@ -90,7 +90,7 @@ const AdminLogin = () => {
                         </p>
                     )}
 
-                    <Button type="submit" className="w-full flex items-center justify-center gap-x-2 bg-[#1B17FF] hover:bg-[#1B17FF] hover:opacity-80" disabled={isSubmitting}>
+                    <Button type="submit" className="w-full flex items-center justify-center gap-x-2 bg-primary-500 hover:bg-primary-400 hover:opacity-80" disabled={isSubmitting}>
                         {isSubmitting && (
                             <span>
                             <img
