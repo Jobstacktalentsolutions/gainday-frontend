@@ -1,13 +1,21 @@
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 
-const AdminLogin = lazy(() => import("@/features/admin/pages/AdminLogin"))
+const AdminLogin = lazy(() => import("@/features/admin/pages/AdminLogin"));
+const AdminLayout = lazy(() => import("@/features/admin/layouts/AdminLayout"));
+const AdminDashboard = lazy(() => import("@/features/admin/pages/AdminDashboard"));
 
 const AppRoutes = () => {
-    return(
-        <Routes>
-            <Route path ="/admin/login" element = {<AdminLogin />} />
-        </Routes>
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <Routes>
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin" element={<AdminLayout />}>
+                    <Route path="dashboard" element={<AdminDashboard />} />
+                </Route>
+            </Routes>
+        </Suspense>
+
     );
 }
 
