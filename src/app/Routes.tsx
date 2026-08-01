@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 const AdminLogin = lazy(() => import("@/features/admin/pages/AdminLogin"));
 const AdminLayout = lazy(() => import("@/features/admin/layouts/AdminLayout"));
 const AdminDashboard = lazy(() => import("@/features/admin/pages/AdminDashboard"));
+const LandingPage = lazy(() => import("@/features/landing/pages/landingPage"));
 
 const AppRoutes = () => {
     return (
@@ -13,6 +14,7 @@ const AppRoutes = () => {
                 <Route path="/admin" element={<AdminLayout />}>
                     <Route path="dashboard" element={<AdminDashboard />} />
                 </Route>
+                <Route path = "/landing" element = { <LandingPage />} />
             </Routes>
         </Suspense>
 
