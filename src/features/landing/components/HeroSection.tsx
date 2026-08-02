@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 const HeroSection = () => {
     return (
         <section className="px-6 pt-20 pb-10">
-            <div>
+            <div className="">
                 <div className="flex items-center justify-center gap-4 flex-col">
                     <p className="max-w-65 flex items-center justify-center text-[10px] text-primary-500 gap-x-2.5 px-1.5 py-2 border rounded-[6px] border-primary-500">
                         <img
@@ -47,9 +47,12 @@ const HeroSection = () => {
                         </Button>
 
                     </div>
+                    <div>
+                        
+                    </div>
                 </div>
             </div>
-            <div>
+            <div className="left-box">
 
             </div>
 
