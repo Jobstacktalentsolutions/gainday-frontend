@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { StatsRow } from "./StatsRow";
 import { fadeUp, heroStagger } from "@/lib/motion/variants";
 import { motion } from "motion/react";
+import GradientCard from "./GradientCard";
 
 const HeroSection = () => {
     return (
@@ -11,7 +12,7 @@ const HeroSection = () => {
             variants={heroStagger}
             initial="hidden"
             animate="visible"
-            className="px-6 pt-20 pb-10">
+            className="px-6 pt-20 pb-10 gap-20 flex flex-col">
             <div className="">
                 <div className="flex items-center justify-center gap-4 flex-col">
                     <motion.div
@@ -71,6 +72,7 @@ const HeroSection = () => {
                 </div>
             </div>
             <div className="left-box">
+                <GradientCard />
 
             </div>
 
