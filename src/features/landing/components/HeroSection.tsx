@@ -12,9 +12,9 @@ const HeroSection = () => {
             variants={heroStagger}
             initial="hidden"
             animate="visible"
-            className="px-6 pt-20 pb-10 gap-20 flex flex-col lg:flex-row lg:px-29 lg:pt-23 lg:gap-44.5">
+            className="px-6 pt-20 pb-10 gap-20 flex flex-col lg:flex-row lg:px-29 lg:pt-23 lg:gap-44.5 lg:pb-30">
             <div className="lg:flex-1">
-                <div className="flex items-center justify-center gap-4 flex-col lg:items-start">
+                <div className="flex items-center justify-center gap-4 flex-col lg:items-start ">
                     <motion.div
                         variants={fadeUp}
                         className="max-w-65  flex items-center justify-center text-[10px] lg:text-[14px] text-primary-500 gap-x-2.5 px-1.5 py-2 border rounded-[6px] border-primary-500 lg:flex-1 lg:max-w-max lg:py-2.5 lg:px-3">
@@ -40,14 +40,14 @@ const HeroSection = () => {
                     </motion.h2>
                     <motion.p
                         variants={fadeUp}
-                        className="text-center text-base text-neutral-700 leading-6">
+                        className="text-center text-base text-neutral-700 leading-6 lg:text-left lg:max-w-134.75">
                         Candidates apply by doing a piece of the actual job. Employers get a ranked list built on evidence — and every challenge a candidate completes
                         stacks into a Capability Passport they keep forever.
                     </motion.p>
 
                     <motion.div
                         variants={fadeUp}
-                        className="flex flex-col items-center justify-center gap-4 py-4">
+                        className="flex flex-col items-center justify-center gap-4 py-4 lg:flex-row">
                         <Button className="text-base h-11 flex gap-2 items-center justify-center pl-4 pr-1 py-2 bg-primary-500 hover:bg-primary-600">
 
                             Try a candidate challenge
