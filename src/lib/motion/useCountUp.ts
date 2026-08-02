@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { useInView, animate } from "motion/react";
 
-const useCountUp = (rawValue : string, duration = 1.5) => {
+const useCountUp = (rawValue: string, duration = 1.5) => {
 
     const ref = useRef<HTMLParagraphElement>(null);
-    const isInView = useInView(ref, {once: true, amount: 0.6});
+    const isInView = useInView(ref, { once: true, amount: 0.6 });
     const [display, setDisplay] = useState(() => rawValue.replace(/\d+/, "0"));
 
     const match = rawValue.match(/(\D*)(\d+)(\D*)/);
 
     useEffect(() => {
-        if (!isInView || match) {
+        if (!isInView || !match) {
             if (!match) setDisplay(rawValue);
             return;
         }
@@ -19,8 +19,8 @@ const useCountUp = (rawValue : string, duration = 1.5) => {
 
         const controls = animate(0, target, {
             duration,
-            ease : "easeOut",
-            onUpdate : (value) => {
+            ease: "easeOut",
+            onUpdate: (value) => {
                 setDisplay(`${prefix}${Math.round(value)}${suffix}`)
             },
         })
@@ -28,7 +28,7 @@ const useCountUp = (rawValue : string, duration = 1.5) => {
         return () => controls.stop()
     }, [isInView])
 
-    return { ref, display}
+    return { ref, display }
 }
 
 export default useCountUp;

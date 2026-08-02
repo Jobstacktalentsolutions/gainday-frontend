@@ -18,14 +18,14 @@ const StatItem = ({ value, label }: Stat) => {
     const { ref, display } = useCountUp(value);
 
     return (
-        <div className="flex w-38 shrink-0 flex-col items-center justify-center gap-0.5">
+        <div className="flex-1 flex flex-col items-center justify-center gap-0.5">
             <p
                 ref={ref}
-                className="text-[48px] leading-14.5 tracking-[-0.48px] text-black"
+                className="text-[28px] leading-14.5 tracking-[-0.48px] text-black"
             >
                 {display}
             </p>
-            <p className="text-base leading-6 text-neutral-700">{label}</p>
+            <p className="text-base text-center leading-6 text-neutral-700">{label}</p>
 
         </div>
     );
@@ -34,7 +34,7 @@ const StatItem = ({ value, label }: Stat) => {
 
 export function StatsRow() {
     return (
-        <div className="flex items-center gap-4.75">
+        <div className="flex justify-center items-center gap-[34.5px]">
             {stats.map((stat) => (
                 <StatItem key={stat.label} {...stat} />
             ))}

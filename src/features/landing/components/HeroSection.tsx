@@ -1,6 +1,7 @@
 import sparkle from "@/assets/sparkle.svg";
 import arrowTr from "@/assets/arrow-tr.svg";
 import { Button } from "@/components/ui/button";
+import { StatsRow } from "./StatsRow";
 
 const HeroSection = () => {
     return (
@@ -47,8 +48,8 @@ const HeroSection = () => {
                         </Button>
 
                     </div>
-                    <div>
-                        
+                    <div className="px-2">
+                        <StatsRow />
                     </div>
                 </div>
             </div>
