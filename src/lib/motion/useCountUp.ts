@@ -30,3 +30,5 @@ const useCountUp = (rawValue : string, duration = 1.5) => {
 
     return { ref, display}
 }
+
+export default useCountUp;
