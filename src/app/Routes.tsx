@@ -4,7 +4,7 @@ import { Route, Routes } from "react-router-dom";
 const AdminLogin = lazy(() => import("@/features/admin/pages/AdminLogin"));
 const AdminLayout = lazy(() => import("@/features/admin/layouts/AdminLayout"));
 const AdminDashboard = lazy(() => import("@/features/admin/pages/AdminDashboard"));
-const LandingPage = lazy(() => import("@/features/landing/pages/landingPage"));
+const LandingPage = lazy(() => import("@/features/landing/pages/LandingPage"));
 
 const AppRoutes = () => {
     return (
