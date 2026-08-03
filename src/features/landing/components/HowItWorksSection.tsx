@@ -33,30 +33,30 @@ const HowItWorksSection = () => {
                 variants={fadeUp}
                 className="flex flex-col items-center gap-3"
             >
-                <div className="flex items-center gap-2.5 rounded-md border border-neutral-100 px-2.5 py-1.5">
+                <div className="flex items-center gap-2.5 rounded-md border border-neutral-100 px-2.5 py-1.5 lg:px-3 lg:py-2.5">
                     <span className="size-1.5 rounded-full bg-secondary-500" />
-                    <p className="text-[10px] text-neutral-100">HOW IT WORKS</p>
+                    <p className="text-[10px] text-neutral-100 lg:text-sm">HOW IT WORKS</p>
                 </div>
-                <div className="flex flex-col items-center gap-2">
-                    <p className="text-center text-[32px] leading-9.5 tracking-[-0.32px] text-neutral-50">
+                <div className="flex flex-col items-center gap-2 lg:gap-2">
+                    <p className="text-center text-[32px] leading-9.5 tracking-[-0.32px] text-neutral-50 lg:text-[48px] lg:leading-14.5 lg:tracking-[-0.48px]">
                         The CV process is broken.
                     </p>
                     <HighlightBox
                         color="secondary"
-                        className="text-[32px] leading-9.5 tracking-[-0.32px]"
+                        className="text-[32px] leading-9.5 tracking-[-0.32px] lg:text-[48px] lg:leading-14.5 lg:tracking-[-0.48px]"
                     >
                         Hero&rsquo;s what replaces it
                     </HighlightBox>
 
                 </div>
-                <p className="max-w-77.25 text-center text-base text-neutral-300    ">
+                <p className="max-w-77.25 text-center text-base text-neutral-300  lg:max-w-125.5  ">
                     Gainday helps candidates demonstrate capability and helps employers
                     identify it faster.
                 </p>
 
             </motion.div>
 
-            <div className="flex w-full flex-col items-start gap-15">
+            <div className="flex w-full flex-col items-start gap-15 lg:w-auto lg:flex-row lg:gap-45">
                 <HowItWorksColumn heading="Candidate" steps={candidateSteps} color="secondary" />
                 <HowItWorksColumn heading="Employer" steps={employerSteps} color="info" />
             </div>
