@@ -2,6 +2,8 @@
 import fileNotFoundIcon from "@/assets/file-not-found.svg";
 import stackOverflowIcon from "@/assets/stackoverflow.svg";
 import secureIcon from "@/assets/secure-window.svg";
+import { motion } from "motion/react";
+import { fadeUp } from "@/lib/motion/variants";
 
 interface cardDetails {
     title: string;
@@ -30,9 +32,13 @@ const tempCardDetails: cardDetails[] = [
 const ProblemCardContainer = () => {
 
     return (
-        <div className="flex flex-col gap-6 lg:flex-row lg:px-24">
+        <div 
+        
+        className="flex flex-col gap-6 lg:flex-row lg:px-24">
             {tempCardDetails.map((card) => (
-                <div className="rounded-[12px] border border-primary-200 py-9 px-6 flex flex-col">
+                <motion.div 
+                variants={fadeUp}
+                className="rounded-[12px] border border-primary-200 py-9 px-6 flex flex-col">
                     <p className=" flex self-start items-center justify-center rounded-[6px] border border-neutral-200 mb-4 p-3">
                         <img
                             src={card.icon}
@@ -47,7 +53,7 @@ const ProblemCardContainer = () => {
                         {card.description}
                     </p>
 
-                </div>
+                </motion.div>
             ))}
         </div>
     );
