@@ -3,6 +3,7 @@ import HeroSection from "../components/HeroSection";
 import HowItWorksSection from "../components/HowItWorksSection";
 import { MarqueeStrip } from "../components/MarqueeStrip";
 import ProblemSection from "../components/ProblemSection";
+import SolutionSection from "../components/solutionSection/SolutionSection";
 
 const LandingPage = () => {
     return (
@@ -18,6 +19,9 @@ const LandingPage = () => {
                 </div>
                 <div>
                     <HowItWorksSection />
+                </div>
+                <div>
+                    <SolutionSection />
                 </div>
 
 
