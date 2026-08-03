@@ -8,10 +8,10 @@ const LandingPage = () => {
             <Header />
             <main className="pt-24.25">
                 <HeroSection />
-                <div className="pt-15 pb-25">
+                <div className="pt-15 pb-25 lg:pt-0">
                     <MarqueeStrip />
                 </div>
-                
+
 
             </main>
 
