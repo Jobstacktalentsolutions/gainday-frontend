@@ -1,4 +1,4 @@
-import sparkle from "@/assets/sparkle.svg";
+
 
 interface SectionTagProps {
     label: string;

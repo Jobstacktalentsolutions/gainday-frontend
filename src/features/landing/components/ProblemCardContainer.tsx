@@ -4,9 +4,9 @@ import stackOverflowIcon from "@/assets/stackoverflow.svg";
 import secureIcon from "@/assets/secure-window.svg";
 
 interface cardDetails {
-    title : string;
-    description : string;
-    icon : string;
+    title: string;
+    description: string;
+    icon: string;
 }
 
 const tempCardDetails: cardDetails[] = [
@@ -30,10 +30,10 @@ const tempCardDetails: cardDetails[] = [
 const ProblemCardContainer = () => {
 
     return (
-        <div className="">
+        <div className="flex flex-col gap-6 lg:flex-row lg:px-24">
             {tempCardDetails.map((card) => (
                 <div className="rounded-[12px] border border-primary-200 py-9 px-6 flex flex-col">
-                    <p className="rounded-[6px] border border-neutral-200 mb-4">
+                    <p className=" flex self-start items-center justify-center rounded-[6px] border border-neutral-200 mb-4 p-3">
                         <img
                             src={card.icon}
                             alt={`${card.title} icon`}
@@ -43,7 +43,7 @@ const ProblemCardContainer = () => {
                     <h3 className="text-[24px] mb-2">
                         {card.title}
                     </h3>
-                    <p className="text-base leading-6">
+                    <p className="text-base leading-6 text-neutral-700">
                         {card.description}
                     </p>
 
