@@ -1,6 +1,7 @@
 import Header from "../components/Header";
 import HeroSection from "../components/HeroSection";
 import { MarqueeStrip } from "../components/MarqueeStrip";
+import ProblemSection from "../components/ProblemSection";
 
 const LandingPage = () => {
     return (
@@ -10,6 +11,9 @@ const LandingPage = () => {
                 <HeroSection />
                 <div className="pt-15 pb-25 lg:pt-0">
                     <MarqueeStrip />
+                </div>
+                <div>
+                    <ProblemSection />
                 </div>
 
 
