@@ -33,14 +33,15 @@ const FAQItem = ({ id, question, answer, isOpen, onToggle }: FAQItemProps) => {
                 className="flex w-full items-center justify-between gap-4 text-left"
             >
                 <span className="text-lg text-primary-950 lg:text-2xl">{question}</span>
-                <span className="flex size-6 shrink-0 items-center justify-center rounded border border-neutral-300 lg:size-12"></span>
-                {isOpen ? (
-                    <Minus className="size-4 text-neutral-500 lg:size-6" />
-                ) : (
-                    <Plus className="size-4 text-neutral-500 lg:size-6" />
-                )
+                <span className="flex size-6 shrink-0 items-center justify-center rounded border border-neutral-300 lg:size-12">
+                    {isOpen ? (
+                        <Minus className="size-4 text-neutral-500 lg:size-6" />
+                    ) : (
+                        <Plus className="size-4 text-neutral-500 lg:size-6" />
+                    )
+                    }
+                </span>
 
-                }
             </button>
             <AnimatePresence initial={false}>
                 {isOpen && (

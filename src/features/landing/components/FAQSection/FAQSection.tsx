@@ -36,7 +36,7 @@ const FAQSection = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.20 }}
-            className="flex w-full flex-col items-center gap-15 px-6 py-10 lg:gap-20 lg:px-30 lg:py-13.75"
+            className="flex w-full flex-col items-center gap-15 px-6 py-25 lg:gap-20 lg:px-30 lg:py-13.75"
         >
             <motion.div
                 variants={fadeUp}
