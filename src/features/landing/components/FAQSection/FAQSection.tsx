@@ -1,8 +1,9 @@
 
 import { useState } from "react";
-import { motion, stagger } from "motion/react";
+import { motion } from "motion/react";
 import { fadeUp, staggerContainer } from "@/lib/motion/variants";
 import SectionTag from "../SectionTag";
+import FAQItem from "./FAQItem";
 
 const faqs = [
     {
@@ -26,6 +27,9 @@ const faqs = [
 ]
 
 const FAQSection = () => {
+
+    const [openId, setOpenId] = useState<string | null>("cv");
+
     return (
         <motion.section
             variants={staggerContainer}
@@ -49,7 +53,13 @@ const FAQSection = () => {
                 variants={fadeUp}
                 className="flex w-full max-w-30 flex-col items-start">
                 {faqs.map((faq) => (
-                    <div></div>
+                    <FAQItem 
+
+                    key = { faq.id }
+                    {...faq}
+                    isOpen={openId === faq.id}
+                    onToggle = { () => setOpenId(openId === faq.id ? null :  faq.id)}
+                    />
                 ))}
 
             </motion.div>
