@@ -10,7 +10,7 @@ const ProblemSection = () => {
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.4 }}
+            viewport={{ once: true, amount: 0.2 }}
             className="px-6 flex flex-col gap-15">
             <motion.div
                 variants={fadeUp}
