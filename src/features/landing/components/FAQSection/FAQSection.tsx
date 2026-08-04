@@ -39,7 +39,7 @@ const FAQSection = () => {
                 className="flex flex-col items-center gap-4"
             >
                 <SectionTag label="FAQs" />
-                <p className="text=[32px] leading-9.5 tracking-[-0.32px] text-black lg:text-[48px] lg:leading-14.5 lg:tracking-[-0.48px]">
+                <p className="text-[32px] leading-9.5 tracking-[-0.32px] text-black lg:text-[48px] lg:leading-14.5 lg:tracking-[-0.48px]">
                     Good to know
                 </p>
 
