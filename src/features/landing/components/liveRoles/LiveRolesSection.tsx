@@ -39,13 +39,13 @@ const LiveRolesSection = () => {
             <div className="flex w-full items-start justify-between">
                 <motion.div
                     variants={fadeUp}
-                    className="flex flex-col items-start gap-6"
+                    className="flex flex-col items-start gap-6 lg:gap-4"
                 >
-                    <div className="flex items-center gap-2.5 rounded-md border border-primary-500 px-2.5 py-1.5">
+                    <div className="flex items-center gap-2.5 rounded-md border border-primary-500 px-2.5 py-1.5 lg:px-3 lg:py-2.5">
                         <span className="size-1.5 rounded-full bg-primary-500" />
-                        <p className="text-[10px] text-primary-500">LIVE ROLES</p>
+                        <p className="text-[10px] text-primary-500 lg:text-sm">LIVE ROLES</p>
                     </div>
-                    <p className=" text-[32px] leading-9.5 tracking-[-0.32px] text-black">
+                    <p className=" text-[32px] leading-9.5 tracking-[-0.32px] text-black lg:text-[48px] lg:leading-14.5 lg:tracking-[-0.48px]">
                         Apply by Doing The Work
                     </p>
 
@@ -54,7 +54,7 @@ const LiveRolesSection = () => {
                 <motion.a
                     variants={fadeUp}
                     href="#all-roles"
-                    className="flex h-7.5 items-center justify-center curosr-pointer whitespace-nowrap gap-2 text-base text-primary-500 underline underline-offset-2"
+                    className="flex h-7.5 items-center justify-center curosr-pointer whitespace-nowrap gap-2 text-base text-primary-500 underline underline-offset-2 lg:h-13"
                 >
 
                     All Roles
@@ -62,7 +62,7 @@ const LiveRolesSection = () => {
                 </motion.a>
             </div>
 
-            <div className="flex w-full flex-col items-start gap-6">
+            <div className="flex w-full flex-col items-start gap-6 lg:flex-row">
                 {jobs.map((job) => (
                     <JobCard key={job.title} {...job} />
                 ))}
