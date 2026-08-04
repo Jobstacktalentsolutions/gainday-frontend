@@ -1,3 +1,4 @@
+import FAQSection from "../components/FAQSection/FAQSection";
 import Header from "../components/Header";
 import HeroSection from "../components/HeroSection";
 import HowItWorksSection from "../components/HowItWorksSection";
@@ -26,6 +27,9 @@ const LandingPage = () => {
                 </div>
                 <div>
                     <LiveRolesSection />
+                </div>
+                <div>
+                    <FAQSection />
                 </div>
 
 
