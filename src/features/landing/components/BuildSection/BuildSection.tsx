@@ -10,10 +10,10 @@ const BuildSection = () => {
                 className="text-white flex flex-col gap-3 py-12.75 px-5 rounded-[12px]"
                 style={{
                     background: `
-                        radial-gradient(ellipse at 0% 0%, #c87e2a 0%, transparent 50%),
+                        radial-gradient(ellipse at 0% 10%, #e8a035 0%, transparent 50%),
                         radial-gradient(ellipse at 100% 100%, #1B17FF 0%, #0d0b99 30%, transparent 60%),
-                        radial-gradient(ellipse at 60% 30%, #3a1550 0%, transparent 60%),
-                        linear-gradient(330deg, #0a0030 0%, #1a0a18 50%, #2d1500 100%)
+                        radial-gradient(ellipse at 60% 40%, #3a1550 0%, transparent 60%),
+                        linear-gradient(330deg, #0a0030 0%, #1a0a18 33%, #1a0a18 50%, #1a0a18 66%, #2d1500 100%)
                     `,
                 }}
             >
@@ -29,8 +29,8 @@ const BuildSection = () => {
 
                 </div>
                 <div>
-                    <StartNowButton 
-                    label = "Start Now"
+                    <StartNowButton
+                        label="Start Now"
                     />
                 </div>
 
