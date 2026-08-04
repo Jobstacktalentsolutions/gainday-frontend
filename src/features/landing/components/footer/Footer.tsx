@@ -13,18 +13,18 @@ export function Footer() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
-            className="flex w-full flex-col items-center gap-5 px-6 py-10 lg:gap-10 lg:px-[120px] lg:py-[55px]"
+            className="flex w-full flex-col items-center gap-5 px-6 py-10 lg:gap-10 lg:px-30 lg:py-13.75"
         >
             <div className="flex w-full flex-col items-start gap-10 lg:flex-row lg:items-start lg:justify-between">
                 <div className="flex flex-col items-start gap-4 lg:gap-6">
                     <img src="/logo.svg" alt="Gainday" className="h-[57.6px] w-[136px]" />
-                    <p className="w-[298px] text-base leading-6 text-neutral-700">
+                    <p className="w-74.5 text-base leading-6 text-neutral-700">
                         Built for proof, not paper. Show employers what you can actually
                         do — not just what your CV says you&rsquo;ve done.
                     </p>
                 </div>
 
-                <div className="flex gap-[135px] lg:contents">
+                <div className="flex gap-33.75 lg:contents">
                     <FooterColumn heading="PRODUCT" links={productLinks} />
                     <FooterColumn heading="COMPANY" links={companyLinks} />
                 </div>
