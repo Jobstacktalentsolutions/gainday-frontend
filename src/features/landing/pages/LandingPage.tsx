@@ -1,6 +1,7 @@
 import Header from "../components/Header";
 import HeroSection from "../components/HeroSection";
 import HowItWorksSection from "../components/HowItWorksSection";
+import LiveRolesSection from "../components/liveRoles/LiveRolesSection";
 import { MarqueeStrip } from "../components/MarqueeStrip";
 import ProblemSection from "../components/ProblemSection";
 import SolutionSection from "../components/solutionSection/SolutionSection";
@@ -22,6 +23,9 @@ const LandingPage = () => {
                 </div>
                 <div>
                     <SolutionSection />
+                </div>
+                <div>
+                    <LiveRolesSection />
                 </div>
 
 
