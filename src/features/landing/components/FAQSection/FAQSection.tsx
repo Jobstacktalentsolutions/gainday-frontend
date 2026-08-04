@@ -51,14 +51,14 @@ const FAQSection = () => {
 
             <motion.div
                 variants={fadeUp}
-                className="flex w-full max-w-30 flex-col items-start">
+                className="flex w-full flex-col items-start">
                 {faqs.map((faq) => (
-                    <FAQItem 
+                    <FAQItem
 
-                    key = { faq.id }
-                    {...faq}
-                    isOpen={openId === faq.id}
-                    onToggle = { () => setOpenId(openId === faq.id ? null :  faq.id)}
+                        key={faq.id}
+                        {...faq}
+                        isOpen={openId === faq.id}
+                        onToggle={() => setOpenId(openId === faq.id ? null : faq.id)}
                     />
                 ))}
 
