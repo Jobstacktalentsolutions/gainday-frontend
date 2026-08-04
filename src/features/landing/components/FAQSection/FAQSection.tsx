@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { motion, stagger } from "motion/react";
 import { fadeUp, staggerContainer } from "@/lib/motion/variants";
+import SectionTag from "../SectionTag";
 
 const faqs = [
     {
@@ -33,6 +34,25 @@ const FAQSection = () => {
             viewport={{ once: true, amount: 0.20 }}
             className="flex w-full flex-col items-center gap-15 px-6 py-10 lg:gap-20 lg:px-30 lg:py-13.75"
         >
+            <motion.div
+                variants={fadeUp}
+                className="flex flex-col items-center gap-4"
+            >
+                <SectionTag label="FAQs" />
+                <p className="text=[32px] leading-9.5 tracking-[-0.32px] text-black lg:text-[48px] lg:leading-14.5 lg:tracking-[-0.48px]">
+                    Good to know
+                </p>
+
+            </motion.div>
+
+            <motion.div
+                variants={fadeUp}
+                className="flex w-full max-w-30 flex-col items-start">
+                {faqs.map((faq) => (
+                    <div></div>
+                ))}
+
+            </motion.div>
 
         </motion.section>
     );
