@@ -1,7 +1,9 @@
 
 const BuildSection = () => {
     return (
-        <div>
+        <div
+            className="py-25 px-6"
+        >
 
         </div>
     );

@@ -1,3 +1,4 @@
+import BuildSection from "../components/BuildSection/BuildSection";
 import FAQSection from "../components/FAQSection/FAQSection";
 import Header from "../components/Header";
 import HeroSection from "../components/HeroSection";
@@ -30,6 +31,9 @@ const LandingPage = () => {
                 </div>
                 <div>
                     <FAQSection />
+                </div>
+                <div>
+                    <BuildSection />
                 </div>
 
 
