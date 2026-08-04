@@ -1,4 +1,4 @@
-import CTAButton from "../solutionSection/CTAButton";
+
 import StartNowButton from "./StartNowButton";
 
 const BuildSection = () => {
@@ -6,7 +6,17 @@ const BuildSection = () => {
         <div
             className="py-25 px-6"
         >
-            <div className="bg-primary-500 text-white flex flex-col gap-3 py-12.75 px-5 rounded-[12px]">
+            <div
+                className="text-white flex flex-col gap-3 py-12.75 px-5 rounded-[12px]"
+                style={{
+                    background: `
+                        radial-gradient(ellipse at 0% 0%, #c87e2a 0%, transparent 50%),
+                        radial-gradient(ellipse at 100% 100%, #1B17FF 0%, #0d0b99 30%, transparent 60%),
+                        radial-gradient(ellipse at 60% 30%, #3a1550 0%, transparent 60%),
+                        linear-gradient(330deg, #0a0030 0%, #1a0a18 50%, #2d1500 100%)
+                    `,
+                }}
+            >
                 <h3 className="text-[32px] leading-9.5 tracking-[-0.32px]">
                     Built for Proof, not Paper.
                 </h3>
