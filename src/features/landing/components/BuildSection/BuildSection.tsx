@@ -17,7 +17,7 @@ const BuildSection = () => {
                     `,
                 }}
             >
-                <div className="flex flex-col gap-y-3 lg:w-[336px] lg:gap-6">
+                <div className="flex flex-col gap-y-3 lg:w-84 lg:gap-6">
                     <h3 className="text-[32px] leading-9.5 tracking-[-0.32px] lg:text-[48px] lg:tracking-[-0.48px] lg:leading-14.5">
                         Built for Proof, not Paper.
                     </h3>
@@ -34,7 +34,7 @@ const BuildSection = () => {
 
                 </div>
 
-                <div className="h-55 bg-white w-full rounded-[12px] lg:max-w-[499px] lg:h-[346px]">
+                <div className="h-55 bg-white w-full rounded-[12px] lg:max-w-124.75 lg:h-86.5">
 
                 </div>
                 <div className="lg:hidden ">
