@@ -1,6 +1,7 @@
 import { motion } from "motion/react"
 import { fadeUp } from "@/lib/motion/variants"
 import { FooterColumn } from "./FooterColumn"
+import brandLogo from "@/assets/gainday icon.svg";
 
 const productLinks = ["How it works", "Try a challenge", "For candidates", "For employers"]
 const companyLinks = ["Privacy", "Terms", "Contact"]
@@ -17,7 +18,7 @@ export function Footer() {
         >
             <div className="flex w-full flex-col items-start gap-10 lg:flex-row lg:items-start lg:justify-between">
                 <div className="flex flex-col items-start gap-4 lg:gap-6">
-                    <img src="/logo.svg" alt="Gainday" className="h-[57.6px] w-[136px]" />
+                    <img src={brandLogo} alt="Gainday" className="h-[57.6px] w-34" />
                     <p className="w-74.5 text-base leading-6 text-neutral-700">
                         Built for proof, not paper. Show employers what you can actually
                         do — not just what your CV says you&rsquo;ve done.
