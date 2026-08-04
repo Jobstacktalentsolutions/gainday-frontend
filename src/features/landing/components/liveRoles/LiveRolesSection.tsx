@@ -34,7 +34,7 @@ const LiveRolesSection = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.15 }}
-            className="flex w-full flex-col items-start gap-15 bg-white px-6 py-10 "
+            className="flex w-full flex-col items-start gap-15 bg-white px-6 py-10  lg:gap-20 lg:px-30 lg:py-13.75"
         >
             <div className="flex w-full items-start justify-between">
                 <motion.div
