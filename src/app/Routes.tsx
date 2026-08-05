@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 const AdminLogin = lazy(() => import("@/features/admin/pages/AdminLogin"));
 const AdminLayout = lazy(() => import("@/features/admin/layouts/AdminLayout"));
@@ -10,11 +10,12 @@ const AppRoutes = () => {
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <Routes>
+                <Route path="/" element={<Navigate to="/landing" />} />
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin" element={<AdminLayout />}>
                     <Route path="dashboard" element={<AdminDashboard />} />
                 </Route>
-                <Route path = "/landing" element = { <LandingPage />} />
+                <Route path="/landing" element={<LandingPage />} />
             </Routes>
         </Suspense>
 
