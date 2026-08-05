@@ -43,7 +43,7 @@ const HowItWorksSection = () => {
                     </p>
                     <HighlightBox
                         color="secondary"
-                        className="text-[32px] leading-9.5 tracking-[-0.32px] lg:text-[48px] lg:leading-14.5 lg:tracking-[-0.48px] whitespace-nowrap"
+                        className="text-[30px] text-center leading-9.5 tracking-[-0.32px] lg:text-[48px] lg:leading-14.5 lg:tracking-[-0.48px] whitespace-nowrap"
                     >
                         Hero&rsquo;s what replaces it
                     </HighlightBox>
