@@ -47,4 +47,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
             </div>
         )
     }
+    
 )
+
+export default PasswordInput ;
