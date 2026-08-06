@@ -61,7 +61,7 @@ const SolutionSection = () => {
 
                 </div>
 
-                <div className="g:flex-1 lg:w-122.75 lg:h-139.5">
+                <div className="lg:flex-1 lg:w-122.75 lg:h-139.5">
                     <GradientCard />
                     <div className="lg:hidden pt-4">
                         <CTAButton

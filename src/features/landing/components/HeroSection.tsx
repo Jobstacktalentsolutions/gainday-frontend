@@ -12,7 +12,7 @@ const HeroSection = () => {
             variants={heroStagger}
             initial="hidden"
             animate="visible"
-            className="px-6 pt-20 pb-10 gap-20 flex flex-col lg:flex-row lg:px-29 lg:pt-23 lg:gap-44.5 lg:pb-30">
+            className="px-6 pt-20 pb-10 gap-20 flex flex-col lg:flex-row lg:px-29 lg:pt-23  lg:pb-30 lg:justify-between">
             <div className="lg:flex-1">
                 <div className="flex items-center justify-center gap-4 flex-col lg:items-start ">
                     <motion.div
@@ -73,9 +73,10 @@ const HeroSection = () => {
             </div>
             <motion.div
                 variants={fadeUp}
-                className="left-box lg:flex-1">
+                className="lg:flex-1 lg:w-122.75 lg:h-139.5">
                 <GradientCard />
             </motion.div>
+
 
         </motion.section>
     );
