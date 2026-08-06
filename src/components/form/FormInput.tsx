@@ -1,4 +1,4 @@
-import { forwardRef, useId, type InputHTMLAttributes } from "react";
+import { forwardRef, useId, type InputHTMLAttributes, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -10,18 +10,18 @@ export interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
     error?: string;
     hint?: string;
     hideLabel?: boolean;
+    endIcon?: ReactNode;
 }
 
 
 export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
-    ({ label, error, id, className, hint, hideLabel, required, ...props }, ref) => {
+    ({ label, error, id, className, hint, hideLabel, required, endIcon, ...props }, ref) => {
 
         //unique IDs to increase accessibility
         const generatedId = useId();
         const inputId = id ?? generatedId;
         const hintId = hint ? `${inputId}-hint` : undefined;
         const errorId = error ? `${inputId}-error` : undefined;
-
 
         //aria-describedby should list every applicable description
         const describedby = [hintId, errorId].filter(Boolean).join(" ") || undefined;
@@ -53,6 +53,13 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
                     className={cn(error && "border-destructive focus-visible:ring-destructive", className)}
                     {...props}
                 />
+                {
+                    endIcon && (
+                        <div className="absolute top-1/2 rigt-3 -translate-y-1/2">
+                            {endIcon}
+                        </div>
+                    )
+                }
 
                 {error && (
                     <p id={errorId}
