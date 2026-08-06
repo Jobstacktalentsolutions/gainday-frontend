@@ -28,9 +28,9 @@ const HeroSection = () => {
 
                     <motion.h2
                         variants={fadeUp}
-                        className=" text-[40px] text-black leading-12 tracking-tight text-center flex flex-col items-center justify-center lg:text-left lg:text-[52px] lg:leading-14 lg:tracking-[-0.56px] lg:flex-row lg:items-end lg:gap-3">
-                        Stop Screening <br className="hidden lg:block" /> Applications. {" "} <br />Start Screening
-                        <span className="relative inline-flex items-center justify-center border-2 border-primary-500  px-4 py-1 text-primary-500 align-baseline mt-1.5">
+                        className="text-[40px] text-black leading-12 tracking-tight text-center lg:text-left lg:text-[52px] lg:leading-14 lg:tracking-[-0.56px]">
+                        Stop Screening <br className="hidden lg:block" /> Applications. {" "} <br className="hidden lg:block" />Start Screening{" "}
+                        <span className="relative inline-flex items-center justify-center border-2 border-primary-500 px-4 py-1 text-primary-500 align-baseline">
                             <span className="absolute -top-1 -left-1 w-1.5 h-1.5  bg-primary-500 " />
                             <span className="absolute -top-1 -right-1 w-1.5 h-1.5 bg-primary-500" />
                             <span className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-primary-500" />
