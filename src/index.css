@@ -287,14 +287,16 @@
       transparent 58%,
       /* ── Gap ── */
       transparent 100%);
-  mask:
-    linear-gradient(#fff 0 0) content-box,
+  -webkit-mask-image:
+    linear-gradient(#fff 0 0),
     linear-gradient(#fff 0 0);
+  -webkit-mask-clip: content-box, border-box;
+  -webkit-mask-composite: destination-out;
+  mask-image:
+    linear-gradient(#fff 0 0),
+    linear-gradient(#fff 0 0);
+  mask-clip: content-box, border-box;
   mask-composite: exclude;
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
   animation: faq-border-spin 3s linear infinite;
   pointer-events: none;
   z-index: 1;
