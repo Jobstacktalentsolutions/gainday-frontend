@@ -5,3 +5,7 @@ interface Rule {
     label : string;
     test : ( value : string) => boolean;
 }
+
+const rules : Rule[] = [
+    
+]
