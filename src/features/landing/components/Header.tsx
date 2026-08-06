@@ -10,7 +10,7 @@ const navLinks = [
 
 const Header = () => {
     return (
-        <header className="fixed top-0 left-0 z-50 flex w-full items-center justify-between border-t border-t-white/25 border-b border-b-white/15 bg-white/10 px-6 py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),inset_0_-1px_0_0_rgba(255,255,255,0.1),0_4px_16px_rgba(0,0,0,0.06)] backdrop-blur-xs md:px-30">
+        <header className="fixed top-0 left-0 z-50 flex w-full items-center justify-between border-t border-t-white/25 border-b border-b-white/15 bg-white/10 px-6 py-4 lg:py-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),inset_0_-1px_0_0_rgba(255,255,255,0.1),0_4px_16px_rgba(0,0,0,0.06)] backdrop-blur-xs md:px-30">
             <Link to="/" className="shrink-0">
                 <img
                     src={brandLogo}
