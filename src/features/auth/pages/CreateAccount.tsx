@@ -66,6 +66,13 @@ const CreateAccount = () => {
                     {...register("email")}
                     error={errors.email?.message}
                 />
+                <FormInput
+                    label ="Company's Name"
+                    placeholder="e.g Amara Capital"
+                    required
+                    {...register("companyName")}
+                    error={errors.companyName?.message}
+                />
 
             </form>
 
