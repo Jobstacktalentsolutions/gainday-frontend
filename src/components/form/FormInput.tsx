@@ -59,7 +59,7 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
                 {!hideLabel && (
                     <label
                         htmlFor={inputId}
-                        className="flex items-center gap-1 text-sm font-medium text-neutral-800 select-none"
+                        className="flex items-center gap-1 text-base font-medium text-neutral-800 select-none"
                     >
                         {label}
                         {optional && (
@@ -128,7 +128,7 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
                             onBlur?.(e);
                         }}
                         className={cn(
-                            "min-w-0 flex-1 bg-transparent text-sm text-neutral-900 outline-none",
+                            "min-w-0 flex-1 bg-transparent text-base text-neutral-900 outline-none",
                             "placeholder:text-neutral-400",
                             // State 2 – Filled: text is simply neutral-900 (default above)
                         )}
