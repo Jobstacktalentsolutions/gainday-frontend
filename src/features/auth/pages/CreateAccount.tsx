@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
-import { Button } from "@base-ui/react";
 import { FormInput } from "@/components/form/FormInput";
 import AuthCard from "../component/AuthCard";
 import PasswordInput from "../component/passwordInput";
