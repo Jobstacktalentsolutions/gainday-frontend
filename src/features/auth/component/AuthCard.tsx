@@ -49,7 +49,7 @@ const AuthCard = ({
                             {subtitle}
                         </Dialog.Description>
                     </div>
-                    <div className = "flex w-full flex-col gap-4">{children}</div>
+                    <div className="flex w-full flex-col gap-4">{children}</div>
 
                 </Dialog.Content>
 
@@ -58,3 +58,5 @@ const AuthCard = ({
         </Dialog.Root>
     )
 }
+
+export default AuthCard;
