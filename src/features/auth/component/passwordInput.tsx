@@ -44,7 +44,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
                             tabIndex={-1}
                             onClick={() => setvisible((v) => !v)}
                             aria-label={visible ? "Hide password" : "Show password"}
-                            className="text-neutral-500 hover:text-neutral-700"
+                            className="text-neutral-300 hover:text-neutral-500 cursor-pointer"
                         >
                             {visible ?
                                 <EyeOff className="size-5" />
