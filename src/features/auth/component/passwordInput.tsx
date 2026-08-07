@@ -1,4 +1,4 @@
-import { forwardRef, useState, type ChangeEvent } from "react";
+import { forwardRef, useState, type ChangeEvent, type FocusEvent } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { FormInput, type FormInputProps } from "@/components/form/FormInput";
 import PasswordChecklist from "./PasswordChecklist";
@@ -9,7 +9,7 @@ interface PasswordInputProps extends Omit<FormInputProps, "type" | "endIcon"> {
 
 
 const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
-    ({ showChecklist, onChange, ...props }, ref) => {
+    ({ showChecklist, onChange, onFocus, onBlur, ...props }, ref) => {
 
         const [visible, setvisible] = useState(false);
         const [focused, setFocused] = useState(false);
@@ -17,8 +17,17 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
 
         const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
             setInternalValue(e.target.value);
-            // forward to react-hook-form's onChange (or any consumer)
             onChange?.(e);
+        };
+
+        const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
+            setFocused(true);
+            onFocus?.(e);
+        };
+
+        const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
+            setFocused(false);
+            onBlur?.(e);
         };
 
         return (
@@ -27,8 +36,8 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
                     ref={ref}
                     type={visible ? "text" : "password"}
                     onChange={handleChange}
-                    onFocus={() => setFocused(true)}
-                    onBlur={() => setFocused(false)}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
                     endIcon={
                         <button
                             type="button"
