@@ -13,3 +13,21 @@ import { AuthDivider } from "../component/AuthDivider";
 import SocialAuthButton from "../component/SocialAuthButton";
 import AuthSwitchLink from "../component/AuthSwitchLink";
 import { createAccountSchema, type CreateAccountFormValues } from "../schemas/createAccountSchema";
+
+
+const CreateAccount = () => {
+    const navigate = useNavigate();
+    const [agreed, setAgreed] = useState(false);
+
+    const {
+        register,
+        handleSubmit,
+        formState : { errors },
+    } = useForm<CreateAccountFormValues>({
+        resolver : zodResolver(createAccountSchema),
+    })
+
+    return (
+
+    );
+}
