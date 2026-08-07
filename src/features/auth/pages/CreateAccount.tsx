@@ -50,11 +50,21 @@ const CreateAccount = () => {
                 className="flex w-full flex-col gap-4"
             >
                 <FormInput
-                    label="full name"
+                    label="Full name"
                     placeholder="Amara Chukwu"
                     required
                     {...register("fullName")}
                     error={errors.fullName?.message}
+                />
+
+                <FormInput
+                    label="Work Email"
+                    type="email"
+                    placeholder="amara@yourcompany.com"
+                    required
+                    autoComplete="email"
+                    {...register("email")}
+                    error={errors.email?.message}
                 />
 
             </form>
