@@ -27,6 +27,16 @@ const CreateAccount = () => {
         resolver : zodResolver(createAccountSchema),
     })
 
+    const signupMutation = useMutation({
+        mutationFn : (values: CreateAccountFormValues) =>
+            apiClient.post("/auth/signup", values ),
+        onSuccess : () => navigate("/dashboard"),
+    })
+
+    const onSubmit = (values : CreateAccountFormValues) => {
+        signupMutation.mutate({...values, agreedToTerms: agreed})
+    }
+
     return (
 
     );
