@@ -13,6 +13,8 @@ import { AuthDivider } from "../component/AuthDivider";
 import SocialAuthButton from "../component/SocialAuthButton";
 import AuthSwitchLink from "../component/AuthSwitchLink";
 import { createAccountSchema, type CreateAccountFormValues } from "../schemas/createAccountSchema";
+import { ActionButton } from "@/components/ui/ActionButton";
+import spinner from "@/assets/Spinner.svg";
 
 
 const CreateAccount = () => {
@@ -89,6 +91,28 @@ const CreateAccount = () => {
                     {...register("confirmPassword")}
                     error={errors.confirmPassword?.message}
                 />
+                <AuthCheckboxRow checked={agreed} onCheckedChange={setAgreed} />
+
+                <ActionButton
+                    type="submit"
+                    className="w-full"
+                    disabled={signupMutation.isPending}
+                >
+                    {
+                        signupMutation.isPending
+                            ? (<span>
+
+                                <img
+                                    src={spinner}
+                                    alt="spinner"
+                                    className="w-4 h-4 animate-spin"
+                                />
+                                <span>Creating account ...</span>
+                            </span>)
+                            : (<span>Create account</span>)
+                    }
+
+                </ActionButton>
 
             </form>
 
