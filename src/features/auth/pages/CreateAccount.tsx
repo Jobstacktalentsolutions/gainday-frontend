@@ -62,3 +62,5 @@ const CreateAccount = () => {
         </AuthCard>
     );
 }
+
+export default CreateAccount;

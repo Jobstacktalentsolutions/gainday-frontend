@@ -5,7 +5,7 @@ const AdminLogin = lazy(() => import("@/features/admin/pages/AdminLogin"));
 const AdminLayout = lazy(() => import("@/features/admin/layouts/AdminLayout"));
 const AdminDashboard = lazy(() => import("@/features/admin/pages/AdminDashboard"));
 const LandingPage = lazy(() => import("@/features/landing/pages/LandingPage"));
-// const CreateAccount = lazy(() => import("@/features/auth/pages/CreateAccount"));
+const CreateAccount = lazy(() => import("@/features/auth/pages/CreateAccount"));
 // const SignInPage = lazy(() => import("@/features/auth/pages/SignIn"))
 
 
@@ -19,6 +19,7 @@ const AppRoutes = () => {
                     <Route path="dashboard" element={<AdminDashboard />} />
                 </Route>
                 <Route path="/landing" element={<LandingPage />} />
+                <Route path="/signup" element={<CreateAccount />} />
             </Routes>
         </Suspense>
 
