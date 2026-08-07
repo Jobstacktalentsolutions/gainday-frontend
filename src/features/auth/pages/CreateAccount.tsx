@@ -67,11 +67,27 @@ const CreateAccount = () => {
                     error={errors.email?.message}
                 />
                 <FormInput
-                    label ="Company's Name"
+                    label="Company's Name"
                     placeholder="e.g Amara Capital"
                     required
                     {...register("companyName")}
                     error={errors.companyName?.message}
+                />
+                <PasswordInput
+                    label="password"
+                    placeholder="At least 8 characters"
+                    required
+                    showChecklist
+                    autoComplete="new-password"
+                    {...register("password")}
+                    error={errors.password?.message}
+                />
+                <PasswordInput
+                    label="Confirm Password"
+                    required
+                    autoComplete="new-password"
+                    {...register("confirmPassword")}
+                    error={errors.confirmPassword?.message}
                 />
 
             </form>
