@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/usemediaQuery";
+import brandLogo from "@/assets/gainday icon.svg"
 
 interface AuthCardProps {
     title: string;
@@ -35,19 +36,29 @@ const AuthCard = ({
                         if (!isDesktop) e.preventDefault();
                     }}
                     className={cn(
-                        "fixed z-50 flex flex-col items-center gap-10 bg-white focus:outline-none lg:gap-15",
+                        "fixed z-50 flex flex-col items-center gap-12 bg-white focus:outline-none lg:gap-15",
                         isDesktop ?
                             "top-1/2 left-1/2 w-141.5 max-w-[92vw] -translate-x-1/2 -translate-y-1/2 rounded-2xl p-12 shadow-lg"
                             : "inset-0 w-full overflow-y-auto p-6"
                     )}
                 >
-                    <div className="flex flex-col items-center gap-2 text-center">
-                        <Dialog.Title className="text-2xl leading-9.5 tracking-[-0.32px] text-primary-950 lg:text-[32px]">
-                            {title}
-                        </Dialog.Title>
-                        <Dialog.Description className="text-base text-neutral-700">
-                            {subtitle}
-                        </Dialog.Description>
+                    <div className="flex flex-col items-center gap-4 text-center pt-6">
+                        <div>
+                            <img
+                                src={brandLogo}
+                                alt="Brand logo"
+                                className=""
+                            />
+                        </div>
+                        <div>
+                            <Dialog.Title className="text-2xl leading-8 tracking-[-0.32px] text-primary-950 lg:text-[32px]">
+                                {title}
+                            </Dialog.Title>
+                            <Dialog.Description className="text-base text-neutral-700 leading-6">
+                                {subtitle}
+                            </Dialog.Description>
+                        </div>
+
                     </div>
                     <div className="flex w-full flex-col gap-4">{children}</div>
 
