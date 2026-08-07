@@ -12,4 +12,4 @@ import { AuthCheckboxRow } from "../component/AuthCheckBox";
 import { AuthDivider } from "../component/AuthDivider";
 import SocialAuthButton from "../component/SocialAuthButton";
 import AuthSwitchLink from "../component/AuthSwitchLink";
-import { createAccountSchema, type createAc } from "../schemas/createAccountSchema";
+import { createAccountSchema, type CreateAccountFormValues } from "../schemas/createAccountSchema";
