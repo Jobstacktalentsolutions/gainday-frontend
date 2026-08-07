@@ -14,3 +14,6 @@ export const createAccountSchema = z
         message: "Password do not match",
         path: ["confirmPassword"],
     })
+
+
+    export type CreateAccountFormValues = z.infer<typeof createAccountSchema>
