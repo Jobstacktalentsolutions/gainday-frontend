@@ -95,7 +95,7 @@ const CreateAccount = () => {
 
                 <ActionButton
                     type="submit"
-                    className="w-full"
+                    className="w-full py-6"
                     disabled={signupMutation.isPending}
                 >
                     {
@@ -113,6 +113,13 @@ const CreateAccount = () => {
                     }
 
                 </ActionButton>
+                <AuthDivider />
+                <SocialAuthButton label="Sign up with Google" />
+                <AuthSwitchLink
+                    prompt="Already have an account?"
+                    linkText="Sign in"
+                    to="/login"
+                />
 
             </form>
 
