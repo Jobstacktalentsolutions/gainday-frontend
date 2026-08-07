@@ -14,6 +14,7 @@ export function AuthCheckboxRow({ checked, onCheckedChange, error }: AuthCheckbo
           checked={checked}
           onCheckedChange={onCheckedChange}
           aria-invalid={error ? "true" : "false"}
+          className="cursor-pointer"
         />
         <p className="text-xs text-primary-950">
           I agree to the{" "}

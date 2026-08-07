@@ -100,7 +100,7 @@ const CreateAccount = () => {
                 >
                     {
                         signupMutation.isPending
-                            ? (<span>
+                            ? (<span className="flex gap-x-3 items-center justify-center">
 
                                 <img
                                     src={spinner}
