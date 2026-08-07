@@ -22,22 +22,43 @@ const CreateAccount = () => {
     const {
         register,
         handleSubmit,
-        formState : { errors },
+        formState: { errors },
     } = useForm<CreateAccountFormValues>({
-        resolver : zodResolver(createAccountSchema),
+        resolver: zodResolver(createAccountSchema),
     })
 
     const signupMutation = useMutation({
-        mutationFn : (values: CreateAccountFormValues) =>
-            apiClient.post("/auth/signup", values ),
-        onSuccess : () => navigate("/dashboard"),
+        mutationFn: (values: CreateAccountFormValues) =>
+            apiClient.post("/auth/signup", values),
+        onSuccess: () => navigate("/dashboard"),
     })
 
-    const onSubmit = (values : CreateAccountFormValues) => {
-        signupMutation.mutate({...values, agreedToTerms: agreed})
+    const onSubmit = (values: CreateAccountFormValues) => {
+        signupMutation.mutate({ ...values, agreedToTerms: agreed })
     }
 
     return (
+        <AuthCard
+            title="Create your Employer Account"
+            subtitle="Post your first job free. No card required."
+            open={true}
+            onOpenChange={(open) => !open && navigate("/")}
+        >
+            <form
+                onSubmit={handleSubmit(onSubmit)}
+                noValidate
+                className="flex w-full flex-col gap-4"
+            >
+                <FormInput
+                    label="full name"
+                    placeholder="Amara Chukwu"
+                    required
+                    {...register("fullName")}
+                    error={errors.fullName?.message}
+                />
 
+            </form>
+
+        </AuthCard>
     );
 }
