@@ -6,7 +6,7 @@ const AdminLayout = lazy(() => import("@/features/admin/layouts/AdminLayout"));
 const AdminDashboard = lazy(() => import("@/features/admin/pages/AdminDashboard"));
 const LandingPage = lazy(() => import("@/features/landing/pages/LandingPage"));
 const CreateAccount = lazy(() => import("@/features/auth/pages/CreateAccount"));
-// const SignInPage = lazy(() => import("@/features/auth/pages/SignIn"))
+const SignInPage = lazy(() => import("@/features/auth/pages/SignIn"))
 
 
 const AppRoutes = () => {
@@ -19,7 +19,11 @@ const AppRoutes = () => {
                     <Route path="dashboard" element={<AdminDashboard />} />
                 </Route>
                 <Route path="/landing" element={<LandingPage />} />
-                <Route path="/signup" element={<CreateAccount />} />
+                <Route path="/employer">
+                    <Route path="signup" element={<CreateAccount />} />
+                    <Route path = "signin" element={<SignInPage />} />
+                </Route>
+                
             </Routes>
         </Suspense>
 
