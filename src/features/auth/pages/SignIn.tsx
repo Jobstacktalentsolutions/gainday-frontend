@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, Form } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
 import { ActionButton } from "@/components/ui/ActionButton";
@@ -32,15 +32,24 @@ const SignIn = () => {
 
     return (
         <AuthCard
-        title = "Log in to Gainday"
-        subtitle="Review submissions and manage job posts."
-        open ={ true }
-        onOpenChange = { (open) => !open && navigate("/")}
+            title="Log in to Gainday"
+            subtitle="Review submissions and manage job posts."
+            open={true}
+            onOpenChange={(open) => !open && navigate("/")}
         >
             <form
-            onSubmit = { handleSubmit((values) => signInMutation.mutate(values))}
-            noValidate
+                onSubmit={handleSubmit((values) => signInMutation.mutate(values))}
+                noValidate
+                className="flex w-full flex-col gap-4"
             >
+                <FormInput
+                    label="Work Email"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    {...register("email")}
+                    error={errors.email?.message}
+                />
 
             </form>
 
