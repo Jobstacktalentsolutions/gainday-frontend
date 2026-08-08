@@ -96,9 +96,9 @@ const SignIn = () => {
                                     alt="spinner"
                                     className="w-4 h-4 animate-spin"
                                 />
-                                <span>Creating account ...</span>
+                                <span>Signing in ...</span>
                             </span>)
-                            : (<span>Create account</span>)
+                            : (<span>Sign in</span>)
                     }
                 </ActionButton>
 
