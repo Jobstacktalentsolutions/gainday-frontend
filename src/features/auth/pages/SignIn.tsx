@@ -11,6 +11,7 @@ import AuthSwitchLink from "../component/AuthSwitchLink";
 import { signInSchema, type signInFormValues } from "../schemas/signInSchema";
 import AuthCard from "../component/AuthCard";
 import PasswordInput from "../component/passwordInput";
+import spinner from "@/assets/Spinner.svg";
 
 
 
@@ -72,14 +73,34 @@ const SignIn = () => {
 
                 {
                     signInMutation.isError && (
-                        <p 
-                        role = "alert"
-                        className = "text-center text-sm text-error-600"
+                        <p
+                            role="alert"
+                            className="text-center text-sm text-error-600"
                         >
                             Incorrect email or password
                         </p>
                     )
                 }
+
+                <ActionButton
+                    type="submit"
+                    className="w-full"
+                    disabled={signInMutation.isPending}
+                >
+                    {
+                        signInMutation.isPending
+                            ? (<span className="flex gap-x-3 items-center justify-center">
+
+                                <img
+                                    src={spinner}
+                                    alt="spinner"
+                                    className="w-4 h-4 animate-spin"
+                                />
+                                <span>Creating account ...</span>
+                            </span>)
+                            : (<span>Create account</span>)
+                    }
+                </ActionButton>
 
             </form>
 
