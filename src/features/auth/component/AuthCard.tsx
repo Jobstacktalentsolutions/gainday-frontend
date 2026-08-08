@@ -2,7 +2,8 @@
 import type { ReactNode } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { cn } from "@/lib/utils";
-import { useMediaQuery } from "@/hooks/usemediaQuery";
+
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import brandLogo from "@/assets/gainday icon.svg"
 
 interface AuthCardProps {
