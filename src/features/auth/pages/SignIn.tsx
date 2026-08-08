@@ -51,7 +51,7 @@ const SignIn = () => {
                     {...register("email")}
                     error={errors.email?.message}
                 />
-                <div className="flex flex-col items-end gap-2">
+                <div className="flex flex-col gap-2">
                     <PasswordInput
                         label="Password"
                         required
@@ -60,13 +60,14 @@ const SignIn = () => {
                         error={errors.password?.message}
                         className="w-full"
                     />
-                    <Link
-                        to="/forgot-password"
-                        className="text-base text-primary-500"
-                    >
-                        Forgot Password?
-                    </Link>
-
+                    <div className="w-full flex justify-end ">
+                        <Link
+                            to="/forgot-password"
+                            className="text-base text-primary-500 hover:text-primary-600  transition-colors duration-300 delay-100"
+                        >
+                            Forgot Password?
+                        </Link>
+                    </div>
                 </div>
 
             </form>
