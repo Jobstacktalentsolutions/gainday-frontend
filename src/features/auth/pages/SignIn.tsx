@@ -9,6 +9,7 @@ import { AuthDivider } from "../component/AuthDivider";
 import SocialAuthButton from "../component/SocialAuthButton";
 import AuthSwitchLink from "../component/AuthSwitchLink";
 import { signInSchema, type signInFormValues } from "../schemas/signInSchema";
+import AuthCard from "../component/AuthCard";
 
 
 
@@ -29,7 +30,22 @@ const SignIn = () => {
         onSuccess: () => navigate("/dashboard")
     })
 
-    return ();
+    return (
+        <AuthCard
+        title = "Log in to Gainday"
+        subtitle="Review submissions and manage job posts."
+        open ={ true }
+        onOpenChange = { (open) => !open && navigate("/")}
+        >
+            <form
+            onSubmit = { handleSubmit((values) => signInMutation.mutate(values))}
+            noValidate
+            >
+
+            </form>
+
+        </AuthCard>
+    );
 }
 
 
