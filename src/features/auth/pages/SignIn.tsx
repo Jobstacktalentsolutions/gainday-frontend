@@ -102,6 +102,14 @@ const SignIn = () => {
                     }
                 </ActionButton>
 
+                <AuthDivider />
+                <SocialAuthButton label="Sign in with Google" />
+                <AuthSwitchLink
+                    prompt="New to Gainday?"
+                    linkText="Create an account"
+                    to="/employer"
+                />
+
             </form>
 
         </AuthCard>
