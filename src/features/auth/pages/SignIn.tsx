@@ -10,6 +10,7 @@ import SocialAuthButton from "../component/SocialAuthButton";
 import AuthSwitchLink from "../component/AuthSwitchLink";
 import { signInSchema, type signInFormValues } from "../schemas/signInSchema";
 import AuthCard from "../component/AuthCard";
+import PasswordInput from "../component/passwordInput";
 
 
 
@@ -50,6 +51,23 @@ const SignIn = () => {
                     {...register("email")}
                     error={errors.email?.message}
                 />
+                <div className="flex flex-col items-end gap-2">
+                    <PasswordInput
+                        label="Password"
+                        required
+                        autoComplete="current-password"
+                        {...register("password")}
+                        error={errors.password?.message}
+                        className="w-full"
+                    />
+                    <Link
+                        to="/forgot-password"
+                        className="text-base text-primary-500"
+                    >
+                        Forgot Password?
+                    </Link>
+
+                </div>
 
             </form>
 
