@@ -70,6 +70,17 @@ const SignIn = () => {
                     </div>
                 </div>
 
+                {
+                    signInMutation.isError && (
+                        <p 
+                        role = "alert"
+                        className = "text-center text-sm text-error-600"
+                        >
+                            Incorrect email or password
+                        </p>
+                    )
+                }
+
             </form>
 
         </AuthCard>
