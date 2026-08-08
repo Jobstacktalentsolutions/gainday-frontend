@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate, Link} from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
 import { ActionButton } from "@/components/ui/ActionButton";
@@ -84,7 +84,7 @@ const SignIn = () => {
 
                 <ActionButton
                     type="submit"
-                    className="w-full py-6"
+                    className="w-full py-6 lg:text-base"
                     disabled={signInMutation.isPending}
                 >
                     {
