@@ -12,4 +12,25 @@ import { signInSchema, type signInFormValues } from "../schemas/signInSchema";
 
 
 
+const SignIn = () => {
+    const navigate = useNavigate();
 
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm<signInFormValues>({
+        resolver: zodResolver(signInSchema)
+    })
+
+    const signInMutation = useMutation({
+        mutationFn: (values: signInFormValues) =>
+            apiClient.post("/auth/login", values),
+        onSuccess: () => navigate("/dashboard")
+    })
+
+    return ();
+}
+
+
+export default SignIn;
