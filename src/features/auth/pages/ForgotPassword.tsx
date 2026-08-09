@@ -11,6 +11,7 @@ import AuthCard from "../component/AuthCard";
 import { forgetPasswordSchema, type forgetPasswordFormValues } from "../schemas/forgetPasswordSchema";
 
 
+
 const ForgotPassword = () => {
     const navigate = useNavigate()
     const [sentTo, setSentTo] = useState<string | null>(null);
@@ -27,13 +28,13 @@ const ForgotPassword = () => {
         onSuccess: (_res, values) => setSentTo(values.email),
     })
 
-     if (sentTo) return (
+    if (sentTo) return (
         <AuthCard
             title="Check your inbox"
             subtitle={sentTo ? `We sent a password reset link to ${sentTo}` : ""}
             open={true}
             onOpenChange={(open) => !open && navigate("/")}
-            
+
         >
             <div className="flex w-full flex-col items-center gap-4">
                 <div className="flex size-16 items-center justify-center rounded-xl bg-primary-50">
@@ -59,24 +60,44 @@ const ForgotPassword = () => {
 
     return (
         <AuthCard
-        title = "Reset your password"
-        subtitle = "Enter the email on your account and we will send you a reset link"
-        open = { true }
-        onOpenChange={ (open) => !open && navigate("/") }
+            title="Reset your password"
+            subtitle="Enter the email on your account and we will send you a reset link"
+            open={true}
+            onOpenChange={(open) => !open && navigate("/")}
         >
             <form
-            onSubmit = { handleSubmit ((values) => requestResetMutation.mutate(values))}
-            noValidate
-            className="flex w-full flex-col gap-4"
+                onSubmit={handleSubmit((values) => requestResetMutation.mutate(values))}
+                noValidate
+                className="flex w-full flex-col gap-4"
             >
                 <FormInput
-                label = "Work Email"
-                type = "email"
-                required
-                autoComplete="email"
-                {...register("email")}
-                error = { errors.email?.message}
+                    label="Work Email"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    {...register("email")}
+                    error={errors.email?.message}
                 />
+
+                <ActionButton
+                    type="submit"
+                    className="w-full text-base"
+                    disabled={requestResetMutation.isPending}
+                >
+                    {requestResetMutation.isPending
+                        ? "Sending..."
+                        : "Send reset link"
+                    }
+
+                </ActionButton>
+
+                <Link
+                    to="/employer/signin"
+                    className="flex items-center justify-center gap-1.5 text-base text-primary-500"
+                >
+                    <ArrowLeft className="size-4" />
+                    Back to log in
+                </Link>
 
             </form>
 
