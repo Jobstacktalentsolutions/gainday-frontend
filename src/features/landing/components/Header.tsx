@@ -3,7 +3,7 @@ import brandLogo from "@/assets/gainday icon.svg";
 
 const navLinks = [
     { label: "For employers", href: "#for-employers" },
-    { label: "For candidates", href: "for-candidates" },
+    { label: "For candidates", href: "#for-candidates" },
     { label: "Open Roles", href: "#open-roles" },
 ]
 
