@@ -93,8 +93,8 @@ const Header = () => {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="relative z-50 overflow-hidden md:hidden border-t border-neutral-200 bg-white pb-30"
+                        transition={{ duration: 0.4, ease: "easeInOut" }}
+                        className="relative z-50 overflow-hidden md:hidden border-t border-neutral-200 bg-white min-h-screen"
                     >
                         <div className="flex flex-col gap-1 px-6 py-4">
                             {navLinks.map((link) => (
