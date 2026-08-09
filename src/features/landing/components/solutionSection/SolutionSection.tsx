@@ -10,11 +10,11 @@ const SolutionSection = () => {
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: true, amount: 0.35 }}
             className="py-25 px-6 gap-30 flex flex-col"
         >
-            <motion.div variants={fadeUp} className="flex flex-col gap-4 lg:flex-row  lg:px-30 lg:gap-44.5" id = "for-candidates">
-                <div className="lg:flex-1">
+            <div className="flex flex-col gap-4 lg:flex-row  lg:px-30 lg:gap-44.5" id="for-candidates">
+                <motion.div variants={fadeUp} className="lg:flex-1">
                     <SectionTag label="FOR CANDIDATES" />
                     <h3 className="text-[32px] tracking-[-0.32px] leading-9.5 pt-4 lg:text-[48px] lg:tracking-[-0.48px] lg:leading-14.5">
                         Skip the CV black hole.
@@ -32,8 +32,8 @@ const SolutionSection = () => {
                             onClick={() => { }}
                         />
                     </div>
-                </div>
-                <div className="lg:flex-1 lg:w-122.75 lg:h-139.5">
+                </motion.div>
+                <motion.div variants={fadeUp} className="lg:flex-1 lg:w-122.75 lg:h-139.5">
                     <GradientCard />
                     <div className="lg:hidden pt-4">
                         <CTAButton
@@ -41,12 +41,12 @@ const SolutionSection = () => {
                             onClick={() => { }}
                         />
                     </div>
-                </div>
+                </motion.div>
 
 
-            </motion.div>
-            <motion.div variants={fadeUp} className="flex flex-col gap-4 lg:flex-row-reverse lg:px-30 lg:gap-44.5 " id = "for-employers">
-                <div className="lg:flex-1">
+            </div>
+            <div className="flex flex-col gap-4 lg:flex-row-reverse lg:px-30 lg:gap-44.5 " id="for-employers">
+                <motion.div variants={fadeUp} className="lg:flex-1">
                     <SectionTag label="FOR EMPLOYERS" />
                     <h3 className="text-[32px] tracking-[-0.32px] leading-9.5 pt-4 lg:text-[48px] lg:tracking-[-0.48px] lg:leading-14.5">
                         Stop guessing.
@@ -64,9 +64,9 @@ const SolutionSection = () => {
                         />
                     </div>
 
-                </div>
+                </motion.div>
 
-                <div className="lg:flex-1 lg:w-122.75 lg:h-139.5">
+                <motion.div className="lg:flex-1 lg:w-122.75 lg:h-139.5">
                     <GradientCard />
                     <div className="lg:hidden pt-4">
                         <CTAButton
@@ -75,9 +75,9 @@ const SolutionSection = () => {
                         />
                     </div>
 
-                </div>
+                </motion.div>
 
-            </motion.div>
+            </div>
 
         </motion.section>
     );
