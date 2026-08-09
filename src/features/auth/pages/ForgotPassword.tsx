@@ -27,12 +27,13 @@ const ForgotPassword = () => {
         onSuccess: (_res, values) => setSentTo(values.email),
     })
 
-    if (sentTo) return (
+     if (sentTo) return (
         <AuthCard
             title="Check your inbox"
-            subtitle={`We sent a password reset link to ${sentTo}`}
+            subtitle={sentTo ? `We sent a password reset link to ${sentTo}` : ""}
             open={true}
             onOpenChange={(open) => !open && navigate("/")}
+            
         >
             <div className="flex w-full flex-col items-center gap-4">
                 <div className="flex size-16 items-center justify-center rounded-xl bg-primary-50">
@@ -50,7 +51,7 @@ const ForgotPassword = () => {
                 onClick={() => setSentTo(null)}
                 className="text-base text-neutral-700 "
             >
-                Wrong email? <span className="text-primary-50">Go back</span>
+                Wrong email? <span className="text-primary-500">Go back</span>
             </button>
 
         </AuthCard>
