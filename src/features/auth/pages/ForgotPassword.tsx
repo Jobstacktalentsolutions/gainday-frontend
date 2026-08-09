@@ -56,6 +56,32 @@ const ForgotPassword = () => {
 
         </AuthCard>
     );
+
+    return (
+        <AuthCard
+        title = "Reset your password"
+        subtitle = "Enter the email on your account and we will send you a reset link"
+        open = { true }
+        onOpenChange={ (open) => !open && navigate("/") }
+        >
+            <form
+            onSubmit = { handleSubmit ((values) => requestResetMutation.mutate(values))}
+            noValidate
+            className="flex w-full flex-col gap-4"
+            >
+                <FormInput
+                label = "Work Email"
+                type = "email"
+                required
+                autoComplete="email"
+                {...register("email")}
+                error = { errors.email?.message}
+                />
+
+            </form>
+
+        </AuthCard>
+    )
 }
 
 export default ForgotPassword;
