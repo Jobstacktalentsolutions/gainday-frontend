@@ -7,6 +7,13 @@ const navLinks = [
     { label: "Open Roles", href: "#open-roles" },
 ]
 
+const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const id = href.replace("#", "");
+    const element = document.getElementById(id);
+    element?.scrollIntoView({ behavior: "smooth" });
+}
+
 
 const Header = () => {
     return (
@@ -24,6 +31,7 @@ const Header = () => {
                     <a
                         key={link.href}
                         href={link.href}
+                        onClick={(e) => scrollToSection(e, link.href)}
                         className="p-2.5 font-sans text-base text-neutral-700"
                     >
                         {link.label}
@@ -34,12 +42,14 @@ const Header = () => {
             <div className="hidden items-center gap-3 md:flex">
                 <a
                     href="#post-a-job"
+                    onClick={(e) => scrollToSection(e, "#post-a-job")}
                     className="flex h-13 items-center justify-center rounded-xl border border-primary-500 px-10 py-2 font-sans"
                 >
                     Post a Job
                 </a>
                 <a
                     href="#try-a-challenge"
+                    onClick={(e) => scrollToSection(e, "#try-a-challenge")}
                     className="flex h-13 w-37.75 items-center justify-center rounded-xl bg-primary-500 px-10 py-2 text-base text-neutral-50"
                 >
                     Try a challenge
@@ -49,4 +59,4 @@ const Header = () => {
     );
 }
 
-export default Header;
+export default Header;
