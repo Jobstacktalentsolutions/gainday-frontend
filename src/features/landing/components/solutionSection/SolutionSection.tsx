@@ -2,13 +2,18 @@ import { motion } from "motion/react";
 import GradientCard from "../GradientCard";
 import SectionTag from "../SectionTag";
 import CTAButton from "./CTAButton";
+import { fadeUp, staggerContainer } from "@/lib/motion/variants";
 
 const SolutionSection = () => {
     return (
         <motion.section
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
             className="py-25 px-6 gap-30 flex flex-col"
         >
-            <div className="flex flex-col gap-4 lg:flex-row  lg:px-30 lg:gap-44.5" id = "for-candidates">
+            <motion.div variants={fadeUp} className="flex flex-col gap-4 lg:flex-row  lg:px-30 lg:gap-44.5" id = "for-candidates">
                 <div className="lg:flex-1">
                     <SectionTag label="FOR CANDIDATES" />
                     <h3 className="text-[32px] tracking-[-0.32px] leading-9.5 pt-4 lg:text-[48px] lg:tracking-[-0.48px] lg:leading-14.5">
@@ -39,8 +44,8 @@ const SolutionSection = () => {
                 </div>
 
 
-            </div>
-            <div className="flex flex-col gap-4 lg:flex-row-reverse lg:px-30 lg:gap-44.5 " id = "for-employers">
+            </motion.div>
+            <motion.div variants={fadeUp} className="flex flex-col gap-4 lg:flex-row-reverse lg:px-30 lg:gap-44.5 " id = "for-employers">
                 <div className="lg:flex-1">
                     <SectionTag label="FOR EMPLOYERS" />
                     <h3 className="text-[32px] tracking-[-0.32px] leading-9.5 pt-4 lg:text-[48px] lg:tracking-[-0.48px] lg:leading-14.5">
@@ -72,7 +77,7 @@ const SolutionSection = () => {
 
                 </div>
 
-            </div>
+            </motion.div>
 
         </motion.section>
     );
