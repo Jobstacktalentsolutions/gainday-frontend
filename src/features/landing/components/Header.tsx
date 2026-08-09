@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import brandLogo from "@/assets/gainday icon.svg";
+import { Menu, X } from "lucide-react";
 
 const navLinks = [
     { label: "For employers", href: "#for-employers" },
@@ -68,27 +69,21 @@ const Header = () => {
 
                 {/* Mobile hamburger button */}
                 <button
-                    className="flex flex-col items-center justify-center gap-1.5 md:hidden w-10 h-10"
+                    className="flex items-center justify-center md:hidden w-10 h-10"
                     onClick={() => setMenuOpen(!menuOpen)}
                     aria-label="Toggle menu"
                 >
-                    <motion.span
-                        className="block h-0.5 w-6 bg-neutral-800 rounded-full origin-center"
-                        animate={menuOpen ? { rotate: 45, y: 4 } : { rotate: 0, y: 0 }}
-                        transition={{ duration: 0.25 }}
-                    />
-                    <motion.span
-                        className="block h-0.5 w-6 bg-neutral-800 rounded-full"
-                        animate={menuOpen ? { opacity: 0 } : { opacity: 1 }}
-                        transition={{ duration: 0.15 }}
-                    />
-                    <motion.span
-                        className="block h-0.5 w-6 bg-neutral-800 rounded-full origin-center"
-                        animate={menuOpen ? { rotate: -45, y: -4 } : { rotate: 0, y: 0 }}
-                        transition={{ duration: 0.25 }}
-                    />
+                    {menuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
             </div>
+
+            {/* Backdrop overlay */}
+            {menuOpen && (
+                <div
+                    className="fixed top-full left-0 w-full h-screen bg-black/20 backdrop-blur-sm md:hidden z-40"
+                    onClick={() => setMenuOpen(false)}
+                />
+            )}
 
             {/* Mobile menu accordion */}
             <AnimatePresence initial={false}>
@@ -99,7 +94,7 @@ const Header = () => {
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="overflow-hidden md:hidden border-t border-white/15 bg-white/10 backdrop-blur-xs"
+                        className="relative z-50 overflow-hidden md:hidden border-t border-neutral-200 bg-white pb-30"
                     >
                         <div className="flex flex-col gap-1 px-6 py-4">
                             {navLinks.map((link) => (
