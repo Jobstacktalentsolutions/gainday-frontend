@@ -8,6 +8,7 @@ const LandingPage = lazy(() => import("@/features/landing/pages/LandingPage"));
 const CreateAccount = lazy(() => import("@/features/auth/pages/CreateAccount"));
 const SignInPage = lazy(() => import("@/features/auth/pages/SignIn"))
 const ForgotPassword = lazy(() => import("@/features/auth/pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("@/features/auth/pages/ResetPassword"))
 
 
 const AppRoutes = () => {
@@ -24,6 +25,7 @@ const AppRoutes = () => {
                     <Route path="signup" element={<CreateAccount />} />
                     <Route path="signin" element={<SignInPage />} />
                     <Route path="forgot-password" element={<ForgotPassword />} />
+                    <Route path="reset-password" element={<ResetPassword />} />
                 </Route>
 
             </Routes>
