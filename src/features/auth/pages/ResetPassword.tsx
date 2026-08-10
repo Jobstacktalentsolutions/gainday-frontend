@@ -12,6 +12,25 @@ import { resetPasswordSchema, type resetPasswordFormValues } from "../schemas/re
 
 const ResetPassWord = ()  => {
 
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const token = searchParams.get("token");
+    const [success, setSuccess] = useState(false);
+
+    const {
+        register,
+        handleSubmit,
+        formState : { errors },
+    } = useForm<resetPasswordFormValues>({
+        resolver : zodResolver(resetPasswordSchema)
+    })
+
+    const resetMutation = useMutation({
+        mutationFn : (values : resetPasswordFormValues) =>  
+            apiClient.post("/auth/reset-password", {...values, token}),
+        onSuccess : () => setSuccess(true),
+    })
+
     return (
         <></>
     );
