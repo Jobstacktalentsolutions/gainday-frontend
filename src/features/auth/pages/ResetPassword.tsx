@@ -16,7 +16,7 @@ const ResetPassWord = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const token = searchParams.get("token");
-    const [success, setSuccess] = useState(true);
+    const [success, setSuccess] = useState(false);
 
     const {
         register,
@@ -90,6 +90,11 @@ const ResetPassWord = () => {
                     {...register("confirmPassword")}
                     error={errors.password?.message}
                 />
+
+                <ActionButton>
+                    {resetMutation.isPending ? "Updating..." : "Continue"}
+                </ActionButton>
+
 
             </form>
 

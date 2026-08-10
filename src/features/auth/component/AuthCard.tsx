@@ -4,7 +4,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { cn } from "@/lib/utils";
 
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import brandLogo from "@/assets/gainday icon.svg"
+import brandLogo from "@/assets/gainday.svg"
 
 interface AuthCardProps {
     title: string;
@@ -44,7 +44,7 @@ const AuthCard = ({
                     )}
                 >
                     <div className="flex flex-col items-center gap-4 text-center pt-6">
-                        <div>
+                        <div className="mb-5">
                             <img
                                 src={brandLogo}
                                 alt="Brand logo"
