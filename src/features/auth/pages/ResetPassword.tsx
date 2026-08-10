@@ -91,7 +91,10 @@ const ResetPassWord = () => {
                     error={errors.password?.message}
                 />
 
-                <ActionButton>
+                <ActionButton
+                    type="submit"
+                    className="w-full text-base py-6 "
+                >
                     {resetMutation.isPending ? "Updating..." : "Continue"}
                 </ActionButton>
 

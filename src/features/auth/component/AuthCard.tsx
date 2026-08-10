@@ -51,7 +51,7 @@ const AuthCard = ({
                                 className=""
                             />
                         </div>
-                        <div>
+                        <div className="lg:max-w-103">
                             <Dialog.Title className="text-2xl leading-8 tracking-[-0.32px] text-primary-950 lg:text-[32px]">
                                 {title}
                             </Dialog.Title>
