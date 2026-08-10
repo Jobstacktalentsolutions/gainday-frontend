@@ -8,6 +8,7 @@ import { ActionButton } from "@/components/ui/ActionButton";
 import AuthCard from "../component/AuthCard";
 import PasswordInput from "../component/passwordInput";
 import { resetPasswordSchema, type resetPasswordFormValues } from "../schemas/resetPasswordSchema";
+import successAnimation from "@/assets/successAnimation.gif";
 
 
 const ResetPassWord = () => {
@@ -15,7 +16,7 @@ const ResetPassWord = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const token = searchParams.get("token");
-    const [success, setSuccess] = useState(false);
+    const [success, setSuccess] = useState(true);
 
     const {
         register,
@@ -40,7 +41,12 @@ const ResetPassWord = () => {
                 open={true}
                 onOpenChange={(open) => !open && navigate("/")}
             >
-                <div className="flex w-full flex-col items-center gap-6 text-center">
+                <div className="flex w-full flex-col items-center gap-6 text-center ">
+                    <img
+                        src={successAnimation}
+                        alt="Success"
+                        className="h-35 w-35"
+                    />
                     <p className="text-2xl text-primary-950">
                         You successfully reset your password
                     </p>
@@ -56,6 +62,20 @@ const ResetPassWord = () => {
             </AuthCard>
         )
     }
+
+    return (
+        <AuthCard
+            title="Change Password"
+            subtitle="Ensure your new password is different from the old password"
+            open ={ true }
+            onOpenChange={ (open) => !open && navigate("/")} 
+        >
+            <form>
+                
+            </form>
+
+        </AuthCard>
+    )
 }
 
 export default ResetPassWord;
