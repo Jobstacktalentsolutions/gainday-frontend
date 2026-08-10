@@ -44,14 +44,14 @@ const AuthCard = ({
                     )}
                 >
                     <div className="flex flex-col items-center gap-4 text-center pt-6">
-                        <div className="mb-5">
+                        <div className="mb-5 lg:hidden">
                             <img
                                 src={brandLogo}
                                 alt="Brand logo"
                                 className=""
                             />
                         </div>
-                        <div className="lg:max-w-103">
+                        <div className="lg:max-w-103 space-y-2">
                             <Dialog.Title className="text-2xl leading-8 tracking-[-0.32px] text-primary-950 lg:text-[32px]">
                                 {title}
                             </Dialog.Title>
