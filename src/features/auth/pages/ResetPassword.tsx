@@ -67,11 +67,30 @@ const ResetPassWord = () => {
         <AuthCard
             title="Change Password"
             subtitle="Ensure your new password is different from the old password"
-            open ={ true }
-            onOpenChange={ (open) => !open && navigate("/")} 
+            open={true}
+            onOpenChange={(open) => !open && navigate("/")}
         >
-            <form>
-                
+            <form
+                onSubmit={handleSubmit((values) => resetMutation.mutate(values))}
+                noValidate
+                className="flex w-full flex-col gap-4"
+            >
+                <PasswordInput
+                    label="Create New Password"
+                    required
+                    showChecklist
+                    autoComplete="new-password"
+                    {...register("password")}
+                    error={errors.password?.message}
+                />
+                <PasswordInput
+                    label="Confirm Password"
+                    required
+                    autoComplete="new-password"
+                    {...register("confirmPassword")}
+                    error={errors.password?.message}
+                />
+
             </form>
 
         </AuthCard>
