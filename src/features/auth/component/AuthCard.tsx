@@ -32,7 +32,7 @@ const AuthCard = ({
                 <Dialog.Portal>
                     <Dialog.Overlay
                         className={cn("fixed inset-0 z-40",
-                            isDesktop && "bg-primary-200/50 backdrop-blur-[20px]"
+                            isDesktop && "bg-primary-50/50 backdrop-blur-[20px]"
                         )}
                     />
                     <Dialog.Content
