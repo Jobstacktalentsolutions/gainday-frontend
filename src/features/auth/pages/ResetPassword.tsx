@@ -10,7 +10,7 @@ import PasswordInput from "../component/passwordInput";
 import { resetPasswordSchema, type resetPasswordFormValues } from "../schemas/resetPasswordSchema";
 
 
-const ResetPassWord = ()  => {
+const ResetPassWord = () => {
 
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -20,20 +20,42 @@ const ResetPassWord = ()  => {
     const {
         register,
         handleSubmit,
-        formState : { errors },
+        formState: { errors },
     } = useForm<resetPasswordFormValues>({
-        resolver : zodResolver(resetPasswordSchema)
+        resolver: zodResolver(resetPasswordSchema)
     })
 
     const resetMutation = useMutation({
-        mutationFn : (values : resetPasswordFormValues) =>  
-            apiClient.post("/auth/reset-password", {...values, token}),
-        onSuccess : () => setSuccess(true),
+        mutationFn: (values: resetPasswordFormValues) =>
+            apiClient.post("/auth/reset-password", { ...values, token }),
+        onSuccess: () => setSuccess(true),
     })
 
-    return (
-        <></>
-    );
+    //renders this if password reset was successful
+    if (success) {
+        return (
+            <AuthCard
+                title=""
+                subtitle=""
+                open={true}
+                onOpenChange={(open) => !open && navigate("/")}
+            >
+                <div className="flex w-full flex-col items-center gap-6 text-center">
+                    <p className="text-2xl text-primary-950">
+                        You successfully reset your password
+                    </p>
+                    <ActionButton
+                        className="w-full"
+                        onClick={() => navigate("/employer/signin")}
+                    >
+                        Sign in
+                    </ActionButton>
+
+                </div>
+
+            </AuthCard>
+        )
+    }
 }
 
 export default ResetPassWord;
