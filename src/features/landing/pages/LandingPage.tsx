@@ -1,4 +1,5 @@
 import BuildSection from "../components/BuildSection/BuildSection";
+import DevRouteLinks from "../components/devRouteLinks/DevRouteLinks";
 import FAQSection from "../components/FAQSection/FAQSection";
 import { Footer } from "../components/footer/Footer";
 import Header from "../components/Header";
@@ -38,6 +39,7 @@ const LandingPage = () => {
                 </div>
                 <div>
                     <Footer />
+                    <DevRouteLinks />
                 </div>
 
 
