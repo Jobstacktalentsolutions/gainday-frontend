@@ -61,7 +61,7 @@ const Header = () => {
                     <a
                         href="#try-a-challenge"
                         onClick={(e) => scrollToSection(e, "#try-a-challenge")}
-                        className="flex h-13 w-37.75 items-center justify-center rounded-xl bg-primary-500 px-10 py-2 text-base text-neutral-50"
+                        className="flex h-13 w-37.75 items-center justify-center rounded-xl bg-primary-500 px-10 py-2 text-base text-neutral-50 whitespace-nowrap"
                     >
                         Try a challenge
                     </a>
