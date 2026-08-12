@@ -32,7 +32,9 @@ const AuthCard = ({
                 <Dialog.Portal>
                     <Dialog.Overlay
                         className={cn("fixed inset-0 z-40",
-                            isDesktop && "bg-primary-50/50 backdrop-blur-[20px]"
+                            isDesktop
+                                ? "overflow-y-auto bg-primary-50/50 backdrop-blur-[20px] flex justify-center items-start pt-50 pb-10"
+                                : ""
                         )}
                     />
                     <Dialog.Content
@@ -40,32 +42,48 @@ const AuthCard = ({
                             if (!isDesktop) e.preventDefault();
                         }}
                         className={cn(
-                            "fixed z-40 flex flex-col items-center gap-12 bg-white focus:outline-none lg:gap-15",
-                            isDesktop ?
-                                "top-1/2 left-1/2 w-141.5 max-w-[92vw] -translate-x-1/2 -translate-y-1/2 rounded-2xl p-12 shadow-lg"
-                                : "inset-0 w-full overflow-y-auto p-6"
+                            "z-40 flex flex-col items-center focus:outline-none",
+                            isDesktop
+                                ? "fixed inset-0 overflow-y-auto pt-40 pb-10 bg-transparent"
+                                : "fixed inset-0 w-full overflow-y-auto p-6 bg-white gap-12 lg:gap-15"
                         )}
                     >
-                        <div className="flex flex-col items-center gap-4 text-center pt-6">
-                            <div className="mb-5 lg:hidden">
-                                <img
-                                    src={brandLogo}
-                                    alt="Brand logo"
-                                    className=""
-                                />
+                        {isDesktop ? (
+                            <div className="mx-auto w-141.5 max-w-[92vw] rounded-2xl bg-white p-12 shadow-lg flex flex-col items-center gap-12 lg:gap-15 my-auto">
+                                <div className="flex flex-col items-center gap-4 text-center pt-6">
+                                    <div className="lg:max-w-103 space-y-2">
+                                        <Dialog.Title className="text-2xl leading-8 tracking-[-0.32px] text-primary-950 lg:text-[32px]">
+                                            {title}
+                                        </Dialog.Title>
+                                        <Dialog.Description className="text-base text-neutral-700 leading-6">
+                                            {subtitle}
+                                        </Dialog.Description>
+                                    </div>
+                                </div>
+                                <div className="flex w-full flex-col gap-4">{children}</div>
                             </div>
-                            <div className="lg:max-w-103 space-y-2">
-                                <Dialog.Title className="text-2xl leading-8 tracking-[-0.32px] text-primary-950 lg:text-[32px]">
-                                    {title}
-                                </Dialog.Title>
-                                <Dialog.Description className="text-base text-neutral-700 leading-6">
-                                    {subtitle}
-                                </Dialog.Description>
-                            </div>
-
-                        </div>
-                        <div className="flex w-full flex-col gap-4">{children}</div>
-
+                        ) : (
+                            <>
+                                <div className="flex flex-col items-center gap-4 text-center pt-6">
+                                    <div className="mb-5 lg:hidden">
+                                        <img
+                                            src={brandLogo}
+                                            alt="Brand logo"
+                                            className=""
+                                        />
+                                    </div>
+                                    <div className="lg:max-w-103 space-y-2">
+                                        <Dialog.Title className="text-2xl leading-8 tracking-[-0.32px] text-primary-950 lg:text-[32px]">
+                                            {title}
+                                        </Dialog.Title>
+                                        <Dialog.Description className="text-base text-neutral-700 leading-6">
+                                            {subtitle}
+                                        </Dialog.Description>
+                                    </div>
+                                </div>
+                                <div className="flex w-full flex-col gap-4">{children}</div>
+                            </>
+                        )}
                     </Dialog.Content>
 
 
