@@ -42,8 +42,6 @@ const CreateAccount = () => {
         <AuthCard
             title="Create your Employer Account"
             subtitle="Post your first job free. No card required."
-            open={true}
-            onOpenChange={(open) => !open && navigate("/")}
         >
             <form
                 onSubmit={handleSubmit(onSubmit)}

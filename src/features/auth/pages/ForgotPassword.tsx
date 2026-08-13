@@ -32,9 +32,6 @@ const ForgotPassword = () => {
         <AuthCard
             title="Check your inbox"
             subtitle={sentTo ? `We sent a password reset link to ${sentTo}` : ""}
-            open={true}
-            onOpenChange={(open) => !open && navigate("/")}
-
         >
             <div className="flex w-full flex-col items-center gap-4">
                 <div className="flex size-16 items-center justify-center rounded-xl bg-primary-50">
@@ -62,8 +59,6 @@ const ForgotPassword = () => {
         <AuthCard
             title="Reset your password"
             subtitle="Enter the email on your account and we will send you a reset link"
-            open={true}
-            onOpenChange={(open) => !open && navigate("/")}
         >
             <form
                 onSubmit={handleSubmit((values) => requestResetMutation.mutate(values))}

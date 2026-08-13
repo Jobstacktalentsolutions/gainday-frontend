@@ -38,8 +38,6 @@ const ResetPassWord = () => {
             <AuthCard
                 title=""
                 subtitle=""
-                open={true}
-                onOpenChange={(open) => !open && navigate("/")}
             >
                 <div className="flex w-full flex-col items-center gap-6 text-center ">
                     <img
@@ -67,8 +65,6 @@ const ResetPassWord = () => {
         <AuthCard
             title="Change Password"
             subtitle="Ensure your new password is different from the old password"
-            open={true}
-            onOpenChange={(open) => !open && navigate("/")}
         >
             <form
                 onSubmit={handleSubmit((values) => resetMutation.mutate(values))}
