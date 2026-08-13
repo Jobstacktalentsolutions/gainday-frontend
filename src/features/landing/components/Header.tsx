@@ -54,7 +54,7 @@ const Header = () => {
                     <a
                         href="#post-a-job"
                         onClick={(e) => scrollToSection(e, "#post-a-job")}
-                        className="flex h-13 items-center justify-center rounded-xl border border-primary-500 px-10 py-2 font-sans cursor-pointer transition-all duration-300 hover:bg-neutral-200 hover:text-white active:scale-95"
+                        className="flex h-13 items-center justify-center rounded-xl border border-primary-500 px-10 py-2 font-sans cursor-pointer transition-all duration-300 hover:bg-primary-50 active:scale-95"
                     >
                         Post a Job
                     </a>
