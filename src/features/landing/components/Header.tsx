@@ -29,7 +29,7 @@ const Header = () => {
     return (
         <header className="fixed top-0 left-0 z-50 w-full border-t border-t-white/25 border-b border-b-white/15 bg-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),inset_0_-1px_0_0_rgba(255,255,255,0.1),0_4px_16px_rgba(0,0,0,0.06)] backdrop-blur-xs">
             <div className="flex items-center justify-between px-6 py-4 lg:py-5 md:px-30">
-                <Link to="/" className="shrink-0">
+                <Link to="/" className="shrink-0 cursor-pointer transition-opacity duration-200 hover:opacity-75 active:opacity-50">
                     <img
                         src={brandLogo}
                         alt="Gainday logo"
@@ -43,7 +43,7 @@ const Header = () => {
                             key={link.href}
                             href={link.href}
                             onClick={(e) => scrollToSection(e, link.href)}
-                            className="p-2.5 font-sans text-base text-neutral-700"
+                            className="p-2.5 font-sans text-base text-neutral-700 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
                         >
                             {link.label}
                         </a>
@@ -54,14 +54,14 @@ const Header = () => {
                     <a
                         href="#post-a-job"
                         onClick={(e) => scrollToSection(e, "#post-a-job")}
-                        className="flex h-13 items-center justify-center rounded-xl border border-primary-500 px-10 py-2 font-sans"
+                        className="flex h-13 items-center justify-center rounded-xl border border-primary-500 px-10 py-2 font-sans cursor-pointer transition-all duration-300 hover:bg-neutral-200 hover:text-white active:scale-95"
                     >
                         Post a Job
                     </a>
                     <a
                         href="#try-a-challenge"
                         onClick={(e) => scrollToSection(e, "#try-a-challenge")}
-                        className="flex h-13 w-37.75 items-center justify-center rounded-xl bg-primary-500 px-10 py-2 text-base text-neutral-50 whitespace-nowrap"
+                        className="flex h-13 w-37.75 items-center justify-center rounded-xl bg-primary-500 px-10 py-2 text-base text-neutral-50 whitespace-nowrap cursor-pointer transition-all duration-200 hover:bg-primary-600 active:scale-95"
                     >
                         Try a challenge
                     </a>
@@ -69,7 +69,7 @@ const Header = () => {
 
                 {/* Mobile hamburger button */}
                 <button
-                    className="flex items-center justify-center md:hidden w-10 h-10"
+                    className="flex items-center justify-center md:hidden w-10 h-10 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
                     onClick={() => setMenuOpen(!menuOpen)}
                     aria-label="Toggle menu"
                 >
@@ -102,7 +102,7 @@ const Header = () => {
                                     key={link.href}
                                     href={link.href}
                                     onClick={(e) => handleMobileLink(e, link.href)}
-                                    className="py-3 font-sans text-base text-neutral-700 border-b border-neutral-200/50"
+                                    className="py-3 font-sans text-base text-neutral-700 border-b border-neutral-200/50 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
                                 >
                                     {link.label}
                                 </a>
@@ -112,14 +112,14 @@ const Header = () => {
                                 <a
                                     href="#post-a-job"
                                     onClick={(e) => handleMobileLink(e, "#post-a-job")}
-                                    className="flex h-13 items-center justify-center rounded-xl border border-primary-500 px-10 py-2 font-sans"
+                                    className="flex h-13 items-center justify-center rounded-xl border border-primary-500 px-10 py-2 font-sans cursor-pointer transition-all duration-200 hover:bg-primary-500 hover:text-white active:scale-95"
                                 >
                                     Post a Job
                                 </a>
                                 <a
                                     href="#try-a-challenge"
                                     onClick={(e) => handleMobileLink(e, "#try-a-challenge")}
-                                    className="flex h-13 items-center justify-center rounded-xl bg-primary-500 px-10 py-2 text-base text-neutral-50"
+                                    className="flex h-13 items-center justify-center rounded-xl bg-primary-500 px-10 py-2 text-base text-neutral-50 cursor-pointer transition-all duration-200 hover:bg-primary-600 active:scale-95"
                                 >
                                     Try a challenge
                                 </a>
