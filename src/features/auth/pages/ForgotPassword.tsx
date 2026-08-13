@@ -13,7 +13,7 @@ import { forgetPasswordSchema, type forgetPasswordFormValues } from "../schemas/
 
 
 const ForgotPassword = () => {
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
     const [sentTo, setSentTo] = useState<string | null>(null);
 
     const {
