@@ -47,19 +47,19 @@ const JobCard = ({ job, onShareLink, onViewSubmissions }: JobCardProps) => {
                 type="button"
                 disabled={!hasSubmissions}
                 onClick={() => onViewSubmissions(job)}
-                className ={cn(
+                className={cn(
                     "flex h-10 items-center justify-center gap-2 rounded-lg bg-neutral-950 px-4 text-base text-neutral-50",
                     !hasSubmissions && "cursor-not-allowed opacity-80"
                 )}
             >
-                <Users className="size-4" aria-hidden ="true" />
+                <Users className="size-4" aria-hidden="true" />
                 <span>
                     {hasSubmissions ? `${job.submissionsCount} Submissions` : "Submissions"}
                 </span>
-                <ArrowRight className ="size-4" aria-hidden="true" />
+                <ArrowRight className="size-4" aria-hidden="true" />
             </button>
 
-            <p className ="text-base text-neutral-400">
+            <p className="text-base text-neutral-400">
                 {formatPostedDate(job.postedAt)}
             </p>
 
@@ -70,8 +70,12 @@ const JobCard = ({ job, onShareLink, onViewSubmissions }: JobCardProps) => {
 
 export const JobCardSkeleton = () => {
     return (
-        <div>
-            <Skeleton className ="h-[15px] w-[75px]" />
+        <div className="flex h-60.75 w-full flex-col justify-between rounded-3xl bg-white px-3 py-6">
+            <Skeleton className="h-3.75 w-18.75" />
+            <Skeleton className="h-8 w-60.75" />
+            <Skeleton className="h-7.25 w-full" />
+            <Skeleton className="h-10 w-41.5" />
+            <Skeleton className="h-3.75 w-43" />
         </div>
     )
 }
