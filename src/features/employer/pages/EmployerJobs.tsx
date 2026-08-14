@@ -60,9 +60,10 @@ const EmployerJobs = () => {
                                     onViewSubmissions={handleViewSubmissions}
                                 />
                             ))}
-
                         </div>
-                    ) : ()}
+                    ) : (
+                        <JobsEmptyState onPostJob={handlePostJob} />
+                    )}
 
 
                 </div>
