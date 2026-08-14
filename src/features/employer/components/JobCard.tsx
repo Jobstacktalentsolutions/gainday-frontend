@@ -67,4 +67,13 @@ const JobCard = ({ job, onShareLink, onViewSubmissions }: JobCardProps) => {
     )
 }
 
+
+export const JobCardSkeleton = () => {
+    return (
+        <div>
+            <Skeleton className ="h-[15px] w-[75px]" />
+        </div>
+    )
+}
+
 export default JobCard;
