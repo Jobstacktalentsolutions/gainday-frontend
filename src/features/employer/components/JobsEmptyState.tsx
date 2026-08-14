@@ -30,5 +30,4 @@ const JobsEmptyState = ({ onPostJob }: JobsEmptyStateProps) => {
         </div>
     );
 }
-
 export default JobsEmptyState;
