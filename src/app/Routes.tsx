@@ -8,7 +8,8 @@ const LandingPage = lazy(() => import("@/features/landing/pages/LandingPage"));
 const CreateAccount = lazy(() => import("@/features/auth/pages/CreateAccount"));
 const SignInPage = lazy(() => import("@/features/auth/pages/SignIn"))
 const ForgotPassword = lazy(() => import("@/features/auth/pages/ForgotPassword"));
-const ResetPassword = lazy(() => import("@/features/auth/pages/ResetPassword"))
+const ResetPassword = lazy(() => import("@/features/auth/pages/ResetPassword"));
+const EmployerJobs = lazy(() => import("@/features/employer/pages/EmployerJobs"))
 
 
 const AppRoutes = () => {
@@ -26,6 +27,9 @@ const AppRoutes = () => {
                     <Route path="signin" element={<SignInPage />} />
                     <Route path="forgot-password" element={<ForgotPassword />} />
                     <Route path="reset-password" element={<ResetPassword />} />
+                    <Route >
+                        <Route path="jobs" element={<EmployerJobs />} />
+                    </Route>
                 </Route>
 
             </Routes>
