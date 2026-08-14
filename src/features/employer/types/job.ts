@@ -1,4 +1,4 @@
-export type JobStatus = "draft" | "under review" | "active" | "shortlist ready" | "closed";
+export type JobStatus = "draft" | "under_review" | "active" | "shortlist_ready" | "closed";
 export type JobStatusFilter = "all" | JobStatus;
 
 export interface Job {
