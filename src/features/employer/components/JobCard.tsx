@@ -66,3 +66,5 @@ const JobCard = ({ job, onShareLink, onViewSubmissions }: JobCardProps) => {
         </article>
     )
 }
+
+export default JobCard;
