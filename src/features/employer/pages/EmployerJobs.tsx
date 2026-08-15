@@ -73,4 +73,4 @@ const EmployerJobs = () => {
 
 }
 
-export default EmployerJobs;
+export default EmployerJo;
