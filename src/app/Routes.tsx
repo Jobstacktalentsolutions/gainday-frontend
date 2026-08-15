@@ -22,7 +22,7 @@ const AppRoutes = () => {
                     <Route path="dashboard" element={<AdminDashboard />} />
                 </Route>
                 <Route path="/landing" element={<LandingPage />} />
-                <Route path="/employer">
+                <Route path="/employ">
                     <Route path="signup" element={<CreateAccount />} />
                     <Route path="signin" element={<SignInPage />} />
                     <Route path="forgot-password" element={<ForgotPassword />} />
