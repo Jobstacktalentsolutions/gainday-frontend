@@ -36,7 +36,7 @@ const JobCard = ({ job, onShareLink, onViewSubmissions }: JobCardProps) => {
                 <button
                     type="button"
                     onClick={() => onShareLink(job)}
-                    className="flex h-10 shrink-0 items-center justify-center rounded-full border-neutral-100 px-3  text-base text-neutral-950"
+                    className="flex h-10 shrink-0 items-center justify-center rounded-full border-neutral-200 border px-3  text-base text-neutral-950"
                 >
                     Share Link
 
