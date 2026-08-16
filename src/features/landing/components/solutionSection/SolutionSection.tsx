@@ -10,8 +10,8 @@ const SolutionSection = () => {
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.35 }}
-            className="py-25 px-6 gap-30 flex flex-col"
+            viewport={{ once: true, amount: 0.15 }}
+            className="py-16 lg:py-25 px-6 gap-16 lg:gap-30 flex flex-col"
         >
             <div className="flex flex-col gap-4 lg:flex-row  lg:px-30 lg:gap-44.5" id="for-candidates">
                 <motion.div variants={fadeUp} className="lg:flex-1">
@@ -66,7 +66,7 @@ const SolutionSection = () => {
 
                 </motion.div>
 
-                <motion.div className="lg:flex-1 lg:w-122.75 lg:h-139.5">
+                <motion.div variants={fadeUp} className="lg:flex-1 lg:w-122.75 lg:h-139.5">
                     <GradientCard />
                     <div className="lg:hidden pt-4">
                         <CTAButton
