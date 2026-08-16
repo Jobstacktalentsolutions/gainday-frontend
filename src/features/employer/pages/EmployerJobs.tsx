@@ -45,7 +45,7 @@ const EmployerJobs = () => {
                     )}
 
                     {isLoading ? (
-                        <div>
+                        <div className="flex items-center gap-4 flex-col">
                             {Array.from({ length: 4 }).map((_, i) => (
                                 <JobCardSkeleton key={i} />
                             ))}
