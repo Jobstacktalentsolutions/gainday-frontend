@@ -31,7 +31,7 @@ const EmployerJobs = () => {
     const hasJobs = !!jobs && jobs.length > 0;
 
     return (
-        <div className="min-h-screen bg-neutral-50 px-6 pb-10 pt-27">
+        <div className="min-h-screen bg-neutral-50 px-6 pb-10 pt-32">
             <div className="mx-auto flex w-full max-w-85.5 flex-col gap-10">
                 <EmployerPageHeader employerName="Gett" onPostJob={handlePostJob} />
 
