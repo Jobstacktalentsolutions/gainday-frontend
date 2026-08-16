@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Bell, Menu } from "lucide-react";
 import EmployerNavDrawer from "./EmployerNavDrawer";
-import BrandLogo from "@/assets/gainday.svg";
+import BrandLogo from "@/assets/gainday icon.svg";
 
 
 const EmployerTopNav = () => {
@@ -9,8 +9,8 @@ const EmployerTopNav = () => {
 
     return (
         <>
-            <header className="fixed left-0 top-0 z-40 flex h-15 w-full items-center justify-between border-b-[0.5px] border-neutral-300 bg-white/10 px-6 py-5 backdrop-blur-[100px]">
-                <span className="text-lg font-bold text-black">
+            <header className="fixed left-0 top-0 z-40 flex w-full items-center justify-between border-b-[0.5px] border-neutral-300 bg-white/10 px-6 py-3.5 backdrop-blur-[100px]">
+                <span className="">
                     <img
                         src={BrandLogo}
                         alt="Brand logo"
