@@ -33,11 +33,11 @@ const Header = () => {
                     <img
                         src={brandLogo}
                         alt="Gainday logo"
-                        className="h-12.75 w-30 md:h-[57.6px] md:w-34"
+                        className="h-12.75 w-30 lg:h-[57.6px] lg:w-34"
                     />
                 </Link>
 
-                <nav className="hidden items-center gap-6 md:flex">
+                <nav className="hidden items-center gap-6 lg:flex">
                     {navLinks.map((link) => (
                         <a
                             key={link.href}
@@ -50,7 +50,7 @@ const Header = () => {
                     ))}
                 </nav>
 
-                <div className="hidden items-center gap-3 md:flex">
+                <div className="hidden items-center gap-3 lg:flex">
                     <a
                         href="#post-a-job"
                         onClick={(e) => scrollToSection(e, "#post-a-job")}
@@ -69,7 +69,7 @@ const Header = () => {
 
                 {/* Mobile hamburger button */}
                 <button
-                    className="flex items-center justify-center md:hidden w-10 h-10 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
+                    className="flex items-center justify-center lg:hidden w-10 h-10 cursor-pointer transition-colors duration-200 hover:text-neutral-500 active:text-neutral-700"
                     onClick={() => setMenuOpen(!menuOpen)}
                     aria-label="Toggle menu"
                 >
@@ -80,7 +80,7 @@ const Header = () => {
             {/* Backdrop overlay */}
             {menuOpen && (
                 <div
-                    className="fixed top-full left-0 w-full h-screen bg-black/20 backdrop-blur-sm md:hidden z-40"
+                    className="fixed top-full left-0 w-full h-screen bg-black/20 backdrop-blur-sm lg:hidden z-40"
                     onClick={() => setMenuOpen(false)}
                 />
             )}
@@ -94,7 +94,7 @@ const Header = () => {
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.4, ease: "easeInOut" }}
-                        className="relative z-50 overflow-hidden md:hidden border-t border-neutral-200 bg-white min-h-screen"
+                        className="relative z-50 overflow-hidden lg:hidden border-t border-neutral-200 bg-white min-h-screen"
                     >
                         <div className="flex flex-col gap-1 px-6 py-4">
                             {navLinks.map((link) => (
