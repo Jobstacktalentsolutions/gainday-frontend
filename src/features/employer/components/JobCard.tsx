@@ -48,7 +48,7 @@ const JobCard = ({ job, onShareLink, onViewSubmissions }: JobCardProps) => {
                 disabled={!hasSubmissions}
                 onClick={() => onViewSubmissions(job)}
                 className={cn(
-                    "flex h-10 items-center justify-center gap-2 rounded-lg bg-neutral-950 px-4 text-base text-neutral-50",
+                    "flex h-10 items-center justify-center gap-2 rounded-lg bg-neutral-950 px-4 text-base text-neutral-50 self-start",
                     !hasSubmissions && "cursor-not-allowed opacity-80"
                 )}
             >
