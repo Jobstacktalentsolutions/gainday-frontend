@@ -10,6 +10,7 @@ const SignInPage = lazy(() => import("@/features/auth/pages/SignIn"))
 const ForgotPassword = lazy(() => import("@/features/auth/pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("@/features/auth/pages/ResetPassword"));
 const EmployerJobs = lazy(() => import("@/features/employer/pages/EmployerJobs"))
+const EmployerLayout = lazy(() => import("@/features/employer/layouts/EmployerLayout"));
 
 
 const AppRoutes = () => {
@@ -27,7 +28,7 @@ const AppRoutes = () => {
                     <Route path="signin" element={<SignInPage />} />
                     <Route path="forgot-password" element={<ForgotPassword />} />
                     <Route path="reset-password" element={<ResetPassword />} />
-                    <Route >
+                    <Route element={<EmployerLayout />} >
                         <Route path="jobs" element={<EmployerJobs />} />
                     </Route>
                 </Route>
