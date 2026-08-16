@@ -1,5 +1,5 @@
 import { Plus } from "lucide-react";
-import brandLogo from "@/assets/gainday icon.svg";
+
 
 interface EmployerPageHeaderProps {
     employerName : string;

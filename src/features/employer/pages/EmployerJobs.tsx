@@ -22,10 +22,12 @@ const EmployerJobs = () => {
 
     const handleShareLink = (job: Job) => {
         // copy job.shareUrl to clipboard
+        console.log(job)
     }
 
     const handleViewSubmissions = (job: Job) => {
         //navigate (/employer/jobs${job.id}/submissions)
+        console.log(job) // to stall deployment issues
     }
 
     const hasJobs = !!jobs && jobs.length > 0;
