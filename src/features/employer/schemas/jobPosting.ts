@@ -19,6 +19,9 @@ export const jobDetailsSchema = z.object({
     .max(350, "keep it under 350 characters"),
     estimatedCompletionTime : z.string().min(1, "Select an estimated time"),
     aiUsePolicy : z.string().min(1, "Select an AI use policy"),
-})
+}).refine(
+    (data) => !data.salaryFrom || !data.salaryTo || data.salaryTo >= data.salaryFrom,
+    { message : "Salary to must be greater than salary from", path : ["salaryTo"]}
+);
 
 
