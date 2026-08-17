@@ -24,4 +24,9 @@ export const jobDetailsSchema = z.object({
     { message : "Salary to must be greater than salary from", path : ["salaryTo"]}
 );
 
+export type JobDetailsFormValues = z.infer<typeof jobDetailsSchema>;
+
+export const jobPostingSchema = jobDetailsSchema;
+export type JobPostingFormValues = z.infer<typeof jobPostingSchema>;
+
 
