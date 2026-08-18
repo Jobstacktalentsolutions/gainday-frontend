@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { jobPostingSchema, type JobPostingFormInput, type JobPostingFormValues } from "../schemas/jobPosting";
+import { jobPostingSchema, type JobPostingFormInput } from "../schemas/jobPosting";
 import { useJobDraftStore } from "../stores/useJobDraftStore";
 
 const DEFAULT_VALUES : Partial<JobPostingFormInput> = {
