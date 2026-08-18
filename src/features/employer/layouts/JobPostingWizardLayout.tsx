@@ -30,5 +30,12 @@ const JobPostingWizardLayout = () => {
 
     }, [setDraft, form]);
 
-    const handle
+    const handleSaveAndExit = () => {
+        navigate("/employer/jobs");
+    }
+
+    const handleDiscardDraft = () => {
+        clearDraft();
+        form.reset(DEFAULT_VALUES);
+    }
 }
