@@ -38,4 +38,12 @@ const JobPostingWizardLayout = () => {
         clearDraft();
         form.reset(DEFAULT_VALUES);
     }
+
+    return (
+        <FormProvider { ...form}>
+            <Outlet context = {{onSaveAndExit : handleSaveAndExit, onDiscardDraft : handleDiscardDraft }} />
+        </FormProvider>
+    );
 }
+
+export default JobPostingWizardLayout ;
