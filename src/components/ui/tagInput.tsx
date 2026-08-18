@@ -8,3 +8,24 @@ interface TagInputProps {
     placeholder? : string;
     className?: string;
 }
+
+const TagInput = ({ value, onChange, placeholder, className} : TagInputProps) => {
+    const [inputValue, setInputValue] = useState("");
+
+    const addTag = (raw : string ) => {
+
+    }
+
+    return (
+        <div>
+            {value.map((tag) => (
+                <span>
+                    
+                </span>
+            ))}
+
+        </div>
+    )
+}
+
+export default TagInput;
