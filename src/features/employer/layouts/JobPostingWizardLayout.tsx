@@ -24,8 +24,11 @@ const JobPostingWizardLayout = () => {
     //persist to localstorage as the form is being filled
     useEffect (() => {
         const subscription = form.watch((values) => {
-            setDraft(values as Partial<JobPostingFormInput>)
-        })
+            setDraft(values as Partial<JobPostingFormInput>);
+        });
+        return () => subscription.unsubscribe();
 
-    }, [setDraft]);
+    }, [setDraft, form]);
+
+    const handle
 }
