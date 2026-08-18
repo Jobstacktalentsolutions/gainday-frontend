@@ -28,5 +28,6 @@ export type JobDetailsFormValues = z.infer<typeof jobDetailsSchema>;
 
 export const jobPostingSchema = jobDetailsSchema;
 export type JobPostingFormValues = z.infer<typeof jobPostingSchema>;
+export type JobPostingFormInput = z.input<typeof jobPostingSchema>;
 
 

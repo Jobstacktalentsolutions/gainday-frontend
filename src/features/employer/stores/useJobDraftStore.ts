@@ -1,11 +1,11 @@
 import { create } from "zustand";
 import { persist }  from "zustand/middleware";
 
-import type { JobPostingFormValues } from "../schemas/jobPosting";
+import type { JobPostingFormInput } from "../schemas/jobPosting";
 
 interface JobDraftState {
-    draft : Partial<JobPostingFormValues>;
-    setDraft : (values : Partial<JobPostingFormValues>) => void;
+    draft : Partial<JobPostingFormInput>;
+    setDraft : (values : Partial<JobPostingFormInput>) => void;
     clearDraft : () => void;
 }
 
