@@ -13,14 +13,28 @@ const TagInput = ({ value, onChange, placeholder, className} : TagInputProps) =>
     const [inputValue, setInputValue] = useState("");
 
     const addTag = (raw : string ) => {
-
+        const tag = raw.trim();
+        if (!tag || value.includes(tag)) return;
+        onChange([...value, tag]);
+        setInputValue("");
     }
+
+    const removeTag = (tag : string) => onChange(value.filter((t) => t == tag));
+
+    const handleKeyDown = (e : KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter" || e.key === ",") {
+            e.preventDefault();
+            addTag(inputValue);
+        } else if (e.key === "Backspace" && !inputValue && value.length > 0) {
+            removeTag(value[value.length - 1]);
+        }
+    };
 
     return (
         <div>
             {value.map((tag) => (
                 <span>
-                    
+
                 </span>
             ))}
 
