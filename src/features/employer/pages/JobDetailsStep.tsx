@@ -54,6 +54,17 @@ const JobDetailsStep = () => {
                 </div>
                 <JobPostingStepIndicator currentStep="details" />
 
+                <div className="flex flex-col gap-4">
+                    <FormInput
+                        label="Job title"
+                        required
+                        placeholder="2.g Customer Operations Business Manager"
+                        error={errors.title?.message}
+                        {...register("title")}
+                    />
+
+                </div>
+
             </div>
 
         </div>
