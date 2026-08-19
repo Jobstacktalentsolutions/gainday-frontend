@@ -1,5 +1,5 @@
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { useFormContext } from "react-hook-form";
+import { Form, useFormContext } from "react-hook-form";
 import { ArrowRight, ArrowLeft, Sparkles } from "lucide-react";
 import TagInput from "@/components/ui/tagInput";
 import JobPostingStepIndicator from "../components/JobPostingStepIndicator";
@@ -62,6 +62,18 @@ const JobDetailsStep = () => {
                         error={errors.title?.message}
                         {...register("title")}
                     />
+
+                    <FormSelect
+                        label="Role category"
+                        required
+                        placeholder="Select a category"
+                        error={errors.roleCategory?.message}
+                        {...register("roleCategory")}
+                    >
+                        {ROLE_CATEGORIES.map((c) => (
+                            <option key={c} value={c}>{c}</option>
+                        ))}
+                    </FormSelect>
 
                 </div>
 
