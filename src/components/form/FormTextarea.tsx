@@ -74,9 +74,15 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
                     )}
 
                 </div>
+                {hasError && (
+                    <p id={errorId} role="alert" className="text-sm text-error-500">
+                        {error}
+                    </p>
+                )}
 
             </div>
         );
 
     }
 )
+FormTextarea.displayName = "FormTextarea";
