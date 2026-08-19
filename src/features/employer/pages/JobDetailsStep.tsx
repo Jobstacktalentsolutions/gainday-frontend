@@ -82,3 +82,5 @@ const JobDetailsStep = () => {
         </div>
     )
 }
+
+export default JobDetailsStep;
