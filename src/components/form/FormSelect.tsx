@@ -62,6 +62,21 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
                         className
                     )}
                 >
+                    <select
+                        id={selectId}
+                        ref={ref}
+                        required={required}
+                        aria-required={required || undefined}
+                        aria-invalid={hasError ? "true" : undefined}
+                        aria-describedby={describedby}
+                        aria-errormessage={errorId}
+                        onFocus={(e) => { setFocused(true); onFocus?.(e); }}
+                        onBlur={(e) => { setFocused(false); onBlur?.(e); }}
+                        className="min-w-0 flex-1 appearance-none bg-transparent text-base text-neutral-900 outline-none"
+                        {...props}
+                    >
+
+                    </select>
 
                 </div>
 
