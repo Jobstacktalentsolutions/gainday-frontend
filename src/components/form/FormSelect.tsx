@@ -54,7 +54,7 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
 
                 <div
                     className={cn(
-                        "group relative flex items-center gap-2 rounded-lg border bg-white px-3.5 py-2.5 transition-all duration-200",
+                        "group relative rounded-lg border bg-white px-3.5 py-2.5 transition-all duration-200",
                         "border-neutral-200",
                         focused && !hasError && "border-primary-500 ring-3 ring-primary-500/20",
                         !focused && !hasError && "hover:bg-neutral-50 hover:border-neutral-300",
@@ -72,21 +72,18 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
                         aria-errormessage={errorId}
                         onFocus={(e) => { setFocused(true); onFocus?.(e); }}
                         onBlur={(e) => { setFocused(false); onBlur?.(e); }}
-                        className="min-w-0 flex-1 appearance-none bg-transparent text-base text-neutral-900 outline-none"
+                        className="w-full appearance-none bg-transparent pr-8 text-base text-neutral-900 outline-none"
                         {...props}
                     >
                         {placeholder && <option value="">{placeholder}</option>}
                         {children}
                     </select>
-                    {hasError ? (
-                        <span className="flex shrink-0 items-center text-error-500">
-                            <AlertCircle className="size-5" />
-                        </span>
-                    ) : (
-                        <span className="flex shrink-0 items-center text-neutral-400">
-                            <ChevronDown className="size-5" />
-                        </span>
-                    )}
+                    <span className={cn(
+                        "pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2",
+                        hasError ? "text-error-500" : "text-neutral-400"
+                    )}>
+                        {hasError ? <AlertCircle className="size-5" /> : <ChevronDown className="size-5" />}
+                    </span>
                 </div>
                 {hasError && (
                     <p id={errorId} role="alert" className="text-sm text-error-500">
