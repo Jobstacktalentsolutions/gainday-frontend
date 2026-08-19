@@ -88,6 +88,11 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
                         </span>
                     )}
                 </div>
+                {hasError && (
+                    <p id={errorId} role="alert" className="text-sm text-error-500">
+                        {error}
+                    </p>
+                )}
 
             </div>
         );
