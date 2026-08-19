@@ -75,9 +75,18 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
                         className="min-w-0 flex-1 appearance-none bg-transparent text-base text-neutral-900 outline-none"
                         {...props}
                     >
-
+                        {placeholder && <option value="">{placeholder}</option>}
+                        {children}
                     </select>
-
+                    {hasError ? (
+                        <span className="flex shrink-0 items-center text-error-500">
+                            <AlertCircle className="size-5" />
+                        </span>
+                    ) : (
+                        <span className="flex shrink-0 items-center text-neutral-400">
+                            <ChevronDown className="size-5" />
+                        </span>
+                    )}
                 </div>
 
             </div>
