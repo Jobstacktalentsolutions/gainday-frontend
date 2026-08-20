@@ -101,25 +101,33 @@ const JobDetailsStep = () => {
                     </div>
                     <div className="flex gap-4">
                         <div className="flex-1 min-w-0">
-                         <FormInput
-                            label="Salary from"
-                            type="number"
-                            optional
-                            startIcon={<span>£</span>}
-                            {...register("salaryFrom")}
-                         />
+                            <FormInput
+                                label="Salary from"
+                                type="number"
+                                optional
+                                startIcon={<span>£</span>}
+                                {...register("salaryFrom")}
+                            />
                         </div>
                         <div className="flex-1 min-w-0">
-                         <FormInput
-                            label="Salary to"
-                            type="number"
-                            optional
-                            startIcon={<span>£</span>}
-                            error={errors.salaryTo?.message}
-                            {...register("salaryTo")}
-                         />
+                            <FormInput
+                                label="Salary to"
+                                type="number"
+                                optional
+                                startIcon={<span>£</span>}
+                                error={errors.salaryTo?.message}
+                                {...register("salaryTo")}
+                            />
                         </div>
                     </div>
+
+                    <FormTextarea
+                        label="What your company does"
+                        optional
+                        placeholder="Enter a description..."
+                        rows={3}
+                        {...register("companyDescription")}
+                    />
 
                 </div>
 
