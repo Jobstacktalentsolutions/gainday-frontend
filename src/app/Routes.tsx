@@ -32,11 +32,13 @@ const AppRoutes = () => {
                     <Route path="reset-password" element={<ResetPassword />} />
                     <Route element={<EmployerLayout />} >
                         <Route path="jobs" element={<EmployerJobs />} />
+
+                        <Route path="jobs/new" element={<JobPostingWizardLayout />}>
+                            <Route index element={<Navigate to="details" replace />} />
+                            <Route path="details" element={<JobDetailsStep />} />
+                        </Route>
                     </Route>
-                    <Route path="jobs/new" element = {<JobPostingWizardLayout />}>
-                        <Route index element={<Navigate to ="details" replace />} />
-                        <Route path= "details" element={<JobDetailsStep />} />
-                    </Route>
+
                 </Route>
 
             </Routes>
