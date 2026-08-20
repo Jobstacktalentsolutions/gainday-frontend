@@ -96,7 +96,7 @@ const JobDetailsStep = () => {
                             ))}
                         </FormSelect>
                         <label className="flex items-center gap-1 text-xs text-neutral-400">
-                            <input type="checkbox" {...register("isRemoteFriendly")} className="size-5 rounded-md border border-neutral-100" />
+                            <input type="checkbox" {...register("isRemoteFriendly")} className="size-5 rounded-md border bg-neutral-50 border-neutral-100" />
                             This role is remote-friendly
                         </label>
                     </div>
