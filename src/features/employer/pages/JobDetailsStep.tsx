@@ -74,6 +74,28 @@ const JobDetailsStep = () => {
                             <option key={c} value={c}>{c}</option>
                         ))}
                     </FormSelect>
+                    <FormInput label="Company" readOnly {...register("company")} />
+
+                    <FormInput
+                        label="Location"
+                        required
+                        error={errors.location?.message}
+                    />
+
+                    <div className="flex flex-col gap-2">
+                        <FormSelect
+                            label="Employment type"
+                            required
+                            placeholder="Select a type"
+                            error={errors.employmentType?.message}
+                            {...register("employmentType")}
+                        >
+                            {EMPLOYMENT_TYPES.map((t) => (
+                                <option key={t} value={t}> {t}</option>
+                            ))}
+                        </FormSelect>
+
+                    </div>
 
                 </div>
 
