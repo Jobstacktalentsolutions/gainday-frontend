@@ -46,6 +46,7 @@ const TagInput = ({ value, onChange, placeholder, className }: TagInputProps) =>
                     <button
                         type="button"
                         onClick={() => removeTag(tag)}
+                        className="cursor-pointer"
                         aria-label={`Remove ${tag}`}>
                         <X className="size-4 text-neutal-700" aria-hidden="true" />
                     </button>
