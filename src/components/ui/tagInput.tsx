@@ -19,7 +19,7 @@ const TagInput = ({ value, onChange, placeholder, className }: TagInputProps) =>
         setInputValue("");
     }
 
-    const removeTag = (tag: string) => onChange(value.filter((t) => t == tag));
+    const removeTag = (tag: string) => onChange(value.filter((t) => t !== tag));
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" || e.key === ",") {
