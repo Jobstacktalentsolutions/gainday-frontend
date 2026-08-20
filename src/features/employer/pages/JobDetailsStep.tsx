@@ -144,6 +144,71 @@ const JobDetailsStep = () => {
                             placeholder="Type a skill and enter"
                         />
                     </div>
+
+                    {/*AI Simulation callout*/}
+                    <div className="flex w-full flex-col gap-2.5 rounded-xl bg-primary-50 p-3">
+                        <span className="flex w-fit items-center gap-1 rounded-md border border-primary-500  p-2 text-[10px] text-primary-500">
+                            <Sparkles className="size-3" aria-hidden="true" />
+                            POWERS YOUR AI SIMULATION
+                        </span>
+                        <p className="text-base text-neutral-950">What does this hire need to solve?</p>
+                        <p className="text-base text-neutral-400">
+                            This next field is the most important one. Gainday turns it into a real work
+                            simulation assessment, so write it the way you would brief a new starter on their
+                            first morning.
+                        </p>
+                        <FormTextarea
+                            label="Simulation brief"
+                            hideLabel
+                            placeholder="Enter a description..."
+                            rows={8}
+                            error={errors.simulationBrief?.message}
+                            className="bg-neutral-50"
+                            {...register("simulationBrief")}
+                        />
+                        <p className="text-sm text-neutral-700">
+                            {simulationBrief.length}/350 characters. 40 minimum
+                        </p>
+                    </div>
+
+                    <FormSelect
+                        label="Estimated completion time"
+                        required
+                        placeholder="Select a duration"
+                        error={errors.estimatedCompletionTime?.message}
+                        {...register("estimatedCompletionTime")}
+                    >
+                        {COMPLETION_TIMES.map((t) => (
+                            <option key={t} value={t}>{t}</option>
+                        ))}
+
+                    </FormSelect>
+                    <FormSelect
+                        label="AI use policy"
+                        required
+                        placeholder="Select a policy"
+                        error={errors.aiUsePolicy?.message}
+                        {...register("aiUsePolicy")}
+                    >
+                        {AI_USE_POLICIES.map((p) => (
+                            <option key={p} value={p}>{p}</option>
+                        ))}
+                    </FormSelect>
+                </div>
+                <div className="flex items-center justify-between">
+                    <button type="button" onClick={onSaveAndExit} className="h-10 cursor-pointer rounded-lg border border-neutral-200 px-4 text-base text-neutral-600">
+                        Save and exit
+                    </button>
+                    <button
+                        type="button"
+                        onClick={handleContinue}
+                        className="flex cursor-pointer h-10 items-center gap-2 rounded-lg bg-primary-500 py-1 pl-4 pr-1 text-base text-neutral-50"
+                    >
+                        Continue
+                        <span className="flex size-8 items-center justify-center rounded-lg bg-secondary-500">
+                            <ArrowRight className="size-4 text-white" aria-hidden="true" />
+                        </span>
+                    </button>
                 </div>
             </div>
 
