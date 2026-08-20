@@ -94,7 +94,31 @@ const JobDetailsStep = () => {
                                 <option key={t} value={t}> {t}</option>
                             ))}
                         </FormSelect>
-
+                        <label className="flex items-center gap-1 text-xs text-neutral-400">
+                            <input type="checkbox" {...register("isRemoteFriendly")} className="size-5 rounded-md border border-neutral-100" />
+                            This role is remote-friendly
+                        </label>
+                    </div>
+                    <div className="flex gap-4">
+                        <div className="flex-1 min-w-0">
+                         <FormInput
+                            label="Salary from"
+                            type="number"
+                            optional
+                            startIcon={<span>£</span>}
+                            {...register("salaryFrom")}
+                         />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                         <FormInput
+                            label="Salary to"
+                            type="number"
+                            optional
+                            startIcon={<span>£</span>}
+                            error={errors.salaryTo?.message}
+                            {...register("salaryTo")}
+                         />
+                        </div>
                     </div>
 
                 </div>
