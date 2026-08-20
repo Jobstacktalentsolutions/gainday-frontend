@@ -129,9 +129,22 @@ const JobDetailsStep = () => {
                         rows={3}
                         {...register("companyDescription")}
                     />
-
+                    <FormTextarea
+                        label="Role description"
+                        optional
+                        placeholder="What the person does day by day, who they work with..."
+                        rows={3}
+                        {...register("roleDescription")}
+                    />
+                    <div className="flex flex-1 flex-col gap-1.5">
+                        <label className="text-base font-medium text-neutral-800">Skills that matter, comma separated</label>
+                        <TagInput
+                            value={skills}
+                            onChange={(tags) => setValue("skills", tags, { shouldValidate: true })}
+                            placeholder="Type a skill and enter"
+                        />
+                    </div>
                 </div>
-
             </div>
 
         </div>
