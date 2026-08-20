@@ -7,6 +7,7 @@ import type { JobPostingFormValues } from "../schemas/jobPosting";
 import { FormInput } from "@/components/form/FormInput";
 import { FormSelect } from "@/components/form/FormSelect";
 import { FormTextarea } from "@/components/form/FormTextarea";
+import { JobFormInput } from "@/components/form/JobFormInput";
 
 const ROLE_CATEGORIES = ["Operations", "Engineering", "Finance", "Sales", "Compliance"];
 const SKILL_LEVELS = ["Entry level", "Mid level", "Senior level"];
@@ -55,7 +56,7 @@ const JobDetailsStep = () => {
                 <JobPostingStepIndicator currentStep="details" />
 
                 <div className="flex flex-col gap-4">
-                    <FormInput
+                    <JobFormInput
                         label="Job title"
                         required
                         placeholder="2.g Customer Operations Business Manager"
@@ -74,9 +75,9 @@ const JobDetailsStep = () => {
                             <option key={c} value={c}>{c}</option>
                         ))}
                     </FormSelect>
-                    <FormInput label="Company" readOnly {...register("company")} />
+                    <JobFormInput label="Company" readOnly {...register("company")} />
 
-                    <FormInput
+                    <JobFormInput
                         label="Location"
                         required
                         error={errors.location?.message}
@@ -101,7 +102,7 @@ const JobDetailsStep = () => {
                     </div>
                     <div className="flex gap-4">
                         <div className="flex-1 min-w-0">
-                            <FormInput
+                            <JobFormInput
                                 label="Salary from"
                                 type="number"
                                 optional
@@ -110,7 +111,7 @@ const JobDetailsStep = () => {
                             />
                         </div>
                         <div className="flex-1 min-w-0">
-                            <FormInput
+                            <JobFormInput
                                 label="Salary to"
                                 type="number"
                                 optional
