@@ -1,16 +1,16 @@
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { Form, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { ArrowRight, ArrowLeft, Sparkles } from "lucide-react";
 import TagInput from "@/components/ui/tagInput";
 import JobPostingStepIndicator from "../components/JobPostingStepIndicator";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
-import { FormInput } from "@/components/form/FormInput";
+
 import { FormSelect } from "@/components/form/FormSelect";
 import { FormTextarea } from "@/components/form/FormTextarea";
 import { JobFormInput } from "@/components/form/JobFormInput";
 
 const ROLE_CATEGORIES = ["Operations", "Engineering", "Finance", "Sales", "Compliance"];
-const SKILL_LEVELS = ["Entry level", "Mid level", "Senior level"];
+// const SKILL_LEVELS = ["Entry level", "Mid level", "Senior level"];
 const EMPLOYMENT_TYPES = ["Full-time", "Part-time", "Contract"];
 const COMPLETION_TIMES = ["15 minutes", "20 minutes", "30 minutes", "45 minutes"];
 const AI_USE_POLICIES = ["Not permitted", "Permitted with disclosure", "Fully permitted"];
