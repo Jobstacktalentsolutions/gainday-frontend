@@ -5,8 +5,8 @@ const SimulationBuilder = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-screen bg-neutral-50 px-6 pb-10 pt-[139px]">
-            <div className="mx-auto flex w-full max-w-[342px] flex-col gap-[43px]">
+        <div className="min-h-screen bg-neutral-50 px-6 pb-10 pt-34.75">
+            <div className="mx-auto flex w-full max-w-85.5 flex-col gap-10.75">
                 <div className="flex flex-col gap-3">
                     <button type="button" onClick={() => navigate(-1)} aria-label="Back">
                         {/* ArrowLeft icon — reuse whatever you wired into JobDetailsStep */}
@@ -22,7 +22,7 @@ const SimulationBuilder = () => {
                 <JobPostingStepIndicator currentStep="simulation-builder" />
 
                 {/* Shell only — capability field array + challenge generation build pending */}
-                <div className="flex min-h-[400px] w-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-neutral-200 bg-white text-center">
+                <div className="flex min-h-100 w-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-neutral-200 bg-white text-center">
                     <p className="text-base text-neutral-700">Simulation Builder — coming soon</p>
                 </div>
 
