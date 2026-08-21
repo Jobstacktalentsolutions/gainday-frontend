@@ -23,6 +23,7 @@ const routeGroups = [
       { path: "/employer/reset-password", label: "Employer Reset Password" },
       { path: "/employer/jobs", label: "Employer Jobs" },
       { path: "/employer/jobs/new/details", label: "Job Details Step" },
+      { path: "/employer/jobs/new/simulation-builder", label: "Simulation Builder" },
     ],
   },
 ];
