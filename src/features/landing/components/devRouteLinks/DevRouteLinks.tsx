@@ -22,6 +22,7 @@ const routeGroups = [
       { path: "/employer/forgot-password", label: "Employer Forgot Password" },
       { path: "/employer/reset-password", label: "Employer Reset Password" },
       { path: "/employer/jobs", label: "Employer Jobs" },
+      { path: "/employer/jobs/new/details", label: "Job Details Step" },
     ],
   },
 ];
