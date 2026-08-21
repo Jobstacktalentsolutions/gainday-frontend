@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import JobPostingStepIndicator from "../components/JobPostingStepIndicator";
+import { ArrowLeft } from "lucide-react";
 
 const SimulationBuilder = () => {
     const navigate = useNavigate();
@@ -9,7 +10,7 @@ const SimulationBuilder = () => {
             <div className="mx-auto flex w-full max-w-85.5 flex-col gap-10.75">
                 <div className="flex flex-col gap-3">
                     <button type="button" onClick={() => navigate(-1)} aria-label="Back">
-                        {/* ArrowLeft icon — reuse whatever you wired into JobDetailsStep */}
+                        <ArrowLeft size={24} />
                     </button>
                     <div>
                         <h1 className="text-2xl text-black">Post a job</h1>

@@ -13,6 +13,8 @@ const EmployerJobs = lazy(() => import("@/features/employer/pages/EmployerJobs")
 const EmployerLayout = lazy(() => import("@/features/employer/layouts/EmployerLayout"));
 const JobPostingWizardLayout = lazy(() => import("@/features/employer/layouts/JobPostingWizardLayout"));
 const JobDetailsStep = lazy(() => import("@/features/employer/pages/JobDetailsStep"));
+const SimulationBuilder = lazy(() => import("@/features/employer/pages/SimulationBuilder"));
+
 
 
 const AppRoutes = () => {
@@ -36,6 +38,7 @@ const AppRoutes = () => {
                         <Route path="jobs/new" element={<JobPostingWizardLayout />}>
                             <Route index element={<Navigate to="details" replace />} />
                             <Route path="details" element={<JobDetailsStep />} />
+                            <Route path ="simulation-builder" element={<SimulationBuilder />} />
                         </Route>
                     </Route>
 
