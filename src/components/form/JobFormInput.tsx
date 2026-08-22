@@ -95,7 +95,7 @@ export const JobFormInput = forwardRef<HTMLInputElement, FormInputProps>(
                         focused && !hasError && "border-primary-500 ring-3 ring-primary-500/20",
 
                         // State 4 – Hover (only when not focused & no error)
-                        !focused && !hasError && "hover:bg-white hover:border-neutral-300",
+                        !focused && !hasError && "hover:bg-[#f7f6f6] hover:border-neutral-300",
 
                         // State 5 – Error
                         hasError && "border-error-400 ring-3 ring-error-400/20",
