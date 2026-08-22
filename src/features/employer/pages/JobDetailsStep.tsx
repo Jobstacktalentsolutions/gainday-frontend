@@ -10,7 +10,7 @@ import { FormTextarea } from "@/components/form/FormTextarea";
 import { JobFormInput } from "@/components/form/JobFormInput";
 
 const ROLE_CATEGORIES = ["Operations", "Engineering", "Finance", "Sales", "Compliance"];
-// const SKILL_LEVELS = ["Entry level", "Mid level", "Senior level"];
+const SKILL_LEVELS = ["Entry level", "Mid level", "Senior level"];
 const EMPLOYMENT_TYPES = ["Full-time", "Part-time", "Contract"];
 const COMPLETION_TIMES = ["15 minutes", "20 minutes", "30 minutes", "45 minutes"];
 const AI_USE_POLICIES = ["Not permitted", "Permitted with disclosure", "Fully permitted"];
