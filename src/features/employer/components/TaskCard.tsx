@@ -32,6 +32,14 @@ const TaskCard = ({
                     <p>TASK {index + 1}</p>
                     <TaskTypeBadge type={task.type} />
                 </div>
+                <button
+                    type="button"
+                    onClick={onRemove}
+                    className="flex items-center gap-1 text-sm text-neutral-400 hover:text-error-500"
+                >
+                    <Trash2 className="size-3.5" aria-hidden="true" />
+                    Remove
+                </button>
 
             </div>
 
