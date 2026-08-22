@@ -40,8 +40,37 @@ const TaskCard = ({
                     <Trash2 className="size-3.5" aria-hidden="true" />
                     Remove
                 </button>
-
             </div>
+
+            <FormInput
+                label="Task title"
+                hideLabel
+                value={task.title}
+                onChange={(e) => onChange("title", e.target.value)}
+                error={errors?.title}
+            />
+            <FormTextarea
+                label="Task prompt"
+                hideLabel
+                rows={4}
+                value={task.taskPrompt}
+                onChange={(e) => onChange("prompt", e.target.value)}
+                error={errors?.prompt}
+            />
+
+            <FormTextarea
+                label="Scenario context"
+                hideLabel
+                rows={8}
+                value={task.scenario}
+                onChange={(e) => onChange("scenario", e.target.value)}
+                error={errors?.scenario}
+            />
+            {(task.capabilities.length > 0 || task.scores.length > 0) && (
+                <p className="text-sm text-neutral-950">
+                    Capabilities: {task.capabilities.join(", ")} · Scores: {task.scores.join(", ")}
+                </p>
+            )}
 
         </div>
     )
