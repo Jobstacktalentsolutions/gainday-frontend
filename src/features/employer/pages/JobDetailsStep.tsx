@@ -75,6 +75,19 @@ const JobDetailsStep = () => {
                             <option key={c} value={c}>{c}</option>
                         ))}
                     </FormSelect>
+
+                    <FormSelect
+                        label="Skill level"
+                        required
+                        placeholder="Select a skill level"
+                        error={errors.skillLevel?.message}
+                        {...register("skillLevel")}
+                    >
+                        {SKILL_LEVELS.map((s) => (
+                            <option key={s} value={s}>{s}</option>
+                        ))}
+                    </FormSelect>
+
                     <JobFormInput label="Company" readOnly {...register("company")} />
 
                     <JobFormInput
