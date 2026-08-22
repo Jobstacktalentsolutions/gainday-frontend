@@ -30,9 +30,7 @@ export const jobDetailsSchema = jobDetailsBaseSchema.refine(
 export type JobDetailsFormValues = z.infer<typeof jobDetailsBaseSchema>;
 
 
-export const jobPostingSchema = jobDetailsBaseSchema;
-export type JobPostingFormValues = z.infer<typeof jobPostingSchema>;
-export type JobPostingFormInput = z.input<typeof jobPostingSchema>;
+
 
 //Simulation builder
 export const taskTypeEnum = z.enum(["written", "choice"])
@@ -55,4 +53,9 @@ const simulationBuilderBaseSchema = z.object({
     tasks: z.array(simulationTaskSchema).min(1, "Add at least one task"),
 });
 
+export type SimulationBuilderFormValues = z.infer<typeof simulationBuilderBaseSchema>;
+
+export const jobPostingSchema = jobDetailsBaseSchema;
+export type JobPostingFormValues = z.infer<typeof jobPostingSchema>;
+export type JobPostingFormInput = z.input<typeof jobPostingSchema>;
 
