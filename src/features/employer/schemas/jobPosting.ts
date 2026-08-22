@@ -34,7 +34,7 @@ export type JobDetailsFormValues = z.infer<typeof jobDetailsBaseSchema>;
 
 //Simulation builder
 export const taskTypeEnum = z.enum(["written", "choice"])
-export type taskTypeEnum = z.infer<typeof taskTypeEnum>;
+export type TaskType = z.infer<typeof taskTypeEnum>;
 
 export const simulationTaskSchema = z.object({
     id: z.string(),
