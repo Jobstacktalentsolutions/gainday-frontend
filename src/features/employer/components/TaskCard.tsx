@@ -6,13 +6,35 @@ import type { SimulationTask } from "../schemas/jobPosting";
 
 
 interface TaskCardProps {
-  index: number;
-  task: SimulationTask;
-  onRemove: () => void;
-  onChange: (field: "title" | "prompt" | "scenario", value: string) => void;
-  errors?: {
-    title?: string;
-    prompt?: string;
-    scenario?: string;
-  };
+    index: number;
+    task: SimulationTask;
+    onRemove: () => void;
+    onChange: (field: "title" | "prompt" | "scenario", value: string) => void;
+    errors?: {
+        title?: string;
+        prompt?: string;
+        scenario?: string;
+    };
+}
+
+const TaskCard = ({
+    index,
+    task,
+    onRemove,
+    onChange,
+    errors
+}: TaskCardProps) => {
+
+    return (
+        <div className="flex w-full flex-col gap-4 rounded-xl border border-neutral-200 px-2 py-3">
+            <div className="flex items-start justify-between gap-2">
+                <div className="flex flex-1 items-center gap-2.5">
+                    <p>TASK {index + 1}</p>
+                    <TaskTypeBadge type={task.type} />
+                </div>
+
+            </div>
+
+        </div>
+    )
 }
