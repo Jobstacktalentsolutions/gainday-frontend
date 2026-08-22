@@ -57,7 +57,7 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
                         "group relative rounded-lg border bg-neutral-50 px-3.5 py-2.5 transition-all duration-200",
                         "border-neutral-200",
                         focused && !hasError && "border-primary-500 ring-3 ring-primary-500/20",
-                        !focused && !hasError && "hover:bg-white hover:border-neutral-300",
+                        !focused && !hasError && "hover:bg-[#f7f6f6] hover:border-neutral-300",
                         hasError && "border-error-400 ring-3 ring-error-400/20",
                         className
                     )}
