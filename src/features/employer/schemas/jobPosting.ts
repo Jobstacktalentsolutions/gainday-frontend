@@ -36,16 +36,23 @@ export type JobPostingFormInput = z.input<typeof jobPostingSchema>;
 
 //Simulation builder
 export const taskTypeEnum = z.enum(["written", "choice"])
-export type  taskTypeEnum = z.infer<typeof taskTypeEnum>;
+export type taskTypeEnum = z.infer<typeof taskTypeEnum>;
 
 export const simulationTaskSchema = z.object({
     id: z.string(),
     type: taskTypeEnum,
     title: z.string().min(1, "Task title is required"),
-    prompt: z.string().min(1, "Task prompt is required"),
+    taskPrompt: z.string().min(1, "Task prompt is required"),
     scenario: z.string().min(1, "Scenario context is required"),
     capabilities: z.array(z.string()).default([]),
     scores: z.array(z.string()).default([]),
+});
+
+export type SimulationTask = z.infer<typeof simulationTaskSchema>;
+
+const simulationBuilderBaseSchema = z.object({
+    scenarioIntro: z.string().min(1, "Scenario intro is required"),
+    tasks: z.array(simulationTaskSchema).min(1, "Add at least one task"),
 });
 
 
