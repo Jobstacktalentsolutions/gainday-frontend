@@ -55,7 +55,15 @@ const simulationBuilderBaseSchema = z.object({
 
 export type SimulationBuilderFormValues = z.infer<typeof simulationBuilderBaseSchema>;
 
-export const jobPostingSchema = jobDetailsBaseSchema;
+
+export const jobPostingSchema = jobDetailsBaseSchema
+    .merge(simulationBuilderBaseSchema)
+    .refine(
+        (data) => !data.salaryFrom || !data.salaryTo || data.salaryTo >= data.salaryFrom,
+        { message: "Salary to must be greater than salary from ", path: ["salaryTo"] }
+    )
+
+// export const jobPostingSchema = jobDetailsBaseSchema;
 export type JobPostingFormValues = z.infer<typeof jobPostingSchema>;
 export type JobPostingFormInput = z.input<typeof jobPostingSchema>;
 
