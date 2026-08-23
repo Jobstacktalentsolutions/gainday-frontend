@@ -76,6 +76,27 @@ const SimulationBuilder = () => {
                         </button>
                     </div>
 
+                    <FormTextarea
+                        label="Scenario intro the candidate reads first"
+                        rows={10}
+                        error={errors.scenarioIntro?.message}
+                        {...register("scenarioIntro")}
+                    />
+                    {fields.map((field, index) => (
+                        <TaskCard
+                            key={field.id}
+                            index={index}
+                            task={field}
+                            onRemove={() => remove(index)}
+                            onChange={(fieldName, value) => update(index, { ...field, [fieldName]: value })}
+                            errors={{
+                                title: errors.tasks?.[index]?.title?.message,
+                                prompt: errors.tasks?.[index]?.taskPrompt?.message,
+                                scenario: errors.tasks?.[index]?.scenario?.message,
+                            }}
+                        />
+                    ))}
+
                 </div>
 
                 <div className="flex items-center justify-between">
