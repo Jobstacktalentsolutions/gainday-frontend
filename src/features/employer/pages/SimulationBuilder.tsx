@@ -47,9 +47,7 @@ const SimulationBuilder = () => {
         <div className="min-h-screen bg-neutral-50 px-6 pb-10 pt-34.75">
             <div className="mx-auto flex w-full max-w-85.5 flex-col gap-10.75">
                 <div className="flex flex-col gap-3">
-                    <button type="button" onClick={() => navigate(-1)} aria-label="Back">
-                        <ArrowLeft size={24} />
-                    </button>
+
                     <div>
                         <h1 className="text-2xl text-black">Post a job</h1>
                         <p className="text-base text-neutral-700">
@@ -60,9 +58,24 @@ const SimulationBuilder = () => {
                 </div>
                 <JobPostingStepIndicator currentStep="simulation-builder" />
 
-                {/* Shell only — capability field array + challenge generation build pending */}
-                <div className="flex min-h-100 w-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-neutral-200 bg-white text-center">
-                    <p className="text-base text-neutral-700">Simulation Builder — coming soon</p>
+
+                <div className="flex w-full flex-col  gap-10 rounded-3xl border border-dashed shadow-sm bg-white/70 px-3 py-10 text-center">
+                    <div className="flex flex-col gap-3 text-left">
+                        <p className="text-sm text-primary-500">CHALLENGE GENERATION</p>
+                        <p className="text-base text-neutral-950">
+                            A realistic work simulation assessment built from the capabilities you approved.
+                            Estimated completion time: 20 minutes.
+                        </p>
+                        <button
+                            type="button"
+                            onClick={handleRegenerate}
+                            className="flex h-10 self-start items-center justify-center gap-2 rounded-xl border border-neutral-300 px-6 py-2 text-base text-neutral-950"
+                        >
+                            Regenerate
+                            <RefreshCw className="size-4 " aria-hidden="true" />
+                        </button>
+                    </div>
+
                 </div>
 
                 <div className="flex items-center justify-between">
