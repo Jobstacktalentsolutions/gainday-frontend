@@ -32,7 +32,11 @@ const SignIn = () => {
             apiClient.post("/auth/login", values),
         onSuccess: (res) => {
             useAuthStore.getState().setAuth(res.data.access_token, res.data.user)
-            navigate("/employer/dashboard")
+            if (!res.data.isEmailVerified) {
+                navigate("/employer/verify-email")
+            } else {
+                navigate("/employer/dashboard")
+            }
         }
     })
 
