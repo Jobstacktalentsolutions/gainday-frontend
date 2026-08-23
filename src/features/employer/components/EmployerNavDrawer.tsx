@@ -10,6 +10,7 @@ interface EmployerNavDrawerProps {
 }
 
 const NAV_ITEMS = [
+    { to: "/employer/dashboard", label: "Dashboard" },
     { to: "/employer/jobs", label: "Your jobs" }
 ]
 

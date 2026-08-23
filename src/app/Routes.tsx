@@ -9,7 +9,9 @@ const CreateAccount = lazy(() => import("@/features/auth/pages/CreateAccount"));
 const SignInPage = lazy(() => import("@/features/auth/pages/SignIn"))
 const ForgotPassword = lazy(() => import("@/features/auth/pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("@/features/auth/pages/ResetPassword"));
+const OAuthCallback = lazy(() => import("@/features/auth/pages/OAuthCallback"));
 const EmployerJobs = lazy(() => import("@/features/employer/pages/EmployerJobs"))
+const EmployerDashboard = lazy(() => import("@/features/employer/pages/EmployerDashboard"));
 const EmployerLayout = lazy(() => import("@/features/employer/layouts/EmployerLayout"));
 const JobPostingWizardLayout = lazy(() => import("@/features/employer/layouts/JobPostingWizardLayout"));
 const JobDetailsStep = lazy(() => import("@/features/employer/pages/JobDetailsStep"));
@@ -32,7 +34,9 @@ const AppRoutes = () => {
                     <Route path="signin" element={<SignInPage />} />
                     <Route path="forgot-password" element={<ForgotPassword />} />
                     <Route path="reset-password" element={<ResetPassword />} />
+                    <Route path="oauth/callback" element={<OAuthCallback />} />
                     <Route element={<EmployerLayout />} >
+                        <Route path="dashboard" element={<EmployerDashboard />} />
                         <Route path="jobs" element={<EmployerJobs />} />
 
                         <Route path="jobs/new" element={<JobPostingWizardLayout />}>
