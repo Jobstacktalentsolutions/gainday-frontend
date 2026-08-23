@@ -86,14 +86,11 @@ const SimulationBuilder = () => {
                         <TaskCard
                             key={field.id}
                             index={index}
-                            task={field}
+                            type={field.type}
+                            capabilities={field.capabilities}
+                            scores={field.scores}
                             onRemove={() => remove(index)}
-                            onChange={(fieldName, value) => update(index, { ...field, [fieldName]: value })}
-                            errors={{
-                                title: errors.tasks?.[index]?.title?.message,
-                                prompt: errors.tasks?.[index]?.taskPrompt?.message,
-                                scenario: errors.tasks?.[index]?.scenario?.message,
-                            }}
+
                         />
                     ))}
 
