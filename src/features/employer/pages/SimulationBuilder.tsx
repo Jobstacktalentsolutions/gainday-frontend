@@ -10,6 +10,30 @@ import { nanoid } from "zod";
 const SimulationBuilder = () => {
     const navigate = useNavigate();
 
+    const {
+        register,
+        control,
+        trigger,
+        formState: { errors },
+    } = useFormContext<JobPostingFormValues>()
+
+    const { fields, append, remove, update } = useFieldArray({
+        control,
+        name: "tasks",
+    });
+
+    const handleAddTask = () => {
+        append({
+            id: crypto.randomUUID(),
+            type: "written",
+            title: "",
+            taskPrompt: "",
+            scenario: "",
+            capabilities: [],
+            scores: [],
+        });
+    };
+
     return (
         <div className="min-h-screen bg-neutral-50 px-6 pb-10 pt-34.75">
             <div className="mx-auto flex w-full max-w-85.5 flex-col gap-10.75">
