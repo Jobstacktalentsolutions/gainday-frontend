@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import JobPostingStepIndicator from "../components/JobPostingStepIndicator";
-import { ArrowLeft, ArrowRight, Plus, RefreshCw } from "lucide-react";
+import { ArrowRight, Plus, RefreshCw } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { FormTextarea } from "@/components/form/FormTextarea";
 import TaskCard from "../components/TaskCard";
@@ -17,7 +17,7 @@ const SimulationBuilder = () => {
         formState: { errors },
     } = useFormContext<JobPostingFormValues>()
 
-    const { fields, append, remove, update } = useFieldArray({
+    const { fields, append, remove } = useFieldArray({
         control,
         name: "tasks",
     });
