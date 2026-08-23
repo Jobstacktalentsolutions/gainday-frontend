@@ -5,7 +5,7 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { FormTextarea } from "@/components/form/FormTextarea";
 import TaskCard from "../components/TaskCard";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
-import { nanoid } from "zod";
+
 
 const SimulationBuilder = () => {
     const navigate = useNavigate();
@@ -32,6 +32,15 @@ const SimulationBuilder = () => {
             capabilities: [],
             scores: [],
         });
+    };
+
+    const handleRegenerate = () => {
+        console.log("AI call would happen here");
+    };
+
+    const handleContinue = async () => {
+        const isValid = await trigger(["scenarioIntro", "tasks"]);
+        if (isValid) navigate("/employer/jobs/new/review");
     };
 
     return (
