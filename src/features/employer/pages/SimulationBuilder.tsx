@@ -97,6 +97,14 @@ const SimulationBuilder = () => {
                         />
                     ))}
 
+                    <button
+                        type="button"
+                        onClick={handleAddTask}
+                        className="flex h-10 w-full cursor-pointer hover:bg-[#f7f6f6] items-center justify-center gap-2 rounded-lg border border-dashed border-neutral-300 px-4 text-base text-neutral-950"
+                    >
+                        <Plus className="size-4" aria-hidden="true" />
+                        Add Task
+                    </button>
                 </div>
 
                 <div className="flex items-center justify-between">
