@@ -1,6 +1,11 @@
 import { useNavigate } from "react-router-dom"
 import JobPostingStepIndicator from "../components/JobPostingStepIndicator";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight, Plus, RefreshCw } from "lucide-react";
+import { useFieldArray, useFormContext } from "react-hook-form";
+import { FormTextarea } from "@/components/form/FormTextarea";
+import TaskCard from "../components/TaskCard";
+import type { JobPostingFormValues } from "../schemas/jobPosting";
+import { nanoid } from "zod";
 
 const SimulationBuilder = () => {
     const navigate = useNavigate();
