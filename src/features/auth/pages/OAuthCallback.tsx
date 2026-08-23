@@ -9,14 +9,12 @@ const OAuthCallback = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = searchParams.get("token");
 
     if (!token) {
       setError("No token received from Google");
-      setLoading(false);
       setTimeout(() => navigate("/employer/signin"), 2000);
       return;
     }

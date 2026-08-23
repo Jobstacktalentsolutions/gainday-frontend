@@ -43,7 +43,8 @@ const CreateAccount = () => {
             apiClient.post("/auth/signup", values),
         onSuccess: (res) => {
             useAuthStore.getState().setAuth(res.data.access_token, res.data.user)
-            navigate("/employer/dashboard")
+            // Redirect to email verification page
+            navigate("/employer/verify-email?verified=false")
         },
     })
 
