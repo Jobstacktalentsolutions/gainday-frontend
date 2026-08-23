@@ -117,10 +117,13 @@ const SimulationBuilder = () => {
                     </button>
                     <button
                         type="button"
-                        disabled
-                        className="flex h-10 cursor-not-allowed items-center gap-2 rounded-lg bg-primary-500 py-1 pl-4 pr-1 text-base text-neutral-50 opacity-70"
+                        onClick={handleContinue}
+                        className="flex cursor-pointer h-10 items-center gap-2 rounded-lg bg-primary-500 py-1 pl-4 pr-1 text-base text-neutral-50"
                     >
                         Continue
+                        <span className="flex size-8 items-center justify-center rounded-lg bg-secondary-500">
+                            <ArrowRight className="size-4 text-white" aria-hidden="true" />
+                        </span>
                     </button>
                 </div>
             </div>
