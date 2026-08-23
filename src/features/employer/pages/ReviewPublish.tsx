@@ -7,7 +7,7 @@ const ReviewPublishStep = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-screen bg-neutral-50 px-6 pb-10 pt-34.74">
+        <div className="min-h-screen bg-neutral-50 px-6 pb-10 pt-34.75">
             <div className="mx-auto flex w-full max-w-85.5 flex-col gap-10.75">
                 <div className="flex flex-col gap-3">
 
