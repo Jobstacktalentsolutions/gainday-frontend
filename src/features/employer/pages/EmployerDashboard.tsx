@@ -2,11 +2,15 @@ import { useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Briefcase, Users, CheckCircle, Plus, FileText, ArrowRight } from "lucide-react";
 import { useEmployerJobs } from "../hooks/useEmployerJobs";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
+import { useProtectedRoute } from "@/features/auth/hooks/useProtectedRoute";
 import { Button } from "@/components/ui/button";
 
 const EmployerDashboard = () => {
     const navigate = useNavigate();
     const { data: jobs, isLoading } = useEmployerJobs();
+    const { user } = useCurrentUser();
+    useProtectedRoute();
 
     // Calculate stats from jobs data
     const stats = useMemo(() => {
@@ -34,7 +38,7 @@ const EmployerDashboard = () => {
                 {/* Header Section */}
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                        <h1 className="text-3xl text-black">Welcome back, Gett</h1>
+                        <h1 className="text-3xl text-black">Welcome back, {user?.fullName || "Guest"}</h1>
                         <p className="text-neutral-500 mt-1">Here is what's happening with your job postings today.</p>
                     </div>
                     <Button 

@@ -10,7 +10,7 @@ interface AuthUser {
 }
 
 interface AuthState {
-  token: string | null;
+  accessToken: string | null;
   user: AuthUser | null;
   setAuth: (token: string, user: AuthUser) => void;
   clearAuth: () => void;
@@ -31,10 +31,10 @@ const getTokenFromCookie = (): string | null => {
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
-      token: getTokenFromCookie(),
+      accessToken: getTokenFromCookie(),
       user: null,
-      setAuth: (token, user) => set({ token, user }),
-      clearAuth: () => set({ token: null, user: null }),
+      setAuth: (token, user) => set({ accessToken: token, user }),
+      clearAuth: () => set({ accessToken: null, user: null }),
     }),
     { name: 'gainday-auth' },
   ),
