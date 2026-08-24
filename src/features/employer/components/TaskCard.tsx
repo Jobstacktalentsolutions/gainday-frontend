@@ -1,36 +1,33 @@
+// src/features/employer/components/TaskCard.tsx
 import { Trash2 } from "lucide-react";
-import { FormInput } from "@/components/form/FormInput";
+import { useFormContext } from "react-hook-form";
+import { JobFormInput } from "@/components/form/JobFormInput";
 import { FormTextarea } from "@/components/form/FormTextarea";
 import TaskTypeBadge from "./TaskTypeBadge";
-import type { SimulationTask } from "../schemas/jobPosting";
-
+import type { JobPostingFormValues, TaskType } from "../schemas/jobPosting";
 
 interface TaskCardProps {
     index: number;
-    task: SimulationTask;
+    type: TaskType;
+    capabilities: string[];
+    scores: string[];
     onRemove: () => void;
-    onChange: (field: "title" | "prompt" | "scenario", value: string) => void;
-    errors?: {
-        title?: string;
-        prompt?: string;
-        scenario?: string;
-    };
 }
 
-const TaskCard = ({
-    index,
-    task,
-    onRemove,
-    onChange,
-    errors
-}: TaskCardProps) => {
+const TaskCard = ({ index, type, capabilities, scores, onRemove }: TaskCardProps) => {
+    const {
+        register,
+        formState: { errors },
+    } = useFormContext<JobPostingFormValues>();
+
+    const taskErrors = errors.tasks?.[index];
 
     return (
         <div className="flex w-full flex-col gap-4 rounded-xl border border-neutral-200 px-2 py-3">
             <div className="flex items-start justify-between gap-2">
                 <div className="flex flex-1 items-center gap-2.5">
-                    <p>TASK {index + 1}</p>
-                    <TaskTypeBadge type={task.type} />
+                    <p className="text-sm text-neutral-950">TASK {index + 1}</p>
+                    <TaskTypeBadge type={type} />
                 </div>
                 <button
                     type="button"
@@ -42,38 +39,36 @@ const TaskCard = ({
                 </button>
             </div>
 
-            <FormInput
+            <JobFormInput
                 label="Task title"
                 hideLabel
-                value={task.title}
-                onChange={(e) => onChange("title", e.target.value)}
-                error={errors?.title}
+                error={taskErrors?.title?.message}
+                {...register(`tasks.${index}.title` as const)}
             />
+
             <FormTextarea
                 label="Task prompt"
                 hideLabel
                 rows={4}
-                value={task.taskPrompt}
-                onChange={(e) => onChange("prompt", e.target.value)}
-                error={errors?.prompt}
+                error={taskErrors?.taskPrompt?.message}
+                {...register(`tasks.${index}.taskPrompt` as const)}
             />
 
             <FormTextarea
                 label="Scenario context"
                 hideLabel
                 rows={8}
-                value={task.scenario}
-                onChange={(e) => onChange("scenario", e.target.value)}
-                error={errors?.scenario}
+                error={taskErrors?.scenario?.message}
+                {...register(`tasks.${index}.scenario` as const)}
             />
-            {(task.capabilities.length > 0 || task.scores.length > 0) && (
+
+            {(capabilities.length > 0 || scores.length > 0) && (
                 <p className="text-sm text-neutral-950">
-                    Capabilities: {task.capabilities.join(", ")} · Scores: {task.scores.join(", ")}
+                    Capabilities: {capabilities.join(", ")} · Scores: {scores.join(", ")}
                 </p>
             )}
-
         </div>
-    )
-}
+    );
+};
 
 export default TaskCard;

@@ -24,6 +24,7 @@ const routeGroups = [
       { path: "/employer/jobs", label: "Employer Jobs" },
       { path: "/employer/jobs/new/details", label: "Job Details Step" },
       { path: "/employer/jobs/new/simulation-builder", label: "Simulation Builder" },
+      { path: "/employer/jobs/new/review", label: "Review and Publish" },
     ],
   },
 ];

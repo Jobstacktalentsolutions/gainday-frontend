@@ -5,8 +5,10 @@ import JobCard, { JobCardSkeleton } from "../components/JobCard";
 import JobsEmptyState from "../components/JobsEmptyState";
 import { useEmployerJobs } from "../hooks/useEmployerJobs";
 import type { Job, JobStatusFilter } from "../types/job";
+import { useNavigate } from "react-router-dom";
 
 const EmployerJobs = () => {
+    const navigate = useNavigate();
     const { data: jobs, isLoading } = useEmployerJobs();
     const [statusFilter, setStatusFilter] = useState<JobStatusFilter>("all");
 
@@ -17,7 +19,7 @@ const EmployerJobs = () => {
     }, [jobs, statusFilter]);
 
     const handlePostJob = () => {
-        //navigate("/employer/jobs/new")
+        navigate("/employer/jobs/new")
     };
 
     const handleShareLink = (job: Job) => {

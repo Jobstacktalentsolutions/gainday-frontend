@@ -4,25 +4,22 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { jobPostingSchema, type JobPostingFormInput } from "../schemas/jobPosting";
 import { useJobDraftStore } from "../stores/useJobDraftStore";
+import { JOB_POSTING_DEFAULT_VALUES } from "../mocks/jobPostingDefaults";
 
-const DEFAULT_VALUES : Partial<JobPostingFormInput> = {
-    company : "Gett", // pull from authenticated employer's profile
-    isRemoteFriendly : false,
-    skills : []
-};
+
 
 const JobPostingWizardLayout = () => {
     const navigate = useNavigate();
-    const { draft, setDraft, clearDraft} = useJobDraftStore();
+    const { draft, setDraft, clearDraft } = useJobDraftStore();
 
-    const form = useForm<JobPostingFormInput> ({
-        resolver : zodResolver(jobPostingSchema),
-        defaultValues : { ...DEFAULT_VALUES, ...draft},
-        mode : "onBlur",
+    const form = useForm<JobPostingFormInput>({
+        resolver: zodResolver(jobPostingSchema),
+        defaultValues: { ...JOB_POSTING_DEFAULT_VALUES, ...draft },
+        mode: "onBlur",
     })
 
     //persist to localstorage as the form is being filled
-    useEffect (() => {
+    useEffect(() => {
         const subscription = form.watch((values) => {
             setDraft(values as Partial<JobPostingFormInput>);
         });
@@ -36,14 +33,14 @@ const JobPostingWizardLayout = () => {
 
     const handleDiscardDraft = () => {
         clearDraft();
-        form.reset(DEFAULT_VALUES);
+        form.reset(JOB_POSTING_DEFAULT_VALUES);
     }
 
     return (
-        <FormProvider { ...form}>
-            <Outlet context = {{onSaveAndExit : handleSaveAndExit, onDiscardDraft : handleDiscardDraft }} />
+        <FormProvider {...form}>
+            <Outlet context={{ onSaveAndExit: handleSaveAndExit, onDiscardDraft: handleDiscardDraft }} />
         </FormProvider>
     );
 }
 
-export default JobPostingWizardLayout ;
+export default JobPostingWizardLayout;
