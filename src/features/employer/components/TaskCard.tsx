@@ -63,7 +63,7 @@ const TaskCard = ({ index, type, capabilities, scores, onRemove }: TaskCardProps
             />
 
             {(capabilities.length > 0 || scores.length > 0) && (
-                <p className="text-sm text-neutral-950">
+                <p className="text-sm text-left text-neutral-950">
                     Capabilities: {capabilities.join(", ")} · Scores: {scores.join(", ")}
                 </p>
             )}
