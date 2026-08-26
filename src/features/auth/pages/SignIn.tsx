@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, Link } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
+import { useAuthStore } from "../store/authStore";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { FormInput } from "@/components/form/FormInput";
 import { AuthDivider } from "../component/AuthDivider";
@@ -29,7 +30,14 @@ const SignIn = () => {
     const signInMutation = useMutation({
         mutationFn: (values: signInFormValues) =>
             apiClient.post("/auth/login", values),
-        onSuccess: () => navigate("/dashboard")
+        onSuccess: (res) => {
+            useAuthStore.getState().setAuth(res.data.access_token, res.data.user)
+            if (!res.data.isEmailVerified) {
+                navigate("/employer/verify-email")
+            } else {
+                navigate("/employer/dashboard")
+            }
+        }
     })
 
     return (
@@ -61,7 +69,7 @@ const SignIn = () => {
                     />
                     <div className="w-full flex justify-end ">
                         <Link
-                            to="/forgot-password"
+                            to="/employer/forgot-password"
                             className="text-base text-primary-500 hover:text-primary-600  transition-colors duration-300 delay-100"
                         >
                             Forgot Password?
@@ -101,11 +109,16 @@ const SignIn = () => {
                 </ActionButton>
 
                 <AuthDivider />
-                <SocialAuthButton label="Sign in with Google" />
+                <SocialAuthButton
+                    label="Sign in with Google"
+                    onClick={() => {
+                        window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/google`
+                    }}
+                />
                 <AuthSwitchLink
                     prompt="New to Gainday?"
                     linkText="Create an account"
-                    to="/employer"
+                    to="/employer/signup"
                 />
 
             </form>

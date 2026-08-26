@@ -1,7 +1,9 @@
 import * as Dialog from "@radix-ui/react-dialog"
-import { X } from "lucide-react"
+import { X, LogOut } from "lucide-react"
 import { NavLink } from "react-router-dom"
 import { cn } from "@/lib/utils"
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser"
+import { useLogout } from "@/features/auth/hooks/useLogout"
 
 
 interface EmployerNavDrawerProps {
@@ -10,10 +12,14 @@ interface EmployerNavDrawerProps {
 }
 
 const NAV_ITEMS = [
+    { to: "/employer/dashboard", label: "Dashboard" },
     { to: "/employer/jobs", label: "Your jobs" }
 ]
 
 const EmployerNavDrawer = ({ open, onOpenChange }: EmployerNavDrawerProps) => {
+    const { user } = useCurrentUser();
+    const { logout } = useLogout();
+
     return (
         <Dialog.Root open={open} onOpenChange={onOpenChange}>
             <Dialog.Portal>
@@ -31,7 +37,7 @@ const EmployerNavDrawer = ({ open, onOpenChange }: EmployerNavDrawerProps) => {
                         </Dialog.Close>
                     </div>
 
-                    <nav className="flex flex-col gap-1">
+                    <nav className="flex flex-col gap-1 flex-1">
                         {
                             NAV_ITEMS.map((item) => (
                                 <NavLink
@@ -47,6 +53,25 @@ const EmployerNavDrawer = ({ open, onOpenChange }: EmployerNavDrawerProps) => {
                             ))
                         }
                     </nav>
+
+                    <div className="border-t border-neutral-200 pt-6 flex flex-col gap-4">
+                        <div className="px-3 py-2">
+                            <p className="text-xs text-neutral-400 uppercase font-medium tracking-wide">Account</p>
+                            <p className="text-sm font-medium text-black mt-2">{user?.fullName}</p>
+                            <p className="text-xs text-neutral-500 mt-0.5">{user?.email}</p>
+                        </div>
+
+                        <button
+                            onClick={() => {
+                                logout();
+                                onOpenChange(false);
+                            }}
+                            className="flex items-center gap-2 px-3 py-2 text-base text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        >
+                            <LogOut className="size-4" />
+                            Sign out
+                        </button>
+                    </div>
                 </Dialog.Content>
             </Dialog.Portal>
         </Dialog.Root>

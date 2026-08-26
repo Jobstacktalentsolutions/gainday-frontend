@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
+import { useAuthStore } from "../store/authStore";
 import { FormInput } from "@/components/form/FormInput";
 import AuthCard from "../component/AuthCard";
 import PasswordInput from "../component/passwordInput";
@@ -23,15 +24,27 @@ const CreateAccount = () => {
     const {
         register,
         handleSubmit,
+        setValue,
         formState: { errors },
     } = useForm<CreateAccountFormValues>({
         resolver: zodResolver(createAccountSchema),
+        defaultValues: {
+            fullName: "",
+            email: "",
+            companyName: "",
+            password: "",
+            confirmPassword: "",
+            agreedToTerms: false,
+        }
     })
 
     const signupMutation = useMutation({
         mutationFn: (values: CreateAccountFormValues) =>
             apiClient.post("/auth/signup", values),
-        onSuccess: () => navigate("/dashboard"),
+        onSuccess: (res) => {
+            useAuthStore.getState().setAuth(res.data.access_token, res.data.user)
+            navigate("/employer/verify-email")
+        },
     })
 
     const onSubmit = (values: CreateAccountFormValues) => {
@@ -88,7 +101,14 @@ const CreateAccount = () => {
                     {...register("confirmPassword")}
                     error={errors.confirmPassword?.message}
                 />
-                <AuthCheckboxRow checked={agreed} onCheckedChange={setAgreed} />
+                <AuthCheckboxRow
+                    checked={agreed}
+                    onCheckedChange={(checked) => {
+                        setAgreed(checked);
+                        setValue("agreedToTerms", checked, { shouldValidate: true });
+                    }}
+                    error={errors.agreedToTerms?.message}
+                />
 
                 <ActionButton
                     type="submit"
@@ -111,11 +131,16 @@ const CreateAccount = () => {
 
                 </ActionButton>
                 <AuthDivider />
-                <SocialAuthButton label="Sign up with Google" />
+                <SocialAuthButton
+                    label="Sign up with Google"
+                    onClick={() => {
+                        window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/google`
+                    }}
+                />
                 <AuthSwitchLink
                     prompt="Already have an account?"
                     linkText="Sign in"
-                    to="/login"
+                    to="/employer/signin"
                 />
 
             </form>
