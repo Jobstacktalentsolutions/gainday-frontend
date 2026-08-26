@@ -16,3 +16,23 @@ async function suspendUser(userId : string) : Promise<AdminUser> {
     if (!user) throw new Error("User not found");
     return {...user, status : "flagged"};
 }
+
+export function useUsers() {
+    return useQuery({
+        queryKey: ["admin", "users"],
+        queryFn : fetchUsers,
+    })
+}
+
+export function useSuspendUser() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn : suspendUser,
+        onSuccess : (updatedUser) => {
+            queryClient.setQueryData<AdminUser[]>(["admin", "users"], (prev) =>
+            prev?.map((u) => (u.id === updatedUser.id ? updatedUser : u) )
+        )
+        }
+    })
+}
