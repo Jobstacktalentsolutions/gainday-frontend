@@ -25,10 +25,37 @@ const UserManagement = () => {
         );
     }, [users, debouncedSearch]);
 
-    const handleEdit = (users : AdminUser) => {
+    const handleEdit = (users: AdminUser) => {
         //Open edit modal/drawer once the flow is ready
         console.log("Edit user", users.id);
     }
 
-    
+    const handleConfirmSuspend = (user: AdminUser) => {
+        suspendMutation.mutate(user.id, {
+            onSuccess: () => setPendingSuspendUser(null),
+        })
+    };
+
+    return (
+        <>
+            <h1 className="text-2xl font-semibold text-neutral-900">
+                User Management
+            </h1>
+
+            <div className="w-full">
+                <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search by name or email..."
+                    className="h-10 w-full rounded-[6px] border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+            </div>
+
+        </>
+    )
+
+
 }
+
+export default UserManagement;

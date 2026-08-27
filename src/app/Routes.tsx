@@ -18,6 +18,7 @@ const JobPostingWizardLayout = lazy(() => import("@/features/employer/layouts/Jo
 const JobDetailsStep = lazy(() => import("@/features/employer/pages/JobDetailsStep"));
 const SimulationBuilder = lazy(() => import("@/features/employer/pages/SimulationBuilder"));
 const ReviewPublish = lazy(() => import("@/features/employer/pages/ReviewPublish"))
+const UserManagement = lazy(() => import("@/features/admin/pages/UserManagement"))
 
 
 
@@ -29,6 +30,7 @@ const AppRoutes = () => {
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin" element={<AdminLayout />}>
                     <Route path="dashboard" element={<AdminDashboard />} />
+                    <Route path="user-management" element={<UserManagement />} />
                 </Route>
                 <Route path="/landing" element={<LandingPage />} />
                 <Route path="/employer">
