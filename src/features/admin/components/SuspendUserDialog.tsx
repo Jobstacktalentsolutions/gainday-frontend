@@ -40,7 +40,7 @@ const SuspendUserDialog = ({ user, open, onOpenChange, onConfirm, isPending }: S
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel asChild>
-                        <AdminButton variant="outline" size="sm">
+                        <AdminButton variant="outline" size="sm" className="cursor-pointer">
                             Cancel
                         </AdminButton>
                     </AlertDialogCancel>
@@ -50,6 +50,7 @@ const SuspendUserDialog = ({ user, open, onOpenChange, onConfirm, isPending }: S
                             size="sm"
                             disabled={isPending}
                             onClick={() => onConfirm(user)}
+                            className="cursor-pointer"
                         >
                             {isPending ? "Suspending..." : `Suspend`}
                         </AdminButton>
