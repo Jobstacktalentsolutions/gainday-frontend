@@ -25,5 +25,10 @@ const UserManagement = () => {
         );
     }, [users, debouncedSearch]);
 
+    const handleEdit = (users : AdminUser) => {
+        //Open edit modal/drawer once the flow is ready
+        console.log("Edit user", users.id);
+    }
+
     
 }
