@@ -63,6 +63,24 @@ const UserManagement = () => {
                 </div>
             )}
 
+            {!isLoading && !isError && (
+                <UsersTable
+                    users={filteredUsers}
+                    onEdit={handleEdit}
+                    onSuspend={setPendingSuspendUser}
+                    isSuspending={suspendMutation.isPending}
+                />
+            )}
+            <SuspendUserDialog
+                user={pendingSuspendUser}
+                open={pendingSuspendUser !== null}
+                onOpenChange={(open) => {
+                    if (!open) setPendingSuspendUser(null);
+                }}
+                onConfirm={handleConfirmSuspend}
+                isPending={suspendMutation.isPending}
+            />
+
 
         </>
     )

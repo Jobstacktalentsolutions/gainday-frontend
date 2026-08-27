@@ -51,7 +51,7 @@ const SuspendUserDialog = ({ user, open, onOpenChange, onConfirm, isPending }: S
                             disabled={isPending}
                             onClick={() => onConfirm(user)}
                         >
-                            {isPending ? "Suspending..." : `Suspend ${user.name}`}
+                            {isPending ? "Suspending..." : `Suspend`}
                         </AdminButton>
                     </AlertDialogAction>
                 </AlertDialogFooter>
