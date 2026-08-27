@@ -51,6 +51,18 @@ const UserManagement = () => {
                     className="h-10 w-full rounded-[6px] border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 />
             </div>
+            {isLoading && (
+                <div className="w-full rounded-[10px] border border-neutral-200 bg-white px-5 py-10 text-center text-sm text-neutral-500">
+                    Loading users...
+                </div>
+            )}
+
+            {isError && (
+                <div className="w-full rounded-[10px] border border-error-200 bg-error-50 px-5 py-10 text-center text-sm text-error-600">
+                    Something went wrong loading users.
+                </div>
+            )}
+
 
         </>
     )
