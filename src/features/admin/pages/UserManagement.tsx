@@ -1,18 +1,21 @@
 import { useMemo, useState } from "react";
-import { useUsers, useSuspendUser } from "../hooks/useUsers";
+import { useUsers, useSuspendUser, useUpdateEmployerUser } from "../hooks/useUsers";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import UsersTable from "../components/UsersTable";
 import SuspendUserDialog from "../components/SuspendUserDialog";
 import type { AdminUser } from "../types/user";
+import type { EmployerEditFormValues } from "../schemas/employerEditSchema";
 
 
 const UserManagement = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const debouncedSearch = useDebouncedValue(searchTerm, 200);
     const [pendingSuspendUser, setPendingSuspendUser] = useState<AdminUser | null>(null);
+    const [editingUser, setEditingUser] = useState<AdminUser | null>(null);
 
     const { data: users, isLoading, isError } = useUsers();
     const suspendMutation = useSuspendUser();
+    const updateEmployerMutation = useUpdateEmployerUser();
 
     const filteredUsers = useMemo(() => {
         if (!users) return [];
@@ -35,6 +38,13 @@ const UserManagement = () => {
             onSuccess: () => setPendingSuspendUser(null),
         })
     };
+
+    const handleSaveEmployer = (userId: string, values: EmployerEditFormValues) => {
+        updateEmployerMutation.mutate(
+            { userId, values },
+            { onSuccess: () => setEditingUser(null) }
+        );
+    }
 
     return (
         <>
