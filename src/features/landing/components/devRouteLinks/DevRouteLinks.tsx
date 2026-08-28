@@ -12,6 +12,7 @@ const routeGroups = [
     routes: [
       { path: "/admin/login", label: "Admin Login" },
       { path: "/admin/dashboard", label: "Admin Dashboard" },
+      { path: "/admin/user-management", label: "User Management" }
     ],
   },
   {
