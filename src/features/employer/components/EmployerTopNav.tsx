@@ -1,9 +1,17 @@
 import { useState } from "react";
-import { Menu, User } from "lucide-react";
+import { Menu, Bell } from "lucide-react";
+import { NavLink } from "react-router-dom";
+import { cn } from "@/lib/utils";
 import EmployerNavDrawer from "./EmployerNavDrawer";
 import BrandLogo from "@/assets/gainday icon.svg";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 
+
+const DESKTOP_NAV_ITEMS = [
+    { to: "/employer/jobs", label: "Jobs" },
+    { to: "/employer/candidates", label: "Candidates" },
+    { to: "/employer/open-roles", label: "Open Roles" },
+];
 
 const EmployerTopNav = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -12,6 +20,7 @@ const EmployerTopNav = () => {
     return (
         <>
             <header className="fixed left-0 top-0 z-40 flex w-full items-center justify-between border-t border-t-white/25 border-b border-b-white/15 bg-white/10 px-6 py-3.5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),inset_0_-1px_0_0_rgba(255,255,255,0.1),0_4px_16px_rgba(0,0,0,0.06)] backdrop-blur-xs lg:px-12 xl:px-20">
+                {/* Left: Brand logo */}
                 <span>
                     <img
                         src={BrandLogo}
@@ -19,17 +28,40 @@ const EmployerTopNav = () => {
                     />
                 </span>
 
-                {/* Desktop: employer name + avatar */}
+                {/* Center: Desktop navigation links */}
+                <nav className="hidden items-center gap-6 lg:flex">
+                    {DESKTOP_NAV_ITEMS.map((item) => (
+                        <NavLink
+                            key={item.to}
+                            to={item.to}
+                            className={({ isActive }) =>
+                                cn(
+                                    "text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-950",
+                                    isActive && "text-neutral-950"
+                                )
+                            }
+                        >
+                            {item.label}
+                        </NavLink>
+                    ))}
+                </nav>
+
+                {/* Right (Desktop): employer name + avatar */}
                 <div className="hidden items-center gap-3 lg:flex">
-                    <span className="text-sm font-medium text-neutral-950">
-                        {user?.fullName}
-                    </span>
+                    {user?.companyName && (
+                        <div className="flex items-center gap-1.5">
+                            <div className="size-4 rounded-sm border-[3px] border-neutral-950" aria-hidden="true" />
+                            <span className="text-sm font-bold text-neutral-950">
+                                {user.companyName}
+                            </span>
+                        </div>
+                    )}
                     <span className="flex size-8 items-center justify-center rounded-full bg-primary-50">
-                        <User className="size-4 text-primary-500" aria-hidden="true" />
+                        <Bell className="size-4 text-primary-500" aria-hidden="true" />
                     </span>
                 </div>
 
-                {/* Mobile: hamburger menu */}
+                {/* Right (Mobile): hamburger menu */}
                 <div className="flex items-center gap-3 lg:hidden">
                     <button
                         type="button"

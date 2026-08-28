@@ -28,11 +28,22 @@ const getTokenFromCookie = (): string | null => {
   return null;
 };
 
+// ── Dev-only mock user ──────────────────────────────────────────────────
+// TODO: Remove once real auth flow is wired up
+const DEV_MOCK_USER: AuthUser = {
+  id: 'mock-user-001',
+  email: 'recruiter@gett.com',
+  role: 'employer',
+  fullName: 'Jane Recruiter',
+  companyName: 'Gett',
+};
+const DEV_MOCK_TOKEN = 'dev-mock-token';
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
-      accessToken: getTokenFromCookie(),
-      user: null,
+      accessToken: getTokenFromCookie() ?? DEV_MOCK_TOKEN,
+      user: DEV_MOCK_USER,
       setAuth: (token, user) => set({ accessToken: token, user }),
       clearAuth: () => set({ accessToken: null, user: null }),
     }),
