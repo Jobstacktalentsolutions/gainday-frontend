@@ -9,7 +9,7 @@ interface EmployerPageHeaderProps {
 
 const EmployerPageHeader = ({ employerName, logoUrl, onPostJob }: EmployerPageHeaderProps) => {
     return (
-        <div className="flex w-full items-centetr justify-between">
+        <div className="flex w-full items-center justify-between">
             <div className="flex flex-col items-start gap-2">
                 <span className="text-xs text-primary-500">EMPLOYER</span>
                 <div className="flex items-center gap-1">
@@ -21,10 +21,11 @@ const EmployerPageHeader = ({ employerName, logoUrl, onPostJob }: EmployerPageHe
                     <span className="text-shadow-lg font-bold text-back">{employerName}</span>
                 </div>
             </div>
+            {/* Post a job button: visible on mobile only, desktop uses inline button in title row */}
             <button
                 type="button"
                 onClick={onPostJob}
-                className="flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary-500 py-1 pl-4 pr-1 text-base text-neutral-50"
+                className="flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary-500 py-1 pl-4 pr-1 text-base text-neutral-50 lg:hidden"
             >
                 <span>Post a job</span>
                 <span className="flex size-8 items-center justify-center rounded-lg bg-secondary-500">
