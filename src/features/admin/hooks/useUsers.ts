@@ -57,3 +57,21 @@ export function useSuspendUser() {
         }
     })
 }
+
+export function useUpdateEmployerUser() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      userId,
+      values,
+    }: {
+      userId: string;
+      values: EmployerEditFormValues;
+    }) => updateEmployerUser(userId, values),
+    onSuccess: (updatedUser) => {
+      queryClient.setQueryData<AdminUser[]>(["admin", "users"], (prev) =>
+        prev?.map((u) => (u.id === updatedUser.id ? updatedUser : u))
+      );
+    },
+  });
+}
