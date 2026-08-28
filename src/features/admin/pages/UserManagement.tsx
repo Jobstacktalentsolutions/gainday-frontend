@@ -74,7 +74,7 @@ const UserManagement = () => {
             {!isLoading && !isError && (
                 <UsersTable
                     users={filteredUsers}
-                    onEdit={handleSaveEmployer}
+                    onEdit={setEditingUser}
                     onSuspend={setPendingSuspendUser}
                     isSuspending={suspendMutation.isPending}
                 />
