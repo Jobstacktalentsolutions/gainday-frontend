@@ -26,7 +26,7 @@ const JobCard = ({ job, onShareLink, onViewSubmissions }: JobCardProps) => {
 
     const hasSubmissions = job.submissionsCount > 0;
     return (
-        <article className="flex w-full flex-col gap-3 rounded-3xl bg-white px-3 py-6">
+        <article className="flex w-full flex-col gap-3 rounded-3xl bg-white px-3 py-6 lg:px-6 lg:py-8">
             <div className="flex items-start justify-between gap-4">
                 <div className="flex flex-col items-start gap-1">
                     <StatusBadge status={job.status} />
@@ -70,7 +70,7 @@ const JobCard = ({ job, onShareLink, onViewSubmissions }: JobCardProps) => {
 
 export const JobCardSkeleton = () => {
     return (
-        <div className="flex h-60.75 w-full flex-col justify-between rounded-3xl bg-white px-3 py-6">
+        <div className="flex w-full flex-col justify-between gap-4 rounded-3xl bg-white px-3 py-6 lg:px-6 lg:py-8">
             <Skeleton className="h-3.75 w-18.75" />
             <Skeleton className="h-8 w-60.75" />
             <Skeleton className="h-7.25 w-full" />
