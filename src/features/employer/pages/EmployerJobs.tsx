@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Plus } from "lucide-react";
 import EmployerPageHeader from "../components/EmployerPageHeader";
 import JobStatusTabs from "../components/JobStatusTabs";
 import JobCard, { JobCardSkeleton } from "../components/JobCard";
@@ -35,21 +36,35 @@ const EmployerJobs = () => {
     const hasJobs = !!jobs && jobs.length > 0;
 
     return (
-        <div className="min-h-screen bg-neutral-50 px-6 pb-10 pt-32">
-            <div className="mx-auto flex w-full max-w-85.5 flex-col gap-10">
+        <div className="min-h-screen bg-neutral-50 px-6 pb-10 pt-32 lg:px-12 xl:px-20">
+            <div className="mx-auto flex w-full max-w-85.5 flex-col gap-10 lg:max-w-4xl xl:max-w-6xl">
                 <EmployerPageHeader employerName="Gett" onPostJob={handlePostJob} />
 
                 <div className="flex flex-col gap-6">
-                    <div className="flex flex-col items-start">
-                        <h1 className="text-2xl text-black">Your jobs</h1>
-                        <p>Track every post, </p>
+                    <div className="flex flex-col items-start gap-4 lg:flex-row lg:items-end lg:justify-between">
+                        <div className="flex flex-col items-start">
+                            <h1 className="text-2xl text-black lg:text-3xl">Your jobs</h1>
+                            <p className="text-neutral-500">Track every post, from draft to hire.</p>
+                        </div>
+                        <div className="hidden lg:block">
+                            <button
+                                type="button"
+                                onClick={handlePostJob}
+                                className="flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary-500 py-1 pl-4 pr-1 text-base text-neutral-50"
+                            >
+                                <span>Post a job</span>
+                                <span className="flex size-8 items-center justify-center rounded-lg bg-secondary-500">
+                                    <Plus className="size-4 text-white" aria-hidden="true" />
+                                </span>
+                            </button>
+                        </div>
                     </div>
                     {!isLoading && hasJobs && (
                         <JobStatusTabs value={statusFilter} onChange={setStatusFilter} />
                     )}
 
                     {isLoading ? (
-                        <div className="flex items-center gap-4 flex-col">
+                        <div className="flex flex-col items-center gap-4">
                             {Array.from({ length: 4 }).map((_, i) => (
                                 <JobCardSkeleton key={i} />
                             ))}
