@@ -11,3 +11,9 @@ async function fetchEmployerJobs() : Promise<AdminJob[]> {
 }
 
 //also replace withe API call
+async function removeJobPost(jobid : string) : Promise<AdminJob> {
+    await new Promise((resolve) => setTimeout(resolve, SIMULATED_LATENCY_MS));
+    const job = mockAdminJobs.find((j) => j.id === jobid) ;
+    if (!job) throw new Error("Job not found");
+    return { ...job, status : "closed"};
+}
