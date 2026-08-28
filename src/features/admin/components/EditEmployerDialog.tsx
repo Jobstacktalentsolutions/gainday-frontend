@@ -48,7 +48,7 @@ const EditEmployerDialog = ({
   useEffect(() => {
     if (user?.employerProfile) {
       reset({
-        fullName: user.fullName,
+        name: user.name,
         status: user.status,
         isVerified: user.employerProfile.isVerified,
         companyName: user.employerProfile.companyName,
@@ -79,7 +79,7 @@ const EditEmployerDialog = ({
             <div className={fieldClass}>
               <label className={labelClass} htmlFor="fullName">Full name</label>
               <input id="fullName" className={inputClass} {...register("name")} />
-              {errors.fullName && (
+              {errors.name && (
                 <p className="text-xs text-error-600">{errors.name.message}</p>
               )}
             </div>
