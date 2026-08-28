@@ -7,6 +7,11 @@ export const mockUsers: AdminUser[] = [
     email: "amaka@finpath.co",
     role: "Employer",
     status: "active",
+    employerProfile: {
+      companyName: "FinPath Capital",
+      isVerified: true,
+      adminNotes: "Verified via company domain email + LinkedIn.",
+    },
   },
   {
     id: "usr_2",
@@ -28,5 +33,10 @@ export const mockUsers: AdminUser[] = [
     email: "femi@quantumcap.ng",
     role: "Employer",
     status: "flagged",
+    employerProfile: {
+      companyName: "Quantum Capital",
+      isVerified: false,
+      adminNotes: "Flagged: multiple job posts reported for misleading pay ranges.",
+    },
   },
 ];

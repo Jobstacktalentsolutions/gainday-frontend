@@ -14,6 +14,6 @@ export interface AdminUser {
     email: string;
     role: UserRole;
     status: UserStatus;
-
+    employerProfile?: EmployerProfile;
 }
 
