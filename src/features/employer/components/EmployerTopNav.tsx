@@ -1,23 +1,36 @@
 import { useState } from "react";
-import { Menu } from "lucide-react";
+import { Menu, User } from "lucide-react";
 import EmployerNavDrawer from "./EmployerNavDrawer";
 import BrandLogo from "@/assets/gainday icon.svg";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 
 
 const EmployerTopNav = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const { user } = useCurrentUser();
 
     return (
         <>
-            <header className="fixed left-0 top-0 z-40 flex w-full items-center justify-between border-t border-t-white/25 border-b border-b-white/15 bg-white/10 px-6 py-3.5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),inset_0_-1px_0_0_rgba(255,255,255,0.1),0_4px_16px_rgba(0,0,0,0.06)] backdrop-blur-xs">
-                <span className="">
+            <header className="fixed left-0 top-0 z-40 flex w-full items-center justify-between border-t border-t-white/25 border-b border-b-white/15 bg-white/10 px-6 py-3.5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),inset_0_-1px_0_0_rgba(255,255,255,0.1),0_4px_16px_rgba(0,0,0,0.06)] backdrop-blur-xs lg:px-12 xl:px-20">
+                <span>
                     <img
                         src={BrandLogo}
                         alt="Brand logo"
-                        className=""
                     />
                 </span>
-                <div className="flex items-center gap-3">
+
+                {/* Desktop: employer name + avatar */}
+                <div className="hidden items-center gap-3 lg:flex">
+                    <span className="text-sm font-medium text-neutral-950">
+                        {user?.fullName}
+                    </span>
+                    <span className="flex size-8 items-center justify-center rounded-full bg-primary-50">
+                        <User className="size-4 text-primary-500" aria-hidden="true" />
+                    </span>
+                </div>
+
+                {/* Mobile: hamburger menu */}
+                <div className="flex items-center gap-3 lg:hidden">
                     <button
                         type="button"
                         onClick={() => setIsDrawerOpen(true)}
@@ -26,13 +39,6 @@ const EmployerTopNav = () => {
                     >
                         <Menu className="size-6 text-neutral-950" aria-hidden="true" />
                     </button>
-                    {/* <button
-                        type="button"
-                        aria-label="Notifications"
-                        className="flex size-6 items-center justify-center rounded-full bg-primary-50"
-                    >
-                        <Bell className="size-3 text-primary-500" aria-hidden="true" />
-                    </button> */}
                 </div>
             </header>
             <EmployerNavDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
