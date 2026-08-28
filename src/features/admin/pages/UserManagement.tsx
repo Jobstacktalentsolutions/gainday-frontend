@@ -3,6 +3,7 @@ import { useUsers, useSuspendUser, useUpdateEmployerUser } from "../hooks/useUse
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import UsersTable from "../components/UsersTable";
 import SuspendUserDialog from "../components/SuspendUserDialog";
+import EditEmployerDialog from "../components/EditEmployerDialog";
 import type { AdminUser } from "../types/user";
 import type { EmployerEditFormValues } from "../schemas/employerEditSchema";
 
@@ -28,10 +29,7 @@ const UserManagement = () => {
         );
     }, [users, debouncedSearch]);
 
-    const handleEdit = (users: AdminUser) => {
-        //Open edit modal/drawer once the flow is ready
-        console.log("Edit user", users.id);
-    }
+
 
     const handleConfirmSuspend = (user: AdminUser) => {
         suspendMutation.mutate(user.id, {
@@ -76,7 +74,7 @@ const UserManagement = () => {
             {!isLoading && !isError && (
                 <UsersTable
                     users={filteredUsers}
-                    onEdit={handleEdit}
+                    onEdit={handleSaveEmployer}
                     onSuspend={setPendingSuspendUser}
                     isSuspending={suspendMutation.isPending}
                 />
@@ -89,6 +87,13 @@ const UserManagement = () => {
                 }}
                 onConfirm={handleConfirmSuspend}
                 isPending={suspendMutation.isPending}
+            />
+            <EditEmployerDialog
+                user={editingUser}
+                open={editingUser !== null}
+                onOpenChange={(open) => !open && setEditingUser(null)}
+                onSave={handleSaveEmployer}
+                isSaving={updateEmployerMutation.isPending}
             />
 
 

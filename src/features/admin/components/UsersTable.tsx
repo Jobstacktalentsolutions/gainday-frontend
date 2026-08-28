@@ -64,7 +64,16 @@ const UsersTable = ({ users, onEdit, onSuspend, isSuspending }: UsersTableProps)
                     </div>
 
                     <div role="cell" className="flex w-45 shrink-0 gap-2">
-                        <AdminButton variant="outline" size="sm" onClick={() => onEdit(user)}>
+                        <AdminButton 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => onEdit(user)}
+                        disabled={user.role !== "Employer"}
+                        title={
+                            user.role !== "Employer"
+                            ? "Candidate editing isn't available yet"
+                            : undefined
+                        }>
                             Edit
                         </AdminButton>
                         <AdminButton
