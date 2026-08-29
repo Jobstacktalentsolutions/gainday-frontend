@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-type Status = "active" | "pending" | "flagged";
+type Status = "active" | "pending" | "flagged" | "suspended";
 
 interface StatusBadgeProps {
     status: Status;
@@ -11,12 +11,14 @@ const statusStyles: Record<Status, string> = {
     active: "bg-success-500 text-white",
     pending: "bg-warning-500 text-white",
     flagged: "bg-error-500 text-white",
+    suspended: "bg-neutral-700 text-white",
 }
 
 const defaultLabels: Record<Status, string> = {
     active: "Active",
     pending: "Pending",
     flagged: "Flagged",
+    suspended: "Suspended",
 }
 
 const StatusBadge = ({ status, label }: StatusBadgeProps) => {

@@ -1,6 +1,4 @@
-export type UserRole = "Employer" | "Candidate";
-export type UserStatus = "active" | "pending" | "flagged";
-
+export type UserStatus = "active" | "pending" | "flagged" | "suspended";
 
 export interface EmployerProfile {
     companyName: string;
@@ -8,12 +6,20 @@ export interface EmployerProfile {
     adminNotes?: string;
 }
 
-export interface AdminUser {
+interface AdminAccountBase {
     id: string;
     name: string;
     email: string;
-    role: UserRole;
     status: UserStatus;
-    employerProfile?: EmployerProfile;
 }
 
+export interface AdminEmployer extends AdminAccountBase {
+    role: "Employer";
+    employerProfile: EmployerProfile;
+}
+
+export interface AdminCandidate extends AdminAccountBase {
+    role: "Candidate";
+}
+
+export type AdminAccount = AdminEmployer | AdminCandidate;

@@ -14,10 +14,10 @@ import {
   employerEditSchema,
   type EmployerEditFormValues,
 } from "../schemas/employerEditSchema";
-import type { AdminUser } from "../types/user";
+import type { AdminEmployer } from "../types/user";
 
 interface EditEmployerDialogProps {
-  user: AdminUser | null;
+  user: AdminEmployer | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSave: (userId: string, values: EmployerEditFormValues) => void;
@@ -108,6 +108,7 @@ const EditEmployerDialog = ({
                 <option value="active">Active</option>
                 <option value="pending">Pending</option>
                 <option value="flagged">Flagged</option>
+                <option value="suspended">Suspended</option>
               </select>
             </div>
             <label className="flex items-center gap-2 text-sm text-neutral-900">

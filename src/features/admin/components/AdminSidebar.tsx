@@ -2,7 +2,8 @@ import SidebarNavItem from "./SidebarNavItem";
 
 const navItems = [
     { to : "/admin/dashboard", label : "Dashboard" },
-    { to : "/admin/user-management", label : "User Management"},
+    { to : "/admin/employer-management", label : "Employer Management"},
+    { to : "/admin/candidate-management", label : "Candidate Management"},
     { to : "/admin/content-moderation", label : "Content Moderation"},
     { to : "/admin/ai-oversight", label : "AI Oversight"},
 ]
