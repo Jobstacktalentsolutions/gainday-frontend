@@ -1,10 +1,16 @@
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+import AppLoader from "@/components/ui/AppLoader";
+
+// TODO: Remove this — temporary delay to preview AppLoader
+const simulateLatency = (ms: number) =>
+    <T,>(mod: T): Promise<T> =>
+        new Promise((resolve) => setTimeout(() => resolve(mod), ms));
 
 const AdminLogin = lazy(() => import("@/features/admin/pages/AdminLogin"));
 const AdminLayout = lazy(() => import("@/features/admin/layouts/AdminLayout"));
 const AdminDashboard = lazy(() => import("@/features/admin/pages/AdminDashboard"));
-const LandingPage = lazy(() => import("@/features/landing/pages/LandingPage"));
+const LandingPage = lazy(() => import("@/features/landing/pages/LandingPage").then(simulateLatency(3000)));
 const CreateAccount = lazy(() => import("@/features/auth/pages/CreateAccount"));
 const SignInPage = lazy(() => import("@/features/auth/pages/SignIn"))
 const ForgotPassword = lazy(() => import("@/features/auth/pages/ForgotPassword"));
@@ -26,7 +32,7 @@ const ContentModeration = lazy(() => import("@/features/admin/pages/ContentModer
 
 const AppRoutes = () => {
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<AppLoader />}>
             <Routes>
                 <Route path="/" element={<Navigate to="/landing" />} />
                 <Route path="/admin/login" element={<AdminLogin />} />

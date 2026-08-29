@@ -1,3 +1,4 @@
+/* ── Logo entrance ── */
 @keyframes app-loader-draw {
     to {
         stroke-dashoffset: 0;
@@ -5,25 +6,13 @@
 }
 
 @keyframes app-loader-fill-in {
-    from {
-        fill-opacity: 0;
-    }
-
-    to {
-        fill-opacity: 1;
-    }
+    from { fill-opacity: 0; }
+    to   { fill-opacity: 1; }
 }
 
 @keyframes app-loader-pulse {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.45;
-    }
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.4; }
 }
 
 .app-loader-path {
@@ -33,19 +22,49 @@
     stroke-dashoffset: 1;
     fill-opacity: 0;
     animation:
-        app-loader-draw 900ms ease-out forwards,
-        app-loader-fill-in 400ms ease-out 700ms forwards;
+        app-loader-draw 800ms ease-out forwards,
+        app-loader-fill-in 350ms ease-out 600ms forwards;
 }
 
-.app-loader-group {
-    animation: app-loader-pulse 1.8s ease-in-out 1100ms infinite;
+.app-loader-logo {
+    animation: app-loader-pulse 2s ease-in-out 1.8s infinite;
 }
 
-.app-loader-wordmark {
+/* ── Typewriter letters ── */
+.app-loader-letter {
     opacity: 0;
-    animation: app-loader-fill-in 500ms ease-out 500ms forwards;
+    display: inline-block;
+    animation: app-loader-letter-in 120ms ease-out forwards;
 }
 
+@keyframes app-loader-letter-in {
+    from {
+        opacity: 0;
+        transform: translateY(2px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── Blinking cursor ── */
+.app-loader-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.1em;
+    margin-left: 1px;
+    background-color: #1817fe;
+    vertical-align: text-bottom;
+    animation: app-loader-blink 530ms step-end infinite;
+}
+
+@keyframes app-loader-blink {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0; }
+}
+
+/* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
     .app-loader-path {
         stroke-dashoffset: 0;
@@ -53,12 +72,16 @@
         animation: none;
     }
 
-    .app-loader-group {
+    .app-loader-logo {
         animation: none;
     }
 
-    .app-loader-wordmark {
+    .app-loader-letter {
         opacity: 1;
         animation: none;
+    }
+
+    .app-loader-cursor {
+        display: none;
     }
 }
