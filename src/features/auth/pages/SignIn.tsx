@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, Link } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { apiClient } from "@/lib/api/client";
+import { apiClient, getBaseURL } from "@/lib/api/client";
 import { useAuthStore } from "../store/authStore";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { FormInput } from "@/components/form/FormInput";
@@ -112,7 +112,7 @@ const SignIn = () => {
                 <SocialAuthButton
                     label="Sign in with Google"
                     onClick={() => {
-                        window.location.href = `${import.meta.env.VITE_API_BASE_URL}/auth/google`
+                        window.location.href = `${getBaseURL()}/auth/google`
                     }}
                 />
                 <AuthSwitchLink
