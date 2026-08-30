@@ -1,6 +1,6 @@
-import type { AdminUser } from "../types/user";
+import type { AdminEmployer } from "../types/user";
 
-export const mockUsers: AdminUser[] = [
+export const mockEmployers: AdminEmployer[] = [
   {
     id: "usr_1",
     name: "Amaka Nwosu",
@@ -12,20 +12,6 @@ export const mockUsers: AdminUser[] = [
       isVerified: true,
       adminNotes: "Verified via company domain email + LinkedIn.",
     },
-  },
-  {
-    id: "usr_2",
-    name: "Tunde Bakare",
-    email: "tunde.b@gmail.com",
-    role: "Candidate",
-    status: "active",
-  },
-  {
-    id: "usr_3",
-    name: "Chidera Okafor",
-    email: "chidera.o@outlook.com",
-    role: "Candidate",
-    status: "pending",
   },
   {
     id: "usr_4",

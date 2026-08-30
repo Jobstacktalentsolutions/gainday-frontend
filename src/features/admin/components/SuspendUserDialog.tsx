@@ -10,13 +10,13 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import type { AdminUser } from "../types/user";
+import type { AdminAccount } from "../types/user";
 
 interface SuspendUserDialogProps {
-    user: AdminUser | null;
+    user: AdminAccount | null;
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    onConfirm: (user: AdminUser) => void;
+    onConfirm: (user: AdminAccount) => void;
     isPending: boolean;
 }
 
