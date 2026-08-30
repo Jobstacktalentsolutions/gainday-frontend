@@ -48,7 +48,7 @@ const JobPostingWizardLayout = () => {
 
     return (
         <FormProvider {...form}>
-            <div className="min-h-screen bg-neutral-50 px-4 pb-10 pt-24 lg:px-10 lg:pt-28">
+            <div className="min-h-screen bg-neutral-50 px-4 pb-10 pt-[134px] lg:px-10">
                 {/* Desktop: card container with sidebar + content */}
                 <div className="mx-auto flex w-full max-w-[1120px] flex-col lg:flex-row lg:gap-0 lg:rounded-3xl lg:bg-white/80 lg:shadow-[0_1px_3px_rgba(0,0,0,0.06),0_0_0_1px_rgba(0,0,0,0.04)] lg:backdrop-blur-sm">
 
@@ -58,7 +58,7 @@ const JobPostingWizardLayout = () => {
                     </aside>
 
                     {/* Mobile — horizontal stepper */}
-                    <div className="px-2 pb-4 lg:hidden">
+                    <div className="px-2 pb-12 lg:hidden">
                         <JobPostingStepIndicator currentStep={currentStep} orientation="horizontal" />
                     </div>
 

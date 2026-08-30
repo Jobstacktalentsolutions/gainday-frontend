@@ -6,7 +6,7 @@ const ReviewPublishStep = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-12">
             {/* Header — centered */}
             <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-3xl font-bold text-black lg:text-4xl">Review and Publish</h1>
