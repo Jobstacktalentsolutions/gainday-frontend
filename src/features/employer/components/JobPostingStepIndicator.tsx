@@ -18,55 +18,64 @@ const JobPostingStepIndicator = ({ currentStep, orientation = "vertical" }: JobP
     const currentIndex = STEPS.findIndex((s) => s.path === currentStep)
 
     if (orientation === "horizontal") {
+        const totalSteps = STEPS.length;
+        const stepNumber = currentIndex + 1;
+        const nextStep = currentIndex < STEPS.length - 1 ? STEPS[currentIndex + 1] : null;
+
+        // SVG circle math
+        const size = 48;
+        const strokeWidth = 3;
+        const radius = (size - strokeWidth) / 2;
+        const circumference = 2 * Math.PI * radius;
+        const progress = stepNumber / totalSteps;
+        const dashOffset = circumference * (1 - progress);
+
         return (
-            <nav aria-label="Job posting progress" className="flex w-full items-center justify-between gap-1">
-                {STEPS.map((step, index) => {
-                    const isCompleted = index < currentIndex;
-                    const isActive = index === currentIndex;
-                    const isFuture = index > currentIndex;
-                    const isLast = index === STEPS.length - 1;
+            <nav aria-label="Job posting progress" className="flex items-center gap-3">
+                {/* Circular progress ring */}
+                <div className="relative flex shrink-0 items-center justify-center">
+                    <svg width={size} height={size} className="-rotate-90">
+                        {/* Background track */}
+                        <circle
+                            cx={size / 2}
+                            cy={size / 2}
+                            r={radius}
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth={strokeWidth}
+                            className="text-neutral-200"
+                        />
+                        {/* Progress arc */}
+                        <circle
+                            cx={size / 2}
+                            cy={size / 2}
+                            r={radius}
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth={strokeWidth}
+                            strokeLinecap="round"
+                            strokeDasharray={circumference}
+                            strokeDashoffset={dashOffset}
+                            className="text-primary-500 transition-all duration-500"
+                        />
+                    </svg>
+                    {/* Step counter */}
+                    <span className="absolute text-xs font-bold text-neutral-950">
+                        {stepNumber} of {totalSteps}
+                    </span>
+                </div>
 
-                    return (
-                        <div key={step.path} className="flex flex-1 items-center gap-1">
-                            {/* Circle + label group */}
-                            <div className="flex flex-col items-center gap-1">
-                                <div
-                                    className={cn(
-                                        "flex shrink-0 items-center justify-center rounded-full transition-all duration-300",
-                                        isActive && "size-4 border-2 border-primary-500 bg-primary-500",
-                                        isCompleted && "size-3 border-2 border-primary-500 bg-primary-500",
-                                        isFuture && "size-3 border-2 border-neutral-300 bg-transparent",
-                                    )}
-                                    aria-current={isActive ? "step" : undefined}
-                                >
-                                    {isActive && (
-                                        <div className="size-1 rounded-full bg-white" />
-                                    )}
-                                </div>
-                                <span
-                                    className={cn(
-                                        "text-[10px] font-medium tracking-wide whitespace-nowrap select-none",
-                                        isActive && "text-neutral-950",
-                                        isCompleted && "text-neutral-950",
-                                        isFuture && "text-neutral-400",
-                                    )}
-                                >
-                                    {step.mobileLabel}
-                                </span>
-                            </div>
-
-                            {/* Connecting line */}
-                            {!isLast && (
-                                <div
-                                    className={cn(
-                                        "mb-4 h-0.5 flex-1 transition-colors duration-300",
-                                        index < currentIndex ? "bg-primary-500" : "bg-neutral-200",
-                                    )}
-                                />
-                            )}
-                        </div>
-                    );
-                })}
+                {/* Step title + next step */}
+                <div className="flex flex-col">
+                    <span className="text-base font-bold text-neutral-950">
+                        {STEPS[currentIndex].mobileLabel}
+                    </span>
+                    {nextStep && (
+                        <span className="text-xs text-neutral-400">
+                            Next: {nextStep.mobileLabel}
+                        </span>
+                    )}
+                </div>
             </nav>
         );
     }
