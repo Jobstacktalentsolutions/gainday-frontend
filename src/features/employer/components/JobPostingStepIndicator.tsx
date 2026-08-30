@@ -2,10 +2,10 @@ import { cn } from "@/lib/utils";
 
 
 const STEPS = [
-    { path: "details", label: "JOB DETAILS", mobileLabel: "Form" },
-    { path: "simulation-builder", label: "SIMULATION BUILDER", mobileLabel: "Simulation" },
-    { path: "review", label: "REVIEW & PUBLISH", mobileLabel: "Review" },
-    { path: "done", label: "DONE", mobileLabel: "Done" },
+    { path: "details", label: "JOB DETAILS" },
+    { path: "simulation-builder", label: "SIMULATION BUILDER" },
+    { path: "review", label: "REVIEW & PUBLISH" },
+    { path: "done", label: "DONE" },
 ];
 
 interface JobPostingStepIndicatorProps {
@@ -68,11 +68,11 @@ const JobPostingStepIndicator = ({ currentStep, orientation = "vertical" }: JobP
                 {/* Step title + next step */}
                 <div className="flex flex-col">
                     <span className="text-base font-bold text-neutral-950">
-                        {STEPS[currentIndex].mobileLabel}
+                        {STEPS[currentIndex].label}
                     </span>
                     {nextStep && (
                         <span className="text-xs text-neutral-400">
-                            Next: {nextStep.mobileLabel}
+                            Next: {nextStep.label}
                         </span>
                     )}
                 </div>
