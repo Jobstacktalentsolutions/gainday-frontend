@@ -48,9 +48,9 @@ const JobPostingWizardLayout = () => {
 
     return (
         <FormProvider {...form}>
-            <div className="min-h-screen bg-neutral-50 px-4 pb-10 pt-[134px] lg:px-10">
+            <div className="min-h-screen bg-neutral-50 px-4 pb-10 pt-33.5 lg:px-10">
                 {/* Desktop: card container with sidebar + content */}
-                <div className="mx-auto flex w-full max-w-[1120px] flex-col lg:flex-row lg:gap-0 lg:rounded-3xl lg:bg-white/80 lg:shadow-[0_1px_3px_rgba(0,0,0,0.06),0_0_0_1px_rgba(0,0,0,0.04)] lg:backdrop-blur-sm">
+                <div className="mx-auto flex w-full max-w-280 flex-col lg:flex-row lg:gap-0 lg:rounded-3xl lg:bg-white/80 lg:shadow-[0_1px_3px_rgba(0,0,0,0.06),0_0_0_1px_rgba(0,0,0,0.04)] lg:backdrop-blur-sm">
 
                     {/* Sidebar — vertical stepper */}
                     <aside className="hidden shrink-0 lg:flex lg:w-60 lg:flex-col lg:gap-6 lg:rounded-l-3xl lg:bg-neutral-50/60 lg:px-8 lg:py-10">
