@@ -36,8 +36,8 @@ const JobDetailsStep = () => {
     return (
         <div className="flex flex-col gap-12">
             {/* Header — centered */}
-            <div className="flex flex-col items-center gap-2 text-center">
-                <h1 className="text-3xl font-bold text-black lg:text-4xl">Post a job</h1>
+            <div className="flex flex-col lg:items-center gap-2 text-left lg:text-center">
+                <h1 className="text-3xl  font-bold text-black lg:text-4xl">Post a job</h1>
                 <p className="max-w-lg text-base text-neutral-500">
                     Gainday decomposes the role, maps it to measurable capabilities, generates a work
                     assessment and quality checks it. Nothing reaches the candidate until you approve it

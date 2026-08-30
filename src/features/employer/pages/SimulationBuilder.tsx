@@ -45,7 +45,7 @@ const SimulationBuilder = () => {
     return (
         <div className="flex flex-col gap-12">
             {/* Header — centered */}
-            <div className="flex flex-col items-center gap-2 text-center">
+            <div className="flex flex-col lg:items-center gap-2 text-left lg:text-center">
                 <h1 className="text-3xl font-bold text-black lg:text-4xl">Challenge generation</h1>
                 <p className="max-w-lg text-base text-neutral-500">
                     A realistic work simulation assessment built from the capabilities you approved.

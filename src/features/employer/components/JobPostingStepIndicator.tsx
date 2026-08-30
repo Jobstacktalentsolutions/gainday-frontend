@@ -93,27 +93,30 @@ const JobPostingStepIndicator = ({ currentStep, orientation = "vertical" }: JobP
 
                 return (
                     <div key={step.path} className="flex items-start gap-3">
-                        {/* Circle + Line column */}
-                        <div className="flex flex-col items-center">
-                            <div
-                                className={cn(
-                                    "flex shrink-0 items-center justify-center rounded-full transition-all duration-300",
-                                    isActive && "size-5 border-2 border-primary-500 bg-primary-500",
-                                    isCompleted && "size-3.5 border-2 border-primary-500 bg-primary-500 mt-0.75",
-                                    isFuture && "size-3.5 border-2 border-neutral-300 bg-transparent mt-0.75",
-                                )}
-                                aria-current={isActive ? "step" : undefined}
-                            >
-                                {isActive && (
-                                    <div className="size-1.5 rounded-full bg-white" />
-                                )}
+                        {/* Circle + Line column — fixed w-5 ensures all circle centers and lines share the exact same vertical axis */}
+                        <div className="flex w-5 shrink-0 flex-col items-center">
+                            {/* Circle wrapper — fixed h-5 centers circles vertically with the label */}
+                            <div className="flex h-5 items-center justify-center">
+                                <div
+                                    className={cn(
+                                        "flex shrink-0 items-center justify-center rounded-full transition-all duration-300",
+                                        isActive && "size-5 border-2 border-primary-500 bg-primary-500",
+                                        isCompleted && "size-3.5 border-2 border-primary-500 bg-primary-500",
+                                        isFuture && "size-3.5 border-2 border-neutral-300 bg-transparent",
+                                    )}
+                                    aria-current={isActive ? "step" : undefined}
+                                >
+                                    {isActive && (
+                                        <div className="size-1.5 rounded-full bg-white" />
+                                    )}
+                                </div>
                             </div>
 
+                            {/* Connecting line */}
                             {!isLast && (
                                 <div
                                     className={cn(
-                                        "w-0.5 transition-colors duration-300",
-                                        isActive ? "h-10" : "h-8",
+                                        "w-0.5 h-8 transition-colors duration-300",
                                         lineColor,
                                     )}
                                 />
@@ -124,7 +127,7 @@ const JobPostingStepIndicator = ({ currentStep, orientation = "vertical" }: JobP
                         <span
                             className={cn(
                                 "text-xs font-medium tracking-wide leading-5 select-none",
-                                isActive && "text-neutral-950",
+                                isActive && "text-neutral-950 font-semibold",
                                 isCompleted && "text-neutral-950",
                                 isFuture && "text-neutral-400",
                             )}
