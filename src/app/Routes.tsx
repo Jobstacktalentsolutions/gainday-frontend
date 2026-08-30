@@ -2,10 +2,10 @@ import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import AppLoader from "@/components/ui/AppLoader";
 
-// TODO: Remove this — temporary delay to preview AppLoader
-const simulateLatency = (ms: number) =>
-    <T,>(mod: T): Promise<T> =>
-        new Promise((resolve) => setTimeout(() => resolve(mod), ms));
+// // TODO: Remove this — temporary delay to preview AppLoader
+// const simulateLatency = (ms: number) =>
+//     <T,>(mod: T): Promise<T> =>
+//         new Promise((resolve) => setTimeout(() => resolve(mod), ms));
 
 const AdminLogin = lazy(() => import("@/features/admin/pages/AdminLogin"));
 const AdminLayout = lazy(() => import("@/features/admin/layouts/AdminLayout"));
