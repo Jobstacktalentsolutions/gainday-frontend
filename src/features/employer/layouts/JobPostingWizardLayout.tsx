@@ -57,6 +57,11 @@ const JobPostingWizardLayout = () => {
                         <JobPostingStepIndicator currentStep={currentStep} />
                     </aside>
 
+                    {/* Mobile — horizontal stepper */}
+                    <div className="px-2 pb-4 lg:hidden">
+                        <JobPostingStepIndicator currentStep={currentStep} orientation="horizontal" />
+                    </div>
+
                     {/* Main content area */}
                     <div className="flex min-w-0 flex-1 flex-col lg:px-10 lg:py-10">
                         <Outlet context={{ onSaveAndExit: handleSaveAndExit, onDiscardDraft: handleDiscardDraft }} />
