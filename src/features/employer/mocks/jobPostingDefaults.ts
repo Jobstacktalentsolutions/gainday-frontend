@@ -45,6 +45,7 @@ export const MOCK_TASKS: JobPostingFormValues["tasks"] = [
 
 export const JOB_POSTING_DEFAULT_VALUES: Partial<JobPostingFormValues> = {
     company: "Gett", // TODO: pull from authenticated employer's org profile
+    deadline: "",
     isRemoteFriendly: false,
     skills: [],
     scenarioIntro: MOCK_SCENARIO_INTRO,

@@ -7,6 +7,7 @@ export const jobDetailsBaseSchema = z.object({
     company: z.string().min(1),
     location: z.string().min(1, "Location is required"),
     employmentType: z.string().min(1, "Select an employment type"),
+    deadline: z.string().optional(),
     isRemoteFriendly: z.boolean().default(false),
     salaryFrom: z.coerce.number().positive().optional(),
     salaryTo: z.coerce.number().positive().optional(),

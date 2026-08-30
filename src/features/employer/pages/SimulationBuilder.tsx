@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom"
-import JobPostingStepIndicator from "../components/JobPostingStepIndicator";
 import { ArrowRight, Plus, RefreshCw } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { FormTextarea } from "@/components/form/FormTextarea";
@@ -44,85 +43,81 @@ const SimulationBuilder = () => {
     };
 
     return (
-        <div className="min-h-screen bg-neutral-50 px-6 pb-10 pt-34.75">
-            <div className="mx-auto flex w-full max-w-85.5 flex-col gap-10.75">
-                <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-8">
+            {/* Header — centered */}
+            <div className="flex flex-col items-center gap-2 text-center">
+                <h1 className="text-3xl font-bold text-black lg:text-4xl">Challenge generation</h1>
+                <p className="max-w-lg text-base text-neutral-500">
+                    A realistic work simulation assessment built from the capabilities you approved.
+                    Estimated completion time: 20 minutes.
+                </p>
+            </div>
 
-                    <div>
-                        <h1 className="text-2xl text-black">Post a job</h1>
-                        <p className="text-base text-neutral-700">
-                            Gainday decomposes the role, maps it to measurable capabilities, generates a work
-                            assessment and quality checks it. Nothing reaches the candidate until you approve it
-                        </p>
-                    </div>
+            {/* Challenge content */}
+            <div className="flex w-full flex-col gap-10 rounded-3xl border border-dashed shadow-sm bg-white/70 px-3 py-10 text-center">
+                <div className="flex flex-col gap-3 text-left">
+                    <p className="text-sm text-primary-500">CHALLENGE GENERATION</p>
+                    <p className="text-base text-neutral-950">
+                        A realistic work simulation assessment built from the capabilities you approved.
+                        Estimated completion time: 20 minutes.
+                    </p>
+                    <button
+                        type="button"
+                        onClick={handleRegenerate}
+                        className="flex h-10 self-start items-center justify-center gap-2 rounded-xl border border-neutral-300 px-6 py-2 text-base text-neutral-950"
+                    >
+                        Regenerate
+                        <RefreshCw className="size-4 " aria-hidden="true" />
+                    </button>
                 </div>
-                <JobPostingStepIndicator currentStep="simulation-builder" />
 
+                <FormTextarea
+                    label="Scenario intro the candidate reads first"
+                    rows={10}
+                    error={errors.scenarioIntro?.message}
+                    {...register("scenarioIntro")}
+                />
+                {fields.map((field, index) => (
+                    <TaskCard
+                        key={field.id}
+                        index={index}
+                        type={field.type}
+                        capabilities={field.capabilities}
+                        scores={field.scores}
+                        onRemove={() => remove(index)}
 
-                <div className="flex w-full flex-col  gap-10 rounded-3xl border border-dashed shadow-sm bg-white/70 px-3 py-10 text-center">
-                    <div className="flex flex-col gap-3 text-left">
-                        <p className="text-sm text-primary-500">CHALLENGE GENERATION</p>
-                        <p className="text-base text-neutral-950">
-                            A realistic work simulation assessment built from the capabilities you approved.
-                            Estimated completion time: 20 minutes.
-                        </p>
-                        <button
-                            type="button"
-                            onClick={handleRegenerate}
-                            className="flex h-10 self-start items-center justify-center gap-2 rounded-xl border border-neutral-300 px-6 py-2 text-base text-neutral-950"
-                        >
-                            Regenerate
-                            <RefreshCw className="size-4 " aria-hidden="true" />
-                        </button>
-                    </div>
-
-                    <FormTextarea
-                        label="Scenario intro the candidate reads first"
-                        rows={10}
-                        error={errors.scenarioIntro?.message}
-                        {...register("scenarioIntro")}
                     />
-                    {fields.map((field, index) => (
-                        <TaskCard
-                            key={field.id}
-                            index={index}
-                            type={field.type}
-                            capabilities={field.capabilities}
-                            scores={field.scores}
-                            onRemove={() => remove(index)}
+                ))}
 
-                        />
-                    ))}
+                <button
+                    type="button"
+                    onClick={handleAddTask}
+                    className="flex h-10 w-full cursor-pointer hover:bg-[#f7f6f6] items-center justify-center gap-2 rounded-lg border border-dashed border-neutral-300 px-4 text-base text-neutral-950"
+                >
+                    <Plus className="size-4" aria-hidden="true" />
+                    Add Task
+                </button>
+            </div>
 
-                    <button
-                        type="button"
-                        onClick={handleAddTask}
-                        className="flex h-10 w-full cursor-pointer hover:bg-[#f7f6f6] items-center justify-center gap-2 rounded-lg border border-dashed border-neutral-300 px-4 text-base text-neutral-950"
-                    >
-                        <Plus className="size-4" aria-hidden="true" />
-                        Add Task
-                    </button>
-                </div>
-
-                <div className="flex items-center justify-between">
-                    <button
-                        type="button"
-                        onClick={() => navigate(-1)}
-                        className="h-10 rounded-lg border border-neutral-200 px-4 text-base text-neutral-600"
-                    >
-                        Back
-                    </button>
-                    <button
-                        type="button"
-                        onClick={handleContinue}
-                        className="flex cursor-pointer h-10 items-center gap-2 rounded-lg bg-primary-500 py-1 pl-4 pr-1 text-base text-neutral-50"
-                    >
-                        Continue
-                        <span className="flex size-8 items-center justify-center rounded-lg bg-secondary-500">
-                            <ArrowRight className="size-4 text-white" aria-hidden="true" />
-                        </span>
-                    </button>
-                </div>
+            {/* Navigation buttons */}
+            <div className="flex items-center justify-between">
+                <button
+                    type="button"
+                    onClick={() => navigate(-1)}
+                    className="h-10 rounded-lg border border-neutral-200 px-4 text-base text-neutral-600"
+                >
+                    Back
+                </button>
+                <button
+                    type="button"
+                    onClick={handleContinue}
+                    className="flex cursor-pointer h-10 items-center gap-2 rounded-lg bg-primary-500 py-1 pl-4 pr-1 text-base text-neutral-50"
+                >
+                    Continue
+                    <span className="flex size-8 items-center justify-center rounded-lg bg-secondary-500">
+                        <ArrowRight className="size-4 text-white" aria-hidden="true" />
+                    </span>
+                </button>
             </div>
         </div>
     )
