@@ -1,10 +1,8 @@
-import React, { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-/* ────────────────────────────────────────────────────────────
-   1. StepSecondaryButton ("Save and exit", "Back", etc.)
-   ──────────────────────────────────────────────────────────── */
+
 
 export interface StepSecondaryButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: ReactNode;
@@ -22,7 +20,7 @@ export const StepSecondaryButton = forwardRef<HTMLButtonElement, StepSecondaryBu
           // Dark neutral on hover
           "hover:border-neutral-900 hover:bg-neutral-900 hover:text-white hover:shadow-sm",
           // Subtle click animation
-          "active:scale-[0.96] active:translate-y-[1px] active:bg-neutral-950",
+          "active:scale-[0.96] active:translate-y-px active:bg-neutral-950",
           "focus-visible:ring-2 focus-visible:ring-neutral-400/40",
           "disabled:pointer-events-none disabled:opacity-50",
           className
