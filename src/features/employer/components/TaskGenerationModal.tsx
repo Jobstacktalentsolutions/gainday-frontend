@@ -31,7 +31,8 @@ export const TaskGenerationModal: React.FC<TaskGenerationModalProps> = ({
           {/* Animated Glowing Badge */}
           <div className="relative mb-6 flex items-center justify-center">
             {/* Outer diffused pulsating glow halo */}
-            <div className="modal-halo-glow absolute -inset-3 rounded-full bg-linear-to-tr from-blue-500/50 via-blue-600/60 to-indigo-600/50" />
+            {/* <div className="modal-halo-glow absolute -inset-3 rounded-full bg-linear-to-tr from-blue-500/50 via-blue-600/60 to-indigo-600/50" /> */}
+            <div className="modal-halo-glow absolute -inset-3 rounded-full" />
 
             {/* Inner Ring Badge */}
             <div className="relative flex size-28 items-center justify-center rounded-full bg-white/95 border-[6px] border-blue-500/80 shadow-[0_0_24px_rgba(59,130,246,0.35)]">
