@@ -33,10 +33,13 @@ export const TaskGenerationModal: React.FC<TaskGenerationModalProps> = ({
             {/* Outer diffused pulsating glow halo */}
             <div className="modal-halo-glow" />
 
-            {/* Gradient Ring Badge */}
-            <div className="relative flex size-32 items-center justify-center rounded-full p-[4.5px] bg-gradient-to-b from-[#3b82f6] via-[#4338ca] to-[#93c5fd] shadow-[0_4px_24px_rgba(99,102,241,0.25)]">
+            {/* Rotating Gradient Ring Badge */}
+            <div className="relative flex size-32 items-center justify-center rounded-full p-[4.5px] overflow-hidden shadow-[0_4px_24px_rgba(99,102,241,0.25)]">
+              {/* Rotating Gradient Ring */}
+              <div className="modal-ring-border" />
+
               {/* Clean White Center */}
-              <div className="flex size-full items-center justify-center rounded-full bg-white">
+              <div className="relative z-10 flex size-full items-center justify-center rounded-full bg-white">
                 {/* Outlined Sparkles with Copper-to-Indigo Gradient */}
                 <svg
                   viewBox="0 0 72 72"

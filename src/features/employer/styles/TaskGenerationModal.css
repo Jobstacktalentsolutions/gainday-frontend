@@ -34,3 +34,27 @@
   animation: sparkle-pulse 2.4s ease-in-out infinite;
   transform-origin: center;
 }
+
+@keyframes ring-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.modal-ring-border {
+  position: absolute;
+  inset: -50%;
+  border-radius: 9999px;
+  background: conic-gradient(
+    from 0deg,
+    #3b82f6 0deg,
+    #4338ca 120deg,
+    #93c5fd 240deg,
+    #3b82f6 360deg
+  );
+  animation: ring-spin 3s linear infinite;
+  will-change: transform;
+}
