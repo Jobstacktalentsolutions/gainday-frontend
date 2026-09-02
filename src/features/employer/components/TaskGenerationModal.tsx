@@ -26,12 +26,12 @@ export const TaskGenerationModal: React.FC<TaskGenerationModalProps> = ({
         {/* Modal Content */}
         <Dialog.Content
           aria-describedby="task-generation-description"
-          className="fixed left-1/2 top-1/2 z-50 w-[90vw] max-w-[380px] -translate-x-1/2 -translate-y-1/2 rounded-[28px] bg-white p-8 shadow-2xl shadow-neutral-950/15 border border-neutral-100/80 outline-none data-[state=open]:animate-in data-[state=open]:zoom-in-95 data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=closed]:fade-out-0 flex flex-col items-center text-center"
+          className="fixed left-1/2 top-1/2 z-50 w-[90vw] max-w-95 -translate-x-1/2 -translate-y-1/2 rounded-[28px] bg-white p-8 shadow-2xl shadow-neutral-950/15 border border-neutral-100/80 outline-none data-[state=open]:animate-in data-[state=open]:zoom-in-95 data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=closed]:fade-out-0 flex flex-col items-center text-center"
         >
           {/* Animated Glowing Badge */}
           <div className="relative mb-6 flex items-center justify-center">
             {/* Outer diffused pulsating glow halo */}
-            <div className="modal-halo-glow absolute -inset-3 rounded-full bg-gradient-to-tr from-blue-500/50 via-indigo-500/60 to-purple-600/50" />
+            <div className="modal-halo-glow absolute -inset-3 rounded-full bg-linear-to-tr from-blue-500/50 via-indigo-500/60 to-purple-600/50" />
 
             {/* Inner Ring Badge */}
             <div className="relative flex size-28 items-center justify-center rounded-full bg-white/95 border-[3.5px] border-indigo-400/90 shadow-[0_0_24px_rgba(99,102,241,0.45)]">

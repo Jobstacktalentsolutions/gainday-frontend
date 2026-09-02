@@ -11,7 +11,7 @@ import { MOCK_SCENARIO_INTRO, MOCK_TASKS } from "../mocks/jobPostingDefaults";
 const SimulationBuilder = () => {
     const navigate = useNavigate();
     const [isGenerating, setIsGenerating] = useState(false);
-    const abortTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const abortTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const {
         register,

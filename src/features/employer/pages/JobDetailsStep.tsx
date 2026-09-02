@@ -20,7 +20,7 @@ const JobDetailsStep = () => {
     const navigate = useNavigate();
     const { onSaveAndExit } = useOutletContext<{ onSaveAndExit: () => void }>();
     const [isGenerating, setIsGenerating] = useState(false);
-    const abortTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const abortTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const {
         register,
