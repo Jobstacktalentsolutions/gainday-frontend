@@ -9,6 +9,7 @@ import TaskGenerationModal from "../components/TaskGenerationModal";
 import { FormSelect } from "@/components/form/FormSelect";
 import { FormTextarea } from "@/components/form/FormTextarea";
 import { JobFormInput } from "@/components/form/JobFormInput";
+import { StepSecondaryButton, StepContinueButton } from "@/components/ui/StepNavigationButtons";
 
 const ROLE_CATEGORIES = ["Operations", "Engineering", "Finance", "Sales", "Compliance"];
 const SKILL_LEVELS = ["Entry level", "Mid level", "Senior level"];
@@ -252,19 +253,12 @@ const JobDetailsStep = () => {
 
             {/* Navigation buttons */}
             <div className="flex items-center justify-between">
-                <button type="button" onClick={onSaveAndExit} className="h-10 cursor-pointer rounded-lg border border-neutral-200 px-4 text-base text-neutral-600">
+                <StepSecondaryButton onClick={onSaveAndExit}>
                     Save and exit
-                </button>
-                <button
-                    type="button"
-                    onClick={handleContinue}
-                    className="flex cursor-pointer h-10 items-center gap-2 rounded-lg bg-primary-500 py-1 pl-4 pr-1 text-base text-neutral-50"
-                >
+                </StepSecondaryButton>
+                <StepContinueButton onClick={handleContinue}>
                     Continue
-                    <span className="flex size-8 items-center justify-center rounded-lg bg-secondary-500">
-                        <ArrowRight className="size-4 text-white" aria-hidden="true" />
-                    </span>
-                </button>
+                </StepContinueButton>
             </div>
 
             {/* Task Generation Loading Modal */}

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowRight, Plus, RefreshCw } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { FormTextarea } from "@/components/form/FormTextarea";
+import { StepSecondaryButton, StepContinueButton } from "@/components/ui/StepNavigationButtons";
 import TaskCard from "../components/TaskCard";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
 import TaskGenerationModal from "../components/TaskGenerationModal";
@@ -127,23 +128,12 @@ const SimulationBuilder = () => {
 
             {/* Navigation buttons */}
             <div className="flex items-center justify-between">
-                <button
-                    type="button"
-                    onClick={() => navigate(-1)}
-                    className="h-10 rounded-lg border border-neutral-200 px-4 text-base text-neutral-600"
-                >
+                <StepSecondaryButton onClick={() => navigate(-1)}>
                     Back
-                </button>
-                <button
-                    type="button"
-                    onClick={handleContinue}
-                    className="flex cursor-pointer h-10 items-center gap-2 rounded-lg bg-primary-500 py-1 pl-4 pr-1 text-base text-neutral-50"
-                >
+                </StepSecondaryButton>
+                <StepContinueButton onClick={handleContinue}>
                     Continue
-                    <span className="flex size-8 items-center justify-center rounded-lg bg-secondary-500">
-                        <ArrowRight className="size-4 text-white" aria-hidden="true" />
-                    </span>
-                </button>
+                </StepContinueButton>
             </div>
 
             {/* Task Generation Loading Modal */}
