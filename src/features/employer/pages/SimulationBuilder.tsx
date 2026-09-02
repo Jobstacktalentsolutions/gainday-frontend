@@ -1,25 +1,38 @@
-import { useNavigate } from "react-router-dom"
+import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { ArrowRight, Plus, RefreshCw } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { FormTextarea } from "@/components/form/FormTextarea";
 import TaskCard from "../components/TaskCard";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
-
+import TaskGenerationModal from "../components/TaskGenerationModal";
+import { MOCK_SCENARIO_INTRO, MOCK_TASKS } from "../mocks/jobPostingDefaults";
 
 const SimulationBuilder = () => {
     const navigate = useNavigate();
+    const [isGenerating, setIsGenerating] = useState(false);
+    const abortTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     const {
         register,
         control,
+        setValue,
         trigger,
         formState: { errors },
     } = useFormContext<JobPostingFormValues>()
 
-    const { fields, append, remove } = useFieldArray({
+    const { fields, append, remove, replace } = useFieldArray({
         control,
         name: "tasks",
     });
+
+    useEffect(() => {
+        return () => {
+            if (abortTimerRef.current) {
+                clearTimeout(abortTimerRef.current);
+            }
+        };
+    }, []);
 
     const handleAddTask = () => {
         append({
@@ -34,7 +47,20 @@ const SimulationBuilder = () => {
     };
 
     const handleRegenerate = () => {
-        console.log("AI call would happen here");
+        setIsGenerating(true);
+        abortTimerRef.current = setTimeout(() => {
+            setValue("scenarioIntro", MOCK_SCENARIO_INTRO, { shouldValidate: true });
+            replace(MOCK_TASKS);
+            setIsGenerating(false);
+        }, 2800);
+    };
+
+    const handleCancelGeneration = () => {
+        if (abortTimerRef.current) {
+            clearTimeout(abortTimerRef.current);
+            abortTimerRef.current = null;
+        }
+        setIsGenerating(false);
     };
 
     const handleContinue = async () => {
@@ -119,6 +145,12 @@ const SimulationBuilder = () => {
                     </span>
                 </button>
             </div>
+
+            {/* Task Generation Loading Modal */}
+            <TaskGenerationModal
+                open={isGenerating}
+                onCancel={handleCancelGeneration}
+            />
         </div>
     )
 }
