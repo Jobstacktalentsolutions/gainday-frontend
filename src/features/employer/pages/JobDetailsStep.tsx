@@ -1,8 +1,10 @@
+import { useState, useRef, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useFormContext } from "react-hook-form";
 import { ArrowRight, Sparkles } from "lucide-react";
 import TagInput from "@/components/ui/tagInput";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
+import TaskGenerationModal from "../components/TaskGenerationModal";
 
 import { FormSelect } from "@/components/form/FormSelect";
 import { FormTextarea } from "@/components/form/FormTextarea";
@@ -17,6 +19,9 @@ const AI_USE_POLICIES = ["Not permitted", "Permitted with disclosure", "Fully pe
 const JobDetailsStep = () => {
     const navigate = useNavigate();
     const { onSaveAndExit } = useOutletContext<{ onSaveAndExit: () => void }>();
+    const [isGenerating, setIsGenerating] = useState(false);
+    const abortTimerRef = useRef<NodeJS.Timeout | null>(null);
+
     const {
         register,
         watch,
@@ -28,9 +33,50 @@ const JobDetailsStep = () => {
     const skills = watch("skills") ?? [];
     const simulationBrief = watch("simulationBrief") ?? "";
 
+    useEffect(() => {
+        return () => {
+            if (abortTimerRef.current) {
+                clearTimeout(abortTimerRef.current);
+            }
+        };
+    }, []);
+
     const handleContinue = async () => {
-        const isValid = await trigger();
-        if (!isValid) navigate("/employer/jobs/new/simulation-builder");
+        const isValid = await trigger([
+            "title",
+            "roleCategory",
+            "skillLevel",
+            "company",
+            "location",
+            "employmentType",
+            "deadline",
+            "isRemoteFriendly",
+            "salaryFrom",
+            "salaryTo",
+            "companyDescription",
+            "roleDescription",
+            "skills",
+            "simulationBrief",
+            "estimatedCompletionTime",
+            "aiUsePolicy",
+        ]);
+
+        if (!isValid) return;
+
+        setIsGenerating(true);
+
+        abortTimerRef.current = setTimeout(() => {
+            setIsGenerating(false);
+            navigate("/employer/jobs/new/simulation-builder");
+        }, 2800);
+    };
+
+    const handleCancelGeneration = () => {
+        if (abortTimerRef.current) {
+            clearTimeout(abortTimerRef.current);
+            abortTimerRef.current = null;
+        }
+        setIsGenerating(false);
     };
 
     return (
@@ -230,6 +276,12 @@ const JobDetailsStep = () => {
                     </span>
                 </button>
             </div>
+
+            {/* Task Generation Loading Modal */}
+            <TaskGenerationModal
+                open={isGenerating}
+                onCancel={handleCancelGeneration}
+            />
         </div>
     )
 }
