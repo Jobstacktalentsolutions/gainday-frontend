@@ -31,11 +31,11 @@ export const TaskGenerationModal: React.FC<TaskGenerationModalProps> = ({
           {/* Animated Glowing Badge */}
           <div className="relative mb-6 flex items-center justify-center">
             {/* Outer diffused pulsating glow halo */}
-            <div className="modal-halo-glow absolute -inset-3 rounded-full bg-linear-to-tr from-blue-500/50 via-indigo-500/60 to-purple-600/50" />
+            <div className="modal-halo-glow absolute -inset-3 rounded-full bg-linear-to-tr from-blue-500/50 via-blue-600/60 to-indigo-600/50" />
 
             {/* Inner Ring Badge */}
-            <div className="relative flex size-28 items-center justify-center rounded-full bg-white/95 border-[3.5px] border-indigo-400/90 shadow-[0_0_24px_rgba(99,102,241,0.45)]">
-              {/* Dynamic Pulsing & Color Changing Sparkles */}
+            <div className="relative flex size-28 items-center justify-center rounded-full bg-white/95 border-[3.5px] border-blue-500/80 shadow-[0_0_24px_rgba(59,130,246,0.35)]">
+              {/* Dynamic Pulsing Sparkles in blue gradient */}
               <svg
                 viewBox="0 0 64 64"
                 className="modal-sparkle-icon size-14 drop-shadow-sm"
@@ -44,8 +44,8 @@ export const TaskGenerationModal: React.FC<TaskGenerationModalProps> = ({
               >
                 <defs>
                   <linearGradient id="taskSparkleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" className="modal-sparkle-stop-1" stopColor="#3b82f6" />
-                    <stop offset="100%" className="modal-sparkle-stop-2" stopColor="#8b5cf6" />
+                    <stop offset="0%" stopColor="#2563eb" />
+                    <stop offset="100%" stopColor="#4f46e5" />
                   </linearGradient>
                 </defs>
 
