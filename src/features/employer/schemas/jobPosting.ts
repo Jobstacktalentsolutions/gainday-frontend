@@ -9,8 +9,14 @@ export const jobDetailsBaseSchema = z.object({
     employmentType: z.string().min(1, "Select an employment type"),
     deadline: z.string().optional(),
     isRemoteFriendly: z.boolean().default(false),
-    salaryFrom: z.coerce.number().positive().optional(),
-    salaryTo: z.coerce.number().positive().optional(),
+    salaryFrom: z.preprocess(
+        (val) => (val === "" || val === null || val === undefined || (typeof val === "number" && isNaN(val)) ? undefined : val),
+        z.coerce.number().positive("Must be greater than 0").optional()
+    ),
+    salaryTo: z.preprocess(
+        (val) => (val === "" || val === null || val === undefined || (typeof val === "number" && isNaN(val)) ? undefined : val),
+        z.coerce.number().positive("Must be greater than 0").optional()
+    ),
     companyDescription: z.string().optional(),
     roleDescription: z.string().optional(),
     skills: z.array(z.string()).default([]),
@@ -24,7 +30,7 @@ export const jobDetailsBaseSchema = z.object({
 
 //Job details schema refine
 export const jobDetailsSchema = jobDetailsBaseSchema.refine(
-    (data) => !data.salaryFrom || !data.salaryTo || data.salaryTo >= data.salaryFrom,
+    (data) => !data.salaryFrom || !data.salaryTo || Number(data.salaryTo) >= Number(data.salaryFrom),
     { message: "Salary to must be greater than salary from", path: ["salaryTo"] }
 );
 
@@ -60,7 +66,7 @@ export type SimulationBuilderFormValues = z.infer<typeof simulationBuilderBaseSc
 export const jobPostingSchema = jobDetailsBaseSchema
     .merge(simulationBuilderBaseSchema)
     .refine(
-        (data) => !data.salaryFrom || !data.salaryTo || data.salaryTo >= data.salaryFrom,
+        (data) => !data.salaryFrom || !data.salaryTo || Number(data.salaryTo) >= Number(data.salaryFrom),
         { message: "Salary to must be greater than salary from ", path: ["salaryTo"] }
     )
 

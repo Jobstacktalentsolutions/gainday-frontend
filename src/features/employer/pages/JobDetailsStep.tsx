@@ -167,6 +167,7 @@ const JobDetailsStep = () => {
                     type="number"
                     optional
                     startIcon={<span>£</span>}
+                    error={errors.salaryFrom?.message}
                     {...register("salaryFrom")}
                 />
                 <JobFormInput
