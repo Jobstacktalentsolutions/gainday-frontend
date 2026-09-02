@@ -3,7 +3,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import { useFormContext } from "react-hook-form";
 import { Sparkles } from "lucide-react";
 import TagInput from "@/components/ui/tagInput";
-import type { JobPostingFormValues } from "../schemas/jobPosting";
+import { jobDetailsSchema, type JobPostingFormValues } from "../schemas/jobPosting";
 import TaskGenerationModal from "../components/TaskGenerationModal";
 
 import { FormSelect } from "@/components/form/FormSelect";
@@ -31,8 +31,10 @@ const JobDetailsStep = () => {
         formState: { errors },
     } = useFormContext<JobPostingFormValues>();
 
-    const skills = watch("skills") ?? [];
-    const simulationBrief = watch("simulationBrief") ?? "";
+    const formValues = watch();
+    const skills = formValues.skills ?? [];
+    const simulationBrief = formValues.simulationBrief ?? "";
+    const isStepValid = jobDetailsSchema.safeParse(formValues).success;
 
     useEffect(() => {
         return () => {
@@ -256,7 +258,7 @@ const JobDetailsStep = () => {
                 <StepSecondaryButton onClick={onSaveAndExit}>
                     Save and exit
                 </StepSecondaryButton>
-                <StepContinueButton onClick={handleContinue}>
+                <StepContinueButton disabled={!isStepValid} onClick={handleContinue}>
                     Continue
                 </StepContinueButton>
             </div>

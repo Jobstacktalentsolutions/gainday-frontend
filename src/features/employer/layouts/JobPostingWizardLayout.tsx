@@ -17,7 +17,7 @@ const JobPostingWizardLayout = () => {
     const form = useForm<JobPostingFormInput>({
         resolver: zodResolver(jobPostingSchema),
         defaultValues: { ...JOB_POSTING_DEFAULT_VALUES, ...draft },
-        mode: "onBlur",
+        mode: "onChange",
     })
 
     // Derive current step from the URL

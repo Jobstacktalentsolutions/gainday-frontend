@@ -5,7 +5,7 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { FormTextarea } from "@/components/form/FormTextarea";
 import { StepSecondaryButton, StepContinueButton } from "@/components/ui/StepNavigationButtons";
 import TaskCard from "../components/TaskCard";
-import type { JobPostingFormValues } from "../schemas/jobPosting";
+import { simulationBuilderSchema, type JobPostingFormValues } from "../schemas/jobPosting";
 import TaskGenerationModal from "../components/TaskGenerationModal";
 import { MOCK_SCENARIO_INTRO, MOCK_TASKS } from "../mocks/jobPostingDefaults";
 
@@ -19,8 +19,12 @@ const SimulationBuilder = () => {
         control,
         setValue,
         trigger,
+        watch,
         formState: { errors },
-    } = useFormContext<JobPostingFormValues>()
+    } = useFormContext<JobPostingFormValues>();
+
+    const formValues = watch();
+    const isStepValid = simulationBuilderSchema.safeParse(formValues).success;
 
     const { fields, append, remove, replace } = useFieldArray({
         control,
@@ -131,7 +135,7 @@ const SimulationBuilder = () => {
                 <StepSecondaryButton onClick={() => navigate(-1)}>
                     Back
                 </StepSecondaryButton>
-                <StepContinueButton onClick={handleContinue}>
+                <StepContinueButton disabled={!isStepValid} onClick={handleContinue}>
                     Continue
                 </StepContinueButton>
             </div>

@@ -52,18 +52,16 @@ export const simulationTaskSchema = z.object({
     scores: z.array(z.string()).default([]),
 });
 
-export type SimulationTask = z.infer<typeof simulationTaskSchema>;
-
-const simulationBuilderBaseSchema = z.object({
+export const simulationBuilderSchema = z.object({
     scenarioIntro: z.string().min(1, "Scenario intro is required"),
     tasks: z.array(simulationTaskSchema).min(1, "Add at least one task"),
 });
 
-export type SimulationBuilderFormValues = z.infer<typeof simulationBuilderBaseSchema>;
+export type SimulationBuilderFormValues = z.infer<typeof simulationBuilderSchema>;
 
 
 export const jobPostingSchema = jobDetailsBaseSchema
-    .merge(simulationBuilderBaseSchema)
+    .merge(simulationBuilderSchema)
     .refine(
         (data) => !data.salaryFrom || !data.salaryTo || Number(data.salaryTo) >= Number(data.salaryFrom),
         { message: "Salary to must be greater than salary from ", path: ["salaryTo"] }
