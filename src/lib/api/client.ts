@@ -1,8 +1,14 @@
 import axios from "axios"
 import { useAuthStore } from "@/features/auth/store/authStore"
 
+export const getBaseURL = () => {
+    const url = import.meta.env.VITE_API_BASE_URL
+    if (!url) return ""
+    return url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`
+}
+
 export const apiClient = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL,
+    baseURL: getBaseURL(),
     withCredentials: true,
 })
 
