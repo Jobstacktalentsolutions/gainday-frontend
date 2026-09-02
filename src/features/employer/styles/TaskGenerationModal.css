@@ -1,4 +1,10 @@
-/* ── Glow pulse & Sparkle pulse for TaskGenerationModal ── */
+/* ── Glow pulse + rotating gradient + Sparkle pulse for TaskGenerationModal ── */
+
+@property --halo-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
 
 @keyframes halo-pulse {
   0%, 100% {
@@ -13,6 +19,12 @@
   }
 }
 
+@keyframes halo-rotate {
+  to {
+    --halo-angle: 360deg;
+  }
+}
+
 @keyframes sparkle-pulse {
   0%, 100% {
     transform: scale(0.94);
@@ -24,8 +36,30 @@
   }
 }
 
+/* Outer layer: handles the pulse (scale/opacity/blur) */
 .modal-halo-glow {
+  position: absolute;
+  inset: -0.75rem;
+  border-radius: 9999px;
   animation: halo-pulse 3s ease-in-out infinite;
+  will-change: transform, filter, opacity;
+}
+
+/* Inner layer: handles the continuous rotation, independent timing */
+.modal-halo-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: conic-gradient(
+    from var(--halo-angle),
+    #3b82f6,
+    #4f46e5,
+    #6366f1,
+    #2563eb,
+    #3b82f6
+  );
+  animation: halo-rotate 4s linear infinite;
 }
 
 .modal-sparkle-icon {
