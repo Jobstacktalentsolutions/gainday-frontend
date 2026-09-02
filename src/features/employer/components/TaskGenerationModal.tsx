@@ -26,7 +26,7 @@ export const TaskGenerationModal: React.FC<TaskGenerationModalProps> = ({
         {/* Modal Content */}
         <Dialog.Content
           aria-describedby="task-generation-description"
-          className="fixed left-1/2 top-1/2 z-50 w-[92vw] max-w-[390px] -translate-x-1/2 -translate-y-1/2 rounded-[32px] bg-white p-8 shadow-2xl shadow-indigo-950/15 border border-neutral-100 outline-none data-[state=open]:animate-in data-[state=open]:zoom-in-95 data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=closed]:fade-out-0 flex flex-col items-center text-center"
+          className="fixed left-1/2 top-1/2 z-50 w-[92vw] max-w-97.5 -translate-x-1/2 -translate-y-1/2 rounded-[32px] bg-white p-8 shadow-2xl shadow-indigo-950/15 border border-neutral-100 outline-none data-[state=open]:animate-in data-[state=open]:zoom-in-95 data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=closed]:fade-out-0 flex flex-col items-center text-center"
         >
           {/* Animated Glowing Badge */}
           <div className="relative mt-2 mb-2 flex items-center justify-center">
