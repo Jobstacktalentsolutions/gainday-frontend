@@ -1,0 +1,89 @@
+/* ── Glow pulse & Color shifting keyframes for TaskGenerationModal ── */
+
+@keyframes halo-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.65;
+    filter: blur(24px);
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.95;
+    filter: blur(32px);
+  }
+}
+
+@keyframes ring-hue-rotate {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    filter: hue-rotate(180deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
+@keyframes sparkle-pulse {
+  0%, 100% {
+    transform: scale(0.92) rotate(-2deg);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.08) rotate(3deg);
+    opacity: 1;
+  }
+}
+
+@keyframes color-shift-gradient {
+  0% {
+    stop-color: #3b82f6; /* Blue */
+  }
+  25% {
+    stop-color: #8b5cf6; /* Violet / Purple */
+  }
+  50% {
+    stop-color: #ec4899; /* Pink / Rose */
+  }
+  75% {
+    stop-color: #f97316; /* Amber / Orange */
+  }
+  100% {
+    stop-color: #3b82f6; /* Blue */
+  }
+}
+
+@keyframes color-shift-secondary {
+  0% {
+    stop-color: #6366f1; /* Indigo */
+  }
+  25% {
+    stop-color: #d946ef; /* Fuchsia */
+  }
+  50% {
+    stop-color: #f59e0b; /* Amber */
+  }
+  75% {
+    stop-color: #06b6d4; /* Cyan */
+  }
+  100% {
+    stop-color: #6366f1; /* Indigo */
+  }
+}
+
+.modal-halo-glow {
+  animation: halo-pulse 3s ease-in-out infinite, ring-hue-rotate 8s linear infinite;
+}
+
+.modal-sparkle-icon {
+  animation: sparkle-pulse 2.4s ease-in-out infinite, ring-hue-rotate 6s linear infinite;
+}
+
+.modal-sparkle-stop-1 {
+  animation: color-shift-gradient 6s ease-in-out infinite;
+}
+
+.modal-sparkle-stop-2 {
+  animation: color-shift-secondary 6s ease-in-out infinite;
+}
