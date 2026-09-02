@@ -1,4 +1,4 @@
-// src/features/employer/components/TaskCard.tsx
+
 import { Trash2 } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import { JobFormInput } from "@/components/form/JobFormInput";

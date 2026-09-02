@@ -1,4 +1,4 @@
-// src/features/employer/components/TaskTypeBadge.tsx
+
 import type { TaskType } from "../schemas/jobPosting";
 
 const TYPE_STYLES: Record<TaskType, { label: string; className: string }> = {
