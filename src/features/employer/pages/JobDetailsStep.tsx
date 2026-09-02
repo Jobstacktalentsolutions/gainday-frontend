@@ -54,7 +54,6 @@ const JobDetailsStep = () => {
             "salaryFrom",
             "salaryTo",
             "companyDescription",
-            "roleDescription",
             "skills",
             "simulationBrief",
             "estimatedCompletionTime",
@@ -190,16 +189,6 @@ const JobDetailsStep = () => {
                     />
                 </div>
 
-                {/* Role description — full width (kept but not in screenshot) */}
-                <div className="lg:col-span-2">
-                    <FormTextarea
-                        label="Role description"
-                        optional
-                        placeholder="What the person does day by day, who they work with..."
-                        rows={3}
-                        {...register("roleDescription")}
-                    />
-                </div>
 
                 {/* Skills — full width */}
                 <div className="flex flex-col gap-1.5 lg:col-span-2">

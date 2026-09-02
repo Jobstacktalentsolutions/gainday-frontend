@@ -18,7 +18,6 @@ export const jobDetailsBaseSchema = z.object({
         z.coerce.number().positive("Must be greater than 0").optional()
     ),
     companyDescription: z.string().optional(),
-    roleDescription: z.string().optional(),
     skills: z.array(z.string()).default([]),
     simulationBrief: z
         .string()
