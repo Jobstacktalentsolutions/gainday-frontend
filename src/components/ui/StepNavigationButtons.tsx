@@ -36,9 +36,7 @@ export const StepSecondaryButton = forwardRef<HTMLButtonElement, StepSecondaryBu
 StepSecondaryButton.displayName = "StepSecondaryButton";
 
 
-/* ────────────────────────────────────────────────────────────
-   2. StepContinueButton ("Continue", "Next Step", etc.)
-   ──────────────────────────────────────────────────────────── */
+
 
 export interface StepContinueButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: ReactNode;
@@ -57,7 +55,7 @@ export const StepContinueButton = forwardRef<HTMLButtonElement, StepContinueButt
           // Darker shade transition on hover
           "hover:bg-primary-600 hover:shadow-md",
           // Click animation
-          "active:scale-[0.96] active:translate-y-[1px] active:bg-primary-700",
+          "active:scale-[0.96] active:translate-y-px active:bg-primary-700",
           "focus-visible:ring-3 focus-visible:ring-primary-500/30",
           "disabled:pointer-events-none disabled:opacity-60 disabled:cursor-not-allowed",
           className
@@ -65,9 +63,9 @@ export const StepContinueButton = forwardRef<HTMLButtonElement, StepContinueButt
         {...props}
       >
         <span>{children}</span>
-        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-secondary-500 text-white transition-colors duration-200 group-hover:bg-secondary-600 group-active:bg-secondary-700">
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-[8px] bg-secondary-500 text-white transition-colors duration-200 group-hover:bg-secondary-500 group-active:bg-secondary-600">
           <span className="flex items-center justify-center group-hover-spiral will-change-transform">
-            {icon ?? <ArrowUpRight className="size-4" aria-hidden="true" />}
+            {icon ?? <ArrowUpRight className="size-5" aria-hidden="true" />}
           </span>
         </span>
       </button>
