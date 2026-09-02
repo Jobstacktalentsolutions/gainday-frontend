@@ -9,12 +9,10 @@ import type { JobPostingFormValues, TaskType } from "../schemas/jobPosting";
 interface TaskCardProps {
     index: number;
     type: TaskType;
-    capabilities: string[];
-    scores: string[];
     onRemove: () => void;
 }
 
-const TaskCard = ({ index, type, capabilities, scores, onRemove }: TaskCardProps) => {
+const TaskCard = ({ index, type, onRemove }: TaskCardProps) => {
     const {
         register,
         formState: { errors },
@@ -61,12 +59,6 @@ const TaskCard = ({ index, type, capabilities, scores, onRemove }: TaskCardProps
                 error={taskErrors?.scenario?.message}
                 {...register(`tasks.${index}.scenario` as const)}
             />
-
-            {(capabilities.length > 0 || scores.length > 0) && (
-                <p className="text-sm text-left text-neutral-950">
-                    Capabilities: {capabilities.join(", ")} · Scores: {scores.join(", ")}
-                </p>
-            )}
         </div>
     );
 };

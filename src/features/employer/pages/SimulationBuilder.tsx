@@ -113,10 +113,7 @@ const SimulationBuilder = () => {
                         key={field.id}
                         index={index}
                         type={field.type}
-                        capabilities={field.capabilities}
-                        scores={field.scores}
                         onRemove={() => remove(index)}
-
                     />
                 ))}
 
