@@ -87,6 +87,13 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEdi
                     >
                         <Bold className="size-3.5" />
                     </ToolbarButton>
+                    <ToolbarButton
+                        label="Italic"
+                        active={editor?.isActive("italic")}
+                        onClick={() => editor?.chain().focus().toggleBold().run()}
+                    >
+                        <Italic className="size-3.5" />
+                    </ToolbarButton>
                 </div>
 
             </div>
