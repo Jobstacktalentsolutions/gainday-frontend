@@ -39,6 +39,7 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
 
         // ── Auto-size logic ──
         const internalRef = useRef<HTMLTextAreaElement | null>(null);
+        const prevValueRef = useRef<string>("");
 
         const resize = useCallback(() => {
             const el = internalRef.current;
@@ -47,10 +48,19 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
             el.style.height = `${el.scrollHeight}px`;
         }, [autoSize]);
 
-        // Resize whenever the value changes externally (e.g. form reset / regenerate)
+        // Poll for programmatic value changes (setValue / replace) that bypass onChange
         useEffect(() => {
-            resize();
-        }, [props.value, resize]);
+            if (!autoSize) return;
+            const interval = setInterval(() => {
+                const el = internalRef.current;
+                if (!el) return;
+                if (el.value !== prevValueRef.current) {
+                    prevValueRef.current = el.value;
+                    resize();
+                }
+            }, 150);
+            return () => clearInterval(interval);
+        }, [autoSize, resize]);
 
         // Merge forwarded ref with internal ref
         const setRefs = useCallback(
@@ -58,14 +68,20 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
                 internalRef.current = node;
                 if (typeof ref === "function") ref(node);
                 else if (ref) (ref as React.MutableRefObject<HTMLTextAreaElement | null>).current = node;
-                // Initial size
+                // Initial size — defer so RHF has time to set the value
                 if (node && autoSize) {
-                    node.style.height = "auto";
-                    node.style.height = `${node.scrollHeight}px`;
+                    requestAnimationFrame(() => {
+                        prevValueRef.current = node.value;
+                        node.style.height = "auto";
+                        node.style.height = `${node.scrollHeight}px`;
+                    });
                 }
             },
             [ref, autoSize]
         );
+
+        // Destructure onChange from rest props so we can wrap it with resize
+        const { onChange: onChangeProp, ...restProps } = props;
 
         return (
             <div className="flex flex-col gap-1.5">
@@ -97,12 +113,18 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
                         aria-errormessage={errorId}
                         onFocus={(e) => { setFocused(true); onFocus?.(e); }}
                         onBlur={(e) => { setFocused(false); onBlur?.(e); }}
-                        onInput={autoSize ? resize : undefined}
+                        onChange={(e) => {
+                            onChangeProp?.(e);
+                            if (autoSize) {
+                                prevValueRef.current = e.target.value;
+                                resize();
+                            }
+                        }}
                         className={cn(
                             "min-w-0 flex-1 resize-none bg-transparent text-base text-neutral-900 outline-none placeholder:text-neutral-400 scrollbar-modern",
                             autoSize && "overflow-hidden"
                         )}
-                        {...props}
+                        {...restProps}
                     />
                     {hasError && (
                         <span className="flex shrink-0 items-center text-error-500">
