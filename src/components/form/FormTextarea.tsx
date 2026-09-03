@@ -1,4 +1,4 @@
-import { forwardRef, useState, useId, type TextareaHTMLAttributes } from "react";
+import { forwardRef, useState, useId, useCallback, useEffect, useRef, type TextareaHTMLAttributes } from "react";
 import { AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -9,6 +9,8 @@ export interface FormTextareaProps extends TextareaHTMLAttributes<HTMLTextAreaEl
     hint?: string;
     hideLabel?: boolean;
     optional?: boolean;
+    /** When true the textarea auto-grows to fit all content (no scroll). */
+    autoSize?: boolean;
 }
 
 export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
@@ -21,6 +23,7 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
         hideLabel,
         required,
         optional,
+        autoSize,
         onFocus,
         onBlur,
         ...props
@@ -33,6 +36,36 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
         const errorId = error ? `${textareaId}-error` : undefined;
         const describedby = [hintId, errorId].filter(Boolean).join(" ") || undefined;
         const hasError = Boolean(error);
+
+        // ── Auto-size logic ──
+        const internalRef = useRef<HTMLTextAreaElement | null>(null);
+
+        const resize = useCallback(() => {
+            const el = internalRef.current;
+            if (!el || !autoSize) return;
+            el.style.height = "auto";
+            el.style.height = `${el.scrollHeight}px`;
+        }, [autoSize]);
+
+        // Resize whenever the value changes externally (e.g. form reset / regenerate)
+        useEffect(() => {
+            resize();
+        }, [props.value, resize]);
+
+        // Merge forwarded ref with internal ref
+        const setRefs = useCallback(
+            (node: HTMLTextAreaElement | null) => {
+                internalRef.current = node;
+                if (typeof ref === "function") ref(node);
+                else if (ref) (ref as React.MutableRefObject<HTMLTextAreaElement | null>).current = node;
+                // Initial size
+                if (node && autoSize) {
+                    node.style.height = "auto";
+                    node.style.height = `${node.scrollHeight}px`;
+                }
+            },
+            [ref, autoSize]
+        );
 
         return (
             <div className="flex flex-col gap-1.5">
@@ -56,7 +89,7 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
                 >
                     <textarea
                         id={textareaId}
-                        ref={ref}
+                        ref={setRefs}
                         required={required}
                         aria-required={required || undefined}
                         aria-invalid={hasError ? "true" : undefined}
@@ -64,7 +97,11 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
                         aria-errormessage={errorId}
                         onFocus={(e) => { setFocused(true); onFocus?.(e); }}
                         onBlur={(e) => { setFocused(false); onBlur?.(e); }}
-                        className="min-w-0 flex-1 resize-none bg-transparent text-base text-neutral-900 outline-none placeholder:text-neutral-400 scrollbar-modern"
+                        onInput={autoSize ? resize : undefined}
+                        className={cn(
+                            "min-w-0 flex-1 resize-none bg-transparent text-base text-neutral-900 outline-none placeholder:text-neutral-400 scrollbar-modern",
+                            autoSize && "overflow-hidden"
+                        )}
                         {...props}
                     />
                     {hasError && (
