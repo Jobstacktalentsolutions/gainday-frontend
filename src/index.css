@@ -243,6 +243,39 @@
   }
 }
 
+/* ── Modern thin scrollbar ── */
+.scrollbar-modern {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.3s;
+}
+
+.scrollbar-modern:hover {
+  scrollbar-color: rgba(0, 0, 0, 0.18) transparent;
+}
+
+.scrollbar-modern::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-modern::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-modern::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 9999px;
+  transition: background 0.3s;
+}
+
+.scrollbar-modern:hover::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.scrollbar-modern::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
 /* ── Animated blue-light border for active FAQ items ── */
 @keyframes faq-border-spin {
   from {

@@ -102,7 +102,7 @@ const TaskCard = ({
                                 {...register(`tasks.${index}.scenario` as const)}
                             />
 
-                            <div className="flex flex-col gap-1.5">
+                            <div className="flex flex-col gap-1.5 text-left">
                                 <label className="text-base font-medium text-neutral-800">Task prompt</label>
                                 <Controller
                                     control={control}
