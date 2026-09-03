@@ -52,6 +52,6 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEdi
             Markdown.configure({ html: false, transformPastedText: true }),
         ],
         content: value,
-        onUpdate : ({ editor }) => onChange((editor.storage.markdown as { getMarkdown: () => string }).getMarkdown())
+        onUpdate : ({ editor }) => onChange((editor.storage as Record<string, any>).markdown.getMarkdown())
     })
 }
