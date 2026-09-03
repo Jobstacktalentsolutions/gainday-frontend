@@ -52,18 +52,44 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEdi
             Markdown.configure({ html: false, transformPastedText: true }),
         ],
         content: value,
-        onUpdate : ({ editor }) => onChange((editor.storage as Record<string, any>).markdown.getMarkdown()),
-        editorProps : {
-            attributes : {
-                class : "min-w-0 flex-1 outline-none text-base text-neutral-900 leading-relaxed [&_p]:min-h-[1.5em]",
+        onUpdate: ({ editor }) => onChange((editor.storage as Record<string, any>).markdown.getMarkdown()),
+        editorProps: {
+            attributes: {
+                class: "min-w-0 flex-1 outline-none text-base text-neutral-900 leading-relaxed [&_p]:min-h-[1.5em]",
             },
         },
     });
 
     //to keep the editor synced when the field value changes externaly
     useEffect(() => {
-        if (!editor)  return ;
+        if (!editor) return;
         const current = (editor.storage as Record<string, any>).markdown.getMarkdown();
         if (value != current) editor.commands.setContent(value, { emitUpdate: false });
-    })
+        //emitUpdate prevents inifite calls to this effect
+    }, [value, editor]);
+
+    const hasError = Boolean(error);
+
+    return (
+        <div className="flex flex-col gap-1.5">
+            <div
+                className={cn(
+                    "rounded-xl border bg-white transition-all duration-200",
+                    "border-neutral-200",
+                    hasError && "border-error-400 ring-3 ring-error-400/20"
+                )}
+            >
+                <div className="flex items-center gap-1 border-b border-neutral-200 bg-neutral-50/50 p-2">
+                    <ToolbarButton
+                        label="Bold"
+                        active={editor?.isActive("bold")}
+                        onClick={() => editor?.chain().focus().toggleBold().run()}
+                    >
+                        <Bold className="size-3.5" />
+                    </ToolbarButton>
+                </div>
+
+            </div>
+        </div>
+    )
 }
