@@ -2,17 +2,26 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, RefreshCw } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
+import { motion, AnimatePresence } from "motion/react";
 import { FormTextarea } from "@/components/form/FormTextarea";
 import { StepSecondaryButton, StepContinueButton } from "@/components/ui/StepNavigationButtons";
 import TaskCard from "../components/TaskCard";
+import TaskCardSkeleton from "../components/TaskCardSkeleton";
+import RegenerationFailureModal from "../components/RegenerationFailureModal";
 import { simulationBuilderSchema, type JobPostingFormValues } from "../schemas/jobPosting";
 import TaskGenerationModal from "../components/TaskGenerationModal";
 import { MOCK_SCENARIO_INTRO, MOCK_TASKS } from "../mocks/jobPostingDefaults";
 
+const EASE = [0.16, 1, 0.3, 1] as const;
+
 const SimulationBuilder = () => {
     const navigate = useNavigate();
     const [isGenerating, setIsGenerating] = useState(false);
+    const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
+    const [regeneratingTaskId, setRegeneratingTaskId] = useState<string | null>(null);
+    const [failedTask, setFailedTask] = useState<{ id: string; index: number } | null>(null);
     const abortTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const taskRegenTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const {
         register,
@@ -31,17 +40,25 @@ const SimulationBuilder = () => {
         name: "tasks",
     });
 
+    // Expand the first task by default once tasks exist
+    useEffect(() => {
+        if (!expandedTaskId && fields.length > 0) {
+            setExpandedTaskId(fields[0].id);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fields.length]);
+
     useEffect(() => {
         return () => {
-            if (abortTimerRef.current) {
-                clearTimeout(abortTimerRef.current);
-            }
+            if (abortTimerRef.current) clearTimeout(abortTimerRef.current);
+            if (taskRegenTimerRef.current) clearTimeout(taskRegenTimerRef.current);
         };
     }, []);
 
     const handleAddTask = () => {
+        const newId = crypto.randomUUID();
         append({
-            id: crypto.randomUUID(),
+            id: newId,
             type: "written",
             title: "",
             taskPrompt: "",
@@ -49,8 +66,10 @@ const SimulationBuilder = () => {
             capabilities: [],
             scores: [],
         });
+        setExpandedTaskId(newId);
     };
 
+    // Regenerates the whole scenario + all tasks
     const handleRegenerate = () => {
         setIsGenerating(true);
         abortTimerRef.current = setTimeout(() => {
@@ -66,6 +85,30 @@ const SimulationBuilder = () => {
             abortTimerRef.current = null;
         }
         setIsGenerating(false);
+    };
+
+    // Regenerates a single task in place
+    const handleRegenerateTask = (index: number, taskId: string) => {
+        setRegeneratingTaskId(taskId);
+        setFailedTask(null);
+
+        // TODO: swap for the real regenerate-single-task API call.
+        // Simulated here with an occasional failure so the failure modal has something to show.
+        taskRegenTimerRef.current = setTimeout(() => {
+            const succeeded = Math.random() > 0.25;
+            if (succeeded) {
+                const replacement = MOCK_TASKS[index % MOCK_TASKS.length];
+                setValue(
+                    `tasks.${index}`,
+                    { ...replacement, id: taskId },
+                    { shouldValidate: true }
+                );
+                setRegeneratingTaskId(null);
+            } else {
+                setRegeneratingTaskId(null);
+                setFailedTask({ id: taskId, index });
+            }
+        }, 1800);
     };
 
     const handleContinue = async () => {
@@ -95,10 +138,11 @@ const SimulationBuilder = () => {
                     <button
                         type="button"
                         onClick={handleRegenerate}
-                        className="flex h-10 self-start items-center justify-center gap-2 rounded-xl border border-neutral-300 px-6 py-2 text-base text-neutral-950"
+                        disabled={isGenerating}
+                        className="flex h-10 self-start items-center justify-center gap-2 rounded-xl border border-neutral-300 px-6 py-2 text-base text-neutral-950 transition-all hover:bg-neutral-50 disabled:opacity-60"
                     >
                         Regenerate
-                        <RefreshCw className="size-4 " aria-hidden="true" />
+                        <RefreshCw className={isGenerating ? "size-4 animate-spin" : "size-4"} aria-hidden="true" />
                     </button>
                 </div>
 
@@ -108,14 +152,60 @@ const SimulationBuilder = () => {
                     error={errors.scenarioIntro?.message}
                     {...register("scenarioIntro")}
                 />
-                {fields.map((field, index) => (
-                    <TaskCard
-                        key={field.id}
-                        index={index}
-                        type={field.type}
-                        onRemove={() => remove(index)}
-                    />
-                ))}
+
+                <div className="flex flex-col gap-5">
+                    <AnimatePresence initial={false}>
+                        {fields.map((field, index) => {
+                            const isThisRegenerating = regeneratingTaskId === field.id;
+                            return (
+                                <motion.div
+                                    key={field.id}
+                                    layout
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -12 }}
+                                    transition={{ duration: 0.4, delay: index * 0.06, ease: EASE }}
+                                >
+                                    <AnimatePresence mode="wait" initial={false}>
+                                        {isThisRegenerating ? (
+                                            <motion.div
+                                                key="skeleton"
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                                transition={{ duration: 0.2 }}
+                                            >
+                                                <TaskCardSkeleton />
+                                            </motion.div>
+                                        ) : (
+                                            <motion.div
+                                                key="card"
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                                transition={{ duration: 0.2 }}
+                                            >
+                                                <TaskCard
+                                                    index={index}
+                                                    type={field.type}
+                                                    expanded={expandedTaskId === field.id}
+                                                    onToggleExpand={() =>
+                                                        setExpandedTaskId((current) =>
+                                                            current === field.id ? null : field.id
+                                                        )
+                                                    }
+                                                    onRemove={() => remove(index)}
+                                                    onRegenerate={() => handleRegenerateTask(index, field.id)}
+                                                    regenerateDisabled={isGenerating || Boolean(regeneratingTaskId)}
+                                                />
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </motion.div>
+                            );
+                        })}
+                    </AnimatePresence>
+                </div>
 
                 <button
                     type="button"
@@ -137,10 +227,21 @@ const SimulationBuilder = () => {
                 </StepContinueButton>
             </div>
 
-            {/* Task Generation Loading Modal */}
+            {/* Full-scenario regeneration loading modal */}
             <TaskGenerationModal
                 open={isGenerating}
                 onCancel={handleCancelGeneration}
+            />
+
+            {/* Single-task regeneration failure modal */}
+            <RegenerationFailureModal
+                open={Boolean(failedTask)}
+                taskLabel={failedTask ? `Task ${failedTask.index + 1}` : undefined}
+                isRetrying={Boolean(regeneratingTaskId)}
+                onDismiss={() => setFailedTask(null)}
+                onRetry={() => {
+                    if (failedTask) handleRegenerateTask(failedTask.index, failedTask.id);
+                }}
             />
         </div>
     )

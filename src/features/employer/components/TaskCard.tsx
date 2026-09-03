@@ -120,29 +120,20 @@ const TaskCard = ({
                     )}
                 </AnimatePresence>
             </div>
+            {!expanded && (
+                <div className="flex justify-center bg-neutral-50/50 pb-5">
+                    <button
+                        type="button"
+                        onClick={onToggleExpand}
+                        className="flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-6 py-2 text-sm font-semibold text-primary-600 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
+                    >
+                        Expand Task Details
+                        <ChevronDown className="size-3.5" aria-hidden="true" />
+                    </button>
+                </div>
+            )}
 
-            <JobFormInput
-                label="Task title"
-                hideLabel
-                error={taskErrors?.title?.message}
-                {...register(`tasks.${index}.title` as const)}
-            />
 
-            <FormTextarea
-                label="Task prompt"
-                hideLabel
-                rows={4}
-                error={taskErrors?.taskPrompt?.message}
-                {...register(`tasks.${index}.taskPrompt` as const)}
-            />
-
-            <FormTextarea
-                label="Scenario context"
-                hideLabel
-                rows={8}
-                error={taskErrors?.scenario?.message}
-                {...register(`tasks.${index}.scenario` as const)}
-            />
         </div>
     );
 };
