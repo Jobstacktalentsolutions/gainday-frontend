@@ -3,14 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { Briefcase, Users, CheckCircle, Plus, FileText, ArrowRight } from "lucide-react";
 import { useEmployerJobs } from "../hooks/useEmployerJobs";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
-import { useProtectedRoute } from "@/features/auth/hooks/useProtectedRoute";
 import { Button } from "@/components/ui/button";
 
 const EmployerDashboard = () => {
     const navigate = useNavigate();
     const { data: jobs, isLoading } = useEmployerJobs();
     const { user } = useCurrentUser();
-    useProtectedRoute();
 
     // Calculate stats from jobs data
     const stats = useMemo(() => {

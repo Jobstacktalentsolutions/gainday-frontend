@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {  useNavigate } from "react-router-dom";
@@ -5,6 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { AlertCircle } from "lucide-react";
 import { type AdminLoginFormValues, adminLoginSchema } from "../schemas/loginSchema";
 import { apiClient } from "@/lib/api/client";
+import { useAuthStore } from "@/features/auth/store/authStore";
 
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/form/FormInput";
@@ -15,6 +17,7 @@ import brandLogo2 from "@/assets/gainday icon.svg";
 const AdminLogin = () => {
 
     const navigate = useNavigate();
+    const [notAdminError, setNotAdminError] = useState(false);
 
     const {
         register,
@@ -26,11 +29,15 @@ const AdminLogin = () => {
 
     const loginMutation = useMutation({
         mutationFn: (values: AdminLoginFormValues) =>
-            apiClient.post("/admin/auth/login", values),
+            apiClient.post("/auth/login", values),
         onSuccess: (res) => {
-            //assume session token gets stored as adminToken by the backend
-
-            localStorage.setItem("adminToken", res.data.token);
+            if (res.data.user?.role !== "ADMIN") {
+                setNotAdminError(true);
+                useAuthStore.getState().clearAuth();
+                return;
+            }
+            setNotAdminError(false);
+            useAuthStore.getState().setAuth(res.data.access_token, res.data.user);
             navigate("/admin/dashboard");
         }
     })
@@ -82,11 +89,13 @@ const AdminLogin = () => {
                         {...register("password")}
                     />
 
-                    {loginMutation.isError && (
+                    {(loginMutation.isError || notAdminError) && (
                         <p role="alert"
                             className="flex items-center gap-1.5 text-sm text-destructive">
                             <AlertCircle aria-hidden="true" className="h-4 w-4 shrink-0" />
-                            Invalid email or password. Please try again
+                            {notAdminError
+                                ? "This account does not have admin access."
+                                : "Invalid email or password. Please try again"}
                         </p>
                     )}
 
