@@ -2,11 +2,13 @@ import { cn } from "@/lib/utils";
 import type { JobStatus } from "../types/job";
 
 const STATUS_STYLES: Record<JobStatus, { label: string; className: string }> = {
-    draft: { label: "Draft", className: "bg-neutral-100 text-neutral-700" },
-    under_review: { label: "Under review", className: "bg-warning-50 text-warning-500" },
-    active: { label: "Active", className: "bg-primary-50 text-primary-500" },
-    shortlist_ready: { label: "Shortlist ready", className: "bg-success-50 text-success-500" },
-    closed: { label: "Closed", className: "bg-error-50 text-error-500" },
+    DRAFT: { label: "Draft", className: "bg-neutral-100 text-neutral-700" },
+    GENERATING: { label: "Generating", className: "bg-warning-50 text-warning-500" },
+    ACTIVE: { label: "Active", className: "bg-primary-50 text-primary-500" },
+    INACTIVE: { label: "Inactive", className: "bg-neutral-100 text-neutral-500" },
+    SHORTLIST_READY: { label: "Shortlist ready", className: "bg-success-50 text-success-500" },
+    GENERATION_FAILED: { label: "Generation failed", className: "bg-error-50 text-error-500" },
+    TERMINATED: { label: "Terminated", className: "bg-error-50 text-error-500" },
 };
 
 interface StatusBadgeProps {

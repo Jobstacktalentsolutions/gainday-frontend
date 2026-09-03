@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -6,13 +6,16 @@ import { jobPostingSchema, type JobPostingFormInput } from "../schemas/jobPostin
 import { useJobDraftStore } from "../stores/useJobDraftStore";
 import { JOB_POSTING_DEFAULT_VALUES } from "../mocks/jobPostingDefaults";
 import JobPostingStepIndicator from "../components/JobPostingStepIndicator";
+import { useSaveJobDraft } from "../hooks/useSaveJobDraft";
 
 
 
 const JobPostingWizardLayout = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { draft, setDraft, clearDraft } = useJobDraftStore();
+    const { draft, jobId, setDraft, setJobId, clearDraft } = useJobDraftStore();
+    const saveDraftMutation = useSaveJobDraft();
+    const [isSavingExit, setIsSavingExit] = useState(false);
 
     const form = useForm<JobPostingFormInput>({
         resolver: zodResolver(jobPostingSchema),
@@ -37,8 +40,16 @@ const JobPostingWizardLayout = () => {
 
     }, [setDraft, form]);
 
-    const handleSaveAndExit = () => {
-        navigate("/employer/jobs");
+    const handleSaveAndExit = async () => {
+        setIsSavingExit(true);
+        try {
+            const values = form.getValues();
+            const saved = await saveDraftMutation.mutateAsync({ ...values, id: jobId ?? undefined });
+            setJobId(saved.id);
+            navigate("/employer/jobs");
+        } finally {
+            setIsSavingExit(false);
+        }
     }
 
     const handleDiscardDraft = () => {
@@ -64,7 +75,13 @@ const JobPostingWizardLayout = () => {
 
                     {/* Main content area */}
                     <div className="flex min-w-0 flex-1 flex-col lg:px-10 lg:py-10">
-                        <Outlet context={{ onSaveAndExit: handleSaveAndExit, onDiscardDraft: handleDiscardDraft }} />
+                        <Outlet context={{
+                            onSaveAndExit: handleSaveAndExit,
+                            onDiscardDraft: handleDiscardDraft,
+                            isSavingExit,
+                            jobId,
+                            setJobId,
+                        }} />
                     </div>
                 </div>
             </div>
