@@ -52,6 +52,18 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEdi
             Markdown.configure({ html: false, transformPastedText: true }),
         ],
         content: value,
-        onUpdate : ({ editor }) => onChange((editor.storage as Record<string, any>).markdown.getMarkdown())
+        onUpdate : ({ editor }) => onChange((editor.storage as Record<string, any>).markdown.getMarkdown()),
+        editorProps : {
+            attributes : {
+                class : "min-w-0 flex-1 outline-none text-base text-neutral-900 leading-relaxed [&_p]:min-h-[1.5em]",
+            },
+        },
+    });
+
+    //to keep the editor synced when the field value changes externaly
+    useEffect(() => {
+        if (!editor)  return ;
+        const current = (editor.storage as Record<string, any>).markdown.getMarkdown();
+        if (value != current) editor.commands.setContent(value, { emitUpdate: false });
     })
 }
