@@ -113,8 +113,18 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEdi
                         <List className="size-3.5" />
                     </ToolbarButton>
                 </div>
+                <div className="px-4 py-3">
+                    <EditorContent editor={editor} />
+                </div>
 
             </div>
+            {hasError && (
+                <p role="alert" className="text-sm text-error-500">
+                    {error}
+                </p>
+            )}
         </div>
     )
 }
+
+export default TaskPromptEditor;
