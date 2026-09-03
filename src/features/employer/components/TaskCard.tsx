@@ -1,7 +1,7 @@
 
 import { Trash2, RefreshCw, ChevronDown, ChevronUp } from "lucide-react";
 import { useFormContext, Controller } from "react-hook-form";
-import { motion, AnimatePresence} from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { JobFormInput } from "@/components/form/JobFormInput";
 import { FormTextarea } from "@/components/form/FormTextarea";
 import TaskTypeBadge from "./TaskTypeBadge";
@@ -12,7 +12,11 @@ import type { JobPostingFormValues, TaskType } from "../schemas/jobPosting";
 interface TaskCardProps {
     index: number;
     type: TaskType;
+    expanded: boolean;
+    onToggleExpand: () => void;
     onRemove: () => void;
+    onRegenerate: () => void;
+    regenerateDisabled?: boolean;
 }
 
 const TaskCard = ({ index, type, onRemove }: TaskCardProps) => {
