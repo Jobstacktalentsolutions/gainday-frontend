@@ -1,5 +1,5 @@
 import { useEffect, type ReactNode } from "react";
-import { useEditor, EditorContent, markdown } from "@tiptap/react";
+import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -50,6 +50,8 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEdi
                 placeholder: placeholder ?? "Write your detailed prompt instructions here...",
             }),
             Markdown.configure({ html: false, transformPastedText: true }),
-        ]
+        ],
+        content: value,
+        onUpdate : ({ editor }) => onChange((editor.storage.markdown as { getMarkdown: () => string }).getMarkdown())
     })
 }
