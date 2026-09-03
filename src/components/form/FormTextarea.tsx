@@ -1,4 +1,4 @@
-import { forwardRef, useState, useId, useCallback, useEffect, useRef, type TextareaHTMLAttributes } from "react";
+import { forwardRef, useState, useId, type TextareaHTMLAttributes } from "react";
 import { AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -9,8 +9,6 @@ export interface FormTextareaProps extends TextareaHTMLAttributes<HTMLTextAreaEl
     hint?: string;
     hideLabel?: boolean;
     optional?: boolean;
-    /** When true the textarea auto-grows to fit all content (no scroll). */
-    autoSize?: boolean;
 }
 
 export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
@@ -23,7 +21,6 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
         hideLabel,
         required,
         optional,
-        autoSize,
         onFocus,
         onBlur,
         ...props
@@ -36,52 +33,6 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
         const errorId = error ? `${textareaId}-error` : undefined;
         const describedby = [hintId, errorId].filter(Boolean).join(" ") || undefined;
         const hasError = Boolean(error);
-
-        // ── Auto-size logic ──
-        const internalRef = useRef<HTMLTextAreaElement | null>(null);
-        const prevValueRef = useRef<string>("");
-
-        const resize = useCallback(() => {
-            const el = internalRef.current;
-            if (!el || !autoSize) return;
-            el.style.height = "auto";
-            el.style.height = `${el.scrollHeight}px`;
-        }, [autoSize]);
-
-        // Poll for programmatic value changes (setValue / replace) that bypass onChange
-        useEffect(() => {
-            if (!autoSize) return;
-            const interval = setInterval(() => {
-                const el = internalRef.current;
-                if (!el) return;
-                if (el.value !== prevValueRef.current) {
-                    prevValueRef.current = el.value;
-                    resize();
-                }
-            }, 150);
-            return () => clearInterval(interval);
-        }, [autoSize, resize]);
-
-        // Merge forwarded ref with internal ref
-        const setRefs = useCallback(
-            (node: HTMLTextAreaElement | null) => {
-                internalRef.current = node;
-                if (typeof ref === "function") ref(node);
-                else if (ref) (ref as React.MutableRefObject<HTMLTextAreaElement | null>).current = node;
-                // Initial size — defer so RHF has time to set the value
-                if (node && autoSize) {
-                    requestAnimationFrame(() => {
-                        prevValueRef.current = node.value;
-                        node.style.height = "auto";
-                        node.style.height = `${node.scrollHeight}px`;
-                    });
-                }
-            },
-            [ref, autoSize]
-        );
-
-        // Destructure onChange from rest props so we can wrap it with resize
-        const { onChange: onChangeProp, ...restProps } = props;
 
         return (
             <div className="flex flex-col gap-1.5">
@@ -105,7 +56,7 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
                 >
                     <textarea
                         id={textareaId}
-                        ref={setRefs}
+                        ref={ref}
                         required={required}
                         aria-required={required || undefined}
                         aria-invalid={hasError ? "true" : undefined}
@@ -113,18 +64,8 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
                         aria-errormessage={errorId}
                         onFocus={(e) => { setFocused(true); onFocus?.(e); }}
                         onBlur={(e) => { setFocused(false); onBlur?.(e); }}
-                        onChange={(e) => {
-                            onChangeProp?.(e);
-                            if (autoSize) {
-                                prevValueRef.current = e.target.value;
-                                resize();
-                            }
-                        }}
-                        className={cn(
-                            "min-w-0 flex-1 resize-none bg-transparent text-base text-neutral-900 outline-none placeholder:text-neutral-400 scrollbar-modern",
-                            autoSize && "overflow-hidden"
-                        )}
-                        {...restProps}
+                        className="min-w-0 flex-1 resize-none bg-transparent text-base text-neutral-900 outline-none placeholder:text-neutral-400 scrollbar-modern"
+                        {...props}
                     />
                     {hasError && (
                         <span className="flex shrink-0 items-center text-error-500">

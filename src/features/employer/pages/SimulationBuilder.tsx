@@ -149,7 +149,6 @@ const SimulationBuilder = () => {
                 <FormTextarea
                     label="Scenario intro the candidate reads first"
                     rows={10}
-                    autoSize
                     error={errors.scenarioIntro?.message}
                     {...register("scenarioIntro")}
                 />
