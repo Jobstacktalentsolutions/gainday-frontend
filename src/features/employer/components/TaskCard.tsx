@@ -26,6 +26,7 @@ const TaskCard = ({
 }: TaskCardProps) => {
     const {
         register,
+        control,
         formState: { errors },
     } = useFormContext<JobPostingFormValues>();
 
@@ -41,15 +42,83 @@ const TaskCard = ({
                     <TaskTypeBadge type={type} />
                 </div>
 
-                
-                <button
-                    type="button"
-                    onClick={onRemove}
-                    className="flex items-center gap-1 text-sm text-neutral-400 hover:text-error-500"
-                >
-                    <Trash2 className="size-3.5" aria-hidden="true" />
-                    Remove
-                </button>
+                <div className="flex items-center gap-2">
+                    <motion.button
+                        type="button"
+                        onClick={onRegenerate}
+                        disabled={regenerateDisabled}
+                        whileHover={{ scale: regenerateDisabled ? 1 : 1.03 }}
+                        whileTap={{ scale: regenerateDisabled ? 1 : 0.97 }}
+                        className={cn(
+                            "flex h-8 items-center gap-1.5 rounded-md bg-linear-to-r from-primary-500 to-primary-700 px-3 text-sm font-medium text-white shadow-sm transition-shadow",
+                            "hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+                        )}
+                    >
+                        <RefreshCw className="size-3.5" aria-hidden="true" />
+                        Regenerate
+                    </motion.button>
+                    {expanded && (
+                        <button
+                            type="button"
+                            onClick={onToggleExpand}
+                            aria-label="Collapse task details"
+                            className="flex size-8 items-center justify-center rounded-md text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
+                        >
+                            <ChevronUp className="size-4" aria-hidden="true" />
+                        </button>
+                    )}
+
+                    <button
+                        type="button"
+                        onClick={onRemove}
+                        className="flex items-center gap-1 rounded-md px-2 py-1.5 text-sm text-neutral-400 transition-colors hover:text-error-500"
+                    >
+                        <Trash2 className="size-3.5" aria-hidden="true" />
+                        Remove
+                    </button>
+                </div>
+            </div>
+            <div className="flex flex-col gap-5 bg-neutral-50/50 p-5">
+                <JobFormInput
+                    label="Title"
+                    error={taskErrors?.title?.message}
+                    {...register(`tasks.${index}.title` as const)}
+                />
+
+                <AnimatePresence initial={false}>
+                    {expanded && (
+                        <motion.div
+                            key="details"
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.35, ease: EASE }}
+                            className="flex flex-col gap-5 overflow-hidden"
+                        >
+                            <FormTextarea
+                                label="Scenario context"
+                                rows={5}
+                                error={taskErrors?.scenario?.message}
+                                {...register(`tasks.${index}.scenario` as const)}
+                            />
+
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-base font-medium text-neutral-800">Task prompt</label>
+                                <Controller
+                                    control={control}
+                                    name={`tasks.${index}.taskPrompt` as const}
+                                    render={({ field }) => (
+                                        <TaskPromptEditor
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                            error={taskErrors?.taskPrompt?.message}
+                                        />
+                                    )}
+                                />
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
 
             <JobFormInput
