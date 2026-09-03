@@ -86,7 +86,7 @@ export const JobFormInput = forwardRef<HTMLInputElement, FormInputProps>(
                 <div
                     className={cn(
                         // base
-                        "group relative flex items-center gap-2 rounded-lg border bg-neutral-50 px-3.5 py-2.5 transition-all duration-200",
+                        "group relative flex items-center gap-2 rounded-lg border bg-white px-3.5 py-2.5 transition-all duration-200",
 
                         // State 1 – Default
                         "border-neutral-200",
@@ -95,7 +95,7 @@ export const JobFormInput = forwardRef<HTMLInputElement, FormInputProps>(
                         focused && !hasError && "border-primary-500 ring-3 ring-primary-500/20",
 
                         // State 4 – Hover (only when not focused & no error)
-                        !focused && !hasError && "hover:bg-[#f7f6f6] hover:border-neutral-300",
+                        !focused && !hasError && "hover:bg-neutral-50 hover:border-neutral-300",
 
                         // State 5 – Error
                         hasError && "border-error-400 ring-3 ring-error-400/20",
