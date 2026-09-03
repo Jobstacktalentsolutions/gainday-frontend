@@ -71,7 +71,7 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEdi
     const hasError = Boolean(error);
 
     return (
-        <div className="flex flex-col gap-1.5">
+        <div className="flex flex-col gap-1.5 text-left">
             <div
                 className={cn(
                     "rounded-xl border bg-white transition-all duration-200",
@@ -113,7 +113,7 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEdi
                         <List className="size-3.5" />
                     </ToolbarButton>
                 </div>
-                <div className="px-4 py-3">
+                <div className="min-h-45 px-4 py-3">
                     <EditorContent editor={editor} />
                 </div>
 
