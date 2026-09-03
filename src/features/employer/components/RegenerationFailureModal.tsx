@@ -45,7 +45,7 @@ const RegenerationFailureModal = ({
                             type="button"
                             onClick={onRetry}
                             disabled={isRetrying}
-                            className="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-primary-500 to-primary-700 text-sm font-medium text-white transition-all hover:shadow-md active:scale-[0.98] disabled:opacity-60"
+                            className="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-linear-to-r from-primary-500 to-primary-700 text-sm font-medium text-white transition-all hover:shadow-md active:scale-[0.98] disabled:opacity-60"
                         >
                             <RefreshCw className={cn("size-4", isRetrying && "animate-spin")} aria-hidden="true" />
                             {isRetrying ? "Retrying..." : "Try again"}
@@ -56,3 +56,5 @@ const RegenerationFailureModal = ({
         </Dialog.Root>
     );
 }
+
+export default RegenerationFailureModal;
