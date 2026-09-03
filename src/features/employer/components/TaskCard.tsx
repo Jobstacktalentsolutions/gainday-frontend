@@ -19,7 +19,11 @@ interface TaskCardProps {
     regenerateDisabled?: boolean;
 }
 
-const TaskCard = ({ index, type, onRemove }: TaskCardProps) => {
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+const TaskCard = ({
+    index, type, expanded, onToggleExpand, onRemove, onRegenerate, regenerateDisabled
+}: TaskCardProps) => {
     const {
         register,
         formState: { errors },
@@ -28,12 +32,16 @@ const TaskCard = ({ index, type, onRemove }: TaskCardProps) => {
     const taskErrors = errors.tasks?.[index];
 
     return (
-        <div className="flex w-full flex-col gap-4 rounded-xl border border-neutral-200 px-2 py-3">
-            <div className="flex items-start justify-between gap-2">
-                <div className="flex flex-1 items-center gap-2.5">
-                    <p className="text-sm text-neutral-950">TASK {index + 1}</p>
+        <div className="flex w-full flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+            <div className="flex items-center justify-between border-b border-neutral-100 p-5">
+                <div className="flex items-center gap-3">
+                    <p className="text-sm font-bold uppercase tracking-wide text-neutral-900">
+                        TASK {index + 1}
+                    </p>
                     <TaskTypeBadge type={type} />
                 </div>
+
+                
                 <button
                     type="button"
                     onClick={onRemove}
