@@ -94,6 +94,24 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEdi
                     >
                         <Italic className="size-3.5" />
                     </ToolbarButton>
+                    <span className="mx-1 h-4 w-px bg-neutral-200" aria-hidden="true" />
+                    <ToolbarButton
+                        label="Link"
+                        active={editor?.isActive("link")}
+                        onClick={() => {
+                            const url = window.prompt("URL");
+                            if (url) editor?.chain().focus().setLink({ href: url }).run();
+                        }}
+                    >
+                        <LinkIcon className="size-3.5" />
+                    </ToolbarButton>
+                    <ToolbarButton
+                        label="Bulleted list"
+                        active={editor?.isActive("bulletList")}
+                        onClick={() => editor?.chain().focus().toggleBulletList().run()}
+                    >
+                        <List className="size-3.5" />
+                    </ToolbarButton>
                 </div>
 
             </div>
