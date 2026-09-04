@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { ArrowLeft, Mail } from "lucide-react";
 import { apiClient } from "@/lib/api/client";
@@ -14,13 +14,20 @@ import { forgetPasswordSchema, type forgetPasswordFormValues } from "../schemas/
 
 const ForgotPassword = () => {
     // const navigate = useNavigate()
+    const [searchParams] = useSearchParams();
+    const defaultEmail = searchParams.get("email") || "";
     const [sentTo, setSentTo] = useState<string | null>(null);
 
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<forgetPasswordFormValues>({ resolver: zodResolver(forgetPasswordSchema) });
+    } = useForm<forgetPasswordFormValues>({
+        resolver: zodResolver(forgetPasswordSchema),
+        defaultValues: {
+            email: defaultEmail,
+        },
+    });
 
     const requestResetMutation = useMutation({
         mutationFn: (values: forgetPasswordFormValues) =>
