@@ -22,7 +22,7 @@ const AdminLogin = () => {
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors },
     } = useForm<AdminLoginFormValues>({
         resolver: zodResolver(adminLoginSchema),
     })
@@ -99,8 +99,8 @@ const AdminLogin = () => {
                         </p>
                     )}
 
-                    <Button type="submit" className="w-full flex items-center justify-center gap-x-2 bg-primary-500 hover:bg-primary-400 hover:opacity-80" disabled={isSubmitting}>
-                        {isSubmitting && (
+                    <Button type="submit" className="w-full flex items-center justify-center gap-x-2 bg-primary-500 hover:bg-primary-400 hover:opacity-80" disabled={loginMutation.isPending}>
+                        {loginMutation.isPending && (
                             <span>
                             <img
                                 src={spinner}
@@ -109,7 +109,7 @@ const AdminLogin = () => {
                             />
                         </span>
                         )}
-                        {isSubmitting ? "Signing in ..." : "Sign In"}
+                        {loginMutation.isPending ? "Signing in ..." : "Sign In"}
                     </Button>
                 </form>
 

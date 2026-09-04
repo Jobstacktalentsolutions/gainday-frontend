@@ -24,8 +24,19 @@ apiClient.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response?.status === 401) {
-            useAuthStore.getState().clearAuth()
-            window.location.href = '/employer/signin'
+            const requestUrl = error.config?.url || ""
+            const isAuthRequest = requestUrl.includes("/auth/login") || requestUrl.includes("/auth/signup")
+            
+            if (!isAuthRequest) {
+                useAuthStore.getState().clearAuth()
+                const isAuthPage =
+                    window.location.pathname.includes("/signin") ||
+                    window.location.pathname.includes("/signup") ||
+                    window.location.pathname.includes("/login")
+                if (!isAuthPage) {
+                    window.location.href = "/employer/signin"
+                }
+            }
         }
         return Promise.reject(error)
     },

@@ -22,10 +22,13 @@ const SignIn = () => {
     const {
         register,
         handleSubmit,
+        watch,
         formState: { errors }
     } = useForm<signInFormValues>({
         resolver: zodResolver(signInSchema)
     })
+
+    const email = watch("email");
 
     const signInMutation = useMutation({
         mutationFn: (values: signInFormValues) =>
@@ -69,7 +72,7 @@ const SignIn = () => {
                     />
                     <div className="w-full flex justify-end ">
                         <Link
-                            to="/employer/forgot-password"
+                            to={email ? `/employer/forgot-password?email=${encodeURIComponent(email)}` : "/employer/forgot-password"}
                             className="text-base text-primary-500 hover:text-primary-600  transition-colors duration-300 delay-100"
                         >
                             Forgot Password?
