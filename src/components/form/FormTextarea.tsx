@@ -64,7 +64,7 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
                         aria-errormessage={errorId}
                         onFocus={(e) => { setFocused(true); onFocus?.(e); }}
                         onBlur={(e) => { setFocused(false); onBlur?.(e); }}
-                        className="min-w-0 flex-1 resize-none bg-transparent text-base text-neutral-900 outline-none placeholder:text-neutral-400 scrollbar-modern"
+                        className="min-w-0 flex-1 resize-none bg-transparent text-base text-neutral-700 outline-none placeholder:text-neutral-400 scrollbar-modern"
                         {...props}
                     />
                     {hasError && (

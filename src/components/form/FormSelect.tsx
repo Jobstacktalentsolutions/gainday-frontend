@@ -72,7 +72,7 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
                         aria-errormessage={errorId}
                         onFocus={(e) => { setFocused(true); onFocus?.(e); }}
                         onBlur={(e) => { setFocused(false); onBlur?.(e); }}
-                        className="w-full appearance-none bg-transparent pr-8 text-base text-neutral-900 outline-none"
+                        className="w-full appearance-none bg-transparent pr-8 text-base text-neutral-700 outline-none"
                         {...props}
                     >
                         {placeholder && <option value="">{placeholder}</option>}

@@ -19,9 +19,11 @@ const SimulationBuilder = () => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
     const [regeneratingTaskId, setRegeneratingTaskId] = useState<string | null>(null);
-    const [failedTask, setFailedTask] = useState<{ id: string; index: number } | null>(null);
+    const [addingTaskId, setAddingTaskId] = useState<string | null>(null);
+    const [failedTask, setFailedTask] = useState<{ id: string; index: number; source: "regenerate" | "add" } | null>(null);
     const abortTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const taskRegenTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const addTaskTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const {
         register,
@@ -52,11 +54,16 @@ const SimulationBuilder = () => {
         return () => {
             if (abortTimerRef.current) clearTimeout(abortTimerRef.current);
             if (taskRegenTimerRef.current) clearTimeout(taskRegenTimerRef.current);
+            if (addTaskTimerRef.current) clearTimeout(addTaskTimerRef.current);
         };
     }, []);
 
+    // Adds a new task via AI generation (simulated)
     const handleAddTask = () => {
         const newId = crypto.randomUUID();
+        const newIndex = fields.length;
+
+        // Append a placeholder so a skeleton card appears in the list
         append({
             id: newId,
             type: "written",
@@ -66,7 +73,27 @@ const SimulationBuilder = () => {
             capabilities: [],
             scores: [],
         });
-        setExpandedTaskId(newId);
+        setAddingTaskId(newId);
+        setFailedTask(null);
+
+        // TODO: swap for the real AI generate-task API call.
+        // Simulated here with an occasional failure so the failure modal has something to show.
+        addTaskTimerRef.current = setTimeout(() => {
+            const succeeded = Math.random() > 0.25;
+            if (succeeded) {
+                const replacement = MOCK_TASKS[newIndex % MOCK_TASKS.length];
+                setValue(
+                    `tasks.${newIndex}`,
+                    { ...replacement, id: newId },
+                    { shouldValidate: true }
+                );
+                setAddingTaskId(null);
+                setExpandedTaskId(newId);
+            } else {
+                setAddingTaskId(null);
+                setFailedTask({ id: newId, index: newIndex, source: "add" });
+            }
+        }, 2200);
     };
 
     // Regenerates the whole scenario + all tasks
@@ -106,15 +133,56 @@ const SimulationBuilder = () => {
                 setRegeneratingTaskId(null);
             } else {
                 setRegeneratingTaskId(null);
-                setFailedTask({ id: taskId, index });
+                setFailedTask({ id: taskId, index, source: "regenerate" });
             }
         }, 1800);
+    };
+
+    // Handles retry from the failure modal for both regeneration and add-task flows
+    const handleFailureRetry = () => {
+        if (!failedTask) return;
+        if (failedTask.source === "add") {
+            // Re-trigger AI generation for the placeholder task
+            setAddingTaskId(failedTask.id);
+            const capturedFailedTask = { ...failedTask };
+            setFailedTask(null);
+
+            addTaskTimerRef.current = setTimeout(() => {
+                const succeeded = Math.random() > 0.25;
+                if (succeeded) {
+                    const replacement = MOCK_TASKS[capturedFailedTask.index % MOCK_TASKS.length];
+                    setValue(
+                        `tasks.${capturedFailedTask.index}`,
+                        { ...replacement, id: capturedFailedTask.id },
+                        { shouldValidate: true }
+                    );
+                    setAddingTaskId(null);
+                    setExpandedTaskId(capturedFailedTask.id);
+                } else {
+                    setAddingTaskId(null);
+                    setFailedTask({ ...capturedFailedTask });
+                }
+            }, 2200);
+        } else {
+            handleRegenerateTask(failedTask.index, failedTask.id);
+        }
+    };
+
+    const handleFailureDismiss = () => {
+        // If an add-task generation failed, remove the empty placeholder
+        if (failedTask?.source === "add") {
+            const idx = fields.findIndex((f) => f.id === failedTask.id);
+            if (idx !== -1) remove(idx);
+        }
+        setFailedTask(null);
     };
 
     const handleContinue = async () => {
         const isValid = await trigger(["scenarioIntro", "tasks"]);
         if (isValid) navigate("/employer/jobs/new/review");
     };
+
+    const isAnyTaskBusy = Boolean(regeneratingTaskId) || Boolean(addingTaskId);
 
     return (
         <div className="flex flex-col gap-12">
@@ -157,6 +225,8 @@ const SimulationBuilder = () => {
                     <AnimatePresence initial={false}>
                         {fields.map((field, index) => {
                             const isThisRegenerating = regeneratingTaskId === field.id;
+                            const isThisAdding = addingTaskId === field.id;
+                            const showSkeleton = isThisRegenerating || isThisAdding;
                             return (
                                 <motion.div
                                     key={field.id}
@@ -167,7 +237,7 @@ const SimulationBuilder = () => {
                                     transition={{ duration: 0.4, delay: index * 0.06, ease: EASE }}
                                 >
                                     <AnimatePresence mode="wait" initial={false}>
-                                        {isThisRegenerating ? (
+                                        {showSkeleton ? (
                                             <motion.div
                                                 key="skeleton"
                                                 initial={{ opacity: 0 }}
@@ -196,7 +266,7 @@ const SimulationBuilder = () => {
                                                     }
                                                     onRemove={() => remove(index)}
                                                     onRegenerate={() => handleRegenerateTask(index, field.id)}
-                                                    regenerateDisabled={isGenerating || Boolean(regeneratingTaskId)}
+                                                    regenerateDisabled={isGenerating || isAnyTaskBusy}
                                                 />
                                             </motion.div>
                                         )}
@@ -210,7 +280,8 @@ const SimulationBuilder = () => {
                 <button
                     type="button"
                     onClick={handleAddTask}
-                    className="flex h-10 w-full cursor-pointer hover:bg-[#f7f6f6] items-center justify-center gap-2 rounded-lg border border-dashed border-neutral-300 px-4 text-base text-neutral-950"
+                    disabled={isAnyTaskBusy || isGenerating}
+                    className="flex h-10 w-full cursor-pointer hover:bg-[#f7f6f6] items-center justify-center gap-2 rounded-lg border border-dashed border-neutral-300 px-4 text-base text-neutral-950 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     <Plus className="size-4" aria-hidden="true" />
                     Add Task
@@ -233,15 +304,13 @@ const SimulationBuilder = () => {
                 onCancel={handleCancelGeneration}
             />
 
-            {/* Single-task regeneration failure modal */}
+            {/* Task generation / regeneration failure modal */}
             <RegenerationFailureModal
                 open={Boolean(failedTask)}
-                taskLabel={failedTask ? `Task ${failedTask.index + 1}` : undefined}
-                isRetrying={Boolean(regeneratingTaskId)}
-                onDismiss={() => setFailedTask(null)}
-                onRetry={() => {
-                    if (failedTask) handleRegenerateTask(failedTask.index, failedTask.id);
-                }}
+                taskLabel={failedTask ? (failedTask.source === "add" ? "the new task" : `Task ${failedTask.index + 1}`) : undefined}
+                isRetrying={isAnyTaskBusy}
+                onDismiss={handleFailureDismiss}
+                onRetry={handleFailureRetry}
             />
         </div>
     )
