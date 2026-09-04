@@ -1,17 +1,9 @@
 import { useState } from "react";
 import { Menu, Bell } from "lucide-react";
-import { NavLink } from "react-router-dom";
-import { cn } from "@/lib/utils";
 import EmployerNavDrawer from "./EmployerNavDrawer";
 import BrandLogo from "@/assets/gainday icon.svg";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 
-
-const DESKTOP_NAV_ITEMS = [
-    { to: "/employer/jobs", label: "Jobs" },
-    { to: "/employer/candidates", label: "Candidates" },
-    { to: "/employer/open-roles", label: "Open Roles" },
-];
 
 const EmployerTopNav = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -28,26 +20,8 @@ const EmployerTopNav = () => {
                     />
                 </span>
 
-                {/* Center: Desktop navigation links */}
-                <nav className="hidden items-center gap-6 lg:flex">
-                    {DESKTOP_NAV_ITEMS.map((item) => (
-                        <NavLink
-                            key={item.to}
-                            to={item.to}
-                            className={({ isActive }) =>
-                                cn(
-                                    "text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-950",
-                                    isActive && "text-neutral-950"
-                                )
-                            }
-                        >
-                            {item.label}
-                        </NavLink>
-                    ))}
-                </nav>
-
-                {/* Right (Desktop): employer name + avatar */}
-                <div className="hidden items-center gap-3 lg:flex">
+                {/* Right: employer name + bell + hamburger (mobile) */}
+                <div className="flex items-center gap-3">
                     {user?.companyName && (
                         <div className="flex items-center gap-1.5">
                             <div className="size-4 rounded-sm border-[3px] border-neutral-950" aria-hidden="true" />
@@ -59,15 +33,12 @@ const EmployerTopNav = () => {
                     <span className="flex size-8 items-center justify-center rounded-full bg-primary-50">
                         <Bell className="size-4 text-primary-500" aria-hidden="true" />
                     </span>
-                </div>
-
-                {/* Right (Mobile): hamburger menu */}
-                <div className="flex items-center gap-3 lg:hidden">
+                    {/* Hamburger: mobile only */}
                     <button
                         type="button"
                         onClick={() => setIsDrawerOpen(true)}
                         aria-label="Open menu"
-                        className="flex size-6 items-center justify-center"
+                        className="flex size-6 items-center justify-center lg:hidden"
                     >
                         <Menu className="size-6 text-neutral-950" aria-hidden="true" />
                     </button>
