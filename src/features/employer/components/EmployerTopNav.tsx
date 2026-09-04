@@ -1,9 +1,15 @@
 import { useState } from "react";
 import { Menu, Bell } from "lucide-react";
+import { NavLink } from "react-router-dom";
+import { cn } from "@/lib/utils";
 import EmployerNavDrawer from "./EmployerNavDrawer";
 import BrandLogo from "@/assets/gainday icon.svg";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 
+const DESKTOP_NAV_ITEMS = [
+    { to: "/employer/dashboard", label: "Dashboard" },
+    { to: "/employer/jobs", label: "Your jobs" },
+];
 
 const EmployerTopNav = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -19,6 +25,24 @@ const EmployerTopNav = () => {
                         alt="Brand logo"
                     />
                 </span>
+
+                {/* Center: Desktop navigation links */}
+                <nav className="hidden items-center gap-6 lg:flex">
+                    {DESKTOP_NAV_ITEMS.map((item) => (
+                        <NavLink
+                            key={item.to}
+                            to={item.to}
+                            className={({ isActive }) =>
+                                cn(
+                                    "text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-950",
+                                    isActive && "text-neutral-950"
+                                )
+                            }
+                        >
+                            {item.label}
+                        </NavLink>
+                    ))}
+                </nav>
 
                 {/* Right: employer name + bell + hamburger (mobile) */}
                 <div className="flex items-center gap-3">

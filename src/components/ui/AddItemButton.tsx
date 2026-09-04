@@ -15,7 +15,7 @@ const AddItemButton = forwardRef<HTMLButtonElement, AddItemButtonProps>(
                 type={type}
                 className={cn(
                     "group inline-flex h-10 items-center gap-2 rounded-lg bg-primary-500 py-1 pl-4 pr-1 text-base font-medium text-neutral-50 select-none cursor-pointer outline-none",
-                    "shadow-sm transition-all duration-200 ease-out",
+                    "shadow-md transition-all duration-200 ease-out",
                     "enabled:hover:bg-primary-600 enabled:hover:shadow-md",
                     "enabled:active:scale-[0.96] enabled:active:translate-y-px enabled:active:bg-primary-700",
                     "focus-visible:ring-3 focus-visible:ring-primary-500/30",
