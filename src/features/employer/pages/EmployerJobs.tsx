@@ -46,7 +46,7 @@ const EmployerJobs = () => {
                             <h1 className="text-2xl text-black lg:text-3xl">Your jobs</h1>
                             <p className="text-neutral-500">Track every post, from draft to hire.</p>
                         </div>
-                        <div className="hidden lg:block">
+                        <div>
                             <button
                                 type="button"
                                 onClick={handlePostJob}
