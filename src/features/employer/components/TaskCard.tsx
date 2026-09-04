@@ -11,7 +11,7 @@ import type { JobPostingFormValues, TaskType } from "../schemas/jobPosting";
 
 interface TaskCardProps {
     index: number;
-    type: TaskType;
+    type?: TaskType;
     expanded: boolean;
     onToggleExpand: () => void;
     onRemove: () => void;
@@ -27,19 +27,24 @@ const TaskCard = ({
     const {
         register,
         control,
+        watch,
         formState: { errors },
     } = useFormContext<JobPostingFormValues>();
 
+    const watchedType = watch(`tasks.${index}.type` as const);
+    const resolvedType = (watchedType as TaskType) || type || "written";
     const taskErrors = errors.tasks?.[index];
 
     return (
         <div className="flex w-full flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+            <input type="hidden" {...register(`tasks.${index}.type` as const)} value={resolvedType} />
+            <input type="hidden" {...register(`tasks.${index}.id` as const)} />
             <div className="flex items-center justify-between border-b border-neutral-100 p-5">
                 <div className="flex items-center gap-3">
                     <p className="text-sm font-bold uppercase tracking-wide text-neutral-900">
                         TASK {index + 1}
                     </p>
-                    <TaskTypeBadge type={type} />
+                    <TaskTypeBadge type={resolvedType} />
                 </div>
 
                 {/* Desktop: action buttons in header */}

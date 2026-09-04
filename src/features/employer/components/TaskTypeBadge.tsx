@@ -7,14 +7,14 @@ const TYPE_STYLES: Record<TaskType, { label: string; className: string }> = {
 };
 
 interface TaskTypeBadgeProps {
-  type: TaskType;
+  type?: TaskType;
 }
 
-const TaskTypeBadge = ({ type }: TaskTypeBadgeProps) => {
-  const { label, className } = TYPE_STYLES[type];
+const TaskTypeBadge = ({ type = "written" }: TaskTypeBadgeProps) => {
+  const style = (type && TYPE_STYLES[type]) || TYPE_STYLES.written;
   return (
-    <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${className}`}>
-      {label}
+    <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs ${style.className}`}>
+      {style.label}
     </span>
   );
 };

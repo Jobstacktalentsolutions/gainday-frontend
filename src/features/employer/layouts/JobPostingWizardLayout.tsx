@@ -17,9 +17,18 @@ const JobPostingWizardLayout = () => {
     const saveDraftMutation = useSaveJobDraft();
     const [isSavingExit, setIsSavingExit] = useState(false);
 
+    const sanitizedTasks = (draft.tasks || JOB_POSTING_DEFAULT_VALUES.tasks || []).map((t) => ({
+        ...t,
+        type: (t?.type === "written" || t?.type === "choice" ? t.type : "written") as "written" | "choice",
+    }));
+
     const form = useForm<JobPostingFormInput>({
         resolver: zodResolver(jobPostingSchema),
-        defaultValues: { ...JOB_POSTING_DEFAULT_VALUES, ...draft },
+        defaultValues: {
+            ...JOB_POSTING_DEFAULT_VALUES,
+            ...draft,
+            tasks: sanitizedTasks,
+        },
         mode: "onChange",
     })
 
