@@ -138,7 +138,7 @@ const TaskCard = ({
                         >
                             <FormTextarea
                                 label="Scenario context"
-                                rows={7}
+                                rows={9}
                                 className="lg:[&_textarea]:h-[7.5rem]"
                                 error={taskErrors?.scenario?.message}
                                 {...register(`tasks.${index}.scenario` as const)}
