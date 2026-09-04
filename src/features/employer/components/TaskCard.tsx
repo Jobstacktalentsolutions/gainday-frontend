@@ -42,7 +42,8 @@ const TaskCard = ({
                     <TaskTypeBadge type={type} />
                 </div>
 
-                <div className="flex items-center gap-2">
+                {/* Desktop: action buttons in header */}
+                <div className="hidden items-center gap-2 lg:flex">
                     <motion.button
                         type="button"
                         onClick={onRegenerate}
@@ -77,7 +78,47 @@ const TaskCard = ({
                         Remove
                     </button>
                 </div>
+
+                {/* Mobile: collapse chevron only */}
+                <div className="flex items-center lg:hidden">
+                    {expanded && (
+                        <button
+                            type="button"
+                            onClick={onToggleExpand}
+                            aria-label="Collapse task details"
+                            className="flex size-8 items-center justify-center rounded-md text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
+                        >
+                            <ChevronUp className="size-4" aria-hidden="true" />
+                        </button>
+                    )}
+                </div>
             </div>
+
+            {/* Mobile: action buttons row below header */}
+            <div className="flex items-center gap-3 border-b border-neutral-100 px-5 py-3 lg:hidden">
+                <motion.button
+                    type="button"
+                    onClick={onRegenerate}
+                    disabled={regenerateDisabled}
+                    whileTap={{ scale: regenerateDisabled ? 1 : 0.97 }}
+                    className={cn(
+                        "flex h-9 flex-1 items-center justify-center gap-1.5 rounded-lg bg-linear-to-r from-primary-500 to-primary-700 px-4 text-sm font-medium text-white shadow-sm transition-shadow",
+                        "disabled:cursor-not-allowed disabled:opacity-60"
+                    )}
+                >
+                    <RefreshCw className="size-3.5" aria-hidden="true" />
+                    Regenerate
+                </motion.button>
+                <button
+                    type="button"
+                    onClick={onRemove}
+                    className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-lg border border-neutral-300 bg-white px-4 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-error-500"
+                >
+                    <Trash2 className="size-3.5" aria-hidden="true" />
+                    Remove
+                </button>
+            </div>
+
             <div className="flex flex-col gap-5 bg-neutral-50/50 p-5">
                 <JobFormInput
                     label="Title"
@@ -97,7 +138,8 @@ const TaskCard = ({
                         >
                             <FormTextarea
                                 label="Scenario context"
-                                rows={5}
+                                rows={7}
+                                className="lg:[&_textarea]:h-[7.5rem]"
                                 error={taskErrors?.scenario?.message}
                                 {...register(`tasks.${index}.scenario` as const)}
                             />
