@@ -5,23 +5,32 @@ import { Sparkles } from "lucide-react";
 import TagInput from "@/components/ui/tagInput";
 import { jobDetailsSchema, type JobPostingFormValues } from "../schemas/jobPosting";
 import TaskGenerationModal from "../components/TaskGenerationModal";
+import { useSaveJobDetails } from "../hooks/useSaveJobDraft";
 
 import { FormSelect } from "@/components/form/FormSelect";
 import { FormTextarea } from "@/components/form/FormTextarea";
 import { JobFormInput } from "@/components/form/JobFormInput";
 import { StepSecondaryButton, StepContinueButton } from "@/components/ui/StepNavigationButtons";
 
-const ROLE_CATEGORIES = ["Operations", "Engineering", "Finance", "Sales", "Compliance"];
+const ROLES = [
+    { value: "FINANCE", label: "Finance" },
+    { value: "SALES", label: "Sales" },
+];
 const SKILL_LEVELS = ["Entry level", "Mid level", "Senior level"];
 const EMPLOYMENT_TYPES = ["Full-time", "Part-time", "Contract"];
-const COMPLETION_TIMES = ["15 minutes", "20 minutes", "30 minutes", "45 minutes"];
-const AI_USE_POLICIES = ["Not permitted", "Permitted with disclosure", "Fully permitted"];
+
+interface JobPostingOutletContext {
+    onSaveAndExit: () => void;
+    jobId: string | null;
+    setJobId: (jobId: string | null) => void;
+}
 
 const JobDetailsStep = () => {
     const navigate = useNavigate();
-    const { onSaveAndExit } = useOutletContext<{ onSaveAndExit: () => void }>();
+    const { onSaveAndExit, jobId, setJobId } = useOutletContext<JobPostingOutletContext>();
     const [isGenerating, setIsGenerating] = useState(false);
     const abortTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const saveDetailsMutation = useSaveJobDetails();
 
     const {
         register,
@@ -33,7 +42,7 @@ const JobDetailsStep = () => {
 
     const formValues = watch();
     const skills = formValues.skills ?? [];
-    const simulationBrief = formValues.simulationBrief ?? "";
+    const description = formValues.description ?? "";
     const isStepValid = jobDetailsSchema.safeParse(formValues).success;
 
     useEffect(() => {
@@ -47,8 +56,9 @@ const JobDetailsStep = () => {
     const handleContinue = async () => {
         const isValid = await trigger([
             "title",
-            "roleCategory",
+            "role",
             "skillLevel",
+            "skillCategory",
             "company",
             "location",
             "employmentType",
@@ -58,19 +68,25 @@ const JobDetailsStep = () => {
             "salaryTo",
             "companyDescription",
             "skills",
-            "simulationBrief",
-            "estimatedCompletionTime",
-            "aiUsePolicy",
+            "description",
         ]);
 
         if (!isValid) return;
 
         setIsGenerating(true);
 
-        abortTimerRef.current = setTimeout(() => {
+        try {
+            const values = watch();
+            const saved = await saveDetailsMutation.mutateAsync({ ...values, id: jobId ?? undefined });
+            setJobId(saved.id);
+
+            abortTimerRef.current = setTimeout(() => {
+                setIsGenerating(false);
+                navigate("/employer/jobs/new/simulation-builder");
+            }, 2800);
+        } catch {
             setIsGenerating(false);
-            navigate("/employer/jobs/new/simulation-builder");
-        }, 2800);
+        }
     };
 
     const handleCancelGeneration = () => {
@@ -104,15 +120,15 @@ const JobDetailsStep = () => {
                     />
                 </div>
 
-                {/* Role category + Skill level — side by side */}
+                {/* Role + Skill level — side by side */}
                 <FormSelect
-                    label="Role category"
-                    placeholder="Select a category"
-                    error={errors.roleCategory?.message}
-                    {...register("roleCategory")}
+                    label="Role"
+                    placeholder="Select a role"
+                    error={errors.role?.message}
+                    {...register("role")}
                 >
-                    {ROLE_CATEGORIES.map((c) => (
-                        <option key={c} value={c}>{c}</option>
+                    {ROLES.map((r) => (
+                        <option key={r.value} value={r.value}>{r.label}</option>
                     ))}
                 </FormSelect>
 
@@ -126,6 +142,17 @@ const JobDetailsStep = () => {
                         <option key={s} value={s}>{s}</option>
                     ))}
                 </FormSelect>
+
+                {/* Skill category — optional, full width */}
+                <div className="lg:col-span-2">
+                    <JobFormInput
+                        label="Skill category"
+                        optional
+                        placeholder="e.g Credit Risk"
+                        error={errors.skillCategory?.message}
+                        {...register("skillCategory")}
+                    />
+                </div>
 
                 {/* Company + Location — side by side */}
                 <JobFormInput label="Company" readOnly {...register("company")} />
@@ -151,7 +178,8 @@ const JobDetailsStep = () => {
                 <JobFormInput
                     label="Deadline"
                     optional
-                    placeholder=""
+                    type="date"
+                    error={errors.deadline?.message}
                     {...register("deadline")}
                 />
 
@@ -216,41 +244,18 @@ const JobDetailsStep = () => {
                         first morning.
                     </p>
                     <FormTextarea
-                        label="Simulation brief"
+                        label="Job description"
                         hideLabel
                         placeholder="Enter a description..."
                         rows={8}
-                        error={errors.simulationBrief?.message}
+                        error={errors.description?.message}
                         className="bg-neutral-50"
-                        {...register("simulationBrief")}
+                        {...register("description")}
                     />
                     <p className="text-sm text-neutral-700">
-                        {simulationBrief.length}/350 characters. 40 minimum
+                        {description.length}/500 characters. 40 minimum
                     </p>
                 </div>
-
-                {/* Estimated completion time + AI use policy — side by side */}
-                <FormSelect
-                    label="Estimated completion time"
-                    placeholder="Select a duration"
-                    error={errors.estimatedCompletionTime?.message}
-                    {...register("estimatedCompletionTime")}
-                >
-                    {COMPLETION_TIMES.map((t) => (
-                        <option key={t} value={t}>{t}</option>
-                    ))}
-                </FormSelect>
-
-                <FormSelect
-                    label="AI use policy"
-                    placeholder="Select a policy"
-                    error={errors.aiUsePolicy?.message}
-                    {...register("aiUsePolicy")}
-                >
-                    {AI_USE_POLICIES.map((p) => (
-                        <option key={p} value={p}>{p}</option>
-                    ))}
-                </FormSelect>
             </div>
 
             {/* Navigation buttons */}

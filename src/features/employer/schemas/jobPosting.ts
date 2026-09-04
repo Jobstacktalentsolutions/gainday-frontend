@@ -1,9 +1,13 @@
 import { z } from "zod";
 
+export const jobRoleEnum = z.enum(["FINANCE", "SALES"]);
+export type JobRole = z.infer<typeof jobRoleEnum>;
+
 export const jobDetailsBaseSchema = z.object({
     title: z.string().min(3, "Job title is required"),
-    roleCategory: z.string().min(1, "Select a role category"),
+    role: jobRoleEnum,
     skillLevel: z.string().min(1, "Select a skill level"),
+    skillCategory: z.string().optional(),
     company: z.string().min(1),
     location: z.string().min(1, "Location is required"),
     employmentType: z.string().min(1, "Select an employment type"),
@@ -19,12 +23,10 @@ export const jobDetailsBaseSchema = z.object({
     ),
     companyDescription: z.string().optional(),
     skills: z.array(z.string()).default([]),
-    simulationBrief: z
+    description: z
         .string()
         .min(40, "Give at least 40 characters so Gainday has enough to work with")
-        .max(350, "keep it under 350 characters"),
-    estimatedCompletionTime: z.string().min(1, "Select an estimated time"),
-    aiUsePolicy: z.string().min(1, "Select an AI use policy"),
+        .max(500, "keep it under 500 characters"),
 })
 
 //Job details schema refine

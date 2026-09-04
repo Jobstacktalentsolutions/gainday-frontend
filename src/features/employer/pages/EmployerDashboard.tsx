@@ -3,23 +3,21 @@ import { Link, useNavigate } from "react-router-dom";
 import { Briefcase, Users, CheckCircle, Plus, FileText, ArrowRight } from "lucide-react";
 import { useEmployerJobs } from "../hooks/useEmployerJobs";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
-import { useProtectedRoute } from "@/features/auth/hooks/useProtectedRoute";
 import { Button } from "@/components/ui/button";
 
 const EmployerDashboard = () => {
     const navigate = useNavigate();
     const { data: jobs, isLoading } = useEmployerJobs();
     const { user } = useCurrentUser();
-    useProtectedRoute();
 
     // Calculate stats from jobs data
     const stats = useMemo(() => {
         if (!jobs) return { active: 0, drafts: 0, completed: 0, totalSubmissions: 0 };
         return jobs.reduce(
             (acc, job) => {
-                if (job.status === "active") acc.active += 1;
-                if (job.status === "draft") acc.drafts += 1;
-                if (job.status === "closed") acc.completed += 1;
+                if (job.status === "ACTIVE") acc.active += 1;
+                if (job.status === "DRAFT") acc.drafts += 1;
+                if (job.status === "INACTIVE" || job.status === "TERMINATED") acc.completed += 1;
                 acc.totalSubmissions += job.submissionsCount || 0;
                 return acc;
             },
@@ -29,7 +27,7 @@ const EmployerDashboard = () => {
 
     const activeJobsList = useMemo(() => {
         if (!jobs) return [];
-        return jobs.filter((job) => job.status === "active" || job.status === "shortlist_ready" || job.status === "under_review").slice(0, 3);
+        return jobs.filter((job) => job.status === "ACTIVE" || job.status === "SHORTLIST_READY" || job.status === "GENERATING").slice(0, 3);
     }, [jobs]);
 
     return (
@@ -120,11 +118,11 @@ const EmployerDashboard = () => {
                                                 <p className="text-[10px] text-neutral-400 uppercase">Submissions</p>
                                             </div>
                                             <span className={`text-xs px-2 py-1 rounded-full font-medium capitalize ${
-                                                job.status === "active" ? "bg-green-50 text-green-700" :
-                                                job.status === "shortlist_ready" ? "bg-primary-50 text-primary-700" :
+                                                job.status === "ACTIVE" ? "bg-green-50 text-green-700" :
+                                                job.status === "SHORTLIST_READY" ? "bg-primary-50 text-primary-700" :
                                                 "bg-amber-50 text-amber-700"
                                             }`}>
-                                                {job.status.replace("_", " ")}
+                                                {job.status.replace("_", " ").toLowerCase()}
                                             </span>
                                         </div>
                                     </div>

@@ -3,10 +3,12 @@ import type { JobStatusFilter } from "../types/job";
 
 const TABS: { value: JobStatusFilter; label: string }[] = [
   { value: "all", label: "All" },
-  { value: "draft", label: "Draft" },
-  { value: "under_review", label: "Under review" },
-  { value: "shortlist_ready", label: "Shortlist ready" },
-  { value: "closed", label: "Closed" },
+  { value: "DRAFT", label: "Draft" },
+  { value: "GENERATING", label: "Generating" },
+  { value: "ACTIVE", label: "Active" },
+  { value: "SHORTLIST_READY", label: "Shortlist ready" },
+  { value: "INACTIVE", label: "Inactive" },
+  { value: "TERMINATED", label: "Terminated" },
 ];
 
 interface JobStatusTabsProps {

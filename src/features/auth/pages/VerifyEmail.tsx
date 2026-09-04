@@ -7,6 +7,13 @@ import AuthCard from "../component/AuthCard";
 import { ActionButton } from "@/components/ui/ActionButton";
 import successAnimation from "@/assets/successAnimation.gif";
 import spinner from "@/assets/Spinner.svg";
+import BrandLogo from "@/assets/gainday icon.svg";
+
+const AppTopBar = () => (
+  <header className="fixed left-0 top-0 z-50 flex w-full items-center border-t border-t-white/25 border-b border-b-white/15 bg-white/70 px-6 py-3.5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),inset_0_-1px_0_0_rgba(255,255,255,0.1),0_4px_16px_rgba(0,0,0,0.06)] backdrop-blur-xs lg:px-12 xl:px-20">
+    <img src={BrandLogo} alt="Brand logo" />
+  </header>
+);
 
 const VerifyEmail = () => {
   const navigate = useNavigate();
@@ -121,35 +128,40 @@ const VerifyEmail = () => {
 
   // Default state - check your email (after signup)
   return (
-    <AuthCard title="" subtitle="">
-      <div className="flex w-full flex-col items-center gap-6 text-center">
-        <div className="w-24 h-24 bg-primary-100 rounded-full flex items-center justify-center">
-          <span className="text-4xl">📧</span>
-        </div>
-        <div>
-          <p className="text-2xl font-bold text-primary-950 mb-2">
-            Check Your Email
-          </p>
-          <p className="text-primary-600 mb-4">
-            We've sent a verification link to your email address.
-          </p>
-          <p className="text-sm text-primary-500">
-            Click the link in the email to verify your account and get started.
-          </p>
-        </div>
-        <div className="flex flex-col gap-3 w-full pt-4">
-          <p className="text-xs text-primary-500">
-            Link expires in 24 hours
-          </p>
-          <button
-            onClick={() => navigate("/employer/signin")}
-            className="w-full py-3 text-base border-2 border-primary-600 text-primary-600 rounded-lg font-semibold hover:bg-primary-50 transition-colors"
-          >
-            Back to Sign In
-          </button>
+    <>
+      <AppTopBar />
+      <div className="fixed inset-0 z-40 flex items-start justify-center overflow-y-auto bg-primary-50/50 pt-40 pb-10 backdrop-blur-[20px]">
+        <div className="mx-auto my-auto flex w-141.5 max-w-[92vw] flex-col items-center gap-12 rounded-2xl bg-white p-12 shadow-lg lg:gap-15">
+          <div className="flex w-full flex-col items-center gap-6 text-center">
+            <div className="w-24 h-24 bg-primary-100 rounded-full flex items-center justify-center">
+              <span className="text-4xl">📧</span>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-primary-950 mb-2">
+                Check Your Email
+              </p>
+              <p className="text-primary-600 mb-4">
+                We've sent a verification link to your email address.
+              </p>
+              <p className="text-sm text-primary-500">
+                Click the link in the email to verify your account and get started.
+              </p>
+            </div>
+            <div className="flex flex-col gap-3 w-full pt-4">
+              <p className="text-xs text-primary-500">
+                Link expires in 24 hours
+              </p>
+              <button
+                onClick={() => navigate("/employer/signin")}
+                className="w-full py-3 text-base border-2 border-primary-600 text-primary-600 rounded-lg font-semibold hover:bg-primary-50 transition-colors"
+              >
+                Back to Sign In
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </AuthCard>
+    </>
   );
 };
 
