@@ -22,9 +22,9 @@ const ReviewPublish = () => {
   const [publishResult, setPublishResult] = useState<{ jobUrl: string } | null>(null);
 
   const handleEditSimulation = () => {
-    // Per the design: editing the task list navigates back to the actual step,
-    // rather than editing inline like Job Details does.
-    navigate("/employer/jobs/new/simulation");
+    
+    navigate("/employer/jobs/new/simulation-builder");
+
   };
 
   const handlePublish = async () => {
