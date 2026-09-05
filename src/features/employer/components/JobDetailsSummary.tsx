@@ -1,7 +1,7 @@
 import { Pencil } from "lucide-react";
 import { useFormContext } from "react-hook-form";
-import type { JobPostingFormValues } from "../../schemas/jobPosting";
-import { ROLES } from "../../constants/jobPostingOptions";
+import type { JobPostingFormValues } from "../schemas/jobPosting";
+import { ROLES } from "../constants/jobPostingOptions";
 
 interface SummaryRowProps {
   label: string;
