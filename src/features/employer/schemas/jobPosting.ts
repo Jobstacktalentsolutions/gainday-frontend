@@ -7,7 +7,7 @@ export const jobDetailsBaseSchema = z.object({
     title: z.string().min(3, "Job title is required"),
     role: jobRoleEnum,
     skillLevel: z.string().min(1, "Select a skill level"),
-    skillCategory: z.string().optional(),
+    roleCategory: z.string().optional(),
     company: z.string().min(1),
     location: z.string().min(1, "Location is required"),
     employmentType: z.string().min(1, "Select an employment type"),
@@ -21,6 +21,7 @@ export const jobDetailsBaseSchema = z.object({
         (val) => (val === "" || val === null || val === undefined || (typeof val === "number" && isNaN(val)) ? undefined : val),
         z.coerce.number().positive("Must be greater than 0").optional()
     ),
+    aiUsePolicy: z.string().optional(),
     companyDescription: z.string().optional(),
     skills: z.array(z.string()).default([]),
     description: z
