@@ -119,15 +119,27 @@ const ReviewPublish = () => {
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-2 gap-4 rounded-2xl border border-neutral-200 p-5">
-                    <div className="flex flex-col gap-1">
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-1 rounded-2xl border border-neutral-200 p-5">
                         <p className="text-3xl font-bold text-neutral-950">{values.tasks.length}</p>
                         <p className="text-sm text-neutral-500">Tasks</p>
                     </div>
-                    <div className="flex flex-col gap-1">
+                    <div className="flex flex-col gap-1 rounded-2xl border border-neutral-200 p-5">
                         <p className="text-3xl font-bold text-neutral-950">20 minutes</p>
                         <p className="text-sm text-neutral-500">Estimated completion time</p>
                     </div>
+                </div>
+
+                {/* Lock warning */}
+                <div className="flex items-start gap-2.5 rounded-xl bg-amber-50 px-4 py-3">
+                    <span className="mt-0.5 shrink-0 text-amber-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="size-4" viewBox="0 0 24 24" fill="currentColor">
+                            <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 0 0-5.25 5.25v3a3 3 0 0 0-3 3v6.75a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3v-6.75a3 3 0 0 0-3-3v-3c0-2.9-2.35-5.25-5.25-5.25Zm3.75 8.25v-3a3.75 3.75 0 1 0-7.5 0v3h7.5Z" clipRule="evenodd" />
+                        </svg>
+                    </span>
+                    <p className="text-sm text-amber-600">
+                        Once published, the work simulation is locked. Editing tasks after candidates start applying would make scores harder to compare across applicants. Job details like the deadline can still be updated after publishing.
+                    </p>
                 </div>
 
                 {/* Agreement */}
