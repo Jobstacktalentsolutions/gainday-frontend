@@ -3,12 +3,9 @@ import { Controller, useFormContext } from "react-hook-form";
 import { JobFormInput } from "@/components/form/JobFormInput";
 import { FormSelect } from "@/components/form/FormSelect";
 import { FormTextarea } from "@/components/form/FormTextarea";
-import SkillsRemovableList from "./SkillsRemovableList";
+import TagInput from "@/components/ui/tagInput";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
-import {
-  EMPLOYMENT_TYPES,
-  AI_USE_POLICIES,
-} from "../constants/jobPostingOptions";
+import { EMPLOYMENT_TYPES } from "../constants/jobPostingOptions";
 
 interface JobDetailsEditFormProps {
   onDone: () => void;
@@ -106,13 +103,18 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
         />
       </div>
 
-      {/* Skills — delete only */}
+      {/* Skills */}
       <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-medium text-neutral-700">Skills</label>
         <Controller
           control={control}
           name="skills"
           render={({ field }) => (
-            <SkillsRemovableList value={field.value} onChange={field.onChange} />
+            <TagInput
+              value={field.value}
+              onChange={field.onChange}
+              placeholder="Type a skill and press Enter"
+            />
           )}
         />
       </div>
@@ -124,21 +126,6 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
         error={errors.description?.message}
         {...register("description")}
       />
-
-      {/* AI use policy */}
-      <FormSelect
-        label="AI use policy"
-        optional
-        placeholder="Select a policy"
-        error={errors.aiUsePolicy?.message}
-        {...register("aiUsePolicy")}
-      >
-        {AI_USE_POLICIES.map((policy) => (
-          <option key={policy} value={policy}>
-            {policy}
-          </option>
-        ))}
-      </FormSelect>
     </div>
   );
 };
