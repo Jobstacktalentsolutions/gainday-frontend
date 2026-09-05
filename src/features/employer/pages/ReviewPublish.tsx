@@ -6,7 +6,7 @@ import { StepSecondaryButton, StepContinueButton } from "@/components/ui/StepNav
 import JobDetailsSummary from "../components/JobDetailsSummary";
 import JobDetailsEditForm from "../components/JobDetailsEditForm";
 import PublishSuccess from "../components/PublishSuccess";
-import TaskSummaryCard from "../components/review/TaskSummaryCard";
+import TaskSummaryCard from "../components/TaskSummaryCard";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
