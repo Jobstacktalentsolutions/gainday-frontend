@@ -64,22 +64,19 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
         </FormSelect>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <JobFormInput label="Location" error={errors.location?.message} {...register("location")} />
+      <JobFormInput
+        label="Skill category"
+        optional
+        error={errors.roleCategory?.message}
+        {...register("roleCategory")}
+      />
 
-        <FormSelect
-          label="Employment type"
-          placeholder="Select a type"
-          error={errors.employmentType?.message}
-          {...register("employmentType")}
-        >
-          {EMPLOYMENT_TYPES.map((type) => (
-            <option key={type} value={type}>
-              {type}
-            </option>
-          ))}
-        </FormSelect>
+      <div className="grid grid-cols-2 gap-4">
+        <JobFormInput label="Company" error={errors.company?.message} {...register("company")} />
+        <JobFormInput label="Location" error={errors.location?.message} {...register("location")} />
       </div>
+
+
 
       <div className="grid grid-cols-2 gap-4">
         <JobFormInput
