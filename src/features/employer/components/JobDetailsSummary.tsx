@@ -60,8 +60,6 @@ const JobDetailsSummary = ({ onEdit }: JobDetailsSummaryProps) => {
         </button>
       </div>
 
-      {/* Job description */}
-      <p className="text-base text-neutral-700">{values.description}</p>
 
       {/* Grid: Category | Employment type, Location | Salary, Deadline */}
       <div className="grid grid-cols-2 gap-x-6 gap-y-5">
