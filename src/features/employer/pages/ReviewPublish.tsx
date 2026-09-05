@@ -3,15 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { useFormContext } from "react-hook-form";
 import { AnimatePresence, motion } from "motion/react";
 import { StepSecondaryButton, StepContinueButton } from "@/components/ui/StepNavigationButtons";
-import JobDetailsSummary from "../components/review/JobDetailsSummary";
-import JobDetailsEditForm from "../components/review/JobDetailsEditForm";
+import JobDetailsSummary from "../components/JobDetailsSummary";
+import JobDetailsEditForm from "../components/JobDetailsEditForm";
+
 import TaskSummaryCard from "../components/review/TaskSummaryCard";
 import PublishSuccess from "../components/review/PublishSuccess";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-const ReviewPublishStep = () => {
+const ReviewPublish = () => {
   const navigate = useNavigate();
   const { watch, trigger } = useFormContext<JobPostingFormValues>();
   const values = watch();
@@ -154,4 +155,4 @@ const ReviewPublishStep = () => {
   );
 };
 
-export default ReviewPublishStep;
+export default ReviewPublish;
