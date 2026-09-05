@@ -1,12 +1,15 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import TaskTypeBadge from "./TaskTypeBadge";
+import { z } from "zod";
 import { simulationTaskSchema } from "../schemas/jobPosting";
+
+type SimulationTask = z.infer<typeof simulationTaskSchema>;
 
 
 interface TaskSummaryCardProps {
     index: number;
-    task: simulationTaskSchema;
+    task: SimulationTask;
 }
 
 const TaskSummaryCard = ({ index, task }: TaskSummaryCardProps) => {
