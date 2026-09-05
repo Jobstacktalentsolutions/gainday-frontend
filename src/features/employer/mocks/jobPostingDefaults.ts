@@ -16,8 +16,6 @@ export const MOCK_TASKS: JobPostingFormValues["tasks"] = [
             "Draft a short plan for a re-engagement sequence targeting users who stall at the KYC stage. Explain your reasoning for the timing and the content of each message, ensuring you address the specific friction point of secondary documentation.",
         scenario:
             "From: Sarah Chen (Head of Product)\nSubject: Drop-off at KYC stage\n\nHi, we are seeing a significant spike in drop-offs during the 'Know Your Customer' (KYC) identity verification stage. Data shows that 40% of users who start the process abandon it when asked to upload a secondary proof of address. We need a CRM nudge sequence to address this immediately. Please draft the logic for a three-step re-engagement plan. Consider the timing of the nudges, the channel, and how we handle users who still fail to convert.",
-        capabilities: ["Analytical Problem Solving", "Omnichannel Campaign Execution"],
-        scores: ["problem_solving", "role_expertise"],
     },
     {
         id: "task-2",
@@ -27,8 +25,6 @@ export const MOCK_TASKS: JobPostingFormValues["tasks"] = [
             "Rank the following CRM interventions in order of priority (1 = highest priority) to mitigate the risk of churn from the Neon Bank launch.",
         scenario:
             "A major competitor, 'Neon Bank', has just launched a 5.5% AER savings product. This is significantly higher than Ray's current top rate. Our data science team has identified five customer segments that are most likely to churn in response to this news. You need to decide which retention activities to execute first this afternoon.",
-        capabilities: ["Retention Strategy Planning", "Data Driven Segmentation"],
-        scores: ["judgement", "commercial_awareness"],
     },
     {
         id: "task-3",
@@ -38,8 +34,6 @@ export const MOCK_TASKS: JobPostingFormValues["tasks"] = [
             "Identify the most critical regulatory issue with the proposed campaign copy and select the best course of action.",
         scenario:
             "From: James Miller (Legal & Compliance)\nSubject: URGENT: Quick review of 'Boost' campaign copy\n\nWe are about to hit 'send' on a mass campaign for the new Boost Investment product. Given the current market volatility, I need a CRM perspective on this copy to ensure we aren't breaching FCA guidelines on clear, fair, and not misleading promotions.\n\nProposed Copy: 'Stop losing money to inflation. Move your savings to Ray Boost today and guarantee a return on your future. It is the safest way to grow your wealth in 2024. Click here to start.'",
-        capabilities: ["Regulatory Awareness"],
-        scores: ["judgement", "role_expertise"],
     },
 ];
 

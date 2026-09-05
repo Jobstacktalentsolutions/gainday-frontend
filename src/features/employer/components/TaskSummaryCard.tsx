@@ -34,15 +34,7 @@ const TaskSummaryCard = ({ index, task }: TaskSummaryCardProps) => {
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.taskPrompt}</ReactMarkdown>
             </div>
 
-            {((task.capabilities?.length ?? 0) > 0 || (task.scores?.length ?? 0) > 0) && (
-                <p className="text-xs text-neutral-400">
-                    {(task.capabilities?.length ?? 0) > 0 && (
-                        <>Capabilities: {task.capabilities!.join(", ")}</>
-                    )}
-                    {(task.capabilities?.length ?? 0) > 0 && (task.scores?.length ?? 0) > 0 && " · "}
-                    {(task.scores?.length ?? 0) > 0 && <>Scores: {task.scores!.join(", ")}</>}
-                </p>
-            )}
+
         </div>
     );
 };

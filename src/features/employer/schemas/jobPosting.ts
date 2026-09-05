@@ -51,8 +51,6 @@ export const simulationTaskSchema = z.object({
     title: z.string().min(1, "Task title is required"),
     taskPrompt: z.string().min(1, "Task prompt is required"),
     scenario: z.string().min(1, "Scenario context is required"),
-    capabilities: z.array(z.string()).default([]),
-    scores: z.array(z.string()).default([]),
 });
 
 export const simulationBuilderSchema = z.object({
