@@ -5,9 +5,8 @@ import { AnimatePresence, motion } from "motion/react";
 import { StepSecondaryButton, StepContinueButton } from "@/components/ui/StepNavigationButtons";
 import JobDetailsSummary from "../components/JobDetailsSummary";
 import JobDetailsEditForm from "../components/JobDetailsEditForm";
-
+import PublishSuccess from "../components/PublishSuccess";
 import TaskSummaryCard from "../components/review/TaskSummaryCard";
-import PublishSuccess from "../components/review/PublishSuccess";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
