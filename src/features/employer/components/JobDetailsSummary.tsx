@@ -88,7 +88,7 @@ const JobDetailsSummary = ({ onEdit }: JobDetailsSummaryProps) => {
       {values.description && (
         <div className="flex flex-col gap-1">
           <p className="text-sm text-neutral-400">What this hire needs to solve</p>
-          <p className="text-base text-neutral-700 break-words">{values.description}</p>
+          <p className="text-base text-neutral-700 wrap-break-word">{values.description}</p>
         </div>
       )}
     </div>
