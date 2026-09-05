@@ -125,7 +125,7 @@ const ReviewPublish = () => {
             <p className="text-sm text-neutral-500">Tasks</p>
           </div>
           <div className="flex flex-col gap-1">
-            <p className="text-3xl font-bold text-neutral-950">{values.estimatedCompletionTime}</p>
+            <p className="text-3xl font-bold text-neutral-950">20 minutes</p>
             <p className="text-sm text-neutral-500">Estimated completion time</p>
           </div>
         </div>
