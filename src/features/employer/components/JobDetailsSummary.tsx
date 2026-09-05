@@ -50,7 +50,7 @@ const JobDetailsSummary = ({ onEdit }: JobDetailsSummaryProps) => {
                 </button>
             </div>
 
-            <p className="text-base text-neutral-700">{values.simulationBrief}</p>
+            <p className="text-base text-neutral-700">{values.description}</p>
 
             <div className="grid grid-cols-2 gap-x-6 gap-y-5">
                 <SummaryRow label="Role category" value={roleLabel} />
