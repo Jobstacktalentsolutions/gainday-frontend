@@ -5,8 +5,12 @@ import { FormSelect } from "@/components/form/FormSelect";
 import { FormTextarea } from "@/components/form/FormTextarea";
 import SkillsRemovableList from "./SkillsRemovableList";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
-
-import { ROLES, SKILL_LEVELS, EMPLOYMENT_TYPES, AI_USE_POLICIES } from "../constants/jobPostingOptions";
+import {
+  ROLES,
+  SKILL_LEVELS,
+  EMPLOYMENT_TYPES,
+  AI_USE_POLICIES, // TODO: confirm real wording once shared
+} from "../constants/jobPostingOptions"
 
 interface JobDetailsEditFormProps {
   onDone: () => void;
@@ -15,6 +19,7 @@ interface JobDetailsEditFormProps {
 const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
   const {
     register,
+    control,
     formState: { errors },
   } = useFormContext<JobPostingFormValues>();
 
@@ -37,12 +42,7 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
       <JobFormInput label="Job title" error={errors.title?.message} {...register("title")} />
 
       <div className="grid grid-cols-2 gap-4">
-        <FormSelect
-          label="Role category"
-          placeholder="Select a category"
-          error={errors.roleCategory?.message}
-          {...register("roleCategory")}
-        >
+        <FormSelect label="Role" placeholder="Select a role" error={errors.role?.message} {...register("role")}>
           {ROLES.map((role) => (
             <option key={role.value} value={role.value}>
               {role.label}
@@ -76,30 +76,85 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
         <JobFormInput label="Location" error={errors.location?.message} {...register("location")} />
       </div>
 
-
-
       <div className="grid grid-cols-2 gap-4">
+        <FormSelect
+          label="Employment type"
+          placeholder="Select a type"
+          error={errors.employmentType?.message}
+          {...register("employmentType")}
+        >
+          {EMPLOYMENT_TYPES.map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
+          ))}
+        </FormSelect>
+
         <JobFormInput
-          label="Salary from"
-          type="number"
-          error={errors.salaryFrom?.message}
-          {...register("salaryFrom")}
-        />
-        <JobFormInput
-          label="Salary to"
-          type="number"
-          error={errors.salaryTo?.message}
-          {...register("salaryTo")}
+          label="Deadline"
+          optional
+          type="date"
+          error={errors.deadline?.message}
+          {...register("deadline")}
         />
       </div>
 
       <label className="flex items-center gap-2 text-sm text-neutral-700">
         <input type="checkbox" className="size-4 rounded" {...register("isRemoteFriendly")} />
-        Remote friendly
+        This role is remote-friendly
       </label>
+
+      <div className="grid grid-cols-2 gap-4">
+        <JobFormInput
+          label="Salary from"
+          optional
+          type="number"
+          startIcon={<span className="text-neutral-400">£</span>}
+          error={errors.salaryFrom?.message}
+          {...register("salaryFrom")}
+        />
+        <JobFormInput
+          label="Salary to"
+          optional
+          type="number"
+          startIcon={<span className="text-neutral-400">£</span>}
+          error={errors.salaryTo?.message}
+          {...register("salaryTo")}
+        />
+      </div>
+
+      <FormTextarea
+        label="What your company does"
+        optional
+        rows={3}
+        error={errors.companyDescription?.message}
+        {...register("companyDescription")}
+      />
+
+      <div className="flex flex-col gap-1.5">
+        <label className="text-base font-medium text-neutral-800">Skills</label>
+        <p className="text-sm text-neutral-400">
+          These skills were used to generate the challenge — remove any that no longer apply.
+        </p>
+        <Controller
+          control={control}
+          name="skills"
+          render={({ field }) => (
+            <SkillsRemovableList value={field.value} onChange={field.onChange} />
+          )}
+        />
+      </div>
+
+      <FormTextarea
+        label="Job description"
+        rows={4}
+        error={errors.description?.message}
+        {...register("description")}
+      />
 
       <FormSelect
         label="AI use policy"
+        optional
         placeholder="Select a policy"
         error={errors.aiUsePolicy?.message}
         {...register("aiUsePolicy")}
@@ -110,8 +165,6 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
           </option>
         ))}
       </FormSelect>
-
-      <JobFormInput label="Deadline" type="date" error={errors.deadline?.message} {...register("deadline")} />
     </div>
   );
 };
