@@ -45,7 +45,7 @@ const JobDetailsSummary = ({ onEdit }: JobDetailsSummaryProps) => {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Title + edit button */}
+      {/* Job title + edit button */}
       <div className="flex items-center justify-between">
         <p className="text-sm font-bold uppercase tracking-wide text-neutral-900">
           {values.title || "Untitled role"}

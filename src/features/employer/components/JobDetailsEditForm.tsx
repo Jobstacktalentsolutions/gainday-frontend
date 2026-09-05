@@ -15,15 +15,17 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
   const {
     register,
     control,
+    watch,
     formState: { errors },
   } = useFormContext<JobPostingFormValues>();
+  const title = watch("title");
 
   return (
     <div className="flex flex-col gap-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <p className="text-sm font-bold uppercase tracking-wide text-neutral-900">
-          Job details
+          {title || "Untitled role"}
         </p>
         <button
           type="button"
