@@ -1,7 +1,9 @@
 import { Check } from "lucide-react";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { JobFormInput } from "@/components/form/JobFormInput";
 import { FormSelect } from "@/components/form/FormSelect";
+import { FormTextarea } from "@/components/form/FormTextarea";
+import SkillsRemovableList from "./SkillsRemovableList";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
 
 import { ROLES, SKILL_LEVELS, EMPLOYMENT_TYPES, AI_USE_POLICIES } from "../constants/jobPostingOptions";
