@@ -7,7 +7,7 @@ export const jobDetailsBaseSchema = z.object({
     title: z.string().min(3, "Job title is required"),
     role: jobRoleEnum,
     skillLevel: z.string().min(1, "Select a skill level"),
-    roleCategory: z.string().optional(),
+    skillCategory: z.string().optional(),
     company: z.string().min(1),
     location: z.string().min(1, "Location is required"),
     employmentType: z.string().min(1, "Select an employment type"),
