@@ -39,6 +39,17 @@ const JobPreview = () => {
     if (isLoading) {
         return <JobPreviewSkeleton />;
     }
+
+    if (!job) {
+        return (
+            <div className="mx-auto flex max-w-6xl flex-col items-start gap-4 px-6 py-10">
+                <BackButton onClick={() => navigate("/employer/jobs")} />
+                <p className="text-base text-neutral-700">
+                    We couldn't find that job. It may have been removed or the link is incorrect.
+                </p>
+            </div>
+        )
+    }
 };
 
 const JobPreviewSkeleton = () => (
@@ -48,3 +59,5 @@ const JobPreviewSkeleton = () => (
         <div className="h-64 w-full animate-pulse rounded-3xl bg-neutral-100" />
     </div>
 );
+
+export default JobPreview;
