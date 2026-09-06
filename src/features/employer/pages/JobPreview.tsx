@@ -65,6 +65,8 @@ const JobPreview = () => {
                 <ContinueEditingAction jobId={job.id} />
             ) : (
                 <>
+                    <LiveJobActions job={job} />
+                    <StatsRow job={job} />
                 </>
             )}
 
@@ -72,6 +74,54 @@ const JobPreview = () => {
     )
 };
 
+
+const LiveJobActions = ({ job }: { job: JobPreviewDetails }) => {
+    const navigate = useNavigate();
+    return (
+        <div className="flex flex-wrap items-center gap-6">
+            {/* <button
+                type="button"
+                // TODO: point this at the submissions route once it exists
+                onClick={() => navigate(`/employer/jobs/${job.id}/submissions`)}
+                className="flex h-13 items-center gap-2 rounded-lg bg-primary-500 py-1 pr-1 pl-6 text-base text-neutral-50"
+            >
+                View Submissions
+                <span className="flex h-full w-11 items-center justify-center rounded-lg bg-secondary-500">
+                    <ArrowRight className="size-4" aria-hidden="true" />
+                </span>
+            </button> */}
+            <StepContinueButton
+                // TODO: point this at the submissions route once it exists
+                onClick={() => navigate(`/employer/jobs/${job.id}/submissions`)}
+            >
+                View Submissions
+            </StepContinueButton>
+            <a
+                href={job.shareUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="flex h-13 items-center rounded-lg border border-primary-500 px-6 text-base text-primary-500"
+            >
+                Preview as a candidate
+            </a>
+        </div>
+    );
+};
+
+const StatsRow = ({ job }: { job: JobPreviewDetails }) => (
+    <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-3">
+        <StatBox value={String(job.submissionsCount)} label="Applicants" />
+        <StatBox value={job.deadline} label="Deadline" />
+        <StatBox value={STATUS_LABELS[job.status]} label="Status" />
+    </div>
+);
+
+const StatBox = ({ value, label }: { value: string; label: string }) => (
+    <div className="flex flex-col gap-3 rounded-2xl border border-primary-200 bg-white/10 p-6">
+        <p className="text-3xl text-neutral-950 tracking-tight lg:text-5xl">{value}</p>
+        <p className="text-base text-neutral-700">{label}</p>
+    </div>
+);
 
 
 const BackButton = ({ onClick }: { onClick: () => void }) => (
