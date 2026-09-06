@@ -1,5 +1,9 @@
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Clock, MapPin, Play } from "lucide-react";
+import { ArrowLeft, ChevronDown, Clock, MapPin, Play } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import TaskTypeBadge from "../components/TaskTypeBadge";
 import StatusBadge from "../components/StatusBadge";
 import { MOCK_JOB_PREVIEWS } from "../mocks/jobPreview";
 import type { JobPreviewDetails } from "../types/jobPreview";
@@ -77,6 +81,69 @@ const JobPreview = () => {
 };
 
 
+// ── Task accordion ────────────────────────────────────────────────────────────
+
+type SimulationTask = JobPreviewDetails["tasks"][number];
+
+const TaskAccordionSection = ({ tasks }: { tasks: SimulationTask[] }) => {
+    const [openId, setOpenId] = useState<string | null>(null);
+
+    return (
+        <Section title="WORK SIMULATION">
+            <div className="flex flex-col gap-2">
+                {tasks.map((task, index) => {
+                    const isOpen = openId === task.id;
+                    return (
+                        <div key={task.id} className="flex flex-col overflow-hidden rounded-2xl border border-neutral-100 bg-neutral-50/60">
+                            {/* Row header — click to toggle */}
+                            <button
+                                type="button"
+                                onClick={() => setOpenId(isOpen ? null : task.id)}
+                                className="flex w-full items-center gap-2.5 px-4 py-3 text-left"
+                            >
+                                <Play
+                                    className={`size-4 shrink-0 transition-colors ${isOpen ? "text-primary-500 fill-primary-500" : "text-primary-500"}`}
+                                    aria-hidden="true"
+                                />
+                                <p className="flex-1 text-base text-neutral-950">
+                                    {`TASK ${index + 1}: `}
+                                    <span className="text-neutral-500">{task.title}</span>
+                                </p>
+                                <TaskTypeBadge type={task.type} />
+                                <ChevronDown
+                                    className={`size-4 shrink-0 text-neutral-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+                                    aria-hidden="true"
+                                />
+                            </button>
+
+                            {/* Expanded card */}
+                            {isOpen && (
+                                <div className="flex flex-col gap-4 border-t border-neutral-200 bg-white px-5 py-5">
+                                    {/* Title */}
+                                    <p className="text-base font-medium text-neutral-950">{task.title}</p>
+
+                                    {/* Scenario */}
+                                    {task.scenario && (
+                                        <div className="whitespace-pre-wrap rounded-xl bg-neutral-50 p-4 text-sm leading-relaxed text-neutral-700">
+                                            {task.scenario}
+                                        </div>
+                                    )}
+
+                                    {/* Task prompt — rendered markdown */}
+                                    <div className="prose prose-sm max-w-none rounded-xl bg-neutral-50 p-4 text-neutral-900 prose-headings:font-semibold prose-headings:text-neutral-950 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-neutral-950">
+                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                            {task.taskPrompt}
+                                        </ReactMarkdown>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+        </Section>
+    );
+};
 
 const JobPreviewDetailsCard = ({ job, showTasks }: { job: JobPreviewDetails, showTasks: boolean }) => {
     return (
@@ -123,22 +190,7 @@ const JobPreviewDetailsCard = ({ job, showTasks }: { job: JobPreviewDetails, sho
             {showTasks && (
                 <>
                     <Divider />
-                    <Section title="WORK SIMULATION">
-                        <div className="flex flex-col gap-3">
-                            {job.tasks.map((task, index) => (
-                                <div key={task.id} className="flex items-center gap-1.5">
-                                    <Play className="size-4 shrink-0" aria-hidden="true" />
-                                    <p className="text-base text-neutral-950">
-                                        {`TASK ${index + 1}: `}
-                                        <span className="text-neutral-500">{task.title}</span>
-                                    </p>
-                                    <span className="rounded-2xl bg-primary-50 px-2 py-1 text-xs uppercase">
-                                        {task.type}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
-                    </Section>
+                    <TaskAccordionSection tasks={job.tasks} />
                 </>
             )}
 
