@@ -27,7 +27,7 @@ const ReviewPublish = lazy(() => import("@/features/employer/pages/ReviewPublish
 const EmployerManagement = lazy(() => import("@/features/admin/pages/EmployerManagement"))
 const CandidateManagement = lazy(() => import("@/features/admin/pages/CandidateManagement"))
 const ContentModeration = lazy(() => import("@/features/admin/pages/ContentModeration"));
-// const JobPreview = lazy(() => import("@/features/employer/pages/JobPreview"));
+const JobPreview = lazy(() => import("@/features/employer/pages/JobPreview"));
 
 
 
@@ -54,7 +54,7 @@ const AppRoutes = () => {
                     <Route element={<EmployerLayout />} >
                         <Route path="dashboard" element={<EmployerDashboard />} />
                         <Route path="jobs" element={<EmployerJobs />} />
-                        {/* <Route path="jobs/:jobId/preview" element={<JobPreview />} /> */}
+                        <Route path="jobs/:jobId/preview" element={<JobPreview />} />
                         <Route path="jobs/new" element={<JobPostingWizardLayout />}>
                             <Route index element={<Navigate to="details" replace />} />
                             <Route path="details" element={<JobDetailsStep />} />
