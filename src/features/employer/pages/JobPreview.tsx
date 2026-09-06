@@ -113,6 +113,35 @@ const JobPreviewDetailsCard = ({ job, showTasks }: { job: JobPreviewDetails, sho
             </div>
         </Section>
 
+        <Divider />
+
+        <Section title="WHAT THIS HIRE NEEDS TO SOLVE">
+            <p className="text-base text-neutral-700">{job.whatThisHireNeedsToSolve}</p>
+        </Section>
+
+        {showTasks && (
+            <>
+                <Divider />
+                <Section title="WORK SIMULATION">
+                    <div className="flex flex-col gap-3">
+                        {job.tasks.map((task, index) => (
+                            <div key={task.id} className="flex items-center gap-1.5">
+                                <Play className="size-4 shrink-0" aria-hidden="true" />
+                                <p className="text-base text-neutral-950">
+                                    {`TASK ${index + 1}: `}
+                                    <span className="text-neutral-500">{task.title}</span>
+                                </p>
+                                <span className="rounded-2xl bg-primary-50 px-2 py-1 text-xs uppercase">
+                                    {task.type}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+                </Section>
+            </>
+        )}
+
+
     </div>
 }
 
