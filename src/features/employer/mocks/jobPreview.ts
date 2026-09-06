@@ -1,3 +1,4 @@
+// src/features/employer/mocks/jobPreviews.ts
 import type { JobPreviewDetails } from "../types/jobPreview";
 import { MOCK_TASKS } from "./jobPostingDefaults";
 
@@ -45,8 +46,7 @@ export const MOCK_JOB_PREVIEWS: JobPreviewDetails[] = [
         tasks: MOCK_TASKS,
     },
     {
-        // Figma calls this "Under review" — mapped to INACTIVE, see note above
-        id: "job-under-review-1",
+        id: "job-inactive-1",
         title: "Credit Risk Analyst",
         status: "INACTIVE",
         location: "Lagos, Nigeria (hybrid)",
