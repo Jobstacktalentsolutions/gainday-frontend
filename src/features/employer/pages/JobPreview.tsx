@@ -52,6 +52,17 @@ const JobPreview = () => {
     }
 };
 
+const BackButton = ({ onClick }: { onClick: () => void }) => (
+    <button
+        type="button"
+        onClick={onClick}
+        className="flex items-center gap-2 text-base text-neutral-700 hover:text-neutral-950"
+    >
+        <ArrowLeft className="size-5" aria-hidden="true" />
+        Back
+    </button>
+);
+
 const JobPreviewSkeleton = () => (
     <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 py-10">
         <div className="h-59.5 w-full animate-pulse rounded-xl bg-neutral-100" />
