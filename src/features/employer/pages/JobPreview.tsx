@@ -100,6 +100,19 @@ const JobPreviewDetailsCard = ({ job, showTasks }: { job: JobPreviewDetails, sho
 
         <Divider />
 
+        <Section title="REQUIRED SKILLS">
+            <div className="flex flex-wrap gap-3">
+                {job.requiredSkills.map((skill) => (
+                    <span
+                        key={skill}
+                        className="rounded-2xl bg-primary-50 px-2 py-1 text-neutral-950 text-sm"
+                    >
+                        {skill}
+                    </span>
+                ))}
+            </div>
+        </Section>
+
     </div>
 }
 
