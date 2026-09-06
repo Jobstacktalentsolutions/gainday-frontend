@@ -70,9 +70,32 @@ const JobPreview = () => {
                 </>
             )}
 
+            <JobPreviewDetailsCard job={job} showTasks={!isDraft} />
+
         </div>
     )
 };
+
+
+
+const JobPreviewDetailsCard = ({ job, showTasks }: { job: JobPreviewDetails, showTasks: boolean }) => {
+    <div className="flex w-full flex-col gap-6 rounded-3xl bg-white p-8">
+        <Section title="DESCRIPTION">
+            <p className="text-base text-neutral-950">{job.description}</p>
+        </Section>
+
+        <Divider />
+
+    </div>
+}
+
+const Divider = () => <div className="h-px w-full bg-neutral-200" />;
+const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
+    <div className="flex flex-col gap-3">
+        <p className="text-base text-primary-500">{title}</p>
+        {children}
+    </div>
+);
 
 
 const LiveJobActions = ({ job }: { job: JobPreviewDetails }) => {
