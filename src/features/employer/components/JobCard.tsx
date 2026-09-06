@@ -4,11 +4,13 @@ import Skeleton from "@/components/ui/skeleton";
 import StatusBadge from "./StatusBadge";
 import JobMetaRow from "./JobMetaRow";
 import type { Job } from "../types/job";
+import { SquareArrowOutUpRight } from "lucide-react";
 
 interface JobCardProps {
     job: Job;
     onShareLink: (job: Job) => void;
     onViewSubmissions: (job: Job) => void;
+    onOpenPreview: (job: Job) => void;
 }
 
 const formatPostedDate = (postedAt: string | null) => {
@@ -22,7 +24,7 @@ const formatPostedDate = (postedAt: string | null) => {
 
 }
 
-const JobCard = ({ job, onShareLink, onViewSubmissions }: JobCardProps) => {
+const JobCard = ({ job, onShareLink, onViewSubmissions, onOpenPreview }: JobCardProps) => {
 
     const hasSubmissions = job.submissionsCount > 0;
     return (
@@ -33,14 +35,25 @@ const JobCard = ({ job, onShareLink, onViewSubmissions }: JobCardProps) => {
                     <h3 className="text-lg text-neutral-950">{job.title}</h3>
                     <JobMetaRow location={job.location} employmentType={job.employmentType} />
                 </div>
-                <button
-                    type="button"
-                    onClick={() => onShareLink(job)}
-                    className="flex h-10 shrink-0 items-center justify-center rounded-full border-neutral-200 border px-3  text-base text-neutral-950"
-                >
-                    Share Link
+                <div>
+                    <button
+                        type="button"
+                        onClick={() => onOpenPreview(job)}
+                        aria-label="Open job preview"
+                        className="flex size-10 items-center justify-center rounded-full border border-neutral-200 text-neutral-950"
+                    >
+                        <SquareArrowOutUpRight className="size-4" aria-hidden="true" />
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => onShareLink(job)}
+                        className="flex h-10 shrink-0 items-center justify-center rounded-full border-neutral-200 border px-3  text-base text-neutral-950"
+                    >
+                        Share Link
 
-                </button>
+                    </button>
+                </div>
+
             </div>
 
             <button
