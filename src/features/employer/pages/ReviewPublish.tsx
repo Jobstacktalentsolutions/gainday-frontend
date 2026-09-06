@@ -14,7 +14,7 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 
 const ReviewPublish = () => {
     const navigate = useNavigate();
-    const { watch, trigger } = useFormContext<JobPostingFormValues>();
+    const { watch, trigger, formState } = useFormContext<JobPostingFormValues>();
     const values = watch();
 
     const [editingJobDetails, setEditingJobDetails] = useState(false);
@@ -28,9 +28,14 @@ const ReviewPublish = () => {
 
     };
 
+
+
     const handlePublish = async () => {
         const isValid = await trigger();
-        if (!isValid) return;
+        if (!isValid) {
+            console.error("[ReviewPublish] Validation failed — blocking publish:", formState.errors);
+            return;
+        }
 
         setIsPublishing(true);
         // TODO: replace with the real publish API call.
