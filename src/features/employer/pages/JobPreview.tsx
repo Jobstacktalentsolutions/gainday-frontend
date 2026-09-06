@@ -188,7 +188,7 @@ const LiveJobActions = ({ job }: { job: JobPreviewDetails }) => {
                 href={job.shareUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="flex h-13 items-center rounded-lg border border-primary-500 px-6 text-base text-primary-500"
+                className="flex h-10 items-center rounded-lg border border-primary-500 px-6 text-base text-primary-500"
             >
                 Preview as a candidate
             </a>
