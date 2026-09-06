@@ -86,6 +86,20 @@ const JobPreviewDetailsCard = ({ job, showTasks }: { job: JobPreviewDetails, sho
 
         <Divider />
 
+        <Section title="ROLE DETAILS">
+            <div className="flex flex-col gap-6 sm:flex-row sm:gap-10">
+                <DetailField label="Category" value={job.category} />
+                <DetailField label="Employment type" value={job.employmentType} />
+            </div>
+            <div className="flex flex-col gap-6 sm:flex-row sm:gap-10">
+                <DetailField label="Location" value={job.location} />
+                <DetailField label="Salary" value={job.salary} />
+            </div>
+            <DetailField label="Deadline" value={job.deadline} />
+        </Section>
+
+        <Divider />
+
     </div>
 }
 
