@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Clock, MapPin, Play } from "lucide-react";
+import { ArrowLeft, Clock, MapPin, Play } from "lucide-react";
 import StatusBadge from "../components/StatusBadge";
 import { MOCK_JOB_PREVIEWS } from "../mocks/jobPreview";
 import type { JobPreviewDetails } from "../types/jobPreview";
@@ -79,70 +79,72 @@ const JobPreview = () => {
 
 
 const JobPreviewDetailsCard = ({ job, showTasks }: { job: JobPreviewDetails, showTasks: boolean }) => {
-    <div className="flex w-full flex-col gap-6 rounded-3xl bg-white p-8">
-        <Section title="DESCRIPTION">
-            <p className="text-base text-neutral-950">{job.description}</p>
-        </Section>
+    return (
+        <div className="flex w-full flex-col gap-6 rounded-3xl bg-white p-8">
+            <Section title="DESCRIPTION">
+                <p className="text-base text-neutral-950">{job.description}</p>
+            </Section>
 
-        <Divider />
+            <Divider />
 
-        <Section title="ROLE DETAILS">
-            <div className="flex flex-col gap-6 sm:flex-row sm:gap-10">
-                <DetailField label="Category" value={job.category} />
-                <DetailField label="Employment type" value={job.employmentType} />
-            </div>
-            <div className="flex flex-col gap-6 sm:flex-row sm:gap-10">
-                <DetailField label="Location" value={job.location} />
-                <DetailField label="Salary" value={job.salary} />
-            </div>
-            <DetailField label="Deadline" value={job.deadline} />
-        </Section>
+            <Section title="ROLE DETAILS">
+                <div className="flex flex-col gap-6 sm:flex-row sm:gap-10">
+                    <DetailField label="Category" value={job.category} />
+                    <DetailField label="Employment type" value={job.employmentType} />
+                </div>
+                <div className="flex flex-col gap-6 sm:flex-row sm:gap-10">
+                    <DetailField label="Location" value={job.location} />
+                    <DetailField label="Salary" value={job.salary} />
+                </div>
+                <DetailField label="Deadline" value={job.deadline} />
+            </Section>
 
-        <Divider />
+            <Divider />
 
-        <Section title="REQUIRED SKILLS">
-            <div className="flex flex-wrap gap-3">
-                {job.requiredSkills.map((skill) => (
-                    <span
-                        key={skill}
-                        className="rounded-2xl bg-primary-50 px-2 py-1 text-neutral-950 text-sm"
-                    >
-                        {skill}
-                    </span>
-                ))}
-            </div>
-        </Section>
+            <Section title="REQUIRED SKILLS">
+                <div className="flex flex-wrap gap-3">
+                    {job.requiredSkills.map((skill) => (
+                        <span
+                            key={skill}
+                            className="rounded-2xl bg-primary-50 px-2 py-1 text-neutral-950 text-sm"
+                        >
+                            {skill}
+                        </span>
+                    ))}
+                </div>
+            </Section>
 
-        <Divider />
+            <Divider />
 
-        <Section title="WHAT THIS HIRE NEEDS TO SOLVE">
-            <p className="text-base text-neutral-700">{job.whatThisHireNeedsToSolve}</p>
-        </Section>
+            <Section title="WHAT THIS HIRE NEEDS TO SOLVE">
+                <p className="text-base text-neutral-700">{job.whatThisHireNeedsToSolve}</p>
+            </Section>
 
-        {showTasks && (
-            <>
-                <Divider />
-                <Section title="WORK SIMULATION">
-                    <div className="flex flex-col gap-3">
-                        {job.tasks.map((task, index) => (
-                            <div key={task.id} className="flex items-center gap-1.5">
-                                <Play className="size-4 shrink-0" aria-hidden="true" />
-                                <p className="text-base text-neutral-950">
-                                    {`TASK ${index + 1}: `}
-                                    <span className="text-neutral-500">{task.title}</span>
-                                </p>
-                                <span className="rounded-2xl bg-primary-50 px-2 py-1 text-xs uppercase">
-                                    {task.type}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
-                </Section>
-            </>
-        )}
+            {showTasks && (
+                <>
+                    <Divider />
+                    <Section title="WORK SIMULATION">
+                        <div className="flex flex-col gap-3">
+                            {job.tasks.map((task, index) => (
+                                <div key={task.id} className="flex items-center gap-1.5">
+                                    <Play className="size-4 shrink-0" aria-hidden="true" />
+                                    <p className="text-base text-neutral-950">
+                                        {`TASK ${index + 1}: `}
+                                        <span className="text-neutral-500">{task.title}</span>
+                                    </p>
+                                    <span className="rounded-2xl bg-primary-50 px-2 py-1 text-xs uppercase">
+                                        {task.type}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </Section>
+                </>
+            )}
 
 
-    </div>
+        </div>
+    );
 }
 
 const Divider = () => <div className="h-px w-full bg-neutral-200" />;
