@@ -1,8 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Clock, MapPin, Play } from "lucide-react";
 import StatusBadge from "../components/StatusBadge";
-import { MOCK_JOB_PREVIEWS } from "../mocks/jobPreviews";
-import type { JobPreviewDetails, JobStatus } from "../types/jobPreview";
+import { MOCK_JOB_PREVIEWS } from "../mocks/jobPreview";
+import type { JobPreviewDetails } from "../types/jobPreview";
+import type { JobStatus } from "../types/job";
+import { StepContinueButton } from "@/components/ui/StepNavigationButtons";
 
 
 // TODO: replace with the real single-job fetch hook once available, e.g.
@@ -59,6 +61,13 @@ const JobPreview = () => {
             <BackButton onClick={() => navigate("employer/jobs")} />
             <JobPreviewHero job={job} />
 
+            {isDraft ? (
+                <ContinueEditingAction jobId={job.id} />
+            ) : (
+                <>
+                </>
+            )}
+
         </div>
     )
 };
@@ -75,6 +84,32 @@ const BackButton = ({ onClick }: { onClick: () => void }) => (
         Back
     </button>
 );
+
+const ContinueEditingAction = ({ jobId }: { jobId: string }) => {
+    const navigate = useNavigate();
+    return (
+        <>
+
+            {/* <button
+                type="button"
+                // TODO: point this at wherever the job posting wizard resumes an existing draft
+                onClick={() => navigate(`/employer/jobs/${jobId}/edit`)}
+                className="flex h-13 w-fit items-center gap-2 rounded-lg bg-primary-500 py-1 pr-1 pl-6 text-base text-neutral-50"
+            >
+                Continue Editing
+                <span className="flex h-full w-11 items-center justify-center rounded-lg bg-secondary-500">
+                    <ArrowRight className="size-4" aria-hidden="true" />
+                </span>
+            </button> */}
+            <StepContinueButton
+                // TODO: point this at wherever the job posting wizard resumes an existing draft
+                onClick={() => navigate(`/employer/jobs/${jobId}/edit`)}
+            >
+                Continue Editing
+            </StepContinueButton>
+        </>
+    );
+};
 
 
 const JobPreviewHero = ({ job }: { job: JobPreviewDetails }) => {
