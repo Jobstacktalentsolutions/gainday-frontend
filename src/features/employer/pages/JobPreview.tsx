@@ -30,3 +30,21 @@ const STATUS_LABELS: Record<JobStatus, string> = {
     GENERATION_FAILED: "Generation failed",
     TERMINATED: "Closed",
 };
+
+const JobPreview = () => {
+    const { jobId } = useParams<{ jobId: string }>();
+    const navigate = useNavigate();
+    const { job, isLoading } = useJobPreviewMock(jobId);
+
+    if (isLoading) {
+        return <JobPreviewSkeleton />;
+    }
+};
+
+const JobPreviewSkeleton = () => (
+    <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 py-10">
+        <div className="h-59.5 w-full animate-pulse rounded-xl bg-neutral-100" />
+        <div className="h-13 w-52 animate-pulse rounded-lg bg-neutral-100" />
+        <div className="h-64 w-full animate-pulse rounded-3xl bg-neutral-100" />
+    </div>
+);
