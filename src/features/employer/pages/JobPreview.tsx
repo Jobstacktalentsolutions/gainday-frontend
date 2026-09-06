@@ -97,6 +97,13 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
     </div>
 );
 
+const DetailField = ({ label, value }: { label: string; value: string }) => (
+    <div className="flex flex-1 flex-col gap-1.5">
+        <p className="text-neutral-700 text-sm">{label}</p>
+        <p className="text-base text-neutral-950">{value}</p>
+    </div>
+);
+
 
 const LiveJobActions = ({ job }: { job: JobPreviewDetails }) => {
     const navigate = useNavigate();
