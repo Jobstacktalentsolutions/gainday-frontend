@@ -58,7 +58,7 @@ const JobPreview = () => {
     return (
         <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 py-10">
 
-            <BackButton onClick={() => navigate("employer/jobs")} />
+            <BackButton onClick={() => navigate("/employer/jobs")} />
             <JobPreviewHero job={job} />
 
             {isDraft ? (

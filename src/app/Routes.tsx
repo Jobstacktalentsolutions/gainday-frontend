@@ -54,7 +54,6 @@ const AppRoutes = () => {
                     <Route element={<EmployerLayout />} >
                         <Route path="dashboard" element={<EmployerDashboard />} />
                         <Route path="jobs" element={<EmployerJobs />} />
-                        <Route path="jobs/:jobId/preview" element={<JobPreview />} />
                         <Route path="jobs/new" element={<JobPostingWizardLayout />}>
                             <Route index element={<Navigate to="details" replace />} />
                             <Route path="details" element={<JobDetailsStep />} />
@@ -62,6 +61,8 @@ const AppRoutes = () => {
                             <Route path="review" element={<ReviewPublish />} />
                         </Route>
                     </Route>
+                    {/* Standalone full-page route — no employer shell */}
+                    <Route path="jobs/:jobId/preview" element={<JobPreview />} />
 
                 </Route>
 
