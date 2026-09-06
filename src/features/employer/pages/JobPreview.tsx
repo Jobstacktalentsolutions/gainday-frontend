@@ -50,7 +50,20 @@ const JobPreview = () => {
             </div>
         )
     }
+
+    const isDraft = job.status === "DRAFT";
+
+    return (
+        <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 py-10">
+
+            <BackButton onClick={() => navigate("employer/jobs")} />
+            <JobPreviewHero job={job} />
+
+        </div>
+    )
 };
+
+
 
 const BackButton = ({ onClick }: { onClick: () => void }) => (
     <button
@@ -62,6 +75,55 @@ const BackButton = ({ onClick }: { onClick: () => void }) => (
         Back
     </button>
 );
+
+
+const JobPreviewHero = ({ job }: { job: JobPreviewDetails }) => {
+    const postedLabel = formatPostedDate(job.postedAt);
+
+    return (
+        <div
+            className="relative w-full overflow-hidden rounded-xl p-10"
+            style={{
+                backgroundImage:
+                    "linear-gradient(172.25deg, rgb(27, 23, 255) 1.44%, rgb(16, 14, 153) 61.68%)",
+            }}
+        >
+            <div className="relative z-10 flex flex-col gap-10">
+                <div className="flex flex-wrap items-center gap-3">
+                    <h1 className="font-['Glacial_Indifference'] text-3xl text-white tracking-tight lg:text-5xl">
+                        {job.title}
+                    </h1>
+                    <StatusBadge status={job.status} />
+                </div>
+                {job.status === "DRAFT" ? (
+                    <div className="flex items-center gap-4 rounded-lg border border-neutral-500 bg-neutral-50 px-6 py-4.5 drop-shadow-md">
+                        <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-neutral-500 text-neutral-50 text-xs">
+                            i
+                        </span>
+                        <p className="text-base text-neutral-900">
+                            This job has not been published yet. Applicants cannot see it until you finish and publish.
+                        </p>
+                    </div>
+                ) : (
+                    postedLabel && (
+                        <div className="flex flex-wrap items-center gap-4 text-base text-primary-50">
+                            <span className="flex items-center gap-2">
+                                <Clock className="size-6" aria-hidden="true" />
+                                {postedLabel}
+                            </span>
+                            <span>·</span>
+                            <span className="flex items-center gap-2">
+                                <MapPin className="size-6" aria-hidden="true" />
+                                {job.location}
+                            </span>
+                        </div>
+                    )
+                )}
+            </div>
+        </div>
+    );
+};
+
 
 const JobPreviewSkeleton = () => (
     <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 py-10">
