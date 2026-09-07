@@ -126,7 +126,7 @@ const TaskCard = ({
 
             <div className="flex flex-col gap-5 bg-neutral-50/50 p-5">
                 <JobFormInput
-                    label=
+                    label="Title"
                     error={taskErrors?.title?.message}
                     {...register(`tasks.${index}.title` as const)}
                 />
