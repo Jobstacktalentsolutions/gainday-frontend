@@ -2,17 +2,34 @@ import { useMemo, useState } from "react";
 import AddItemButton from "@/components/ui/AddItemButton";
 
 import JobStatusTabs from "../components/JobStatusTabs";
-import JobCard, { JobCardSkeleton } from "../components/JobCard";
+import JobCard from "../components/JobCard";
 import JobsEmptyState from "../components/JobsEmptyState";
 import EmployerPageHeader from "../components/EmployerPageHeader";
-import { useEmployerJobs } from "../hooks/useEmployerJobs";
+// TODO: re-enable live fetch once backend is stable
+// import { useEmployerJobs } from "../hooks/useEmployerJobs";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import type { Job, JobStatusFilter } from "../types/job";
 import { useNavigate } from "react-router-dom";
+import { MOCK_JOB_PREVIEWS } from "../mocks/jobPreview";
+
+// Derive the Job list from the same mock source used by JobPreview
+const MOCK_JOBS: Job[] = MOCK_JOB_PREVIEWS.map((preview) => ({
+    id: preview.id,
+    title: preview.title,
+    status: preview.status,
+    location: preview.location,
+    employmentType: preview.employmentType,
+    submissionsCount: preview.submissionsCount,
+    postedAt: preview.postedAt,
+    shareUrl: preview.shareUrl,
+}));
 
 const EmployerJobs = () => {
     const navigate = useNavigate();
-    const { data: jobs, isLoading } = useEmployerJobs();
+    // TODO: swap back to live data when re-enabling API fetch
+    // const { data: jobs, isLoading } = useEmployerJobs();
+    const jobs = MOCK_JOBS;
+    const isLoading = false;
     const { user } = useCurrentUser();
     const [statusFilter, setStatusFilter] = useState<JobStatusFilter>("all");
 
@@ -35,6 +52,10 @@ const EmployerJobs = () => {
         //navigate (/employer/jobs${job.id}/submissions)
         console.log(job) // to stall deployment issues
     }
+
+    const handleOpenPreview = (job: Job) => {
+        navigate(`/employer/jobs/${job.id}/preview`);
+    };
 
     const hasJobs = !!jobs && jobs.length > 0;
 
@@ -65,13 +86,7 @@ const EmployerJobs = () => {
                         <JobStatusTabs value={statusFilter} onChange={setStatusFilter} />
                     )}
 
-                    {isLoading ? (
-                        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-                            {Array.from({ length: 6 }).map((_, i) => (
-                                <JobCardSkeleton key={i} />
-                            ))}
-                        </div>
-                    ) : hasJobs ? (
+                    {hasJobs ? (
                         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
                             {filteredJobs.map((job) => (
                                 <JobCard
@@ -79,6 +94,7 @@ const EmployerJobs = () => {
                                     job={job}
                                     onShareLink={handleShareLink}
                                     onViewSubmissions={handleViewSubmissions}
+                                    onOpenPreview={handleOpenPreview}
                                 />
                             ))}
                         </div>

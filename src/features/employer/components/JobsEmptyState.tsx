@@ -1,4 +1,5 @@
-import { Briefcase, Plus } from "lucide-react";
+import { Briefcase } from "lucide-react";
+import AddItemButton from "@/components/ui/AddItemButton";
 
 interface JobsEmptyStateProps {
     onPostJob: () => void;
@@ -16,16 +17,9 @@ const JobsEmptyState = ({ onPostJob }: JobsEmptyStateProps) => {
                     Post your first job free and get a ranked shortlist of proven talent.
                 </p>
             </div>
-            <button
-                type="button"
-                onClick={ onPostJob }
-                className ="flex h-10 items-center justify-center gap-2 rounded-lg bg-primary-500 py-1 pl-4 pr-1 text-base text-neutral-50"
-            >
-                <span>Post your new job</span>
-                <span className ="flex size-8 items-center rounded-lg bg-secondary-500">
-                    <Plus className ="size-4 text-white" aria-hidden="true" />
-                </span>
-            </button>
+            <AddItemButton onClick={onPostJob}>
+                Post your new job
+            </AddItemButton>
 
         </div>
     );

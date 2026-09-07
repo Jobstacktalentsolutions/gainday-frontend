@@ -1,10 +1,9 @@
-import { Users, ArrowRight } from "lucide-react";
+import { Users, ArrowRight, Link as LinkIcon, SquareArrowOutUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Skeleton from "@/components/ui/skeleton";
 import StatusBadge from "./StatusBadge";
 import JobMetaRow from "./JobMetaRow";
 import type { Job } from "../types/job";
-import { SquareArrowOutUpRight } from "lucide-react";
 
 interface JobCardProps {
     job: Job;
@@ -35,22 +34,27 @@ const JobCard = ({ job, onShareLink, onViewSubmissions, onOpenPreview }: JobCard
                     <h3 className="text-lg text-neutral-950">{job.title}</h3>
                     <JobMetaRow location={job.location} employmentType={job.employmentType} />
                 </div>
-                <div>
+                <div className="flex items-center gap-2">
+                    {/* Preview button: "Open" + icon on mobile/tablet, icon-only on desktop */}
                     <button
                         type="button"
                         onClick={() => onOpenPreview(job)}
                         aria-label="Open job preview"
-                        className="flex size-10 items-center justify-center rounded-full border border-neutral-200 text-neutral-950"
+                        className="flex h-10 items-center justify-center gap-1.5 rounded-full border border-neutral-200 px-3 text-sm text-neutral-950 lg:size-10 lg:p-0"
                     >
-                        <SquareArrowOutUpRight className="size-4" aria-hidden="true" />
+                        <SquareArrowOutUpRight className="size-4 shrink-0" aria-hidden="true" />
+                        <span className="lg:hidden">Open</span>
                     </button>
+
+                    {/* Share button: "Share Link" + icon on mobile/tablet, link icon only on desktop */}
                     <button
                         type="button"
                         onClick={() => onShareLink(job)}
-                        className="flex h-10 shrink-0 items-center justify-center rounded-full border-neutral-200 border px-3  text-base text-neutral-950"
+                        aria-label="Share job link"
+                        className="flex h-10 items-center justify-center gap-1.5 rounded-full border border-neutral-200 px-3 text-sm text-neutral-950 lg:size-10 lg:p-0"
                     >
-                        Share Link
-
+                        <LinkIcon className="size-4 shrink-0" aria-hidden="true" />
+                        <span className="lg:hidden">Share Link</span>
                     </button>
                 </div>
 
