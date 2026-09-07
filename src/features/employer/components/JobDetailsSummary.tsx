@@ -37,10 +37,10 @@ const JobDetailsSummary = ({ onEdit }: JobDetailsSummaryProps) => {
 
   const deadlineDisplay = values.deadline
     ? new Date(values.deadline).toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      })
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    })
     : undefined;
 
   return (
@@ -76,7 +76,7 @@ const JobDetailsSummary = ({ onEdit }: JobDetailsSummaryProps) => {
           {values.skills.map((skill) => (
             <span
               key={skill}
-              className="rounded-full bg-primary-50 px-2.5 py-1 text-sm text-primary-600"
+              className="rounded-full bg-primary-50 px-2.5 py-1 text-sm text-neutral-700"
             >
               {skill}
             </span>
