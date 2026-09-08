@@ -56,7 +56,7 @@ const TaskCard = ({
                         whileHover={{ scale: regenerateDisabled ? 1 : 1.03 }}
                         whileTap={{ scale: regenerateDisabled ? 1 : 0.97 }}
                         className={cn(
-                            "flex h-8 items-center gap-1.5 rounded-md bg-primary-500 hover:bg-primary-600 px-3 text-sm font-medium text-white shadow-sm transition-colors",
+                            "flex h-8 cursor-pointer items-center gap-1.5 rounded-md bg-primary-500 hover:bg-primary-600 px-3 text-sm font-medium text-white shadow-sm transition-colors",
                             "disabled:cursor-not-allowed disabled:opacity-60"
                         )}
                     >
@@ -68,7 +68,7 @@ const TaskCard = ({
                             type="button"
                             onClick={onToggleExpand}
                             aria-label="Collapse task details"
-                            className="flex size-8 items-center justify-center rounded-md text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
+                            className="flex size-8 cursor-pointer items-center justify-center rounded-md text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
                         >
                             <ChevronUp className="size-4" aria-hidden="true" />
                         </button>
@@ -77,7 +77,7 @@ const TaskCard = ({
                     <button
                         type="button"
                         onClick={onRemove}
-                        className="flex items-center gap-1 rounded-md px-2 py-1.5 text-sm text-neutral-400 transition-colors hover:text-error-500"
+                        className="flex cursor-pointer items-center gap-1 rounded-md px-2 py-1.5 text-sm text-neutral-400 transition-colors hover:bg-error-50 hover:text-error-500"
                     >
                         <Trash2 className="size-3.5" aria-hidden="true" />
                         Remove
@@ -91,7 +91,7 @@ const TaskCard = ({
                             type="button"
                             onClick={onToggleExpand}
                             aria-label="Collapse task details"
-                            className="flex size-8 items-center justify-center rounded-md text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
+                            className="flex size-8 cursor-pointer items-center justify-center rounded-md text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
                         >
                             <ChevronUp className="size-4" aria-hidden="true" />
                         </button>
@@ -107,7 +107,7 @@ const TaskCard = ({
                     disabled={regenerateDisabled}
                     whileTap={{ scale: regenerateDisabled ? 1 : 0.97 }}
                     className={cn(
-                        "flex h-9 flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 px-4 text-sm font-medium text-white shadow-sm transition-colors",
+                        "flex h-9 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 px-4 text-sm font-medium text-white shadow-sm transition-colors",
                         "disabled:cursor-not-allowed disabled:opacity-60"
                     )}
                 >
@@ -117,7 +117,7 @@ const TaskCard = ({
                 <button
                     type="button"
                     onClick={onRemove}
-                    className="flex h-9 flex-1 items-center justify-center gap-1.5 rounded-lg border border-neutral-300 bg-white px-4 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50 hover:text-error-500"
+                    className="flex h-9 flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-neutral-300 bg-white px-4 text-sm font-medium text-neutral-700 transition-colors hover:border-error-200 hover:bg-error-50 hover:text-error-500"
                 >
                     <Trash2 className="size-3.5" aria-hidden="true" />
                     Remove
@@ -172,7 +172,7 @@ const TaskCard = ({
                     <button
                         type="button"
                         onClick={onToggleExpand}
-                        className="flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-6 py-2 text-sm font-semibold text-primary-600 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
+                        className="flex cursor-pointer items-center gap-2 rounded-full border border-neutral-200 bg-white px-6 py-2 text-sm font-semibold text-primary-600 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
                     >
                         Expand Task Details
                         <ChevronDown className="size-3.5" aria-hidden="true" />

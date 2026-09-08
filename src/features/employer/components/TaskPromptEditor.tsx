@@ -30,7 +30,7 @@ const ToolbarButton = ({
             aria-label={label}
             aria-pressed={active}
             className={cn(
-                "flex size-8 items-center justify-center rounded-md text-neutral-500 transition-colors duration-150",
+                "flex size-8 cursor-pointer items-center justify-center rounded-md text-neutral-500 transition-colors duration-150",
                 "hover:bg-neutral-100 hover:text-neutral-900",
                 active && "bg-primary-50 text-primary-600"
             )}
