@@ -55,7 +55,7 @@ const TaskCard = ({
                         disabled={regenerateDisabled}
                         whileTap={{ scale: regenerateDisabled ? 1 : 0.97 }}
                         className={cn(
-                            "flex h-8 cursor-pointer items-center gap-1.5 rounded-md bg-primary-500 hover:bg-primary-600 active:bg-primary-700 px-3 text-sm font-medium text-white shadow-sm transition-colors duration-200",
+                            "flex h-8 cursor-pointer items-center gap-1.5 rounded-md bg-primary-500 hover:bg-primary-700 active:bg-primary-700 px-3 text-sm font-medium text-white shadow-sm transition-colors duration-200",
                             "disabled:cursor-not-allowed disabled:opacity-60"
                         )}
                     >
