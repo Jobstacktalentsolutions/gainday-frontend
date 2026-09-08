@@ -56,8 +56,8 @@ const TaskCard = ({
                         whileHover={{ scale: regenerateDisabled ? 1 : 1.03 }}
                         whileTap={{ scale: regenerateDisabled ? 1 : 0.97 }}
                         className={cn(
-                            "flex h-8 items-center gap-1.5 rounded-md bg-linear-to-r from-primary-500 to-primary-700 px-3 text-sm font-medium text-white shadow-sm transition-shadow",
-                            "hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
+                            "flex h-8 items-center gap-1.5 rounded-md bg-primary-500 hover:bg-primary-600 px-3 text-sm font-medium text-white shadow-sm transition-colors",
+                            "disabled:cursor-not-allowed disabled:opacity-60"
                         )}
                     >
                         <RefreshCw className="size-3.5" aria-hidden="true" />
@@ -107,7 +107,7 @@ const TaskCard = ({
                     disabled={regenerateDisabled}
                     whileTap={{ scale: regenerateDisabled ? 1 : 0.97 }}
                     className={cn(
-                        "flex h-9 flex-1 items-center justify-center gap-1.5 rounded-lg bg-linear-to-r from-primary-500 to-primary-700 px-4 text-sm font-medium text-white shadow-sm transition-shadow",
+                        "flex h-9 flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 px-4 text-sm font-medium text-white shadow-sm transition-colors",
                         "disabled:cursor-not-allowed disabled:opacity-60"
                     )}
                 >
