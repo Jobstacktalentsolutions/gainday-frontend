@@ -5,3 +5,25 @@ export interface JobSalaryRange {
   max: number;
   currency: string;
 }
+
+export interface JobBoardEmployer {
+  companyName: string;
+}
+
+export interface JobBoardListing {
+  id: string;
+  title: string;
+  description: string;
+  requiredSkills: string[];
+  roleCategory: string;
+  location: string;
+  employmentType: string;
+  salaryRange: JobSalaryRange;
+  applicationDeadline: string;
+  businessProblem: string;
+  status: JobStatus;
+  employerId: string;
+  employer: JobBoardEmployer;
+  createdAt: string;
+  updatedAt: string;
+}
