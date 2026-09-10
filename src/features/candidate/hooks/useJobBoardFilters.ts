@@ -96,6 +96,3 @@ export function useJobBoardFilters() {
         clearFilters,
     };
 }
-// TODO : double check this hook later
-// hook it up to the back end 
-// don't forget to remove this
