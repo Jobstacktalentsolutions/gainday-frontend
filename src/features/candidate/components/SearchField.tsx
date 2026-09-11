@@ -13,7 +13,7 @@ export function SearchField({
   placeholder = "Search by job title or keyword",
 }: SearchFieldProps) {
   return (
-    <div className="flex h-13 w-full items-center gap-3 rounded-full border-[0.5px] border-neutral-300 bg-neutral-50 px-4 sm:w-[388px]">
+    <div className="flex h-13 w-full items-center gap-3 rounded-full border-[0.5px] border-neutral-300 bg-neutral-50 px-4 sm:w-97">
       <Search className="size-5 shrink-0 text-neutral-400" />
       <input
         type="text"
