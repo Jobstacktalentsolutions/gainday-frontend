@@ -3,6 +3,7 @@ import { PublicNavbar } from "../components/PublicNavbar";
 import { SearchField } from "../components/SearchField";
 import { FilterDropdown } from "../components/FilterDropdown";
 import { JobCard } from "../components/JobCard";
+
 import { EmptyJobBoardState } from "../components/EmptyJobBoardState";
 import { NoResultsState } from "../components/NoResultsState";
 import { useJobBoardFilters } from "../hooks/useJobBoardFilters";
