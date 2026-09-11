@@ -4,12 +4,6 @@ import { motion, AnimatePresence } from "motion/react";
 import brandLogo from "@/assets/gainday icon.svg";
 import { Menu, X } from "lucide-react";
 
-const navLinks = [
-    { label: "For employers", href: "#for-employers" },
-    { label: "For candidates", href: "#for-candidates" },
-    { label: "Open Roles", href: "#open-roles" },
-]
-
 const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     const id = href.replace("#", "");
@@ -17,14 +11,8 @@ const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) =
     element?.scrollIntoView({ behavior: "smooth" });
 }
 
-
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
-
-    const handleMobileLink = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-        scrollToSection(e, href);
-        setMenuOpen(false);
-    }
 
     return (
         <header className="fixed top-0 left-0 z-50 w-full border-t border-t-white/25 border-b border-b-white/15 bg-white/75 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),inset_0_-1px_0_0_rgba(255,255,255,0.1),0_4px_16px_rgba(0,0,0,0.06)] backdrop-blur-xs">
@@ -38,33 +26,34 @@ const Header = () => {
                 </Link>
 
                 <nav className="hidden items-center gap-6 lg:flex">
-                    {navLinks.map((link) => (
-                        <a
-                            key={link.href}
-                            href={link.href}
-                            onClick={(e) => scrollToSection(e, link.href)}
-                            className="p-2.5 font-sans text-base text-neutral-700 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
-                        >
-                            {link.label}
-                        </a>
-                    ))}
+                    <a
+                        href="#for-employers"
+                        onClick={(e) => scrollToSection(e, "#for-employers")}
+                        className="p-2.5 font-sans text-base text-neutral-700 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
+                    >
+                        For employers
+                    </a>
+                    <Link
+                        to="/job-board"
+                        className="p-2.5 font-sans text-base text-neutral-700 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
+                    >
+                        Browse jobs
+                    </Link>
                 </nav>
 
                 <div className="hidden items-center gap-3 lg:flex">
-                    <a
-                        href="#post-a-job"
-                        onClick={(e) => scrollToSection(e, "#post-a-job")}
-                        className="flex h-13 items-center justify-center rounded-xl border border-primary-500 px-10 py-2 font-sans cursor-pointer transition-all duration-300 hover:bg-primary-50 active:scale-95"
+                    <Link
+                        to="/login"
+                        className="flex h-13 items-center justify-center rounded-xl border border-primary-500 px-10 py-2 font-sans text-[16px] text-primary-500 cursor-pointer transition-all duration-300 hover:bg-primary-50 active:scale-95"
                     >
-                        Post a Job
-                    </a>
-                    <a
-                        href="#try-a-challenge"
-                        onClick={(e) => scrollToSection(e, "#try-a-challenge")}
-                        className="flex h-13 w-37.75 items-center justify-center rounded-xl bg-primary-500 px-10 py-2 text-base text-neutral-50 whitespace-nowrap cursor-pointer transition-all duration-200 hover:bg-primary-600 active:scale-95"
+                        Log in
+                    </Link>
+                    <Link
+                        to="/signup"
+                        className="flex h-13 items-center justify-center rounded-xl bg-primary-500 px-10 py-2 text-base text-neutral-50 whitespace-nowrap cursor-pointer transition-all duration-200 hover:bg-primary-600 active:scale-95"
                     >
-                        Try a challenge
-                    </a>
+                        Sign up
+                    </Link>
                 </div>
 
                 {/* Mobile hamburger button */}
@@ -97,32 +86,36 @@ const Header = () => {
                         className="relative z-50 overflow-hidden lg:hidden border-t border-neutral-200 bg-white min-h-screen"
                     >
                         <div className="flex flex-col gap-1 px-6 py-4">
-                            {navLinks.map((link) => (
-                                <a
-                                    key={link.href}
-                                    href={link.href}
-                                    onClick={(e) => handleMobileLink(e, link.href)}
-                                    className="py-3 font-sans text-base text-neutral-700 border-b border-neutral-200/50 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
-                                >
-                                    {link.label}
-                                </a>
-                            ))}
+                            <a
+                                href="#for-employers"
+                                onClick={(e) => { scrollToSection(e, "#for-employers"); setMenuOpen(false); }}
+                                className="py-3 font-sans text-base text-neutral-700 border-b border-neutral-200/50 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
+                            >
+                                For employers
+                            </a>
+                            <Link
+                                to="/job-board"
+                                onClick={() => setMenuOpen(false)}
+                                className="py-3 font-sans text-base text-neutral-700 border-b border-neutral-200/50 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
+                            >
+                                Browse jobs
+                            </Link>
 
                             <div className="flex flex-col gap-3 pt-4">
-                                <a
-                                    href="#post-a-job"
-                                    onClick={(e) => handleMobileLink(e, "#post-a-job")}
-                                    className="flex h-13 items-center justify-center rounded-xl border border-primary-500 px-10 py-2 font-sans cursor-pointer transition-all duration-200 hover:bg-primary-500 hover:text-white active:scale-95"
+                                <Link
+                                    to="/login"
+                                    onClick={() => setMenuOpen(false)}
+                                    className="flex h-13 items-center justify-center rounded-xl border border-primary-500 px-10 py-2 font-sans text-[16px] text-primary-500 cursor-pointer transition-all duration-200 hover:bg-primary-50 active:scale-95"
                                 >
-                                    Post a Job
-                                </a>
-                                <a
-                                    href="#try-a-challenge"
-                                    onClick={(e) => handleMobileLink(e, "#try-a-challenge")}
+                                    Log in
+                                </Link>
+                                <Link
+                                    to="/signup"
+                                    onClick={() => setMenuOpen(false)}
                                     className="flex h-13 items-center justify-center rounded-xl bg-primary-500 px-10 py-2 text-base text-neutral-50 cursor-pointer transition-all duration-200 hover:bg-primary-600 active:scale-95"
                                 >
-                                    Try a challenge
-                                </a>
+                                    Sign up
+                                </Link>
                             </div>
                         </div>
                     </motion.nav>
