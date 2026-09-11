@@ -7,7 +7,7 @@ import { cva, type VariantProps } from "class-variance-authority";
    Variant × Size matrix  (arrows omitted per design spec)
    ──────────────────────────────────────────────────────────── */
 
-const actionButtonVariants = cva(
+export const actionButtonVariants = cva(
     // base — shared across every variant & size
     [
         "inline-flex items-center justify-center gap-2 font-medium select-none",
