@@ -98,3 +98,5 @@ export function JobBoardPage() {
         </div>
     );
 }
+
+export default JobBoardPage;
