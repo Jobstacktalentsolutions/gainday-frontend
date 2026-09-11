@@ -28,6 +28,7 @@ const EmployerManagement = lazy(() => import("@/features/admin/pages/EmployerMan
 const CandidateManagement = lazy(() => import("@/features/admin/pages/CandidateManagement"))
 const ContentModeration = lazy(() => import("@/features/admin/pages/ContentModeration"));
 const JobPreview = lazy(() => import("@/features/employer/pages/JobPreview"));
+const JobBoardPage = lazy(() => import("@/features/candidate/pages/JobBoardPage"));
 
 
 
@@ -65,6 +66,8 @@ const AppRoutes = () => {
                     <Route path="jobs/:jobId/preview" element={<JobPreview />} />
 
                 </Route>
+
+                <Route path="/job-board" element={<JobBoardPage />} />
 
             </Routes>
         </Suspense>
