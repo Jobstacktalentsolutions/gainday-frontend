@@ -29,6 +29,12 @@ const routeGroups = [
       { path: "/employer/jobs/new/review", label: "Review and Publish" },
     ],
   },
+  {
+    label: "Candidate",
+    routes: [
+      { path: "/job-board", label: "Job Board" },
+    ],
+  },
 ];
 
 const DevRouteLinks = () => {
