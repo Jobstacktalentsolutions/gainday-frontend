@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import brandLogo from "@/assets/gainday icon.svg";
 import { Menu, X } from "lucide-react";
+import { actionButtonVariants } from "@/components/ui/ActionButton";
+import { cn } from "@/lib/utils";
 
 const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
@@ -44,13 +46,13 @@ const Header = () => {
                 <div className="hidden items-center gap-3 lg:flex">
                     <Link
                         to="/login"
-                        className="flex h-13 items-center justify-center rounded-xl border border-primary-500 px-10 py-2 font-sans text-[16px] text-primary-500 cursor-pointer transition-all duration-300 hover:bg-primary-50 active:scale-95"
+                        className={cn(actionButtonVariants({ variant: "outline", size: "lg" }), "w-auto rounded-xl px-10")}
                     >
                         Log in
                     </Link>
                     <Link
                         to="/signup"
-                        className="flex h-13 items-center justify-center rounded-xl bg-primary-500 px-10 py-2 text-base text-neutral-50 whitespace-nowrap cursor-pointer transition-all duration-200 hover:bg-primary-600 active:scale-95"
+                        className={cn(actionButtonVariants({ variant: "primary", size: "lg" }), "w-auto rounded-xl px-10")}
                     >
                         Sign up
                     </Link>
@@ -105,14 +107,14 @@ const Header = () => {
                                 <Link
                                     to="/login"
                                     onClick={() => setMenuOpen(false)}
-                                    className="flex h-13 items-center justify-center rounded-xl border border-primary-500 px-10 py-2 font-sans text-[16px] text-primary-500 cursor-pointer transition-all duration-200 hover:bg-primary-50 active:scale-95"
+                                    className={cn(actionButtonVariants({ variant: "outline", size: "lg" }), "rounded-xl")}
                                 >
                                     Log in
                                 </Link>
                                 <Link
                                     to="/signup"
                                     onClick={() => setMenuOpen(false)}
-                                    className="flex h-13 items-center justify-center rounded-xl bg-primary-500 px-10 py-2 text-base text-neutral-50 cursor-pointer transition-all duration-200 hover:bg-primary-600 active:scale-95"
+                                    className={cn(actionButtonVariants({ variant: "primary", size: "lg" }), "rounded-xl")}
                                 >
                                     Sign up
                                 </Link>
