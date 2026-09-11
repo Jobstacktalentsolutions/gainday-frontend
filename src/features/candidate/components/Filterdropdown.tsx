@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import type { FilterOption } from "../types/job-board.types";
+import type { FilterOption } from "../types/jobBoard";
 
 interface FilterDropdownProps {
   allLabel: string;
@@ -17,9 +17,7 @@ interface FilterDropdownProps {
   className?: string;
 }
 
-// NOTE: this assumes shadcn's `dropdown-menu` primitive is already generated
-// at `src/components/ui/dropdown-menu.tsx`. If not, run:
-//   npx shadcn@latest add dropdown-menu
+
 export function FilterDropdown({
   allLabel,
   options,
@@ -32,17 +30,14 @@ export function FilterDropdown({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <button
-          type="button"
-          className={cn(
-            "flex h-[52px] shrink-0 items-center justify-center gap-1 rounded-[24px] border border-neutral-200 pl-6 pr-4 py-2 text-[16px] text-neutral-700 outline-none transition-colors hover:border-neutral-300 focus-visible:border-primary-500 data-[state=open]:border-primary-500",
-            className,
-          )}
-        >
-          {triggerLabel}
-          <ChevronDown className="size-6 shrink-0" />
-        </button>
+      <DropdownMenuTrigger
+        className={cn(
+          "flex h-13 shrink-0 items-center justify-center gap-1 rounded-[24px] border border-neutral-200 pl-6 pr-4 py-2 text-[16px] text-neutral-700 outline-none transition-colors hover:border-neutral-300 focus-visible:border-primary-500 data-[popup-open]:border-primary-500",
+          className,
+        )}
+      >
+        {triggerLabel}
+        <ChevronDown className="size-6 shrink-0" />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="start"
