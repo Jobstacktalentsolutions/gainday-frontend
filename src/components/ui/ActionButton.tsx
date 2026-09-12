@@ -72,7 +72,7 @@ export const actionButtonVariants = cva(
 
 export interface ActionButtonProps
     extends ButtonHTMLAttributes<HTMLButtonElement>,
-        VariantProps<typeof actionButtonVariants> {
+    VariantProps<typeof actionButtonVariants> {
     /** Optional icon rendered before the label */
     startIcon?: ReactNode;
     /** Optional icon rendered after the label */
