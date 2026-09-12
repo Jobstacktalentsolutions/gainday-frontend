@@ -21,15 +21,15 @@ export const actionButtonVariants = cva(
                 /* ── 1. Primary  ─────────────────────────────── */
                 primary: [
                     "bg-primary-500 text-white",
-                    "hover:bg-primary-600",
+                    "hover:bg-primary-400",
                     "active:bg-primary-700 active:scale-[0.97]",
                     "focus-visible:ring-3 focus-visible:ring-primary-500/30",
                 ].join(" "),
 
                 /* ── 2. Outline  ─────────────────────────────── */
                 outline: [
-                    "border border-neutral-300 bg-white text-neutral-800",
-                    "hover:border-primary-400 hover:text-primary-600 hover:bg-primary-50",
+                    "border border-primary-400 bg-white text-primary-500",
+                    "hover:border-transparent hover:text-primary-600 hover:bg-primary-50",
                     "active:bg-primary-100 active:scale-[0.97]",
                     "focus-visible:ring-3 focus-visible:ring-primary-500/30",
                 ].join(" "),
