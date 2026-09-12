@@ -1,7 +1,7 @@
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {cva, type VariantProps} from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 
 
 
@@ -63,7 +63,7 @@ const iconWrapperSize = { md: "size-8", lg: "size-11" } as const;
 
 export interface StepContinueButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof stepContinueButtonVariants> {
+  VariantProps<typeof stepContinueButtonVariants> {
   children?: ReactNode;
   icon?: ReactNode;
 }
