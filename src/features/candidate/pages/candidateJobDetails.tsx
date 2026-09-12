@@ -9,7 +9,7 @@ import { useJobDetails } from "../hooks/useJobDetails";
 import { formatPostedDate, formatSalaryRange } from "../utils/formatters";
 
 
-export function JobDetailsPage() {
+export default function JobDetailsPage() {
 
     const { jobId } = useParams<{ jobId: string }>();
     const navigate = useNavigate();
