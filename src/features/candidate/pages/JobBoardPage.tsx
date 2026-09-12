@@ -22,8 +22,6 @@ export function JobBoardPage() {
     } = useJobBoardFilters();
 
     function handleApply(job: JobBoardListing) {
-        // TODO: no job detail / application screen has been designed yet.
-        // Route stub only — /job-board/:jobId isn't registered in the router.
         navigate(`/job-board/${job.id}`);
     }
 
