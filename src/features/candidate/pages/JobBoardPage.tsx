@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { PublicNavbar } from "../components/PublicNavbar";
 import { SearchField } from "../components/SearchField";
 import { FilterDropdown } from "../components/Filterdropdown";
-import { JobCard } from "../components/Jobcard";
+import { JobCard } from "../components/JobCard";
 import { EmptyJobBoardState } from "../components/EmptyJobBoardState";
 import { NoResultsState } from "../components/NoFilterResult";
 import { useJobBoardFilters } from "../hooks/useJobBoardFilters";
