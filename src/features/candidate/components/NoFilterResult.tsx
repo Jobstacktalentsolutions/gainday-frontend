@@ -1,4 +1,5 @@
 import { SearchX } from "lucide-react";
+import { ActionButton } from "@/components/ui/ActionButton";
 
 interface NoResultsStateProps {
     onClearFilters: () => void;
@@ -14,13 +15,13 @@ export function NoResultsState({ onClearFilters }: NoResultsStateProps) {
                 <p className="w-86 text-center text-[16px] text-neutral-700">
                     No roles match these filters. Try widening your search.
                 </p>
-                <button
-                    type="button"
+                <ActionButton
+                    variant="outline"
                     onClick={onClearFilters}
-                    className="flex h-13 items-center justify-center rounded-lg border border-primary-500 px-10 py-2 text-[16px] text-primary-500"
+                    className="px-10 text-[16px]"
                 >
                     Clear filters
-                </button>
+                </ActionButton>
             </div>
         </div>
     );
