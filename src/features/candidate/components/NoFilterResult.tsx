@@ -6,7 +6,7 @@ interface NoResultsStateProps {
 
 export function NoResultsState({ onClearFilters }: NoResultsStateProps) {
     return (
-        <div className="flex w-full flex-col items-center justify-center gap-4 rounded-3xl border border-dashed border-neutral-300 bg-white py-20">
+        <div className="flex w-full flex-col items-center justify-center gap-4 rounded-3xl border border-dashed border-neutral-300 bg-white py-28">
             <div className="flex flex-col items-center gap-2">
                 <h2 className="text-[20px] font-semibold text-neutral-900">
                     No roles match your filters

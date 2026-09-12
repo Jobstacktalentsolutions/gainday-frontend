@@ -75,7 +75,7 @@ export function JobBoardPage() {
                         type="button"
                         onClick={clearFilters}
                         disabled={!hasActiveFilters}
-                        className="text-[16px] text-primary-500 disabled:opacity-40"
+                        className="cursor-pointer text-[16px] text-primary-500 transition-colors hover:text-primary-700 disabled:cursor-default disabled:opacity-40"
                     >
                         Clear filters
                     </button>
