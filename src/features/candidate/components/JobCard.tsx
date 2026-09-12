@@ -1,4 +1,4 @@
-import { ArrowUpRight } from "lucide-react";
+import { StepContinueButton } from "@/components/ui/StepNavigationButtons";
 import { formatPostedDate, formatSalaryRange } from "../utils/formatters";
 import type { JobBoardListing } from "../types/jobBoard";
 
@@ -25,16 +25,9 @@ export function JobCard({ job, onApply }: JobCardProps) {
             </div>
             <div className="h-px w-full bg-neutral-200" />
             <div className="flex w-full items-center justify-between">
-                <button
-                    type="button"
-                    onClick={() => onApply(job)}
-                    className="flex h-10 items-center justify-center gap-2 rounded-lg bg-primary-500 py-1 pl-6 pr-1 text-[16px] text-neutral-50"
-                >
+                <StepContinueButton onClick={() => onApply(job)}>
                     Apply Now
-                    <span className="flex size-8 items-center justify-center rounded-lg bg-secondary-500">
-                        <ArrowUpRight className="size-4 text-white" />
-                    </span>
-                </button>
+                </StepContinueButton>
                 <p className="text-[14px] text-neutral-400">Posted {formatPostedDate(job.createdAt)}</p>
             </div>
         </article>
