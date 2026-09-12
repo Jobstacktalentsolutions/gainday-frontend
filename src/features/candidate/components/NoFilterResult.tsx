@@ -1,4 +1,3 @@
-import { SearchX } from "lucide-react";
 import { ActionButton } from "@/components/ui/ActionButton";
 
 interface NoResultsStateProps {
@@ -7,22 +6,23 @@ interface NoResultsStateProps {
 
 export function NoResultsState({ onClearFilters }: NoResultsStateProps) {
     return (
-        <div className="flex h-103.5 w-full flex-col items-center justify-center gap-6 rounded-3xl border border-dashed border-primary-300 bg-white py-7.25">
-            <span className="flex size-15 items-center justify-center rounded-lg bg-primary-50">
-                <SearchX className="size-6 text-primary-500" />
-            </span>
-            <div className="flex flex-col items-center gap-6">
-                <p className="w-86 text-center text-[16px] text-neutral-700">
-                    No roles match these filters. Try widening your search.
+        <div className="flex w-full flex-col items-center justify-center gap-4 rounded-3xl border border-dashed border-neutral-300 bg-white py-20">
+            <div className="flex flex-col items-center gap-2">
+                <h2 className="text-[20px] font-semibold text-neutral-900">
+                    No roles match your filters
+                </h2>
+                <p className="text-[14px] text-neutral-500">
+                    Try widening your search or clearing a filter.
                 </p>
-                <ActionButton
-                    variant="outline"
-                    onClick={onClearFilters}
-                    className="px-10 text-[16px]"
-                >
-                    Clear filters
-                </ActionButton>
             </div>
+            <ActionButton
+                variant="outline"
+                size="sm"
+                onClick={onClearFilters}
+                className="hover:bg-neutral-500 hover:text-neutral-50 hover:border-neutral-400"
+            >
+                Clear filters
+            </ActionButton>
         </div>
     );
 }
