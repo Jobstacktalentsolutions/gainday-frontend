@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Clock, MapPin, Wallet, Share2 } from "lucide-react";
+import { Clock, MapPin, Wallet, Share2, Sparkles } from "lucide-react";
 import { PublicNavbar } from "../components/PublicNavbar";
 import { AuthPromptModal } from "../components/AuthPromptModal";
 import { ActionButton } from "@/components/ui/ActionButton";
@@ -40,8 +40,27 @@ export default function JobDetailsPage() {
             <PublicNavbar />
 
             <main className="mx-auto w-full max-w-300 px-5 pb-20 pt-33.75 sm:pt-43.75 lg:px-0">
-                <div className="flex flex-col gap-10 overflow-hidden rounded-[32px] bg-white p-8">
-                    <div className="flex flex-wrap items-start justify-between gap-6">
+                <div className="relative flex flex-col gap-10 overflow-hidden rounded-[32px] bg-white p-8">
+                    {/* Left gradient bloom */}
+                    <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute -left-20 -top-20 h-80 w-80 rounded-full opacity-40"
+                        style={{
+                            background:
+                                "radial-gradient(circle, #B2C9FF 0%, #E7EFFF 50%, transparent 75%)",
+                        }}
+                    />
+                    {/* Right gradient bloom */}
+                    <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute -right-20 -top-20 h-80 w-80 rounded-full opacity-40"
+                        style={{
+                            background:
+                                "radial-gradient(circle, #B2C9FF 0%, #E7EFFF 50%, transparent 75%)",
+                        }}
+                    />
+
+                    <div className="relative flex flex-wrap items-start justify-between gap-6">
                         <div className="flex flex-col gap-4">
                             <div className="flex flex-wrap items-center gap-3">
                                 <h1 className="text-[32px] leading-[1.2] text-primary-950 sm:text-[48px] sm:leading-14.5 sm:tracking-[-0.48px]">
@@ -68,7 +87,7 @@ export default function JobDetailsPage() {
                             </div>
                         </div>
                         <div className="flex items-center gap-4">
-                            <StepContinueButton size="lg" onClick={() => setAuthPromptOpen(true)}>
+                            <StepContinueButton size="lg" className="w-fit" onClick={() => setAuthPromptOpen(true)}>
                                 Apply
                             </StepContinueButton>
                             <ActionButton
@@ -129,12 +148,13 @@ export default function JobDetailsPage() {
 
                     <div className="h-px w-full bg-neutral-200" />
                     <section className="flex flex-col gap-4 rounded-xl bg-primary-50 p-4">
-                        <span className="w-fit rounded-md border border-primary-500 px-2 py-2 text-[10px] text-primary-500">
+                        <span className="flex w-fit items-center gap-1.5 rounded-md border border-primary-500 px-2 py-2 text-[10px] text-primary-500">
+                            <Sparkles className="size-3.5 text-secondary-500" />
                             FULL TRANSPARENCY
                         </span>
                         <p className="text-[16px] text-primary-950">What this hire needs to solve?</p>
                         <p className="text-[16px] text-neutral-700">{job.businessProblem}</p>
-                        <StepContinueButton size="lg" onClick={() => setAuthPromptOpen(true)}>
+                        <StepContinueButton size="lg" className="w-fit" onClick={() => setAuthPromptOpen(true)}>
                             Start Now
                         </StepContinueButton>
                         <p className="text-[16px] text-neutral-400">

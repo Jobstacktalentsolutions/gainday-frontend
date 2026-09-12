@@ -43,7 +43,7 @@ const stepContinueButtonVariants = cva(
   [
     "group inline-flex items-center gap-2 rounded-lg bg-primary-500 text-neutral-50 select-none cursor-pointer outline-none",
     "shadow-sm transition-all duration-200 ease-out font-medium",
-    "enabled:hover:bg-primary-600 enabled:hover:shadow-md",
+    "enabled:hover:bg-primary-400 enabled:hover:shadow-md",
     "enabled:active:scale-[0.96] enabled:active:translate-y-px enabled:active:bg-primary-700",
     "focus-visible:ring-3 focus-visible:ring-primary-500/30",
     "disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none",
@@ -80,7 +80,7 @@ export const StepContinueButton = forwardRef<HTMLButtonElement, StepContinueButt
         <span>{children}</span>
         <span
           className={cn(
-            "flex shrink-0 items-center justify-center rounded-[8px] bg-secondary-500 text-white transition-colors duration-200 group-enabled:group-hover:bg-secondary-600 group-enabled:group-active:bg-secondary-700",
+            "flex shrink-0 items-center justify-center rounded-[8px] bg-secondary-500 text-white transition-colors duration-200 group-enabled:group-hover:bg-secondary-400 group-enabled:group-active:bg-secondary-700",
             iconWrapperSize[size ?? "md"],
           )}
         >
