@@ -39,15 +39,15 @@ export function JobDetailsPage() {
         <div className="min-h-screen w-full bg-neutral-50">
             <PublicNavbar />
 
-            <main className="mx-auto w-full max-w-[1200px] px-5 pb-20 pt-[135px] sm:pt-[175px] lg:px-0">
+            <main className="mx-auto w-full max-w-300 px-5 pb-20 pt-33.75 sm:pt-43.75 lg:px-0">
                 <div className="flex flex-col gap-10 overflow-hidden rounded-[32px] bg-white p-8">
                     <div className="flex flex-wrap items-start justify-between gap-6">
                         <div className="flex flex-col gap-4">
                             <div className="flex flex-wrap items-center gap-3">
-                                <h1 className="text-[32px] leading-[1.2] text-primary-950 sm:text-[48px] sm:leading-[58px] sm:tracking-[-0.48px]">
+                                <h1 className="text-[32px] leading-[1.2] text-primary-950 sm:text-[48px] sm:leading-14.5 sm:tracking-[-0.48px]">
                                     {job.title}
                                 </h1>
-                                <span className="rounded-full bg-primary-50 px-4 py-1 text-[16px] text-[#3e64d6]">
+                                <span className="rounded-full bg-primary-50 px-4 py-1 text-[16px] text-info-500">
                                     {job.roleCategory}
                                 </span>
                             </div>
