@@ -60,8 +60,8 @@ export default function JobDetailsPage() {
                         }}
                     />
 
-                    <div className="relative flex flex-wrap items-start justify-between gap-6">
-                        <div className="flex flex-col gap-4">
+                    <div className="relative flex flex-wrap items-start justify-between gap-4">
+                        <div className="flex min-w-0 flex-1 flex-col gap-4">
                             <div className="flex flex-wrap items-center gap-3">
                                 <h1 className="text-[32px] leading-[1.2] text-primary-950 sm:text-[48px] sm:leading-14.5 sm:tracking-[-0.48px]">
                                     {job.title}
@@ -86,7 +86,7 @@ export default function JobDetailsPage() {
                                 </span>
                             </div>
                         </div>
-                        <div className="flex items-center gap-4">
+                        <div className="flex shrink-0 items-center gap-4">
                             <StepContinueButton size="lg" className="w-fit" onClick={() => setAuthPromptOpen(true)}>
                                 Apply
                             </StepContinueButton>
