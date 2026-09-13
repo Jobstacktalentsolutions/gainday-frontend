@@ -71,26 +71,6 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEdi
         //emitUpdate prevents inifite calls to this effect
     }, [value, editor]);
 
-    // Detect active heading level so the icon updates in real time
-    const activeHeadingLevel =
-        editor?.isActive("heading", { level: 1 }) ? 1 :
-            editor?.isActive("heading", { level: 2 }) ? 2 :
-                editor?.isActive("heading", { level: 3 }) ? 3 : null;
-
-    // Cycle: none → H1 → H2 → H3 → paragraph (matches GitHub toolbar behaviour)
-    const handleHeadingClick = () => {
-        if (!editor) return;
-        if (activeHeadingLevel === 1) editor.chain().focus().setHeading({ level: 2 }).run();
-        else if (activeHeadingLevel === 2) editor.chain().focus().setHeading({ level: 3 }).run();
-        else if (activeHeadingLevel === 3) editor.chain().focus().setParagraph().run();
-        else editor.chain().focus().setHeading({ level: 1 }).run();
-    };
-
-    const HeadingIcon =
-        activeHeadingLevel === 2 ? Heading2 :
-            activeHeadingLevel === 3 ? Heading3 :
-                Heading1;
-
     const hasError = Boolean(error);
 
     return (
@@ -103,13 +83,39 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEdi
                 )}
             >
                 <div className="flex items-center gap-1 border-b border-neutral-200 bg-neutral-50/50 p-2">
-                    {/* Heading — cycles H1 → H2 → H3 → paragraph */}
+                    {/* H1 / H2 / H3 — each button independently toggles its heading level */}
                     <ToolbarButton
-                        label={activeHeadingLevel ? `Heading ${activeHeadingLevel} — click to cycle` : "Heading"}
-                        active={activeHeadingLevel !== null}
-                        onClick={handleHeadingClick}
+                        label="Heading 1"
+                        active={editor?.isActive("heading", { level: 1 })}
+                        onClick={() =>
+                            editor?.isActive("heading", { level: 1 })
+                                ? editor.chain().focus().setParagraph().run()
+                                : editor?.chain().focus().setHeading({ level: 1 }).run()
+                        }
                     >
-                        <HeadingIcon className="size-3.5" />
+                        <Heading1 className="size-3.5" />
+                    </ToolbarButton>
+                    <ToolbarButton
+                        label="Heading 2"
+                        active={editor?.isActive("heading", { level: 2 })}
+                        onClick={() =>
+                            editor?.isActive("heading", { level: 2 })
+                                ? editor.chain().focus().setParagraph().run()
+                                : editor?.chain().focus().setHeading({ level: 2 }).run()
+                        }
+                    >
+                        <Heading2 className="size-3.5" />
+                    </ToolbarButton>
+                    <ToolbarButton
+                        label="Heading 3"
+                        active={editor?.isActive("heading", { level: 3 })}
+                        onClick={() =>
+                            editor?.isActive("heading", { level: 3 })
+                                ? editor.chain().focus().setParagraph().run()
+                                : editor?.chain().focus().setHeading({ level: 3 }).run()
+                        }
+                    >
+                        <Heading3 className="size-3.5" />
                     </ToolbarButton>
 
                     <span className="mx-1 h-4 w-px bg-neutral-200" aria-hidden="true" />
