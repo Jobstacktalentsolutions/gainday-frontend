@@ -90,7 +90,7 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEdi
                     <ToolbarButton
                         label="Italic"
                         active={editor?.isActive("italic")}
-                        onClick={() => editor?.chain().focus().toggleBold().run()}
+                        onClick={() => editor?.chain().focus().toggleItalic().run()}
                     >
                         <Italic className="size-3.5" />
                     </ToolbarButton>
@@ -99,8 +99,12 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEdi
                         label="Link"
                         active={editor?.isActive("link")}
                         onClick={() => {
-                            const url = window.prompt("URL");
-                            if (url) editor?.chain().focus().setLink({ href: url }).run();
+                            const raw = window.prompt("URL")?.trim();
+                            if (!raw) return;
+                            // Ensure an absolute URL — without a protocol the browser
+                            // treats it as a relative path and appends it to the current route.
+                            const href = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+                            editor?.chain().focus().setLink({ href }).run();
                         }}
                     >
                         <LinkIcon className="size-3.5" />
