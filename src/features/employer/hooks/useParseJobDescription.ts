@@ -14,6 +14,7 @@ export interface ParsedJobDetails {
     salaryTo?: number;
     companyDescription?: string;
     skills?: string[];
+    generatedDescription?: string;
 }
 
 // TODO: swap this mock for the real POST /jobs/parse-description call once the
@@ -36,6 +37,8 @@ const mockParseJobDescription = (rawText: string) => {
                 salaryFrom: 60000,
                 salaryTo: 80000,
                 skills: ["Business management", "PowerPoint", "Data analysis", "Stakeholder comms"],
+                generatedDescription:
+                    "We need someone to own credit risk decisions for our SME lending book. You'll review incoming applications, flag exposure concerns to the lending committee, and tighten up our underwriting criteria as the portfolio grows. Most mornings start with a backlog of flagged applications from overnight — you'll triage those first, then spend the rest of the day working with sales to structure deals that balance growth against risk.",
             })
         }, 1600);
     });
@@ -43,6 +46,6 @@ const mockParseJobDescription = (rawText: string) => {
 
 export const useParseJobDescription = () => {
     return useMutation({
-        mutationFn : (rawText : string) => mockParseJobDescription(rawText),
+        mutationFn: (rawText: string) => mockParseJobDescription(rawText),
     })
 }
