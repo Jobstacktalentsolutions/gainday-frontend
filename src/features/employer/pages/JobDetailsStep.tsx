@@ -1,0 +1,283 @@
+import { useState, useEffect } from "react";
+import { useNavigate, useOutletContext } from "react-router-dom";
+import { useFormContext } from "react-hook-form";
+import { Sparkles } from "lucide-react";
+import TagInput from "@/components/ui/tagInput";
+import { jobDetailsSchema, type JobPostingFormValues } from "../schemas/jobPosting";
+import TaskGenerationModal from "../components/TaskGenerationModal";
+import { useSaveJobDetails } from "../hooks/useSaveJobDraft";
+import { useTriggerGeneration } from "../hooks/useTriggerGeneration";
+import { useProfile } from "@/features/auth/hooks/useProfile";
+
+import { FormSelect } from "@/components/form/FormSelect";
+import { FormTextarea } from "@/components/form/FormTextarea";
+import { JobFormInput } from "@/components/form/JobFormInput";
+import { StepSecondaryButton, StepContinueButton } from "@/components/ui/StepNavigationButtons";
+
+const ROLES = [
+    { value: "FINANCE", label: "Finance" },
+    { value: "SALES", label: "Sales" },
+];
+const SKILL_LEVELS = ["Entry level", "Mid level", "Senior level"];
+const EMPLOYMENT_TYPES = ["Full-time", "Part-time", "Contract"];
+
+interface JobPostingOutletContext {
+    onSaveAndExit: () => void;
+    jobId: string | null;
+    setJobId: (jobId: string | null) => void;
+}
+
+const JobDetailsStep = () => {
+    const navigate = useNavigate();
+    const { onSaveAndExit, jobId, setJobId } = useOutletContext<JobPostingOutletContext>();
+    const [isGenerating, setIsGenerating] = useState(false);
+    const saveDetailsMutation = useSaveJobDetails();
+    const triggerGeneration = useTriggerGeneration();
+    const { data: profile } = useProfile();
+
+    const {
+        register,
+        watch,
+        setValue,
+        trigger,
+        formState: { errors },
+    } = useFormContext<JobPostingFormValues>();
+
+    const formValues = watch();
+    const skills = formValues.skills ?? [];
+    const description = formValues.description ?? "";
+    const isStepValid = jobDetailsSchema.safeParse(formValues).success;
+
+    // Synchronize company profile name into form state when loaded
+    useEffect(() => {
+        if (profile?.companyName && !formValues.company) {
+            setValue("company", profile.companyName, { shouldValidate: true });
+        }
+    }, [profile?.companyName, formValues.company, setValue]);
+
+    const handleContinue = async () => {
+        const isValid = await trigger([
+            "title",
+            "role",
+            "skillLevel",
+            "location",
+            "employmentType",
+            "deadline",
+            "isRemoteFriendly",
+            "salaryFrom",
+            "salaryTo",
+            "companyDescription",
+            "skills",
+            "description",
+            "businessProblem",
+        ]);
+
+        if (!isValid) return;
+
+        setIsGenerating(true);
+
+        try {
+            const values = watch();
+            const saved = await saveDetailsMutation.mutateAsync({ ...values, id: jobId ?? undefined });
+            setJobId(saved.id);
+
+            // Queues the real generation pipeline (async on the backend); SimulationBuilder
+            // polls job+simulation status and shows its own generating UI once we navigate there.
+            await triggerGeneration.mutateAsync(saved.id);
+            navigate("/employer/jobs/new/simulation-builder");
+        } catch {
+            // no-op — isGenerating reset in finally below
+        } finally {
+            setIsGenerating(false);
+        }
+    };
+
+    const handleCancelGeneration = () => {
+        setIsGenerating(false);
+    };
+
+    return (
+        <div className="flex flex-col gap-12">
+            {/* Header — centered */}
+            <div className="flex flex-col lg:items-center gap-2 text-left lg:text-center">
+                <h1 className="text-3xl  font-bold text-black lg:text-4xl">Post a job</h1>
+                <p className="max-w-lg text-base text-neutral-500">
+                    Gainday decomposes the role, maps it to measurable capabilities, generates a work
+                    assessment and quality checks it. Nothing reaches the candidate until you approve it
+                </p>
+            </div>
+
+            {/* Form fields — two-column grid on desktop */}
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                {/* Job title — full width */}
+                <div className="lg:col-span-2">
+                    <JobFormInput
+                        label="Job title"
+                        placeholder="e.g Customer Operations Business Manager"
+                        error={errors.title?.message}
+                        {...register("title")}
+                    />
+                </div>
+
+                {/* Role + Skill level — side by side */}
+                <FormSelect
+                    label="Role"
+                    placeholder="Select a role"
+                    error={errors.role?.message}
+                    {...register("role")}
+                >
+                    {ROLES.map((r) => (
+                        <option key={r.value} value={r.value}>{r.label}</option>
+                    ))}
+                </FormSelect>
+
+                <FormSelect
+                    label="Skill level"
+                    placeholder="Select a skill level"
+                    error={errors.skillLevel?.message}
+                    {...register("skillLevel")}
+                >
+                    {SKILL_LEVELS.map((s) => (
+                        <option key={s} value={s}>{s}</option>
+                    ))}
+                </FormSelect>
+
+                {/* Company (read-only, from the employer's profile) + Location — side by side */}
+                <JobFormInput
+                    label="Company"
+                    readOnly
+                    value={formValues.company ?? profile?.companyName ?? ""}
+                    {...register("company")}
+                />
+                <JobFormInput
+                    label="Location"
+                    placeholder="London, UK"
+                    error={errors.location?.message}
+                    {...register("location")}
+                />
+
+                {/* Employment type + Deadline — side by side */}
+                <FormSelect
+                    label="Employment type"
+                    placeholder="Select a type"
+                    error={errors.employmentType?.message}
+                    {...register("employmentType")}
+                >
+                    {EMPLOYMENT_TYPES.map((t) => (
+                        <option key={t} value={t}>{t}</option>
+                    ))}
+                </FormSelect>
+
+                <JobFormInput
+                    label="Deadline"
+                    optional
+                    type="date"
+                    error={errors.deadline?.message}
+                    {...register("deadline")}
+                />
+
+                {/* Remote-friendly checkbox — full width */}
+                <div className="lg:col-span-2">
+                    <label className="flex items-center gap-1 text-xs text-neutral-400">
+                        <input type="checkbox" {...register("isRemoteFriendly")} className="size-5 rounded-md border bg-neutral-50 border-neutral-100" />
+                        Is this role remote?
+                    </label>
+                </div>
+
+                {/* Salary from + Salary to — side by side */}
+                <JobFormInput
+                    label="Salary from (£)"
+                    formatCommas
+                    optional
+                    startIcon={<span>£</span>}
+                    error={errors.salaryFrom?.message}
+                    {...register("salaryFrom")}
+                />
+                <JobFormInput
+                    label="Salary to (£)"
+                    formatCommas
+                    optional
+                    startIcon={<span>£</span>}
+                    error={errors.salaryTo?.message}
+                    {...register("salaryTo")}
+                />
+
+                {/* What your company does — full width */}
+                <div className="lg:col-span-2">
+                    <FormTextarea
+                        label="What your company does"
+                        optional
+                        placeholder="Enter a description..."
+                        rows={3}
+                        {...register("companyDescription")}
+                    />
+                </div>
+
+
+                {/* Skills — full width */}
+                <div className="flex flex-col gap-1.5 lg:col-span-2">
+                    <label className="text-base font-medium text-neutral-800">Skills that matter, comma separated</label>
+                    <TagInput
+                        value={skills}
+                        onChange={(tags) => setValue("skills", tags, { shouldValidate: true })}
+                        placeholder="Type a skill and enter"
+                    />
+                </div>
+
+                {/* AI Simulation callout — full width */}
+                <div className="flex w-full flex-col gap-2.5 rounded-xl bg-primary-50 p-3 lg:col-span-2">
+                    <span className="flex w-fit items-center gap-1 rounded-md border border-primary-500 p-2 text-[10px] text-primary-500">
+                        <Sparkles className="size-3" aria-hidden="true" />
+                        POWERS YOUR AI SIMULATION
+                    </span>
+                    <p className="text-base text-neutral-950">Job description</p>
+                    <p className="text-base text-neutral-400">
+                        This next field is the most important one. Gainday turns it into a real work
+                        simulation assessment, so write it the way you would brief a new starter on their
+                        first morning.
+                    </p>
+                    <FormTextarea
+                        label="Job description"
+                        hideLabel
+                        placeholder="Enter a description..."
+                        rows={8}
+                        error={errors.description?.message}
+                        className="bg-neutral-50"
+                        {...register("description")}
+                    />
+                    <p className="text-sm text-neutral-700">
+                        {description.length}/500 characters. 40 minimum
+                    </p>
+
+                    <FormTextarea
+                        label="What specific business problem should this hire help solve?"
+                        optional
+                        placeholder="e.g Reduce onboarding drop-off by improving our KYC follow-up flow"
+                        rows={3}
+                        error={errors.businessProblem?.message}
+                        className="bg-neutral-50"
+                        {...register("businessProblem")}
+                    />
+                </div>
+            </div>
+
+            {/* Navigation buttons */}
+            <div className="flex items-center justify-between">
+                <StepSecondaryButton onClick={onSaveAndExit}>
+                    Save and exit
+                </StepSecondaryButton>
+                <StepContinueButton disabled={!isStepValid} onClick={handleContinue}>
+                    Continue
+                </StepContinueButton>
+            </div>
+
+            {/* Task Generation Loading Modal */}
+            <TaskGenerationModal
+                open={isGenerating}
+                onCancel={handleCancelGeneration}
+            />
+        </div>
+    )
+}
+
+export default JobDetailsStep;
