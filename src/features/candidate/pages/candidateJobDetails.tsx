@@ -22,18 +22,18 @@ export default function JobDetailsPage() {
             <div className="flex min-h-screen items-center justify-center bg-neutral-50 text-neutral-700">
                 Job not found
             </div>
-        )
+        );
     }
 
-    function handleSignUp() {
+    const handleSignUp = () => {
         // TODO: confirm the real signup route/query param shape for carrying job context
         navigate(`/signup?redirect=/job-board/${job.id}/apply`);
-    }
+    };
 
-    function handleContinueAsGuest() {
+    const handleContinueAsGuest = () => {
         // TODO: guest info form (name/email/phone) not built yet — stub only
         console.log("TODO: open guest info form for", job.id);
-    }
+    };
 
     return (
         <div className="min-h-screen w-full bg-neutral-50">
