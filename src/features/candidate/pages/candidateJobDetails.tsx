@@ -27,12 +27,12 @@ export default function JobDetailsPage() {
 
     function handleSignUp() {
         // TODO: confirm the real signup route/query param shape for carrying job context
-        navigate(`/signup?redirect=/job-board/${job.id}/apply`);
+        navigate(`/signup?redirect=/job-board/${job!.id}/apply`);
     }
 
     function handleContinueAsGuest() {
         // TODO: guest info form (name/email/phone) not built yet — stub only
-        console.log("TODO: open guest info form for", job.id);
+        console.log("TODO: open guest info form for", job!.id);
     }
 
     return (

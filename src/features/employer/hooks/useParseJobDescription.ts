@@ -24,7 +24,7 @@ export interface ParsedJobDetails {
 
 const mockParseJobDescription = (rawText: string) => {
     console.log("Raw text : ", rawText);
-    return new Promise((resolve) => {
+    return new Promise<ParsedJobDetails>((resolve) => {
         setTimeout(() => {
             resolve({
                 title: "Business Manager",
