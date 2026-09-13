@@ -1,5 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog"
 import { AlertTriangle } from "lucide-react"
+import { StepSecondaryButton } from "@/components/ui/StepNavigationButtons"
+import { ActionButton } from "@/components/ui/ActionButton"
 
 interface ConfirmOverwriteModalProps {
     open: boolean;
@@ -31,20 +33,20 @@ const ConfirmOverwriteModal = ({ open, onConfirm, onCancel }: ConfirmOverwriteMo
                     </Dialog.Description>
 
                     <div className="mt-8 flex w-full gap-3">
-                        <button
-                            type="button"
+                        <StepSecondaryButton
                             onClick={onCancel}
-                            className="flex h-11 flex-1 items-center justify-center rounded-xl border border-neutral-200 text-sm font-medium text-neutral-700 transition-all hover:bg-neutral-50 active:scale-[0.98]"
+                            className="flex-1"
                         >
                             Cancel
-                        </button>
-                        <button
-                            type="button"
+                        </StepSecondaryButton>
+                        <ActionButton
+                            variant="primary"
+                            size="lg"
                             onClick={onConfirm}
-                            className="flex h-11 flex-1 items-center justify-center rounded-xl bg-linear-to-r from-primary-500 to-primary-700 text-sm font-medium text-white transition-all hover:shadow-md active:scale-[0.98]"
+                            className="flex-1"
                         >
                             Overwrite
-                        </button>
+                        </ActionButton>
                     </div>
 
                 </Dialog.Content>
