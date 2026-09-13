@@ -5,6 +5,8 @@ import { Sparkles } from "lucide-react";
 import TagInput from "@/components/ui/tagInput";
 import { jobDetailsSchema, type JobPostingFormValues } from "../schemas/jobPosting";
 import TaskGenerationModal from "../components/TaskGenerationModal";
+import JobDescriptionPasteInput from "../components/JobDescriptionPasteInput";
+import type { ParsedJobDetails } from "../hooks/useParseJobDescription";
 import { useSaveJobDetails } from "../hooks/useSaveJobDraft";
 
 import { FormSelect } from "@/components/form/FormSelect";
