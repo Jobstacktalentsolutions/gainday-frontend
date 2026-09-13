@@ -58,23 +58,7 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEdi
         onUpdate: ({ editor }) => onChange((editor.storage as Record<string, any>).markdown.getMarkdown()),
         editorProps: {
             attributes: {
-                // Prose styles applied directly so the WYSIWYG output matches
-                // the GitHub-style rendered markdown preview.
-                class: [
-                    "min-w-0 flex-1 outline-none text-base text-neutral-900 leading-relaxed",
-                    "[&_p]:min-h-[1.5em]",
-                    // Headings
-                    "[&_h1]:text-2xl [&_h1]:font-bold   [&_h1]:text-neutral-900 [&_h1]:mt-4 [&_h1]:mb-1",
-                    "[&_h2]:text-xl  [&_h2]:font-semibold [&_h2]:text-neutral-900 [&_h2]:mt-3 [&_h2]:mb-1",
-                    "[&_h3]:text-lg  [&_h3]:font-semibold [&_h3]:text-neutral-800 [&_h3]:mt-2 [&_h3]:mb-0.5",
-                    // Bullet / ordered lists — GitHub-style indented disc bullets
-                    "[&_ul]:list-disc   [&_ul]:pl-5 [&_ul]:my-1 [&_ul_li]:my-0.5",
-                    "[&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-1 [&_ol_li]:my-0.5",
-                    // Inline code
-                    "[&_code]:rounded [&_code]:bg-neutral-100 [&_code]:px-1 [&_code]:text-sm [&_code]:font-mono",
-                    // Links
-                    "[&_a]:text-primary-600 [&_a]:underline",
-                ].join(" "),
+                class: "tpe-content min-w-0 flex-1 outline-none text-base text-neutral-900 leading-relaxed",
             },
         },
     });
@@ -173,6 +157,21 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEdi
                     </ToolbarButton>
                 </div>
                 <div className="min-h-45 px-4 py-3">
+                    {/* Scoped prose styles — keeps heading/list/link rules self-contained
+                        and avoids relying on Tailwind scanning dynamic class arrays. */}
+                    <style>{`
+                        .tpe-content p          { min-height: 1.5em; }
+                        .tpe-content h1         { font-size: 1.5rem;   font-weight: 700; color: #171717; margin-top: 1rem;   margin-bottom: 0.25rem; line-height: 1.2; }
+                        .tpe-content h2         { font-size: 1.25rem;  font-weight: 600; color: #171717; margin-top: 0.75rem; margin-bottom: 0.25rem; line-height: 1.3; }
+                        .tpe-content h3         { font-size: 1.125rem; font-weight: 600; color: #262626; margin-top: 0.5rem;  margin-bottom: 0.125rem; line-height: 1.3; }
+                        .tpe-content ul         { list-style-type: disc;    padding-left: 1.25rem; margin: 0.25rem 0; }
+                        .tpe-content ol         { list-style-type: decimal; padding-left: 1.25rem; margin: 0.25rem 0; }
+                        .tpe-content li         { margin: 0.125rem 0; }
+                        .tpe-content a          { color: #4f46e5; text-decoration: underline; }
+                        .tpe-content code       { background: #f5f5f5; border-radius: 0.25rem; padding: 0 0.25rem; font-size: 0.875rem; font-family: monospace; }
+                        .tpe-content strong     { font-weight: 700; }
+                        .tpe-content em         { font-style: italic; }
+                    `}</style>
                     <EditorContent editor={editor} />
                 </div>
 
