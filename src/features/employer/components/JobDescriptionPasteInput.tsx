@@ -55,7 +55,7 @@ const JobDescriptionPasteInput = ({ onParsed }: JobDescriptionPasteInputProps) =
                     type="button"
                     onClick={handleParseClick}
                     disabled={!rawText.trim() || parseMutation.isPending}
-                    className="flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-primary-500 to-primary-700 px-4 text-sm font-medium text-white shadow-sm transition-all hover:shadow-md active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="flex h-10 items-center gap-2 rounded-xl bg-linear-to-r from-primary-500 to-primary-700 px-4 text-sm font-medium text-white shadow-sm transition-all hover:shadow-md active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     {parseMutation.isPending ? (
                         <Loader2 className="size-4 animate-spin" aria-hidden="true" />
@@ -82,3 +82,5 @@ const JobDescriptionPasteInput = ({ onParsed }: JobDescriptionPasteInputProps) =
         </div>
     )
 }
+
+export default JobDescriptionPasteInput;
