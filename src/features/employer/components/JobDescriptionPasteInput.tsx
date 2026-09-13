@@ -50,6 +50,35 @@ const JobDescriptionPasteInput = ({ onParsed }: JobDescriptionPasteInputProps) =
                 onChange={(e) => setRawText(e.target.value)}
             />
 
+            <div className="flex items-center gap-3 self-start">
+                <button
+                    type="button"
+                    onClick={handleParseClick}
+                    disabled={!rawText.trim() || parseMutation.isPending}
+                    className="flex h-10 items-center gap-2 rounded-xl bg-gradient-to-r from-primary-500 to-primary-700 px-4 text-sm font-medium text-white shadow-sm transition-all hover:shadow-md active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                    {parseMutation.isPending ? (
+                        <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                    ) : (
+                        <Sparkles className="size-4" aria-hidden="true" />
+                    )}
+                    {parseMutation.isPending ? "Parsing..." : "Parse job description"}
+                </button>
+
+                {parseMutation.isError && (
+                    <p className="text-sm text-error-500">
+                        Couldn't parse that description. Try again, or fill the fields in manually.
+                    </p>
+                )}
+            </div>
+
+            <ConfirmOverwriteModal
+                open={confirmOpen}
+                onConfirm={handleConfirm}
+                onCancel={() => setConfirmOpen(false)}
+            />
+
+
         </div>
     )
 }
