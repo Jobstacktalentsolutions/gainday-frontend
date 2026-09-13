@@ -6,7 +6,7 @@ import { useParseJobDescription, type ParsedJobDetails } from "../hooks/useParse
 
 
 interface JobDescriptionPasteInputProps {
-    onParsed: (rawText: string, parsed: ParsedJobDetails) => void;
+    onParsed: (parsed: ParsedJobDetails) => void;
 }
 
 const JobDescriptionPasteInput = ({ onParsed }: JobDescriptionPasteInputProps) => {
@@ -24,9 +24,12 @@ const JobDescriptionPasteInput = ({ onParsed }: JobDescriptionPasteInputProps) =
         setConfirmOpen(false);
         try {
             const parsed = await parseMutation.mutateAsync(rawText);
-            onParsed(rawText, parsed);
+            onParsed(parsed);
+
+            setRawText("");
         } catch {
             //put the parse mutation error
+            // leave raw text to allow retry
         }
     }
 
@@ -37,7 +40,8 @@ const JobDescriptionPasteInput = ({ onParsed }: JobDescriptionPasteInputProps) =
                     Have an existing job description?
                 </p>
                 <p className="text-sm text-neutral-500">
-                    Paste it below and we'll fill in as many of the fields underneath as we can find.
+                    Paste it below and we'll fill in as many of the fields underneath as we can find,
+                    including a ready-to-review brief for the simulation
                 </p>
             </div>
 

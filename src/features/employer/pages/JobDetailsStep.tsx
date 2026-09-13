@@ -31,6 +31,9 @@ const JobDetailsStep = () => {
     const navigate = useNavigate();
     const { onSaveAndExit, jobId, setJobId } = useOutletContext<JobPostingOutletContext>();
     const [isGenerating, setIsGenerating] = useState(false);
+    // True only while the current description value is exactly what the parser
+    // produced. Cleared the instant the person edits the field by hand.
+    const [isDescriptionAiGenerated, setIsDescriptionAiGenerated] = useState(false);
     const abortTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const saveDetailsMutation = useSaveJobDetails();
 
@@ -56,12 +59,9 @@ const JobDetailsStep = () => {
     }, []);
 
     // Applies parsed fields onto the form, overwriting only the fields the parser
-    // actually returned a value for — fields it couldn't find stay untouched. The
-    // raw pasted text becomes the "description" value directly, since that field is
-    // what drives simulation generation.
-
-    const handleParsed = (rawText: string, parsed: ParsedJobDetails) => {
-
+    // actually returned a value for. The generated description replaces the field
+    // directly (no raw-JD passthrough) and is flagged as AI-generated until edited.
+    const handleParsed = (parsed: ParsedJobDetails) => {
         const fieldSetters: Array<[keyof ParsedJobDetails, keyof JobPostingFormValues]> = [
             ["title", "title"],
             ["role", "role"],
@@ -87,8 +87,11 @@ const JobDetailsStep = () => {
             setValue("skills", parsed.skills, { shouldValidate: true });
         }
 
-        setValue("description", rawText, { shouldValidate: true });
-    }
+        if (parsed.generatedDescription) {
+            setValue("description", parsed.generatedDescription, { shouldValidate: true });
+            setIsDescriptionAiGenerated(true);
+        }
+    };
 
     const handleContinue = async () => {
         const isValid = await trigger([
@@ -283,6 +286,14 @@ const JobDetailsStep = () => {
                         simulation assessment, so write it the way you would brief a new starter on their
                         first morning.
                     </p>
+
+                    {isDescriptionAiGenerated && (
+                        <span className="flex w-fit items-center gap-1 rounded-full bg-primary-100 px-2.5 py-1 text-xs font-medium text-primary-700">
+                            <Sparkles className="size-3" aria-hidden="true" />
+                            AI-generated — review before continuing
+                        </span>
+                    )}
+
                     <FormTextarea
                         label="Job description"
                         hideLabel
@@ -290,7 +301,11 @@ const JobDetailsStep = () => {
                         rows={8}
                         error={errors.description?.message}
                         className="bg-neutral-50"
-                        {...register("description")}
+                        {...register("description", {
+                            // Any manual edit means this is no longer purely the
+                            // AI's text, so the "review" hint disappears.
+                            onChange: () => setIsDescriptionAiGenerated(false),
+                        })}
                     />
                     <p className="text-sm text-neutral-700">
                         {description.length}/500 characters. 40 minimum
