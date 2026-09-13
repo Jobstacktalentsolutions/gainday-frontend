@@ -60,9 +60,9 @@ const JobDetailsStep = () => {
     // raw pasted text becomes the "description" value directly, since that field is
     // what drives simulation generation.
 
-    const handleParsed = (rawText : string, parsed : ParsedJobDetails) => {
+    const handleParsed = (rawText: string, parsed: ParsedJobDetails) => {
 
-        const fieldSetters : Array<[keyof ParsedJobDetails, keyof JobPostingFormValues]> = [
+        const fieldSetters: Array<[keyof ParsedJobDetails, keyof JobPostingFormValues]> = [
             ["title", "title"],
             ["role", "role"],
             ["skillLevel", "skillLevel"],
@@ -79,17 +79,17 @@ const JobDetailsStep = () => {
         fieldSetters.forEach(([parsedKey, formKey]) => {
             const value = parsed[parsedKey];
             if (value !== undefined) {
-                setValue(formKey, value as never, { shouldValidate : true});
+                setValue(formKey, value as never, { shouldValidate: true });
             }
         });
 
         if (parsed.skills && parsed.skills.length > 0) {
-            setValue("skills", parsed.skills, { shouldValidate : true});
+            setValue("skills", parsed.skills, { shouldValidate: true });
         }
 
-        setValue("description", rawText, { shouldValidate : true});
+        setValue("description", rawText, { shouldValidate: true });
     }
- 
+
     const handleContinue = async () => {
         const isValid = await trigger([
             "title",
@@ -144,6 +144,9 @@ const JobDetailsStep = () => {
                     assessment and quality checks it. Nothing reaches the candidate until you approve it
                 </p>
             </div>
+
+            {/* Paste-and-parse entry point — first thing on the page */}
+            <JobDescriptionPasteInput onParsed={handleParsed} />
 
             {/* Form fields — two-column grid on desktop */}
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
