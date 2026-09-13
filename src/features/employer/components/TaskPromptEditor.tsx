@@ -90,8 +90,8 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEdi
     // Detect active heading level so the icon updates in real time
     const activeHeadingLevel =
         editor?.isActive("heading", { level: 1 }) ? 1 :
-        editor?.isActive("heading", { level: 2 }) ? 2 :
-        editor?.isActive("heading", { level: 3 }) ? 3 : null;
+            editor?.isActive("heading", { level: 2 }) ? 2 :
+                editor?.isActive("heading", { level: 3 }) ? 3 : null;
 
     // Cycle: none → H1 → H2 → H3 → paragraph (matches GitHub toolbar behaviour)
     const handleHeadingClick = () => {
@@ -104,8 +104,8 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEdi
 
     const HeadingIcon =
         activeHeadingLevel === 2 ? Heading2 :
-        activeHeadingLevel === 3 ? Heading3 :
-        Heading1;
+            activeHeadingLevel === 3 ? Heading3 :
+                Heading1;
 
     const hasError = Boolean(error);
 
