@@ -55,6 +55,41 @@ const JobDetailsStep = () => {
         };
     }, []);
 
+    // Applies parsed fields onto the form, overwriting only the fields the parser
+    // actually returned a value for — fields it couldn't find stay untouched. The
+    // raw pasted text becomes the "description" value directly, since that field is
+    // what drives simulation generation.
+
+    const handleParsed = (rawText : string, parsed : ParsedJobDetails) => {
+
+        const fieldSetters : Array<[keyof ParsedJobDetails, keyof JobPostingFormValues]> = [
+            ["title", "title"],
+            ["role", "role"],
+            ["skillLevel", "skillLevel"],
+            ["skillCategory", "skillCategory"],
+            ["location", "location"],
+            ["employmentType", "employmentType"],
+            ["deadline", "deadline"],
+            ["isRemoteFriendly", "isRemoteFriendly"],
+            ["salaryFrom", "salaryFrom"],
+            ["salaryTo", "salaryTo"],
+            ["companyDescription", "companyDescription"],
+        ];
+
+        fieldSetters.forEach(([parsedKey, formKey]) => {
+            const value = parsed[parsedKey];
+            if (value !== undefined) {
+                setValue(formKey, value as never, { shouldValidate : true});
+            }
+        });
+
+        if (parsed.skills && parsed.skills.length > 0) {
+            setValue("skills", parsed.skills, { shouldValidate : true});
+        }
+
+        setValue("description", rawText, { shouldValidate : true});
+    }
+ 
     const handleContinue = async () => {
         const isValid = await trigger([
             "title",
