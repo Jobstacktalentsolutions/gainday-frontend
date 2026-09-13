@@ -41,7 +41,7 @@ const ConfirmOverwriteModal = ({ open, onConfirm, onCancel }: ConfirmOverwriteMo
                         <button
                             type="button"
                             onClick={onConfirm}
-                            className="flex h-11 flex-1 items-center justify-center rounded-xl bg-gradient-to-r from-primary-500 to-primary-700 text-sm font-medium text-white transition-all hover:shadow-md active:scale-[0.98]"
+                            className="flex h-11 flex-1 items-center justify-center rounded-xl bg-linear-to-r from-primary-500 to-primary-700 text-sm font-medium text-white transition-all hover:shadow-md active:scale-[0.98]"
                         >
                             Overwrite
                         </button>
@@ -53,3 +53,5 @@ const ConfirmOverwriteModal = ({ open, onConfirm, onCancel }: ConfirmOverwriteMo
         </Dialog.Root>
     )
 }
+
+export default ConfirmOverwriteModal;
