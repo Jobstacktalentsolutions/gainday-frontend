@@ -31,7 +31,7 @@ const JobDescriptionPasteInput = ({ onParsed }: JobDescriptionPasteInputProps) =
     }
 
     return (
-        <div className="flex flex-col gap-3 rounded-2xl border border-dashed border-neutral-300 bg-neutral-50/50 p-5">
+        <div className="flex flex-col gap-3 rounded-2xl border border-neutral-200 bg-primary-50 p-5">
             <div className="flex flex-col gap-1">
                 <p className="text-base font-medium text-neutral-800">
                     Have an existing job description?
@@ -55,7 +55,7 @@ const JobDescriptionPasteInput = ({ onParsed }: JobDescriptionPasteInputProps) =
                     type="button"
                     onClick={handleParseClick}
                     disabled={!rawText.trim() || parseMutation.isPending}
-                    className="flex h-10 items-center gap-2 rounded-xl bg-linear-to-r from-primary-500 to-primary-700 px-4 text-sm font-medium text-white shadow-sm transition-all hover:shadow-md active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="flex cursor-pointer h-10 items-center gap-2 rounded-xl bg-primary-500 hover:bg-primary-400 px-4 text-sm font-medium text-white shadow-sm transition-all hover:shadow-md active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     {parseMutation.isPending ? (
                         <Loader2 className="size-4 animate-spin" aria-hidden="true" />
