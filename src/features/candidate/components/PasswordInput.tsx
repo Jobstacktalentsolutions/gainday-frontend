@@ -15,7 +15,7 @@ export const PasswordInput = forwardRef<HTMLInputElement, Omit<FormInputProps, "
                         type="button"
                         tabIndex={-1}
                         onClick={() => setVisible((v) => !v)}
-                        className="text-neutral-400 hover:text-neutral-600"
+                        className="cursor-pointer text-neutral-400 hover:text-neutral-600"
                     >
                         {visible ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
                     </button>

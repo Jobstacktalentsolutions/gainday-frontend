@@ -10,7 +10,7 @@ const SocialAuthButton = ({ label, onClick }: SocialAuthButtonProps) => {
         <button
             type="button"
             onClick={onClick}
-            className="flex h-13 w-full items-center justify-center gap-2 rounded-xl border border-primary-500 px-6 text-base text-primary-500"
+            className="flex h-13 w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-primary-500 px-6 text-base text-primary-500"
         >
             <img
                 src={googleIcon}
