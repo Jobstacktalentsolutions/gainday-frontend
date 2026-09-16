@@ -5,7 +5,7 @@ import { PublicNavbar } from "@/features/candidate/components/PublicNavbar";
 import { FormInput } from "@/components/form/FormInput";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { PasswordInput } from "../components/PasswordInput";
-import { candidateSignInSchema, type CandidateSignInValues } from "../schemas";
+import { candidateSignInSchema, type CandidateSignInValues } from "../auth/schema";
 import { useCandidateAuth } from "../hooks/useCandidateAuth";
 
 
@@ -35,41 +35,42 @@ export default function CandidateSignIn() {
     return (
         <div className="min-h-screen w-full bg-neutral-50">
             <PublicNavbar />
-            <main className="mx-auto flex w-full max-w-[566px] flex-col items-center gap-[60px] px-6 pb-20 pt-[175px]">
-                <div className="flex flex-col items-center gap-2 text-center">
-                    <h1 className="text-[32px] leading-[38px] tracking-[-0.32px] text-primary-950">Log in to Gainday</h1>
-                    <p className="text-[16px] text-neutral-700">Get discovered by other employers on Gainday</p>
+            <main className="flex w-full justify-center px-4 pt-[150px] pb-12">
+                <div className="w-full max-w-[480px] rounded-2xl bg-white px-10 py-12 shadow-sm">
+                    <div className="mb-8 flex flex-col items-center gap-2 text-center">
+                        <h1 className="text-[32px] leading-[38px] tracking-[-0.32px] text-primary-950">Log in to Gainday</h1>
+                        <p className="text-[16px] text-neutral-700">Get discovered by other employers on Gainday</p>
+                    </div>
+
+                    <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-4">
+                        <FormInput label="Email" type="email" error={errors.email?.message} {...register("email")} />
+                        <div className="flex flex-col items-end gap-4">
+                            <PasswordInput label="Password" error={errors.password?.message} {...register("password")} />
+                            {/* TODO: /candidate/forgot-password not built yet — stub link */}
+                            <Link to="/candidate/forgot-password" className="text-[16px] text-primary-500">
+                                Forgot Password?
+                            </Link>
+                        </div>
+                        <ActionButton type="submit" variant="primary" size="lg" disabled={!isValid || isSubmitting}>
+                            {isSubmitting ? "Logging in..." : "Log in"}
+                        </ActionButton>
+
+                        <div className="flex items-center gap-2.5 text-[16px] text-neutral-400">
+                            <span className="h-px flex-1 bg-neutral-200" /> or <span className="h-px flex-1 bg-neutral-200" />
+                        </div>
+
+                        <ActionButton type="button" variant="outline" size="lg" disabled>
+                            Sign in with Google
+                        </ActionButton>
+
+                        <p className="text-center text-[16px] text-neutral-700">
+                            New to Gainday?{" "}
+                            <Link to={signUpHref} className="text-primary-500">Create an account</Link>
+                        </p>
+                    </form>
                 </div>
-
-                <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-4">
-                    <FormInput label="Email" type="email" error={errors.email?.message} {...register("email")} />
-                    <div className="flex flex-col items-end gap-4">
-                        <PasswordInput label="Password" error={errors.password?.message} {...register("password")} />
-                        {/* TODO: /candidate/forgot-password not built yet — stub link */}
-                        <Link to="/candidate/forgot-password" className="text-[16px] text-primary-500">
-                            Forgot Password?
-                        </Link>
-                    </div>
-                    <ActionButton type="submit" variant="primary" size="lg" disabled={!isValid || isSubmitting}>
-                        {isSubmitting ? "Logging in..." : "Log in"}
-                    </ActionButton>
-
-                    <div className="flex items-center gap-2.5 text-[16px] text-neutral-200">
-                        <span className="h-px flex-1 bg-neutral-200" /> or <span className="h-px flex-1 bg-neutral-200" />
-                    </div>
-
-                    <ActionButton type="button" variant="outline" size="lg" disabled>
-                        Sign in with Google
-                    </ActionButton>
-
-                    <p className="text-center text-[16px] text-neutral-700">
-                        New to Gainday?{" "}
-                        <Link to={signUpHref} className="text-primary-500">Create an account</Link>
-                    </p>
-                </form>
             </main>
         </div>
-
     );
 
 }
