@@ -54,7 +54,7 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
         const hasError = Boolean(error);
 
         return (
-            <div className="flex flex-col gap-1.5">
+            <div className="flex w-full flex-col gap-1.5">
                 {/* ── Label row ── */}
                 {!hideLabel && (
                     <label
