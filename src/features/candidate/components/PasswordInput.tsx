@@ -20,8 +20,11 @@ export const PasswordInput = forwardRef<HTMLInputElement, Omit<FormInputProps, "
                         {visible ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
                     </button>
                 }
+
             />
         )
 
     }
 )
+
+PasswordInput.displayName = "PasswordInput";
