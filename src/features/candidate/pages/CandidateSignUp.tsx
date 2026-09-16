@@ -5,6 +5,7 @@ import { PublicNavbar } from "@/features/candidate/components/PublicNavbar";
 import { FormInput } from "@/components/form/FormInput";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { PasswordInput } from "../components/PasswordInput";
+import SocialAuthButton from "@/features/auth/component/SocialAuthButton";
 import { candidateSignUpSchema, type CandidateSignUpValues } from "../auth/schema";
 import { useCandidateAuth } from "../hooks/useCandidateAuth";
 
@@ -72,10 +73,7 @@ export default function CandidateSignUp() {
                             <span className="h-px flex-1 bg-neutral-200" /> or <span className="h-px flex-1 bg-neutral-200" />
                         </div>
 
-                        {/* TODO: no OAuth wired yet, per your call, just placeholder for now */}
-                        <ActionButton type="button" variant="outline" size="lg" disabled>
-                            Sign up with Google
-                        </ActionButton>
+                        <SocialAuthButton label="Sign up with Google" />
                         <p className="text-center text-[16px] text-neutral-700">
                             Already have an account?{" "}
                             <Link to={signInHref} className="text-primary-500">Sign in</Link>
