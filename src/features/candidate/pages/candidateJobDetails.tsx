@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Clock, MapPin, Wallet, Share2, Sparkles } from "lucide-react";
 import { PublicNavbar } from "../components/PublicNavbar";
-import { AuthPromptModal } from "../components/AuthPromptModal";
+import { ApplyDialog } from "../components/ApplyDialog";
+import type { GuestInfoValues } from "../auth/schema";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { StepContinueButton } from "@/components/ui/StepNavigationButtons";
 import { useJobDetails } from "../hooks/useJobDetails";
@@ -26,13 +27,13 @@ export default function JobDetailsPage() {
     }
 
     function handleSignUp() {
-        // TODO: confirm the real signup route/query param shape for carrying job context
-        navigate(`/signup?redirect=/job-board/${job!.id}/apply`);
+        navigate(`/candidate/signup?redirect=/job-board/${job!.id}/apply`);
     }
 
-    function handleContinueAsGuest() {
-        // TODO: guest info form (name/email/phone) not built yet — stub only
-        console.log("TODO: open guest info form for", job!.id);
+    function handleGuestSubmit(values: GuestInfoValues) {
+        // TODO: POST guest application once endpoint exists
+        console.log("TODO: POST guest application for", job!.id, values);
+        navigate(`/job-board/${job!.id}/apply`);
     }
 
     return (
@@ -165,11 +166,11 @@ export default function JobDetailsPage() {
             </main>
 
 
-            <AuthPromptModal
+            <ApplyDialog
                 open={authPromptOpen}
                 onOpenChange={setAuthPromptOpen}
                 onSignUp={handleSignUp}
-                onContinueAsGuest={handleContinueAsGuest}
+                onGuestSubmit={handleGuestSubmit}
             />
         </div>
     );
