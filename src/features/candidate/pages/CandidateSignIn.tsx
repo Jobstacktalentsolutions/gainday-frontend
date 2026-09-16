@@ -5,6 +5,7 @@ import { PublicNavbar } from "@/features/candidate/components/PublicNavbar";
 import { FormInput } from "@/components/form/FormInput";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { PasswordInput } from "../components/PasswordInput";
+import SocialAuthButton from "@/features/auth/component/SocialAuthButton";
 import { candidateSignInSchema, type CandidateSignInValues } from "../auth/schema";
 import { useCandidateAuth } from "../hooks/useCandidateAuth";
 
@@ -59,9 +60,7 @@ export default function CandidateSignIn() {
                             <span className="h-px flex-1 bg-neutral-200" /> or <span className="h-px flex-1 bg-neutral-200" />
                         </div>
 
-                        <ActionButton type="button" variant="outline" size="lg" disabled>
-                            Sign in with Google
-                        </ActionButton>
+                        <SocialAuthButton label="Sign in with Google" />
 
                         <p className="text-center text-[16px] text-neutral-700">
                             New to Gainday?{" "}
