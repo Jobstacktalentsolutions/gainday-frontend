@@ -41,10 +41,10 @@ export default function CandidateSignUp() {
     return (
         <div className="min-h-screen w-full bg-neutral-50">
             <PublicNavbar />
-            <main className="flex min-h-[calc(100vh-64px)] items-center justify-center px-4 py-12">
-                <div className="w-full max-w-[480px] rounded-2xl bg-white px-10 py-12 shadow-sm">
+            <main className="flex w-full justify-center px-4 pt-37.5 pb-12">
+                <div className="w-full max-w-120 rounded-2xl bg-white px-10 py-12 shadow-sm">
                     <div className="mb-8 flex flex-col items-center gap-2 text-center">
-                        <h1 className="text-[32px] leading-[38px] tracking-[-0.32px] text-primary-950">Sign up to apply</h1>
+                        <h1 className="text-[32px] leading-9.5 tracking-[-0.32px] text-primary-950">Sign up to apply</h1>
                         <p className="text-[16px] text-neutral-700">
                             Track your Capability Score across every application & see your full results and feedback anytime
                         </p>
