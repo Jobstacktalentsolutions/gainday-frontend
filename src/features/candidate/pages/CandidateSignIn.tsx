@@ -35,10 +35,10 @@ export default function CandidateSignIn() {
     return (
         <div className="min-h-screen w-full bg-neutral-50">
             <PublicNavbar />
-            <main className="flex w-full justify-center px-4 pt-[150px] pb-12">
-                <div className="w-full max-w-[480px] rounded-2xl bg-white px-10 py-12 shadow-sm">
+            <main className="flex w-full justify-center px-4 pt-37.5 pb-12">
+                <div className="w-full max-w-120 rounded-2xl bg-white px-10 py-12 shadow-sm">
                     <div className="mb-8 flex flex-col items-center gap-2 text-center">
-                        <h1 className="text-[32px] leading-[38px] tracking-[-0.32px] text-primary-950">Log in to Gainday</h1>
+                        <h1 className="text-[32px] leading-9.5 tracking-[-0.32px] text-primary-950">Log in to Gainday</h1>
                         <p className="text-[16px] text-neutral-700">Get discovered by other employers on Gainday</p>
                     </div>
 
