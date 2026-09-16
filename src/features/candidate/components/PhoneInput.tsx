@@ -98,10 +98,25 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
                         </PopoverContent>
                     </Popover>
 
+                    <input
+                        ref={ref}
+                        value={value}
+                        onChange={(event) => onChange(event.target.value)}
+                        onBlur={onBlur}
+                        placeholder={`${selected.dialCode} ${selected.placeholder}`}
+                        className="min-w-0 flex-1 bg-transparent px-3.5 py-2.5 text-base text-neutral-700 outline-none placeholder:text-neutral-400"
+                    />
                 </div>
+                {hasError && (
+                    <p role="alert" className="text-sm text-error-500">
+                        {error}
+                    </p>
+                )}
 
             </div>
         );
 
     }
 );
+
+PhoneInput.displayName = "PhoneInput";
