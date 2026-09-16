@@ -33,6 +33,8 @@ const routeGroups = [
     label: "Candidate",
     routes: [
       { path: "/job-board", label: "Job Board" },
+      { path: "/candidate/signup", label: "Candidate Sign Up" },
+      { path: "/candidate/signin", label: "Candidate Sign In" },
     ],
   },
 ];
