@@ -73,6 +73,29 @@ export const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
                             {selected.code}
                             <ChevronDown className="size-4 text-neutral-400" />
                         </PopoverTrigger>
+                        <PopoverContent align="start" className="w-55 p-0">
+                            <Command>
+                                <CommandInput placeholder="Search country..." />
+                                <CommandList>
+                                    <CommandEmpty>No country found.</CommandEmpty>
+                                    <CommandGroup>
+                                        {PHONE_COUNTRIES.map((country) => (
+                                            <CommandItem
+                                                key={country.code}
+                                                value={country.label}
+                                                onSelect={() => {
+                                                    onCountryChange(country.code);
+                                                    setOpen(false);
+                                                }}
+                                            >
+                                                <Check />
+                                                {country.label} ({country.dialCode})
+                                            </CommandItem>
+                                        ))}
+                                    </CommandGroup>
+                                </CommandList>
+                            </Command>
+                        </PopoverContent>
                     </Popover>
 
                 </div>
