@@ -23,3 +23,12 @@ export const candidateSignInSchema = z.object({
 })
 
 export type CandidateSignInValues = z.infer<typeof candidateSignInSchema>;
+
+export const guestInfoSchema = z.object({
+  fullName: z.string().trim().min(2, "Enter your name"),
+  email: z.string().trim().email("Enter a valid email address"),
+  phoneCountry: z.string().min(1),
+  phoneNumber: z.string().trim().min(4, "Enter a valid phone number"),
+});
+
+export type GuestInfoValues = z.infer<typeof guestInfoSchema>;
