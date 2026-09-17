@@ -61,8 +61,8 @@ export default function CandidateSignIn() {
                                 Forgot Password?
                             </Link>
                         </div>
-                        <ActionButton type="submit" variant="primary" size="lg" disabled={!isValid || isSubmitting}>
-                            {signInMutation.mutate ? "Logging in..." : "Log in"}
+                        <ActionButton type="submit" variant="primary" size="lg" disabled={!isValid || signInMutation.isPending}>
+                            {signInMutation.isPending ? "Logging in..." : "Log in"}
                         </ActionButton>
 
                         <div className="flex items-center gap-2.5 text-[16px] text-neutral-400">

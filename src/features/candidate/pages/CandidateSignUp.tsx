@@ -71,7 +71,7 @@ export default function CandidateSignUp() {
                         </label>
                         {errors.agreedToTerms && <p role="alert" className="text-sm text-error-500">{errors.agreedToTerms.message}</p>}
 
-                        <ActionButton type="submit" variant="primary" size="lg" disabled={!isValid || isSubmitting}>
+                        <ActionButton type="submit" variant="primary" size="lg" disabled={!isValid || signUpMutation.isPending}>
                             {signUpMutation.isPending ? "Creating account..." : "Create account"}
                         </ActionButton>
 
