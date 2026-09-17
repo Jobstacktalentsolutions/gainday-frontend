@@ -7,14 +7,24 @@ import { ActionButton } from "@/components/ui/ActionButton";
 import { PasswordInput } from "../components/PasswordInput";
 import SocialAuthButton from "@/features/auth/component/SocialAuthButton";
 import { candidateSignInSchema, type CandidateSignInValues } from "../auth/schema";
-import { useCandidateAuth } from "../hooks/useCandidateAuth";
+import { useMutation } from "@tanstack/react-query";
+import { useAuthStore } from "@/features/auth/store/authStore";
+import { mockCandidateSignIn } from "../auth/mockCandidateAuth";
+
 
 
 export default function CandidateSignIn() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const redirect = searchParams.get("redirect");
-    const { isSubmitting, signIn } = useCandidateAuth();
+
+    const signInMutation = useMutation({
+        mutationFn: mockCandidateSignIn,
+        onSuccess: (res) => {
+            useAuthStore.getState().setAuth(res.data.access_token, res.data.user);
+            navigate(redirect ?? "/job-board");
+        }
+    })
 
     const {
         register,
@@ -27,8 +37,7 @@ export default function CandidateSignIn() {
     });
 
     async function onSubmit(values: CandidateSignInValues) {
-        await signIn(values);
-        navigate(redirect ?? "/job-board");
+        signInMutation.mutate(values);
     }
 
     const signUpHref = redirect ? `/candidate/signup?redirect=${encodeURIComponent(redirect)}` : "/candidate/signup";
@@ -53,7 +62,7 @@ export default function CandidateSignIn() {
                             </Link>
                         </div>
                         <ActionButton type="submit" variant="primary" size="lg" disabled={!isValid || isSubmitting}>
-                            {isSubmitting ? "Logging in..." : "Log in"}
+                            {signInMutation.mutate ? "Logging in..." : "Log in"}
                         </ActionButton>
 
                         <div className="flex items-center gap-2.5 text-[16px] text-neutral-400">
