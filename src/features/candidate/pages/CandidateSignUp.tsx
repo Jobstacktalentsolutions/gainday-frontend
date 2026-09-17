@@ -7,14 +7,23 @@ import { ActionButton } from "@/components/ui/ActionButton";
 import { PasswordInput } from "../components/PasswordInput";
 import SocialAuthButton from "@/features/auth/component/SocialAuthButton";
 import { candidateSignUpSchema, type CandidateSignUpValues } from "../auth/schema";
-import { useCandidateAuth } from "../hooks/useCandidateAuth";
+import { useMutation } from "@tanstack/react-query";
+import { useAuthStore } from "@/features/auth/store/authStore";
+import { mockCandidateSignUp } from "../auth/mockCandidateAuth";
 
 
 export default function CandidateSignUp() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const redirect = searchParams.get("redirect");
-    const { isSubmitting, signUp } = useCandidateAuth()
+
+    const signUpMutation = useMutation({
+        mutationFn: mockCandidateSignUp,
+        onSuccess: (res) => {
+            useAuthStore.getState().setAuth(res.data.access_token, res.data.user);
+            navigate(redirect ?? "/job-board");
+        }
+    });
 
 
     const { register, handleSubmit, formState: { errors, isValid }, } =
@@ -31,10 +40,7 @@ export default function CandidateSignUp() {
         });
 
     async function onSubmit(values: CandidateSignUpValues) {
-        await signUp(values);
-
-        // TODO: candidate dashboard doesn't exist yet — /job-board is the fallback
-        navigate(redirect ?? "/job-board");
+        signUpMutation.mutate(values);
     }
 
     const signInHref = redirect ? `/candidate/signin?redirect=${encodeURIComponent(redirect)}` : "/candidate/signin";
@@ -66,7 +72,7 @@ export default function CandidateSignUp() {
                         {errors.agreedToTerms && <p role="alert" className="text-sm text-error-500">{errors.agreedToTerms.message}</p>}
 
                         <ActionButton type="submit" variant="primary" size="lg" disabled={!isValid || isSubmitting}>
-                            {isSubmitting ? "Creating account..." : "Create account"}
+                            {signUpMutation.isPending ? "Creating account..." : "Create account"}
                         </ActionButton>
 
                         <div className="flex items-center gap-2.5 text-[16px] text-neutral-400">
