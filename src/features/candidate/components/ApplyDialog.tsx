@@ -37,11 +37,11 @@ export function ApplyDialog({ open, onOpenChange, onSignUp, onGuestSubmit, isSub
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[566px] gap-[60px] rounded-2xl p-12">
+      <DialogContent className="max-w-141.5 gap-15 rounded-2xl p-12">
         {step === "choose" ? (
           <>
             <DialogHeader className="items-center gap-2 text-center">
-              <DialogTitle className="text-[32px] leading-[38px] tracking-[-0.32px] text-primary-950">
+              <DialogTitle className="text-[32px] leading-9.5 tracking-[-0.32px] text-primary-950">
                 How would you like to apply?
               </DialogTitle>
               <DialogDescription className="text-[16px] text-neutral-700">
@@ -60,7 +60,7 @@ export function ApplyDialog({ open, onOpenChange, onSignUp, onGuestSubmit, isSub
         ) : (
           <>
             <DialogHeader className="items-center gap-2 text-center">
-              <DialogTitle className="text-[32px] leading-[38px] tracking-[-0.32px] text-primary-950">
+              <DialogTitle className="text-[32px] leading-9.5 tracking-[-0.32px] text-primary-950">
                 Continue as guest
               </DialogTitle>
               <DialogDescription className="text-[16px] text-neutral-700">
