@@ -1,11 +1,9 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import TaskTypeBadge from "./TaskTypeBadge";
-import { z } from "zod";
-import { simulationTaskSchema } from "../schemas/jobPosting";
-
-type SimulationTask = z.infer<typeof simulationTaskSchema>;
-
+import { InterfaceRendererView } from "@/features/simulation-tasks/interfaceRenderers/registry";
+import ComponentSummary from "@/features/simulation-tasks/ComponentSummary";
+import type { SimulationTask } from "@/features/simulation-tasks/types";
 
 interface TaskSummaryCardProps {
     index: number;
@@ -19,22 +17,31 @@ const TaskSummaryCard = ({ index, task }: TaskSummaryCardProps) => {
                 <p className="text-sm font-bold uppercase tracking-wide text-neutral-900">
                     Task {index + 1}
                 </p>
-                <TaskTypeBadge type={task.type} />
+                <TaskTypeBadge taskType={task.taskType} interfaceType={task.interfaceType} />
             </div>
 
             <p className="text-base font-medium text-neutral-950">{task.title}</p>
 
-            {task.scenario && (
-                <div className="whitespace-pre-wrap rounded-xl bg-neutral-50/50 p-4 text-sm text-neutral-700">
-                    {task.scenario}
+            {task.scenarioDescription && (
+                <div className="prose prose-sm max-w-none rounded-xl bg-neutral-50/50 p-4 text-neutral-700 prose-p:my-2 prose-ul:my-2">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {task.scenarioDescription}
+                    </ReactMarkdown>
                 </div>
             )}
 
             <div className="prose prose-sm max-w-none rounded-xl bg-neutral-50/50 p-4 text-neutral-900 prose-p:my-2 prose-ul:my-2">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.taskPrompt}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown>
             </div>
 
+            <InterfaceRendererView
+                interfaceType={task.interfaceType}
+                payload={task.interfacePayload}
+                mode="preview"
+            />
 
+            <ComponentSummary label="Grading criteria" data={task.objectiveComponent} />
+            <ComponentSummary label="Prompt framing" data={task.openEndedComponent} />
         </div>
     );
 };

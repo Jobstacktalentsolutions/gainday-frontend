@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useFormContext } from "react-hook-form";
 import { Sparkles } from "lucide-react";
@@ -8,6 +8,8 @@ import TaskGenerationModal from "../components/TaskGenerationModal";
 import JobDescriptionPasteInput from "../components/JobDescriptionPasteInput";
 import type { ParsedJobDetails } from "../hooks/useParseJobDescription";
 import { useSaveJobDetails } from "../hooks/useSaveJobDraft";
+import { useTriggerGeneration } from "../hooks/useTriggerGeneration";
+import { useProfile } from "@/features/auth/hooks/useProfile";
 
 import { FormSelect } from "@/components/form/FormSelect";
 import { FormTextarea } from "@/components/form/FormTextarea";
@@ -34,8 +36,9 @@ const JobDetailsStep = () => {
     // True only while the current description value is exactly what the parser
     // produced. Cleared the instant the person edits the field by hand.
     const [isDescriptionAiGenerated, setIsDescriptionAiGenerated] = useState(false);
-    const abortTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const saveDetailsMutation = useSaveJobDetails();
+    const triggerGeneration = useTriggerGeneration();
+    const { data: profile } = useProfile();
 
     const {
         register,
@@ -50,13 +53,12 @@ const JobDetailsStep = () => {
     const description = formValues.description ?? "";
     const isStepValid = jobDetailsSchema.safeParse(formValues).success;
 
+    // Synchronize company profile name into form state when loaded
     useEffect(() => {
-        return () => {
-            if (abortTimerRef.current) {
-                clearTimeout(abortTimerRef.current);
-            }
-        };
-    }, []);
+        if (profile?.companyName && !formValues.company) {
+            setValue("company", profile.companyName, { shouldValidate: true });
+        }
+    }, [profile?.companyName, formValues.company, setValue]);
 
     // Applies parsed fields onto the form, overwriting only the fields the parser
     // actually returned a value for. The generated description replaces the field
@@ -120,20 +122,18 @@ const JobDetailsStep = () => {
             const saved = await saveDetailsMutation.mutateAsync({ ...values, id: jobId ?? undefined });
             setJobId(saved.id);
 
-            abortTimerRef.current = setTimeout(() => {
-                setIsGenerating(false);
-                navigate("/employer/jobs/new/simulation-builder");
-            }, 2800);
+            // Queues the real generation pipeline (async on the backend); SimulationBuilder
+            // polls job+simulation status and shows its own generating UI once we navigate there.
+            await triggerGeneration.mutateAsync(saved.id);
+            navigate("/employer/jobs/new/simulation-builder");
         } catch {
+            // no-op — isGenerating reset in finally below
+        } finally {
             setIsGenerating(false);
         }
     };
 
     const handleCancelGeneration = () => {
-        if (abortTimerRef.current) {
-            clearTimeout(abortTimerRef.current);
-            abortTimerRef.current = null;
-        }
         setIsGenerating(false);
     };
 
@@ -197,8 +197,13 @@ const JobDetailsStep = () => {
                     />
                 </div>
 
-                {/* Company + Location — side by side */}
-                <JobFormInput label="Company" readOnly {...register("company")} />
+                {/* Company (read-only, from the employer's profile) + Location — side by side */}
+                <JobFormInput
+                    label="Company"
+                    readOnly
+                    value={formValues.company ?? profile?.companyName ?? ""}
+                    {...register("company")}
+                />
                 <JobFormInput
                     label="Location"
                     placeholder="London, UK"

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Lock } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useFormContext } from "react-hook-form";
 import { AnimatePresence, motion } from "motion/react";
 import { StepSecondaryButton, StepContinueButton } from "@/components/ui/StepNavigationButtons";
@@ -8,13 +8,20 @@ import JobDetailsSummary from "../components/JobDetailsSummary";
 import JobDetailsEditForm from "../components/JobDetailsEditForm";
 import PublishSuccess from "../components/PublishSuccess";
 import TaskSummaryCard from "../components/TaskSummaryCard";
+import { usePublishJob } from "../hooks/usePublishJob";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
+interface JobPostingOutletContext {
+    jobId: string | null;
+}
+
 const ReviewPublish = () => {
     const navigate = useNavigate();
+    const { jobId } = useOutletContext<JobPostingOutletContext>();
     const { watch, trigger, formState } = useFormContext<JobPostingFormValues>();
+    const publishJob = usePublishJob();
     const values = watch();
 
     const [editingJobDetails, setEditingJobDetails] = useState(false);
@@ -37,12 +44,19 @@ const ReviewPublish = () => {
             return;
         }
 
+        if (!jobId) {
+            console.error("[ReviewPublish] No jobId in outlet context — cannot publish");
+            return;
+        }
+
         setIsPublishing(true);
-        // TODO: replace with the real publish API call.
-        await new Promise((resolve) => setTimeout(resolve, 1800));
-        const slug = values.title.toLowerCase().replace(/\s+/g, "-");
-        setPublishResult({ jobUrl: `gainday.com/jobs/${slug}` });
-        setIsPublishing(false);
+        try {
+            await publishJob.mutateAsync(jobId);
+            const slug = values.title.toLowerCase().replace(/\s+/g, "-");
+            setPublishResult({ jobUrl: `gainday.com/jobs/${slug}` });
+        } finally {
+            setIsPublishing(false);
+        }
     };
 
     if (publishResult) {

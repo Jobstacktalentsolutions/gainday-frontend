@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { InterfaceType } from "@/features/simulation-tasks/types";
 
 export const jobRoleEnum = z.enum(["FINANCE", "SALES"]);
 export type JobRole = z.infer<typeof jobRoleEnum>;
@@ -41,20 +42,27 @@ export type JobDetailsFormValues = z.infer<typeof jobDetailsBaseSchema>;
 
 
 
-//Simulation builder
-export const taskTypeEnum = z.enum(["written", "choice"])
-export type TaskType = z.infer<typeof taskTypeEnum>;
-
+//Simulation builder — mirrors the backend's SimulationTask shape exactly (see
+// gainday-backend/src/db/schema/simulations.schema.ts) so tasks round-trip through
+// GET/PUT /simulations without a lossy field-mapping layer.
 export const simulationTaskSchema = z.object({
     id: z.string(),
-    type: taskTypeEnum,
+    // Null for a task added/regenerated via regenerateTask() that hasn't been accepted +
+    // persisted to question_bank yet — it can't be graded until it has one.
+    questionBankId: z.string().nullable(),
+    taskType: z.string().min(1),
+    category: z.string().min(1),
     title: z.string().min(1, "Task title is required"),
-    taskPrompt: z.string().min(1, "Task prompt is required"),
-    scenario: z.string().min(1, "Scenario context is required"),
+    scenarioDescription: z.string().min(1, "Scenario is required"),
+    questionPrompt: z.string().min(1, "Task prompt is required"),
+    objectiveComponent: z.record(z.string(), z.unknown()).optional(),
+    openEndedComponent: z.record(z.string(), z.unknown()).optional(),
+    businessProblemDerived: z.boolean(),
+    interfaceType: z.nativeEnum(InterfaceType),
+    interfacePayload: z.record(z.string(), z.unknown()),
 });
 
 export const simulationBuilderSchema = z.object({
-    scenarioIntro: z.string().min(1, "Scenario intro is required"),
     tasks: z.array(simulationTaskSchema).min(1, "Add at least one task"),
 });
 

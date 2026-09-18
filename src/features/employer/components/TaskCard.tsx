@@ -3,15 +3,15 @@ import { Trash2, RefreshCw, ChevronDown, ChevronUp } from "lucide-react";
 import { useFormContext, Controller } from "react-hook-form";
 import { motion, AnimatePresence } from "motion/react";
 import { JobFormInput } from "@/components/form/JobFormInput";
-import { FormTextarea } from "@/components/form/FormTextarea";
 import TaskTypeBadge from "./TaskTypeBadge";
 import TaskPromptEditor from "./TaskPromptEditor";
+import { InterfaceRendererView } from "@/features/simulation-tasks/interfaceRenderers/registry";
+import ComponentSummary from "@/features/simulation-tasks/ComponentSummary";
 import { cn } from "@/lib/utils";
-import type { JobPostingFormValues, TaskType } from "../schemas/jobPosting";
+import type { JobPostingFormValues } from "../schemas/jobPosting";
 
 interface TaskCardProps {
     index: number;
-    type?: TaskType;
     expanded: boolean;
     onToggleExpand: () => void;
     onRemove: () => void;
@@ -22,7 +22,7 @@ interface TaskCardProps {
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 const TaskCard = ({
-    index, type, expanded, onToggleExpand, onRemove, onRegenerate, regenerateDisabled
+    index, expanded, onToggleExpand, onRemove, onRegenerate, regenerateDisabled
 }: TaskCardProps) => {
     const {
         register,
@@ -31,20 +31,29 @@ const TaskCard = ({
         formState: { errors },
     } = useFormContext<JobPostingFormValues>();
 
-    const watchedType = watch(`tasks.${index}.type` as const);
-    const resolvedType = (watchedType as TaskType) || type || "written";
+    const taskType = watch(`tasks.${index}.taskType` as const);
+    const interfaceType = watch(`tasks.${index}.interfaceType` as const);
+    const interfacePayload = watch(`tasks.${index}.interfacePayload` as const);
+    const objectiveComponent = watch(`tasks.${index}.objectiveComponent` as const);
+    const openEndedComponent = watch(`tasks.${index}.openEndedComponent` as const);
+    const businessProblemDerived = watch(`tasks.${index}.businessProblemDerived` as const);
+    const questionPrompt = watch(`tasks.${index}.questionPrompt` as const);
     const taskErrors = errors.tasks?.[index];
+
+    const promptPreview = questionPrompt
+        ?.replace(/[#*_`>]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
 
     return (
         <div className="flex w-full flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white">
-            <input type="hidden" {...register(`tasks.${index}.type` as const)} value={resolvedType} />
             <input type="hidden" {...register(`tasks.${index}.id` as const)} />
             <div className="flex items-center justify-between border-b border-neutral-100 p-5">
                 <div className="flex items-center gap-3">
                     <p className="text-sm font-bold uppercase tracking-wide text-neutral-900">
                         TASK {index + 1}
                     </p>
-                    <TaskTypeBadge type={resolvedType} />
+                    <TaskTypeBadge taskType={taskType} interfaceType={interfaceType} />
                 </div>
 
                 {/* Desktop: action buttons in header */}
@@ -130,6 +139,12 @@ const TaskCard = ({
                     {...register(`tasks.${index}.title` as const)}
                 />
 
+                {!expanded && promptPreview && (
+                    <p className="line-clamp-2 text-left text-sm text-neutral-500">
+                        {promptPreview}
+                    </p>
+                )}
+
                 <AnimatePresence initial={false}>
                     {expanded && (
                         <motion.div
@@ -140,28 +155,61 @@ const TaskCard = ({
                             transition={{ duration: 0.35, ease: EASE }}
                             className="flex flex-col gap-5 overflow-hidden"
                         >
-                            <FormTextarea
-                                label="Scenario context"
-                                rows={9}
-                                className="lg:[&_textarea]:h-30"
-                                error={taskErrors?.scenario?.message}
-                                {...register(`tasks.${index}.scenario` as const)}
-                            />
+                            <div className="flex flex-col gap-1.5 text-left">
+                                <label className="text-base font-medium text-neutral-800">Scenario</label>
+                                <Controller
+                                    control={control}
+                                    name={`tasks.${index}.scenarioDescription` as const}
+                                    render={({ field }) => (
+                                        <TaskPromptEditor
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                            error={taskErrors?.scenarioDescription?.message}
+                                        />
+                                    )}
+                                />
+                            </div>
 
                             <div className="flex flex-col gap-1.5 text-left">
                                 <label className="text-base font-medium text-neutral-800">Task prompt</label>
                                 <Controller
                                     control={control}
-                                    name={`tasks.${index}.taskPrompt` as const}
+                                    name={`tasks.${index}.questionPrompt` as const}
                                     render={({ field }) => (
                                         <TaskPromptEditor
                                             value={field.value}
                                             onChange={field.onChange}
-                                            error={taskErrors?.taskPrompt?.message}
+                                            error={taskErrors?.questionPrompt?.message}
                                         />
                                     )}
                                 />
                             </div>
+
+                            {/* Read-only preview of how the candidate will answer — the response-interface
+                                type/shape is set by the generation pipeline, not editable at this tier. */}
+                            <div className="flex flex-col gap-1.5 text-left">
+                                <label className="text-base font-medium text-neutral-800">
+                                    Candidate response interface
+                                </label>
+                                <InterfaceRendererView
+                                    interfaceType={interfaceType}
+                                    payload={interfacePayload ?? {}}
+                                    mode="preview"
+                                />
+                            </div>
+
+                            {/* Read-only grading data — what the candidate's answer is actually scored
+                                against. Not editable here: fixing flagged content is an admin action
+                                (Generation Reviews), employers just need visibility into it. */}
+                            <ComponentSummary label="Grading criteria" data={objectiveComponent} />
+                            <ComponentSummary label="Prompt framing" data={openEndedComponent} />
+
+                            {businessProblemDerived && (
+                                <p className="flex items-center gap-1.5 text-left text-sm text-primary-600">
+                                    <span className="inline-block size-1.5 rounded-full bg-primary-500" aria-hidden="true" />
+                                    Built from the specific business problem you described.
+                                </p>
+                            )}
                         </motion.div>
                     )}
                 </AnimatePresence>

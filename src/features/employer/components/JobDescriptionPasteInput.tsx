@@ -40,8 +40,7 @@ const JobDescriptionPasteInput = ({ onParsed }: JobDescriptionPasteInputProps) =
                     Have an existing job description?
                 </p>
                 <p className="text-sm text-neutral-500">
-                    Paste it below and we'll fill in as many of the fields underneath as we can find,
-                    including a ready-to-review brief for the simulation
+                    Paste it below and we'll fill in as many of the fields underneath as we can find
                 </p>
             </div>
 

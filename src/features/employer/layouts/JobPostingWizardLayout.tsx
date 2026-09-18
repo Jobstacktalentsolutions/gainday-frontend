@@ -18,11 +18,7 @@ const JobPostingWizardLayout = () => {
     const [isSavingExit, setIsSavingExit] = useState(false);
 
     const sanitizedTasks = (draft.tasks || JOB_POSTING_DEFAULT_VALUES.tasks || [])
-        .filter((t) => t?.title?.trim() || t?.taskPrompt?.trim())
-        .map((t) => ({
-            ...t,
-            type: (t?.type === "written" || t?.type === "choice" ? t.type : "written") as "written" | "choice",
-        }));
+        .filter((t) => t?.title?.trim() || t?.questionPrompt?.trim());
 
     const form = useForm<JobPostingFormInput>({
         resolver: zodResolver(jobPostingSchema),

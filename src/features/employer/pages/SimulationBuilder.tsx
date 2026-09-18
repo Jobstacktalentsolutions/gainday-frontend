@@ -1,150 +1,208 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { Plus, RefreshCw } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { motion, AnimatePresence } from "motion/react";
-import { FormTextarea } from "@/components/form/FormTextarea";
 import { StepSecondaryButton, StepContinueButton } from "@/components/ui/StepNavigationButtons";
 import TaskCard from "../components/TaskCard";
 import TaskCardSkeleton from "../components/TaskCardSkeleton";
 import RegenerationFailureModal from "../components/RegenerationFailureModal";
+import RegenerateGuidanceModal from "../components/RegenerateGuidanceModal";
 import { simulationBuilderSchema, type JobPostingFormValues } from "../schemas/jobPosting";
 import TaskGenerationModal from "../components/TaskGenerationModal";
-import { MOCK_SCENARIO_INTRO, MOCK_TASKS } from "../mocks/jobPostingDefaults";
+import { useJobSimulation } from "../hooks/useJobSimulation";
+import { useRegenerateTask } from "../hooks/useRegenerateTask";
+import { useRegenerateAllTasks } from "../hooks/useRegenerateAllTasks";
+import { useUpdateSimulationTasks } from "../hooks/useUpdateSimulationTasks";
+import type { SimulationTask } from "@/features/simulation-tasks/types";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 type FailedTaskInfo =
     | { source: "regenerate"; id: string; index: number }
-    | { source: "add" };
+    | { source: "add" }
+    | { source: "regenerate-all" };
+
+interface JobPostingOutletContext {
+    jobId: string | null;
+}
 
 const SimulationBuilder = () => {
     const navigate = useNavigate();
-    const [isGenerating, setIsGenerating] = useState(false);
+    const { jobId } = useOutletContext<JobPostingOutletContext>();
     const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
     const [regeneratingTaskId, setRegeneratingTaskId] = useState<string | null>(null);
     const [isAddingTask, setIsAddingTask] = useState(false);
     const [failedTask, setFailedTask] = useState<FailedTaskInfo | null>(null);
-    const abortTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const taskRegenTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const addTaskTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const [guidanceTarget, setGuidanceTarget] = useState<{ index: number; taskId: string } | null>(null);
+    const [isContinuing, setIsContinuing] = useState(false);
+    const [isRegeneratingAll, setIsRegeneratingAll] = useState(false);
+    const hasLoadedTasksRef = useRef(false);
 
     const {
-        register,
         control,
-        setValue,
         trigger,
         watch,
-        formState: { errors },
     } = useFormContext<JobPostingFormValues>();
 
     const formValues = watch();
     const isStepValid = simulationBuilderSchema.safeParse(formValues).success;
 
+    // keyName: "fieldKey" — react-hook-form's useFieldArray otherwise silently overwrites our
+    // real SimulationTask.id with its own tracking id on every append/replace/update, which would
+    // corrupt task identity (the id ties back to question_bank for grading) the moment it's saved.
     const { fields, append, remove, replace, update } = useFieldArray({
         control,
         name: "tasks",
+        keyName: "fieldKey",
     });
 
-    // Expand the first task by default once tasks exist
+    const { data: jobSimulation, isLoading: isLoadingSimulation } = useJobSimulation(jobId);
+    const { regenerate } = useRegenerateTask();
+    const { regenerateAll } = useRegenerateAllTasks();
+    const updateSimulationTasks = useUpdateSimulationTasks();
+
+    // True while the INITIAL full-graph generation (queued via BullMQ from Job Details) is still
+    // running, or while a manual "Regenerate all" SSE stream is in flight. The two are otherwise
+    // unrelated: "Regenerate all" never touches job.status or the queue (see handleRegenerate).
+    const isWholeScenarioGenerating = jobSimulation?.status === "GENERATING" || isRegeneratingAll;
+
+    // Seed the field array from the real generated tasks the first time they arrive — never
+    // again after that, so it doesn't clobber the employer's own edits on subsequent polls.
     useEffect(() => {
-        if (!expandedTaskId && fields.length > 0) {
-            setExpandedTaskId(fields[0].id);
+        if (!hasLoadedTasksRef.current && jobSimulation?.simulation?.tasks?.length) {
+            replace(jobSimulation.simulation.tasks);
+            hasLoadedTasksRef.current = true;
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fields.length]);
+    }, [jobSimulation?.simulation?.tasks]);
 
-    // Auto-expand the newly appended task
+    // Keeps the expanded task valid whenever the field array changes shape: falls back to the
+    // first task if the currently-expanded one no longer exists (initial load, "Regenerate all"
+    // wiping the array, or the expanded task being removed) — otherwise leaves the user's choice
+    // alone. `update()` (single-task regenerate) preserves the original fieldKey, so this
+    // correctly does NOT re-expand/collapse anything during that flow.
+    useEffect(() => {
+        if (fields.length === 0) {
+            if (expandedTaskId !== null) {
+                // eslint-disable-next-line react-hooks/set-state-in-effect -- see comment above
+                setExpandedTaskId(null);
+            }
+            return;
+        }
+        const stillExists = fields.some((f) => f.fieldKey === expandedTaskId);
+        if (!stillExists) {
+            setExpandedTaskId(fields[0].fieldKey);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fields]);
+
+    // Auto-expand the newly appended task ("Add Task") — runs after the effect above, so it wins
+    // when both fire in the same pass (a brand-new task always exists, so the guard above no-ops).
     const prevFieldsLengthRef = useRef(fields.length);
     useEffect(() => {
         if (fields.length > prevFieldsLengthRef.current) {
             const latest = fields[fields.length - 1];
             if (latest) {
-                setExpandedTaskId(latest.id);
+                // eslint-disable-next-line react-hooks/set-state-in-effect -- see comment above
+                setExpandedTaskId(latest.fieldKey);
             }
         }
         prevFieldsLengthRef.current = fields.length;
     }, [fields]);
 
-    useEffect(() => {
-        return () => {
-            if (abortTimerRef.current) clearTimeout(abortTimerRef.current);
-            if (taskRegenTimerRef.current) clearTimeout(taskRegenTimerRef.current);
-            if (addTaskTimerRef.current) clearTimeout(addTaskTimerRef.current);
-        };
-    }, []);
+    const runRegeneration = async (
+        guidance: string | undefined,
+        existingTask: SimulationTask | undefined,
+        onSuccess: (task: SimulationTask) => void,
+        onFailure: () => void,
+    ) => {
+        if (!jobId) return;
+        try {
+            const task = await regenerate(jobId, guidance, existingTask);
+            onSuccess(task);
+        } catch {
+            onFailure();
+        }
+    };
 
-    // Adds a new task via AI generation (simulated)
+    // Adds a new task via the real generation pipeline (no guidance prompt for "Add Task" —
+    // guidance is only offered when regenerating an existing task, per the employer flow).
     const handleAddTask = () => {
         setIsAddingTask(true);
         setFailedTask(null);
-
-        // TODO: swap for the real AI generate-task API call.
-        // Simulated here with an occasional failure so the failure modal has something to show.
-        addTaskTimerRef.current = setTimeout(() => {
-            const succeeded = Math.random() > 0.25;
-            if (succeeded) {
-                const nextIndex = fields.length;
-                const replacement = MOCK_TASKS[nextIndex % MOCK_TASKS.length];
-                const newId = crypto.randomUUID();
-                append({
-                    ...replacement,
-                    id: newId,
-                });
+        void runRegeneration(
+            undefined,
+            undefined,
+            (task) => {
+                append(task);
                 setIsAddingTask(false);
-            } else {
+            },
+            () => {
                 setIsAddingTask(false);
                 setFailedTask({ source: "add" });
-            }
-        }, 2200);
+            },
+        );
     };
 
-    // Regenerates the whole scenario + all tasks
-    const handleRegenerate = () => {
-        setIsGenerating(true);
-        abortTimerRef.current = setTimeout(() => {
-            setValue("scenarioIntro", MOCK_SCENARIO_INTRO, { shouldValidate: true });
-            replace(MOCK_TASKS);
-            setIsGenerating(false);
-        }, 2800);
-    };
-
-    const handleCancelGeneration = () => {
-        if (abortTimerRef.current) {
-            clearTimeout(abortTimerRef.current);
-            abortTimerRef.current = null;
+    // Streams a fresh regeneration of every current task slot over the same lightweight SSE path
+    // as a single-task regenerate — no BullMQ queue, no re-run of extraction/critic, since
+    // job_extractions already exists by the time this button is reachable. Tasks fill in
+    // progressively as each one streams back rather than appearing all at once after a wait.
+    const handleRegenerate = async () => {
+        if (!jobId || fields.length === 0) return;
+        const count = fields.length;
+        setIsRegeneratingAll(true);
+        setFailedTask(null);
+        replace([]);
+        try {
+            await regenerateAll(jobId, count, { onTask: (task) => append(task) });
+        } catch {
+            setFailedTask({ source: "regenerate-all" });
+        } finally {
+            setIsRegeneratingAll(false);
         }
-        setIsGenerating(false);
     };
 
-    // Regenerates a single task in place
+    // Opens the optional-guidance modal, then regenerates a single task in place on submit.
     const handleRegenerateTask = (index: number, taskId: string) => {
+        setGuidanceTarget({ index, taskId });
+    };
+
+    const handleGuidanceSubmit = (guidance?: string) => {
+        if (!guidanceTarget) return;
+        const { index, taskId } = guidanceTarget;
+        setGuidanceTarget(null);
         setRegeneratingTaskId(taskId);
         setFailedTask(null);
-
-        // TODO: swap for the real regenerate-single-task API call.
-        // Simulated here with an occasional failure so the failure modal has something to show.
-        taskRegenTimerRef.current = setTimeout(() => {
-            const succeeded = Math.random() > 0.25;
-            if (succeeded) {
-                const replacement = MOCK_TASKS[index % MOCK_TASKS.length];
-                const updated = { ...replacement, id: taskId };
-                update(index, updated);
-                setValue(`tasks.${index}`, updated, { shouldValidate: true });
+        // With guidance, send the task as it exists now so the backend EDITS it per the
+        // instruction instead of writing an unrelated new one (see useRegenerateTask). Without
+        // guidance, omit it entirely — a plain "Regenerate" with no instruction still means
+        // "surprise me with something new," not "make no change."
+        const existingTask = guidance ? (watch(`tasks.${index}`) as SimulationTask) : undefined;
+        void runRegeneration(
+            guidance,
+            existingTask,
+            (task) => {
+                update(index, { ...task, id: taskId });
                 setRegeneratingTaskId(null);
-            } else {
+            },
+            () => {
                 setRegeneratingTaskId(null);
                 setFailedTask({ id: taskId, index, source: "regenerate" });
-            }
-        }, 1800);
+            },
+        );
     };
 
-    // Handles retry from the failure modal for both regeneration and add-task flows
+    // Handles retry from the failure modal for add-task, single-task, and whole-scenario flows
     const handleFailureRetry = () => {
         if (!failedTask) return;
         if (failedTask.source === "add") {
             setFailedTask(null);
             handleAddTask();
+        } else if (failedTask.source === "regenerate-all") {
+            setFailedTask(null);
+            void handleRegenerate();
         } else {
             const { index, id } = failedTask;
             setFailedTask(null);
@@ -157,11 +215,26 @@ const SimulationBuilder = () => {
     };
 
     const handleContinue = async () => {
-        const isValid = await trigger(["scenarioIntro", "tasks"]);
-        if (isValid) navigate("/employer/jobs/new/review");
+        const isValid = await trigger(["tasks"]);
+        if (!isValid) return;
+
+        const simulationId = jobSimulation?.simulation?.id;
+        if (simulationId) {
+            setIsContinuing(true);
+            try {
+                await updateSimulationTasks.mutateAsync({
+                    simulationId,
+                    tasks: watch("tasks"),
+                });
+            } finally {
+                setIsContinuing(false);
+            }
+        }
+
+        navigate("/employer/jobs/new/review");
     };
 
-    const isAnyTaskBusy = Boolean(regeneratingTaskId) || isAddingTask;
+    const isAnyTaskBusy = Boolean(regeneratingTaskId) || isAddingTask || isRegeneratingAll;
 
     return (
         <div className="flex flex-col gap-12">
@@ -185,20 +258,13 @@ const SimulationBuilder = () => {
                     <button
                         type="button"
                         onClick={handleRegenerate}
-                        disabled={isGenerating}
+                        disabled={isWholeScenarioGenerating}
                         className="flex h-10 self-start items-center justify-center gap-2 rounded-xl border border-neutral-300 px-6 py-2 text-base text-neutral-950 transition-all hover:bg-neutral-50 disabled:opacity-60"
                     >
                         Regenerate
-                        <RefreshCw className={isGenerating ? "size-4 animate-spin" : "size-4"} aria-hidden="true" />
+                        <RefreshCw className={isWholeScenarioGenerating ? "size-4 animate-spin" : "size-4"} aria-hidden="true" />
                     </button>
                 </div>
-
-                <FormTextarea
-                    label="Scenario intro the candidate reads first"
-                    rows={10}
-                    error={errors.scenarioIntro?.message}
-                    {...register("scenarioIntro")}
-                />
 
                 <div className="flex flex-col gap-5">
                     <AnimatePresence initial={false}>
@@ -206,7 +272,7 @@ const SimulationBuilder = () => {
                             const isThisRegenerating = regeneratingTaskId === field.id;
                             return (
                                 <motion.div
-                                    key={field.id}
+                                    key={field.fieldKey}
                                     layout
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
@@ -234,16 +300,15 @@ const SimulationBuilder = () => {
                                             >
                                                 <TaskCard
                                                     index={index}
-                                                    type={field.type}
-                                                    expanded={expandedTaskId === field.id}
+                                                    expanded={expandedTaskId === field.fieldKey}
                                                     onToggleExpand={() =>
                                                         setExpandedTaskId((current) =>
-                                                            current === field.id ? null : field.id
+                                                            current === field.fieldKey ? null : field.fieldKey
                                                         )
                                                     }
                                                     onRemove={() => remove(index)}
                                                     onRegenerate={() => handleRegenerateTask(index, field.id)}
-                                                    regenerateDisabled={isGenerating || isAnyTaskBusy}
+                                                    regenerateDisabled={isWholeScenarioGenerating || isAnyTaskBusy}
                                                 />
                                             </motion.div>
                                         )}
@@ -271,7 +336,7 @@ const SimulationBuilder = () => {
                 <button
                     type="button"
                     onClick={handleAddTask}
-                    disabled={isAnyTaskBusy || isGenerating}
+                    disabled={isAnyTaskBusy || isWholeScenarioGenerating}
                     className="flex h-10 w-full cursor-pointer hover:bg-[#f7f6f6] items-center justify-center gap-2 rounded-lg border border-dashed border-neutral-300 px-4 text-base text-neutral-950 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     <Plus className="size-4" aria-hidden="true" />
@@ -284,21 +349,35 @@ const SimulationBuilder = () => {
                 <StepSecondaryButton onClick={() => navigate(-1)}>
                     Back
                 </StepSecondaryButton>
-                <StepContinueButton disabled={!isStepValid} onClick={handleContinue}>
-                    Continue
+                <StepContinueButton disabled={!isStepValid || isContinuing} onClick={handleContinue}>
+                    {isContinuing ? "Saving..." : "Continue"}
                 </StepContinueButton>
             </div>
 
-            {/* Full-scenario regeneration loading modal */}
-            <TaskGenerationModal
-                open={isGenerating}
-                onCancel={handleCancelGeneration}
+            {/* Full-scenario generation loading modal — covers both the initial generate-from-Job-Details
+                wait and an explicit "Regenerate" re-run. No cancel option: this is a real async
+                pipeline run on the backend with no cancel endpoint, so there's nothing to abort. */}
+            <TaskGenerationModal open={isWholeScenarioGenerating || isLoadingSimulation} />
+
+            {/* Optional-guidance prompt before regenerating a single task */}
+            <RegenerateGuidanceModal
+                open={Boolean(guidanceTarget)}
+                onCancel={() => setGuidanceTarget(null)}
+                onSubmit={handleGuidanceSubmit}
             />
 
             {/* Task generation / regeneration failure modal */}
             <RegenerationFailureModal
                 open={Boolean(failedTask)}
-                taskLabel={failedTask?.source === "add" ? "the new task" : failedTask ? `Task ${failedTask.index + 1}` : undefined}
+                taskLabel={
+                    failedTask?.source === "add"
+                        ? "the new task"
+                        : failedTask?.source === "regenerate-all"
+                            ? "the tasks"
+                            : failedTask
+                                ? `Task ${failedTask.index + 1}`
+                                : undefined
+                }
                 isRetrying={isAnyTaskBusy}
                 onDismiss={handleFailureDismiss}
                 onRetry={handleFailureRetry}

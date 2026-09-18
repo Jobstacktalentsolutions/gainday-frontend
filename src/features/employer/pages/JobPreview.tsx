@@ -109,7 +109,7 @@ const TaskAccordionSection = ({ tasks }: { tasks: SimulationTask[] }) => {
                                     {`TASK ${index + 1}: `}
                                     <span className="text-neutral-500">{task.title}</span>
                                 </p>
-                                <TaskTypeBadge type={task.type} />
+                                <TaskTypeBadge taskType={task.taskType} interfaceType={task.interfaceType} />
                                 <ChevronDown
                                     className={`size-4 shrink-0 text-neutral-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
                                     aria-hidden="true"
@@ -122,17 +122,19 @@ const TaskAccordionSection = ({ tasks }: { tasks: SimulationTask[] }) => {
                                     {/* Title */}
                                     <p className="text-base font-medium text-neutral-950">{task.title}</p>
 
-                                    {/* Scenario */}
-                                    {task.scenario && (
-                                        <div className="whitespace-pre-wrap rounded-xl bg-neutral-50 p-4 text-sm leading-relaxed text-neutral-700">
-                                            {task.scenario}
+                                    {/* Scenario — rendered markdown */}
+                                    {task.scenarioDescription && (
+                                        <div className="prose prose-sm max-w-none rounded-xl bg-neutral-50 p-4 text-sm leading-relaxed text-neutral-700">
+                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                                {task.scenarioDescription}
+                                            </ReactMarkdown>
                                         </div>
                                     )}
 
                                     {/* Task prompt — rendered markdown */}
                                     <div className="prose prose-sm max-w-none rounded-xl bg-neutral-50 p-4 text-neutral-900 prose-headings:font-semibold prose-headings:text-neutral-950 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-neutral-950">
                                         <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                            {task.taskPrompt}
+                                            {task.questionPrompt}
                                         </ReactMarkdown>
                                     </div>
                                 </div>
