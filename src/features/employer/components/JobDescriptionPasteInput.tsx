@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { Loader2, Sparkles } from "lucide-react";
+import { toast } from "sonner";
 import { FormTextarea } from "@/components/form/FormTextarea";
 import ConfirmOverwriteModal from "./ConfirmOverwriteModal";
 import { useParseJobDescription, type ParsedJobDetails } from "../hooks/useParseJobDescription";
 
+// Mirrors the backend's ParseJobDescriptionDto minimum — surfaced here so the employer gets an
+// inline hint instead of a round-trip 400.
+const MIN_RAW_TEXT_LENGTH = 40;
 
 interface JobDescriptionPasteInputProps {
     onParsed: (parsed: ParsedJobDetails) => void;
@@ -14,9 +18,10 @@ const JobDescriptionPasteInput = ({ onParsed }: JobDescriptionPasteInputProps) =
     const [confirmOpen, setConfirmOpen] = useState(false);
     const parseMutation = useParseJobDescription();
 
+    const isTooShort = rawText.trim().length > 0 && rawText.trim().length < MIN_RAW_TEXT_LENGTH;
 
     const handleParseClick = () => {
-        if (!rawText.trim()) return;
+        if (!rawText.trim() || isTooShort) return;
         setConfirmOpen(true);
     }
 
@@ -28,7 +33,7 @@ const JobDescriptionPasteInput = ({ onParsed }: JobDescriptionPasteInputProps) =
 
             setRawText("");
         } catch {
-            //put the parse mutation error
+            toast.error("Couldn't parse that description — try again, or fill the fields in manually.");
             // leave raw text to allow retry
         }
     }
@@ -57,7 +62,7 @@ const JobDescriptionPasteInput = ({ onParsed }: JobDescriptionPasteInputProps) =
                 <button
                     type="button"
                     onClick={handleParseClick}
-                    disabled={!rawText.trim() || parseMutation.isPending}
+                    disabled={!rawText.trim() || isTooShort || parseMutation.isPending}
                     className="flex cursor-pointer h-10 items-center gap-2 rounded-xl bg-primary-500 hover:bg-primary-400 px-4 text-sm font-medium text-white shadow-sm transition-all hover:shadow-md active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
                 >
                     {parseMutation.isPending ? (
@@ -68,7 +73,13 @@ const JobDescriptionPasteInput = ({ onParsed }: JobDescriptionPasteInputProps) =
                     {parseMutation.isPending ? "Parsing..." : "Parse job description"}
                 </button>
 
-                {parseMutation.isError && (
+                {isTooShort && (
+                    <p className="text-sm text-neutral-500">
+                        Paste at least {MIN_RAW_TEXT_LENGTH} characters so Gainday has enough to work with.
+                    </p>
+                )}
+
+                {!isTooShort && parseMutation.isError && (
                     <p className="text-sm text-error-500">
                         Couldn't parse that description. Try again, or fill the fields in manually.
                     </p>

@@ -1,5 +1,6 @@
 import type { JobRole } from "../schemas/jobPosting";
 import { useMutation } from "@tanstack/react-query";
+import { apiClient } from "@/lib/api/client";
 
 export interface ParsedJobDetails {
     title?: string;
@@ -14,38 +15,40 @@ export interface ParsedJobDetails {
     salaryTo?: number;
     companyDescription?: string;
     skills?: string[];
-    generatedDescription?: string;
+    // The AI-enhanced, markdown-formatted rewrite of the pasted job description.
+    formattedDescription?: string;
+    // The specific problem this hire should help solve, only if explicitly stated in the raw
+    // text — see gainday-backend's extraction node, which relies on the same "never invent" rule.
+    businessProblem?: string;
 }
 
-// TODO: swap this mock for the real POST /jobs/parse-description call once the
-// backend endpoint ships. Expected contract: raw JD text in, ParsedJobDetails out,
-// with role/skillLevel/employmentType already normalized to match the frontend enums
-// (ROLES/SKILL_LEVELS/EMPLOYMENT_TYPES) exactly, so no fuzzy-matching happens here.
+// Backend response fields are nullable (Gemini structured-output convention — see
+// gainday-backend's parsed-job-description.schema.ts) rather than undefined/absent.
+type ParsedJobDescriptionResponse = {
+    [K in keyof ParsedJobDetails]: ParsedJobDetails[K] | null;
+};
 
-const mockParseJobDescription = (rawText: string) => {
-    console.log("Raw text : ", rawText);
-    return new Promise<ParsedJobDetails>((resolve) => {
-        setTimeout(() => {
-            resolve({
-                title: "Business Manager",
-                role: "FINANCE",
-                skillLevel: "Senior level",
-                skillCategory: "Credit Risk",
-                location: "London, UK",
-                employmentType: "Full-time",
-                isRemoteFriendly: false,
-                salaryFrom: 60000,
-                salaryTo: 80000,
-                skills: ["Business management", "PowerPoint", "Data analysis", "Stakeholder comms"],
-                generatedDescription:
-                    "We need someone to own credit risk decisions for our SME lending book. You'll review incoming applications, flag exposure concerns to the lending committee, and tighten up our underwriting criteria as the portfolio grows. Most mornings start with a backlog of flagged applications from overnight — you'll triage those first, then spend the rest of the day working with sales to structure deals that balance growth against risk.",
-            })
-        }, 1600);
+const nullsToUndefined = (parsed: ParsedJobDescriptionResponse): ParsedJobDetails => {
+    const result: ParsedJobDetails = {};
+    (Object.keys(parsed) as Array<keyof ParsedJobDetails>).forEach((key) => {
+        const value = parsed[key];
+        if (value !== null && value !== undefined) {
+            (result[key] as unknown) = value;
+        }
     });
-}
+    return result;
+};
+
+const parseJobDescription = async (rawText: string): Promise<ParsedJobDetails> => {
+    const { data } = await apiClient.post<ParsedJobDescriptionResponse>(
+        "/jobs/parse-description",
+        { rawText },
+    );
+    return nullsToUndefined(data);
+};
 
 export const useParseJobDescription = () => {
     return useMutation({
-        mutationFn: (rawText: string) => mockParseJobDescription(rawText),
+        mutationFn: (rawText: string) => parseJobDescription(rawText),
     })
 }

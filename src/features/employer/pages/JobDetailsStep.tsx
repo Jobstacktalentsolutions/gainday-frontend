@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, Controller } from "react-hook-form";
 import { Sparkles } from "lucide-react";
+import { toast } from "sonner";
 import TagInput from "@/components/ui/tagInput";
 import { jobDetailsSchema, type JobPostingFormValues } from "../schemas/jobPosting";
 import TaskGenerationModal from "../components/TaskGenerationModal";
 import JobDescriptionPasteInput from "../components/JobDescriptionPasteInput";
+import TaskPromptEditor from "../components/TaskPromptEditor";
 import type { ParsedJobDetails } from "../hooks/useParseJobDescription";
 import { useSaveJobDetails } from "../hooks/useSaveJobDraft";
 import { useTriggerGeneration } from "../hooks/useTriggerGeneration";
@@ -42,6 +44,7 @@ const JobDetailsStep = () => {
 
     const {
         register,
+        control,
         watch,
         setValue,
         trigger,
@@ -50,7 +53,6 @@ const JobDetailsStep = () => {
 
     const formValues = watch();
     const skills = formValues.skills ?? [];
-    const description = formValues.description ?? "";
     const isStepValid = jobDetailsSchema.safeParse(formValues).success;
 
     // Synchronize company profile name into form state when loaded
@@ -76,6 +78,7 @@ const JobDetailsStep = () => {
             ["salaryFrom", "salaryFrom"],
             ["salaryTo", "salaryTo"],
             ["companyDescription", "companyDescription"],
+            ["businessProblem", "businessProblem"],
         ];
 
         fieldSetters.forEach(([parsedKey, formKey]) => {
@@ -89,8 +92,8 @@ const JobDetailsStep = () => {
             setValue("skills", parsed.skills, { shouldValidate: true });
         }
 
-        if (parsed.generatedDescription) {
-            setValue("description", parsed.generatedDescription, { shouldValidate: true });
+        if (parsed.formattedDescription) {
+            setValue("description", parsed.formattedDescription, { shouldValidate: true });
             setIsDescriptionAiGenerated(true);
         }
     };
@@ -111,6 +114,7 @@ const JobDetailsStep = () => {
             "companyDescription",
             "skills",
             "description",
+            "businessProblem",
         ]);
 
         if (!isValid) return;
@@ -127,7 +131,7 @@ const JobDetailsStep = () => {
             await triggerGeneration.mutateAsync(saved.id);
             navigate("/employer/jobs/new/simulation-builder");
         } catch {
-            // no-op — isGenerating reset in finally below
+            toast.error("Couldn't start generation — try again.");
         } finally {
             setIsGenerating(false);
         }
@@ -279,6 +283,38 @@ const JobDetailsStep = () => {
                     />
                 </div>
 
+                {/* Job description — the full, candidate-facing writeup. Populated (as markdown) by
+                    pasting-and-parsing an existing description above, or written by hand. */}
+                <div className="flex flex-col gap-1.5 lg:col-span-2">
+                    <div className="flex items-center justify-between gap-2">
+                        <label className="text-base font-medium text-neutral-800">Job description</label>
+                        {isDescriptionAiGenerated && (
+                            <span className="flex w-fit items-center gap-1 rounded-full bg-primary-100 px-2.5 py-1 text-xs font-medium text-primary-700">
+                                <Sparkles className="size-3" aria-hidden="true" />
+                                AI-generated — review before continuing
+                            </span>
+                        )}
+                    </div>
+                    <Controller
+                        control={control}
+                        name="description"
+                        render={({ field }) => (
+                            <TaskPromptEditor
+                                value={field.value}
+                                onChange={(markdown) => {
+                                    field.onChange(markdown);
+                                    // Any manual edit means this is no longer purely the AI's
+                                    // text, so the "review" hint disappears.
+                                    setIsDescriptionAiGenerated(false);
+                                }}
+                                error={errors.description?.message}
+                                placeholder="Write or paste the full job description here..."
+                                contentClassName="max-h-64 overflow-y-auto lg:max-h-96"
+                            />
+                        )}
+                    />
+                </div>
+
                 {/* AI Simulation callout — full width */}
                 <div className="flex w-full flex-col gap-2.5 rounded-xl bg-primary-50 p-3 lg:col-span-2">
                     <span className="flex w-fit items-center gap-1 rounded-md border border-primary-500 p-2 text-[10px] text-primary-500">
@@ -287,34 +323,20 @@ const JobDetailsStep = () => {
                     </span>
                     <p className="text-base text-neutral-950">What does this hire need to solve?</p>
                     <p className="text-base text-neutral-400">
-                        This next field is the most important one. Gainday turns it into a real work
-                        simulation assessment, so write it the way you would brief a new starter on their
-                        first morning.
+                        Optional, but the more specific the better — Gainday builds the work simulation
+                        around the exact problem you describe here instead of a generic one.
                     </p>
-
-                    {isDescriptionAiGenerated && (
-                        <span className="flex w-fit items-center gap-1 rounded-full bg-primary-100 px-2.5 py-1 text-xs font-medium text-primary-700">
-                            <Sparkles className="size-3" aria-hidden="true" />
-                            AI-generated — review before continuing
-                        </span>
-                    )}
 
                     <FormTextarea
-                        label="Job description"
+                        label="What does this hire need to solve?"
                         hideLabel
-                        placeholder="Enter a description..."
-                        rows={8}
-                        error={errors.description?.message}
+                        optional
+                        placeholder="e.g Reduce onboarding drop-off by improving our KYC follow-up flow"
+                        rows={3}
+                        error={errors.businessProblem?.message}
                         className="bg-neutral-50"
-                        {...register("description", {
-                            // Any manual edit means this is no longer purely the
-                            // AI's text, so the "review" hint disappears.
-                            onChange: () => setIsDescriptionAiGenerated(false),
-                        })}
+                        {...register("businessProblem")}
                     />
-                    <p className="text-sm text-neutral-700">
-                        {description.length}/500 characters. 40 minimum
-                    </p>
                 </div>
             </div>
 

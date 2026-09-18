@@ -1,5 +1,5 @@
 import { useEffect, type ReactNode } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -13,6 +13,10 @@ interface TaskPromptEditorProps {
     onChange: (markdown: string) => void;
     error?: string;
     placeholder?: string;
+    // Extra classes merged onto the scrollable content wrapper — use to cap height with a
+    // scrollbar for long-form fields (e.g. "max-h-64 overflow-y-auto") instead of the default
+    // grow-with-content behavior.
+    contentClassName?: string;
 }
 
 const ToolbarButton = ({
@@ -44,7 +48,17 @@ const ToolbarButton = ({
 
 }
 
-const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEditorProps) => {
+// Tiptap's markdown storage isn't populated until the Markdown extension has finished
+// initializing — reading it too early (e.g. the instant an editor is created, or a stray
+// callback firing after `editor.destroy()` clears storage) throws instead of returning "". This
+// centralizes the defensive read so both onUpdate and the external-sync effect below agree.
+const getMarkdown = (editor: Editor | null | undefined): string => {
+    const storage = editor?.storage as Record<string, { getMarkdown?: () => string }> | undefined;
+    return storage?.markdown?.getMarkdown?.() ?? "";
+};
+
+const TaskPromptEditor = ({ value, onChange, error, placeholder, contentClassName }: TaskPromptEditorProps) => {
+    const safeValue = value ?? "";
     const editor = useEditor({
         extensions: [
             StarterKit.configure({ heading: { levels: [1, 2, 3] } }),
@@ -54,8 +68,8 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEdi
             }),
             Markdown.configure({ html: false, transformPastedText: true }),
         ],
-        content: value,
-        onUpdate: ({ editor }) => onChange((editor.storage as Record<string, any>).markdown.getMarkdown()),
+        content: safeValue,
+        onUpdate: ({ editor }) => onChange(getMarkdown(editor)),
         editorProps: {
             attributes: {
                 class: "tpe-content min-w-0 flex-1 outline-none text-base text-neutral-900 leading-relaxed",
@@ -66,10 +80,10 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEdi
     //to keep the editor synced when the field value changes externaly
     useEffect(() => {
         if (!editor) return;
-        const current = (editor.storage as Record<string, any>).markdown.getMarkdown();
-        if (value != current) editor.commands.setContent(value, { emitUpdate: false });
+        const current = getMarkdown(editor);
+        if (safeValue != current) editor.commands.setContent(safeValue, { emitUpdate: false });
         //emitUpdate prevents inifite calls to this effect
-    }, [value, editor]);
+    }, [safeValue, editor]);
 
     const hasError = Boolean(error);
 
@@ -162,7 +176,7 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder }: TaskPromptEdi
                         <List className="size-3.5" />
                     </ToolbarButton>
                 </div>
-                <div className="min-h-45 px-4 py-3">
+                <div className={cn("min-h-45 px-4 py-3 scrollbar-modern", contentClassName)}>
                     {/* Scoped prose styles — keeps heading/list/link rules self-contained
                         and avoids relying on Tailwind scanning dynamic class arrays. */}
                     <style>{`

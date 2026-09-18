@@ -3,6 +3,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import { Plus, RefreshCw } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { motion, AnimatePresence } from "motion/react";
+import { toast } from "sonner";
 import { StepSecondaryButton, StepContinueButton } from "@/components/ui/StepNavigationButtons";
 import TaskCard from "../components/TaskCard";
 import TaskCardSkeleton from "../components/TaskCardSkeleton";
@@ -226,6 +227,9 @@ const SimulationBuilder = () => {
                     simulationId,
                     tasks: watch("tasks"),
                 });
+            } catch {
+                toast.error("Couldn't save your changes — try again.");
+                return;
             } finally {
                 setIsContinuing(false);
             }

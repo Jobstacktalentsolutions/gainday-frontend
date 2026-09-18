@@ -3,6 +3,7 @@ import { Lock } from "lucide-react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useFormContext } from "react-hook-form";
 import { AnimatePresence, motion } from "motion/react";
+import { toast } from "sonner";
 import { StepSecondaryButton, StepContinueButton } from "@/components/ui/StepNavigationButtons";
 import JobDetailsSummary from "../components/JobDetailsSummary";
 import JobDetailsEditForm from "../components/JobDetailsEditForm";
@@ -41,11 +42,13 @@ const ReviewPublish = () => {
         const isValid = await trigger();
         if (!isValid) {
             console.error("[ReviewPublish] Validation failed — blocking publish:", formState.errors);
+            toast.error("Some job details aren't valid yet — check the details step and try again.");
             return;
         }
 
         if (!jobId) {
             console.error("[ReviewPublish] No jobId in outlet context — cannot publish");
+            toast.error("Couldn't find this job — try going back a step.");
             return;
         }
 
@@ -54,6 +57,9 @@ const ReviewPublish = () => {
             await publishJob.mutateAsync(jobId);
             const slug = values.title.toLowerCase().replace(/\s+/g, "-");
             setPublishResult({ jobUrl: `gainday.com/jobs/${slug}` });
+            toast.success("Job published!");
+        } catch {
+            toast.error("Couldn't publish this job — try again.");
         } finally {
             setIsPublishing(false);
         }

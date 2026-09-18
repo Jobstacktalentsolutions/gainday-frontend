@@ -28,7 +28,11 @@ export const jobDetailsBaseSchema = z.object({
     description: z
         .string()
         .min(40, "Give at least 40 characters so Gainday has enough to work with")
-        .max(500, "keep it under 500 characters"),
+        .max(5000, "keep it under 5000 characters"),
+    // Optional — the specific business problem this hire should help solve; feeds the AI
+    // pipeline's "Problem" extraction separately from `description` (see extraction.node.ts on
+    // the backend, which never invents a problem if this is left blank).
+    businessProblem: z.string().max(500, "keep it under 500 characters").optional(),
 })
 
 //Job details schema refine

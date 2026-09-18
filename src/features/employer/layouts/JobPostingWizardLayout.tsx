@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 import { jobPostingSchema, type JobPostingFormInput } from "../schemas/jobPosting";
 import { useJobDraftStore } from "../stores/useJobDraftStore";
 import { JOB_POSTING_DEFAULT_VALUES } from "../mocks/jobPostingDefaults";
@@ -53,7 +54,10 @@ const JobPostingWizardLayout = () => {
             const values = form.getValues();
             const saved = await saveDraftMutation.mutateAsync({ ...values, id: jobId ?? undefined });
             setJobId(saved.id);
+            toast.success("Draft saved");
             navigate("/employer/jobs");
+        } catch {
+            toast.error("Couldn't save your draft — try again.");
         } finally {
             setIsSavingExit(false);
         }
