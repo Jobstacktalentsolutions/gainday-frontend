@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useJobDetails } from "../hooks/useJobDetails";
 import { formatPostedDate } from "../utils/formatters";
 import { useJobSimulation } from "../hooks/useJobSimulation";
+import { Sparkles } from "lucide-react";
 
 const CHECKS = [
     {
@@ -77,6 +78,9 @@ export default function PreSimulation() {
                 <div className="relative w-full max-w-246.5 overflow-hidden rounded-3xl bg-white p-10 shadow-[0px_4px_10px_rgba(16,24,40,0.05)]">
                     <div className="flex flex-col items-center gap-6 text-center">
                         <div className="flex flex-col items-center gap-1">
+                            <div>
+                                <Sparkles className="size-8 text-primary-500" strokeWidth={1.5} />
+                            </div>
                             <p className="text-[16px] text-primary-500">Applying to</p>
                             <h1 className="text-[40px] leading-12 tracking-[-0.4px] text-neutral-950">
                                 {job.title} at {job.employer.companyName}
