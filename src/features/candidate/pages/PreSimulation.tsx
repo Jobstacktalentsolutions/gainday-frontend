@@ -26,7 +26,7 @@ const CHECKS = [
     },
 ];
 
-export function PreSimulation() {
+export default function PreSimulation() {
     const { jobId } = useParams<{ jobId: string }>();
     const navigate = useNavigate();
     const { job } = useJobDetails(jobId);

@@ -33,7 +33,7 @@ const JobBoardPage = lazy(() => import("@/features/candidate/pages/JobBoardPage"
 const JobDetailsPage = lazy(() => import("@/features/candidate/pages/candidateJobDetails"));
 const CandidateSignUp = lazy(() => import("@/features/candidate/pages/CandidateSignUp"));
 const CandidateSignIn = lazy(() => import("@/features/candidate/pages/CandidateSignIn"));
-
+const PreSimulation = lazy(() => import("@/features/candidate/pages/PreSimulation"));
 
 
 const AppRoutes = () => {
@@ -67,13 +67,14 @@ const AppRoutes = () => {
                             <Route path="review" element={<ReviewPublish />} />
                         </Route>
                     </Route>
-                    {/* Standalone full-page route — no employer shell */}
+                    {/* Standalone full-page route, no employer shell */}
                     <Route path="jobs/:jobId/preview" element={<JobPreview />} />
 
                 </Route>
 
                 <Route path="/job-board" element={<JobBoardPage />} />
                 <Route path="/job-board/:jobId" element={<JobDetailsPage />} />
+                <Route path="/job-board/:jobId/pre-simulation" element={<PreSimulation />} />
 
                 <Route path="/candidate">
                     <Route path="signup" element={<CandidateSignUp />} />
