@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useJobDetails } from "../hooks/useJobDetails";
 import { formatPostedDate } from "../utils/formatters";
 import { useJobSimulation } from "../hooks/useJobSimulation";
-import { Sparkles } from "lucide-react";
+import BlueSparkles from "@/assets/blue-sparkles.svg";
 
 const CHECKS = [
     {
@@ -75,11 +75,29 @@ export default function PreSimulation() {
                     Go back to job description
                 </button>
 
-                <div className="relative w-full max-w-246.5 overflow-hidden rounded-3xl bg-white p-10 shadow-[0px_4px_10px_rgba(16,24,40,0.05)]">
-                    <div className="flex flex-col items-center gap-6 text-center">
+                <div className="relative w-full max-w-246.5 overflow-hidden  rounded-3xl bg-white p-10 shadow-[0px_4px_10px_rgba(16,24,40,0.05)]">
+
+                    {/* Decorative gradient blobs */}
+                    <div
+                        aria-hidden="true"
+                        className={`pointer-events-none block absolute z-50 -left-5 -top-64 h-105 w-95 rotate-[-49deg] rounded-full bg-linear-to-b  opacity-38 blur-3xl
+                            bg-[linear-gradient(180deg,var(--color-primary-500)_40%,var(--color-secondary-500)_55%,var(--color-secondary-300)_65%,transparent_100%)]`}
+                    />
+                    <div
+                        aria-hidden="true"
+                        className={`pointer-events-none block absolute z-50 -right-5 -top-64 h-105 w-95 rotate-49 rounded-full bg-linear-to-b  opacity-38 blur-3xl
+                            bg-[linear-gradient(180deg,var(--color-primary-500)_40%,var(--color-secondary-500)_55%,var(--color-secondary-300)_65%,transparent_100%)]`}
+                    />
+
+
+                    <div className="relative flex flex-col items-center gap-6 text-center">
                         <div className="flex flex-col items-center gap-1">
-                            <div>
-                                <Sparkles className="size-8 text-primary-500" strokeWidth={1.5} />
+                            <div className="pb-7.25">
+                                <img
+                                    src={BlueSparkles}
+                                    className="h-8"
+                                    alt="Blue sparkles"
+                                />
                             </div>
                             <p className="text-[16px] text-primary-500">Applying to</p>
                             <h1 className="text-[40px] leading-12 tracking-[-0.4px] text-neutral-950">
