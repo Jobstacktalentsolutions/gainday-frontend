@@ -10,5 +10,4 @@ export interface JobPreviewDetails extends Job {
     requiredSkills: string[];
     whatThisHireNeedsToSolve: string;
     tasks: JobPostingFormValues["tasks"];
-    hiredCandidateId?: string; // only present when status is TERMINATED and a hire was made
 }

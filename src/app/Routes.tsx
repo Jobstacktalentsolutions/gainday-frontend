@@ -33,6 +33,10 @@ const JobBoardPage = lazy(() => import("@/features/candidate/pages/JobBoardPage"
 const JobDetailsPage = lazy(() => import("@/features/candidate/pages/candidateJobDetails"));
 const CandidateSignUp = lazy(() => import("@/features/candidate/pages/CandidateSignUp"));
 const CandidateSignIn = lazy(() => import("@/features/candidate/pages/CandidateSignIn"));
+const CandidateForgotPassword = lazy(() => import("@/features/candidate/pages/CandidateForgotPassword"));
+const CandidateResetPassword = lazy(() => import("@/features/candidate/pages/CandidateResetPassword"));
+const CandidateVerifyEmail = lazy(() => import("@/features/candidate/pages/CandidateVerifyEmail"));
+const CandidateOAuthCallback = lazy(() => import("@/features/candidate/pages/CandidateOAuthCallback"));
 
 
 
@@ -78,6 +82,10 @@ const AppRoutes = () => {
                 <Route path="/candidate">
                     <Route path="signup" element={<CandidateSignUp />} />
                     <Route path="signin" element={<CandidateSignIn />} />
+                    <Route path="forgot-password" element={<CandidateForgotPassword />} />
+                    <Route path="reset-password" element={<CandidateResetPassword />} />
+                    <Route path="verify-email" element={<CandidateVerifyEmail />} />
+                    <Route path="oauth/callback" element={<CandidateOAuthCallback />} />
                 </Route>
 
             </Routes>

@@ -10,6 +10,7 @@ import JobDetailsEditForm from "../components/JobDetailsEditForm";
 import PublishSuccess from "../components/PublishSuccess";
 import TaskSummaryCard from "../components/TaskSummaryCard";
 import { usePublishJob } from "../hooks/usePublishJob";
+import { useJobDraftStore } from "../stores/useJobDraftStore";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -23,6 +24,7 @@ const ReviewPublish = () => {
     const { jobId } = useOutletContext<JobPostingOutletContext>();
     const { watch, trigger, formState } = useFormContext<JobPostingFormValues>();
     const publishJob = usePublishJob();
+    const clearDraft = useJobDraftStore((state) => state.clearDraft);
     const values = watch();
 
     const [editingJobDetails, setEditingJobDetails] = useState(false);
@@ -35,8 +37,6 @@ const ReviewPublish = () => {
         navigate("/employer/jobs/new/simulation-builder");
 
     };
-
-
 
     const handlePublish = async () => {
         const isValid = await trigger();
@@ -55,6 +55,7 @@ const ReviewPublish = () => {
         setIsPublishing(true);
         try {
             await publishJob.mutateAsync(jobId);
+            clearDraft();
             const slug = values.title.toLowerCase().replace(/\s+/g, "-");
             setPublishResult({ jobUrl: `gainday.com/jobs/${slug}` });
             toast.success("Job published!");

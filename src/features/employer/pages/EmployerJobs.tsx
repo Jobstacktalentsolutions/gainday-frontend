@@ -1,35 +1,19 @@
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 import AddItemButton from "@/components/ui/AddItemButton";
 
 import JobStatusTabs from "../components/JobStatusTabs";
-import JobCard from "../components/JobCard";
+import JobCard, { JobCardSkeleton } from "../components/JobCard";
 import JobsEmptyState from "../components/JobsEmptyState";
 import EmployerPageHeader from "../components/EmployerPageHeader";
-// TODO: re-enable live fetch once backend is stable
-// import { useEmployerJobs } from "../hooks/useEmployerJobs";
+import { useEmployerJobs } from "../hooks/useEmployerJobs";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import type { Job, JobStatusFilter } from "../types/job";
 import { useNavigate } from "react-router-dom";
-import { MOCK_JOB_PREVIEWS } from "../mocks/jobPreview";
-
-// Derive the Job list from the same mock source used by JobPreview
-const MOCK_JOBS: Job[] = MOCK_JOB_PREVIEWS.map((preview) => ({
-    id: preview.id,
-    title: preview.title,
-    status: preview.status,
-    location: preview.location,
-    employmentType: preview.employmentType,
-    submissionsCount: preview.submissionsCount,
-    postedAt: preview.postedAt,
-    shareUrl: preview.shareUrl,
-}));
 
 const EmployerJobs = () => {
     const navigate = useNavigate();
-    // TODO: swap back to live data when re-enabling API fetch
-    // const { data: jobs, isLoading } = useEmployerJobs();
-    const jobs = MOCK_JOBS;
-    const isLoading = false;
+    const { data: jobs, isLoading, isError } = useEmployerJobs();
     const { user } = useCurrentUser();
     const [statusFilter, setStatusFilter] = useState<JobStatusFilter>("all");
 
@@ -43,9 +27,13 @@ const EmployerJobs = () => {
         navigate("/employer/jobs/new")
     };
 
-    const handleShareLink = (job: Job) => {
-        // copy job.shareUrl to clipboard
-        console.log(job)
+    const handleShareLink = async (job: Job) => {
+        try {
+            await navigator.clipboard.writeText(job.shareUrl);
+            toast.success("Job link copied to clipboard");
+        } catch {
+            toast.error("Couldn't copy the link — try again.");
+        }
     }
 
     const handleViewSubmissions = (job: Job) => {
@@ -82,26 +70,41 @@ const EmployerJobs = () => {
                             Post a job
                         </AddItemButton>
                     </div>
-                    {!isLoading && hasJobs && (
+                    {!isLoading && !isError && hasJobs && (
                         <JobStatusTabs value={statusFilter} onChange={setStatusFilter} />
                     )}
 
-                    {hasJobs ? (
+                    {isLoading && (
                         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-                            {filteredJobs.map((job) => (
-                                <JobCard
-                                    key={job.id}
-                                    job={job}
-                                    onShareLink={handleShareLink}
-                                    onViewSubmissions={handleViewSubmissions}
-                                    onOpenPreview={handleOpenPreview}
-                                />
+                            {Array.from({ length: 3 }).map((_, index) => (
+                                <JobCardSkeleton key={index} />
                             ))}
                         </div>
-                    ) : (
-                        <JobsEmptyState onPostJob={handlePostJob} />
                     )}
 
+                    {!isLoading && isError && (
+                        <div className="w-full rounded-3xl border border-error-200 bg-error-50 px-5 py-10 text-center text-sm text-error-600">
+                            Something went wrong loading your jobs. Please refresh the page to try again.
+                        </div>
+                    )}
+
+                    {!isLoading && !isError && (
+                        hasJobs ? (
+                            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                                {filteredJobs.map((job) => (
+                                    <JobCard
+                                        key={job.id}
+                                        job={job}
+                                        onShareLink={handleShareLink}
+                                        onViewSubmissions={handleViewSubmissions}
+                                        onOpenPreview={handleOpenPreview}
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <JobsEmptyState onPostJob={handlePostJob} />
+                        )
+                    )}
 
                 </div>
             </div>

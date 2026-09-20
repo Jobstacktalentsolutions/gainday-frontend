@@ -5,11 +5,13 @@ import { PublicNavbar } from "@/features/candidate/components/PublicNavbar";
 import { FormInput } from "@/components/form/FormInput";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { PasswordInput } from "../components/PasswordInput";
-import SocialAuthButton from "@/features/auth/component/SocialAuthButton";
 import { candidateSignUpSchema, type CandidateSignUpValues } from "../auth/schema";
 import { useMutation } from "@tanstack/react-query";
+import { type AxiosError } from "axios";
+import { apiClient, getBaseURL } from "@/lib/api/client";
 import { useAuthStore } from "@/features/auth/store/authStore";
-import { mockCandidateSignUp } from "../auth/mockCandidateAuth";
+import { AuthDivider } from "@/features/auth/component/AuthDivider";
+import SocialAuthButton from "@/features/auth/component/SocialAuthButton";
 
 
 export default function CandidateSignUp() {
@@ -18,10 +20,11 @@ export default function CandidateSignUp() {
     const redirect = searchParams.get("redirect");
 
     const signUpMutation = useMutation({
-        mutationFn: mockCandidateSignUp,
+        mutationFn: (values: CandidateSignUpValues) =>
+            apiClient.post("/auth/register/candidate", values),
         onSuccess: (res) => {
             useAuthStore.getState().setAuth(res.data.access_token, res.data.user);
-            navigate(redirect ?? "/job-board");
+            navigate(redirect ? `/candidate/verify-email?redirect=${encodeURIComponent(redirect)}` : "/candidate/verify-email");
         }
     });
 
@@ -59,7 +62,7 @@ export default function CandidateSignUp() {
                     <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-4">
                         <FormInput label="Full name" placeholder="Amara Chukwu" error={errors.fullName?.message} {...register("fullName")} />
                         <FormInput label="Email" type="email" placeholder="amara@yourcompany.com" error={errors.email?.message} {...register("email")} />
-                        <PasswordInput label="Password" placeholder="At least 8 characters" error={errors.password?.message} {...register("password")} />
+                        <PasswordInput label="Password" placeholder="At least 8 characters" showChecklist error={errors.password?.message} {...register("password")} />
                         <PasswordInput label="Confirm Password" error={errors.confirmPassword?.message} {...register("confirmPassword")} />
 
                         <label className="flex items-start gap-2 text-xs text-primary-950">
@@ -71,15 +74,24 @@ export default function CandidateSignUp() {
                         </label>
                         {errors.agreedToTerms && <p role="alert" className="text-sm text-error-500">{errors.agreedToTerms.message}</p>}
 
+                        {signUpMutation.isError && (
+                            <p role="alert" className="text-center text-sm text-error-600">
+                                {(signUpMutation.error as AxiosError<{ message?: string }>)?.response?.data?.message ?? "Something went wrong. Please try again."}
+                            </p>
+                        )}
+
                         <ActionButton type="submit" variant="primary" size="lg" disabled={!isValid || signUpMutation.isPending}>
                             {signUpMutation.isPending ? "Creating account..." : "Create account"}
                         </ActionButton>
 
-                        <div className="flex items-center gap-2.5 text-[16px] text-neutral-400">
-                            <span className="h-px flex-1 bg-neutral-200" /> or <span className="h-px flex-1 bg-neutral-200" />
-                        </div>
+                        <AuthDivider />
+                        <SocialAuthButton
+                            label="Sign up with Google"
+                            onClick={() => {
+                                window.location.href = `${getBaseURL()}/auth/google?role=JOB_SEEKER`;
+                            }}
+                        />
 
-                        <SocialAuthButton label="Sign up with Google" />
                         <p className="text-center text-[16px] text-neutral-700">
                             Already have an account?{" "}
                             <Link to={signInHref} className="text-primary-500">Sign in</Link>

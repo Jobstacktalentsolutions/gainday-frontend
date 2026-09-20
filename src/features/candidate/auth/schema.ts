@@ -1,10 +1,11 @@
 import { z } from "zod";
+import { passwordSchema } from "@/features/auth/schemas/passwordRules";
 
 export const candidateSignUpSchema = z
   .object({
     fullName: z.string().trim().min(2, "Enter your full name"),
     email: z.string().trim().email("Enter a valid email address"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    password: passwordSchema,
     confirmPassword: z.string(),
     agreedToTerms: z.boolean().refine((value) => value === true, {
       message: "You must agree to the Terms & Conditions and Privacy Policy",

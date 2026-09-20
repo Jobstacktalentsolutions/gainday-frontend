@@ -134,7 +134,7 @@ const CreateAccount = () => {
                 <SocialAuthButton
                     label="Sign up with Google"
                     onClick={() => {
-                        window.location.href = `${getBaseURL()}/auth/google`
+                        window.location.href = `${getBaseURL()}/auth/google?role=EMPLOYER`
                     }}
                 />
                 <AuthSwitchLink

@@ -25,8 +25,11 @@ apiClient.interceptors.response.use(
     (error) => {
         if (error.response?.status === 401) {
             const requestUrl = error.config?.url || ""
-            const isAuthRequest = requestUrl.includes("/auth/login") || requestUrl.includes("/auth/signup")
-            
+            const isAuthRequest =
+                requestUrl.includes("/auth/login") ||
+                requestUrl.includes("/auth/signup") ||
+                requestUrl.includes("/auth/register")
+
             if (!isAuthRequest) {
                 useAuthStore.getState().clearAuth()
                 const isAuthPage =
@@ -34,7 +37,10 @@ apiClient.interceptors.response.use(
                     window.location.pathname.includes("/signup") ||
                     window.location.pathname.includes("/login")
                 if (!isAuthPage) {
-                    window.location.href = "/employer/signin"
+                    const isCandidateArea =
+                        window.location.pathname.startsWith("/candidate") ||
+                        window.location.pathname.startsWith("/job-board")
+                    window.location.href = isCandidateArea ? "/candidate/signin" : "/employer/signin"
                 }
             }
         }

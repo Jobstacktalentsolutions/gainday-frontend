@@ -5,18 +5,10 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import TaskTypeBadge from "../components/TaskTypeBadge";
 import StatusBadge from "../components/StatusBadge";
-import { MOCK_JOB_PREVIEWS } from "../mocks/jobPreview";
+import { useJobPreview } from "../hooks/useJobPreview";
 import type { JobPreviewDetails } from "../types/jobPreview";
 import type { JobStatus } from "../types/job";
 import { StepContinueButton } from "@/components/ui/StepNavigationButtons";
-
-
-// TODO: replace with the real single-job fetch hook once available, e.g.
-// const { data: job, isLoading } = useJobPreview(jobId);
-const useJobPreviewMock = (jobId: string | undefined) => {
-    const job = MOCK_JOB_PREVIEWS.find((preview) => preview.id === jobId);
-    return { job, isLoading: false };
-};
 
 const formatPostedDate = (postedAt: string | null) => {
     if (!postedAt) return null;
@@ -40,10 +32,24 @@ const STATUS_LABELS: Record<JobStatus, string> = {
 const JobPreview = () => {
     const { jobId } = useParams<{ jobId: string }>();
     const navigate = useNavigate();
-    const { job, isLoading } = useJobPreviewMock(jobId);
+    const { data: job, isLoading, isError, refetch } = useJobPreview(jobId);
 
     if (isLoading) {
         return <JobPreviewSkeleton />;
+    }
+
+    if (isError) {
+        return (
+            <div className="mx-auto flex max-w-6xl flex-col items-start gap-4 px-6 py-10">
+                <BackButton onClick={() => navigate("/employer/jobs")} />
+                <div className="w-full rounded-3xl border border-error-200 bg-error-50 px-5 py-10 text-center text-sm text-error-600">
+                    Something went wrong loading this job.{" "}
+                    <button type="button" onClick={() => refetch()} className="underline">
+                        Try again
+                    </button>
+                </div>
+            </div>
+        )
     }
 
     if (!job) {
@@ -151,7 +157,9 @@ const JobPreviewDetailsCard = ({ job, showTasks }: { job: JobPreviewDetails, sho
     return (
         <div className="flex w-full flex-col gap-6 rounded-3xl bg-white p-8">
             <Section title="DESCRIPTION">
-                <p className="text-base text-neutral-950">{job.description}</p>
+                <div className="prose prose-sm max-w-none text-base text-neutral-950 prose-headings:font-semibold prose-headings:text-neutral-950 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-neutral-950">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{job.description}</ReactMarkdown>
+                </div>
             </Section>
 
             <Divider />
@@ -250,17 +258,37 @@ const LiveJobActions = ({ job }: { job: JobPreviewDetails }) => {
     );
 };
 
-const StatsRow = ({ job }: { job: JobPreviewDetails }) => (
-    <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-3">
-        <StatBox value={String(job.submissionsCount)} label="Applicants" />
-        <StatBox value={job.deadline} label="Deadline" />
-        <StatBox value={STATUS_LABELS[job.status]} label="Status" />
-    </div>
-);
+const StatsRow = ({ job }: { job: JobPreviewDetails }) => {
+    const isTerminated = job.status === "TERMINATED";
+    return (
+        <div className={`grid w-full grid-cols-1 gap-6 sm:grid-cols-3 ${isTerminated ? "lg:grid-cols-4" : ""}`}>
+            <StatBox value={String(job.submissionsCount)} label="Applicants" />
+            <StatBox value={job.deadline} label="Deadline" />
+            <StatBox value={STATUS_LABELS[job.status]} label="Status" />
+            {/* TODO: wire up the real hired candidate once a "mark as hired" concept exists on
+                the backend — no such field currently exists on jobs or submissions, so this is
+                shown blurred rather than fabricating a value. */}
+            {isTerminated && <StatBox value="Hired candidate" label="Hired candidate" blurValue />}
+        </div>
+    );
+};
 
-const StatBox = ({ value, label }: { value: string; label: string }) => (
+const StatBox = ({
+    value,
+    label,
+    blurValue = false,
+}: {
+    value: string;
+    label: string;
+    blurValue?: boolean;
+}) => (
     <div className="flex flex-col gap-3 rounded-2xl border border-primary-200 bg-white/10 p-6">
-        <p className="text-3xl text-neutral-950 tracking-tight lg:text-5xl">{value}</p>
+        <p
+            className={`text-3xl text-neutral-950 tracking-tight lg:text-5xl ${blurValue ? "select-none blur-sm" : ""}`}
+            aria-hidden={blurValue}
+        >
+            {value}
+        </p>
         <p className="text-base text-neutral-700">{label}</p>
     </div>
 );
