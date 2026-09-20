@@ -106,19 +106,21 @@ export default function PreSimulation() {
                             <p className="text-[16px] text-neutral-400">Before you begin...</p>
                         </div>
 
-                        <div className="flex w-full flex-col gap-6 rounded-xl bg-neutral-50 p-6 text-left">
-                            {CHECKS.map((check, index) => (
-                                <div key={check.title} className="flex flex-col gap-6">
-                                    <div className="flex items-center gap-5">
-                                        <check.icon className="size-5 shrink-0 text-primary-500" />
-                                        <div className="flex flex-1 flex-col text-[16px]">
-                                            <p className="text-neutral-950">{check.title}</p>
-                                            <p className="text-neutral-400">{check.description}</p>
+                        <div className="rounded-xl bg-linear-to-r from-secondary-500 to-primary-950 px-px py-px w-full">
+                            <div className="flex w-full flex-col gap-6 rounded-xl bg-neutral-50 p-6 text-left">
+                                {CHECKS.map((check, index) => (
+                                    <div key={check.title} className="flex flex-col gap-6">
+                                        <div className="flex items-center gap-5">
+                                            <check.icon className="size-5 shrink-0 text-primary-500" />
+                                            <div className="flex flex-1 flex-col text-[16px]">
+                                                <p className="text-neutral-950">{check.title}</p>
+                                                <p className="text-neutral-400">{check.description}</p>
+                                            </div>
                                         </div>
+                                        {index < CHECKS.length - 1 && <div className="h-px w-full bg-neutral-200" />}
                                     </div>
-                                    {index < CHECKS.length - 1 && <div className="h-px w-full bg-neutral-200" />}
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
 
                         <p className="text-[16px] text-neutral-400">
@@ -127,25 +129,32 @@ export default function PreSimulation() {
                         </p>
 
                         <div className="flex w-full gap-3">
-                            <div className="flex flex-1 flex-col gap-3 rounded-lg border border-neutral-200 p-4 shadow-[0px_4px_20px_rgba(16,24,40,0.05)]">
-                                <p className="text-[32px] leading-9.5 tracking-[-0.32px] text-black">{simulation.tasks.length}</p>
-                                <p className="text-[16px] text-neutral-700">Tasks</p>
+                            <div className="rounded-lg bg-linear-to-r from-secondary-500 to-primary-950 px-px py-px flex-1">
+                                <div className="flex h-full flex-col gap-3 rounded-lg bg-white p-4 shadow-[0px_4px_20px_rgba(16,24,40,0.05)]">
+                                    <p className="text-[32px] leading-9.5 tracking-[-0.32px] text-black">{simulation.tasks.length}</p>
+                                    <p className="text-[16px] text-neutral-700">Tasks</p>
+                                </div>
                             </div>
-                            <div className="flex flex-1 flex-col gap-3 rounded-lg border border-neutral-200 p-4 shadow-[0px_4px_20px_rgba(16,24,40,0.05)]">
-                                <p className="text-[32px] leading-9.5 tracking-[-0.32px] text-black">
-                                    ~{simulation.timeLimitMinutes} min
-                                </p>
-                                <p className="text-[16px] text-neutral-700">Est. time allowed</p>
+                            <div className="rounded-lg bg-linear-to-r from-secondary-500 to-primary-950 px-px py-px flex-1">
+                                <div className="flex h-full flex-col gap-3 rounded-lg bg-white p-4 shadow-[0px_4px_20px_rgba(16,24,40,0.05)]">
+                                    <p className="text-[32px] leading-9.5 tracking-[-0.32px] text-black">
+                                        ~{simulation.timeLimitMinutes} min
+                                    </p>
+                                    <p className="text-[16px] text-neutral-700">Est. time allowed</p>
+                                </div>
                             </div>
-                            <div className="flex flex-1 flex-col gap-3 rounded-lg border border-neutral-200 p-4 shadow-[0px_4px_20px_rgba(16,24,40,0.05)]">
-                                <p className="text-[32px] leading-9.5 tracking-[-0.32px] text-black">
-                                    {formatPostedDate(job.applicationDeadline)}
-                                </p>
-                                <p className="text-[16px] text-neutral-700">Deadline</p>
+                            <div className="rounded-lg bg-linear-to-r from-secondary-500 to-primary-950 px-px py-px flex-1">
+                                <div className="flex h-full flex-col gap-3 rounded-lg bg-white p-4 shadow-[0px_4px_20px_rgba(16,24,40,0.05)]">
+                                    <p className="text-[32px] leading-9.5 tracking-[-0.32px] text-black">
+                                        {formatPostedDate(job.applicationDeadline)}
+                                    </p>
+                                    <p className="text-[16px] text-neutral-700">Deadline</p>
+                                </div>
                             </div>
                         </div>
 
-                        <div className="flex w-full items-center justify-center gap-2 rounded-xl border border-[#e6e6e8] bg-neutral-50 p-3">
+
+                        <div className="flex w-full items-center gap-2 rounded-xl border border-[#e6e6e8] bg-neutral-50 p-3">
                             <Checkbox
                                 id="monitoring-consent"
                                 checked={consented}

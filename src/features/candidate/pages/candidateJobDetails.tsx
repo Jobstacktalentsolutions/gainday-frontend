@@ -48,23 +48,16 @@ export default function JobDetailsPage() {
 
             <main className="mx-auto w-full max-w-300 px-5 pb-20 pt-33.75 sm:pt-43.75 lg:px-0">
                 <div className="relative flex flex-col gap-10 overflow-hidden rounded-[32px] bg-white p-8">
-                    {/* Left gradient bloom */}
+                    {/* Decorative gradient blobs */}
                     <div
                         aria-hidden="true"
-                        className="pointer-events-none absolute -left-20 -top-20 h-80 w-80 rounded-full opacity-40"
-                        style={{
-                            background:
-                                "radial-gradient(circle, #B2C9FF 0%, #E7EFFF 50%, transparent 75%)",
-                        }}
+                        className={`pointer-events-none block absolute z-50 -left-5 -top-64 h-105 w-95 rotate-[-49deg] rounded-full bg-linear-to-b opacity-38 blur-3xl
+                            bg-[linear-gradient(180deg,var(--color-primary-500)_40%,var(--color-secondary-500)_55%,var(--color-secondary-300)_65%,transparent_100%)]`}
                     />
-                    {/* Right gradient bloom */}
                     <div
                         aria-hidden="true"
-                        className="pointer-events-none absolute -right-20 -top-20 h-80 w-80 rounded-full opacity-40"
-                        style={{
-                            background:
-                                "radial-gradient(circle, #B2C9FF 0%, #E7EFFF 50%, transparent 75%)",
-                        }}
+                        className={`pointer-events-none block absolute z-50 -right-5 -top-64 h-105 w-95 rotate-49 rounded-full bg-linear-to-b opacity-38 blur-3xl
+                            bg-[linear-gradient(180deg,var(--color-primary-500)_40%,var(--color-secondary-500)_55%,var(--color-secondary-300)_65%,transparent_100%)]`}
                     />
 
                     <div className="relative flex flex-wrap items-start justify-between gap-4">
