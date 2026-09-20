@@ -49,7 +49,7 @@ export default function PreSimulation() {
 
     function handleBegin() {
         // TODO: simulation runner isn't built yet — stub only
-        console.log("TODO: begin simulation", job.id);
+        console.log("TODO: begin simulation", job!.id);
     }
 
     if (isSimulationLoading || !simulation) {

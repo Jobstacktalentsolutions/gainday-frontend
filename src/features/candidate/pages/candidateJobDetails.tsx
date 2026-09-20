@@ -28,7 +28,7 @@ export default function JobDetailsPage() {
     }
 
     function handleSignUp() {
-        navigate(`/candidate/signup?redirect=${encodeURIComponent(`/job-board/${job.id}/pre-simulation`)}`);
+        navigate(`/candidate/signup?redirect=${encodeURIComponent(`/job-board/${job!.id}/pre-simulation`)}`);
     }
 
     function handleGuestSubmit(values: GuestInfoValues) {
@@ -38,8 +38,8 @@ export default function JobDetailsPage() {
 
         // TODO: POST guest application once endpoint exists
         //also persist guests info
-        navigate(`/job-board/${job.id}/pre-simulation`);
-        console.log("TODO: persist guest info before simulation starts", job.id, values)
+        navigate(`/job-board/${job!.id}/pre-simulation`);
+        console.log("TODO: persist guest info before simulation starts", job!.id, values)
     }
 
     return (
