@@ -1,107 +1,155 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { PublicNavbar } from "@/features/candidate/components/PublicNavbar";
-import { FormInput } from "@/components/form/FormInput";
-import { ActionButton } from "@/components/ui/ActionButton";
-import { PasswordInput } from "../components/PasswordInput";
-import { candidateSignUpSchema, type CandidateSignUpValues } from "../auth/schema";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { type AxiosError } from "axios";
 import { apiClient, getBaseURL } from "@/lib/api/client";
 import { useAuthStore } from "@/features/auth/store/authStore";
+import { FormInput } from "@/components/form/FormInput";
+import AuthCard from "@/features/auth/component/AuthCard";
+import PasswordInput from "@/features/auth/component/passwordInput";
+import { AuthCheckboxRow } from "@/features/auth/component/AuthCheckBox";
 import { AuthDivider } from "@/features/auth/component/AuthDivider";
 import SocialAuthButton from "@/features/auth/component/SocialAuthButton";
+import AuthSwitchLink from "@/features/auth/component/AuthSwitchLink";
+import { ActionButton } from "@/components/ui/ActionButton";
+import spinner from "@/assets/Spinner.svg";
+import { candidateSignUpSchema, type CandidateSignUpValues } from "../auth/schema";
+import { useState } from "react";
 
 
-export default function CandidateSignUp() {
+const CandidateSignUp = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const redirect = searchParams.get("redirect");
+    const [agreed, setAgreed] = useState(false);
+
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        formState: { errors },
+    } = useForm<CandidateSignUpValues>({
+        resolver: zodResolver(candidateSignUpSchema),
+        defaultValues: {
+            fullName: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            agreedToTerms: false,
+        }
+    })
 
     const signUpMutation = useMutation({
         mutationFn: (values: CandidateSignUpValues) =>
             apiClient.post("/auth/register/candidate", values),
         onSuccess: (res) => {
-            useAuthStore.getState().setAuth(res.data.access_token, res.data.user);
-            navigate(redirect ? `/candidate/verify-email?redirect=${encodeURIComponent(redirect)}` : "/candidate/verify-email");
-        }
-    });
+            useAuthStore.getState().setAuth(res.data.access_token, res.data.user)
+            navigate(redirect ? `/candidate/verify-email?redirect=${encodeURIComponent(redirect)}` : "/candidate/verify-email")
+        },
+    })
 
-
-    const { register, handleSubmit, formState: { errors, isValid }, } =
-        useForm<CandidateSignUpValues>({
-            resolver: zodResolver(candidateSignUpSchema),
-            mode: "onChange",
-            defaultValues: {
-                fullName: "",
-                email: "",
-                password: "",
-                confirmPassword: "",
-                agreedToTerms: false
-            },
-        });
-
-    async function onSubmit(values: CandidateSignUpValues) {
-        signUpMutation.mutate(values);
+    const onSubmit = (values: CandidateSignUpValues) => {
+        signUpMutation.mutate({ ...values, agreedToTerms: agreed })
     }
 
     const signInHref = redirect ? `/candidate/signin?redirect=${encodeURIComponent(redirect)}` : "/candidate/signin";
 
     return (
-        <div className="min-h-screen w-full bg-neutral-50">
-            <PublicNavbar />
-            <main className="flex w-full justify-center px-4 pt-55 pb-12">
-                <div className="w-full max-w-120 rounded-2xl bg-white px-10 py-12 shadow-sm">
-                    <div className="mb-8 flex flex-col items-center gap-2 text-center">
-                        <h1 className="text-[32px] leading-9.5 tracking-[-0.32px] text-primary-950">Sign up to apply</h1>
-                        <p className="text-[16px] text-neutral-700">
-                            Track your Capability Score across every application & see your full results and feedback anytime
-                        </p>
-                    </div>
-                    <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-4">
-                        <FormInput label="Full name" placeholder="Amara Chukwu" error={errors.fullName?.message} {...register("fullName")} />
-                        <FormInput label="Email" type="email" placeholder="amara@yourcompany.com" error={errors.email?.message} {...register("email")} />
-                        <PasswordInput label="Password" placeholder="At least 8 characters" showChecklist error={errors.password?.message} {...register("password")} />
-                        <PasswordInput label="Confirm Password" error={errors.confirmPassword?.message} {...register("confirmPassword")} />
+        <AuthCard
+            title="Sign up to apply"
+            subtitle="Track your Capability Score across every application & see your full results and feedback anytime"
+        >
+            <form
+                onSubmit={handleSubmit(onSubmit)}
+                noValidate
+                className="flex w-full flex-col gap-4"
+            >
+                <FormInput
+                    label="Full name"
+                    placeholder="Amara Chukwu"
+                    required
+                    {...register("fullName")}
+                    error={errors.fullName?.message}
+                />
 
-                        <label className="flex items-start gap-2 text-xs text-primary-950">
-                            <input type="checkbox" className="mt-0.5 size-5 rounded-[6px] border border-neutral-200" {...register("agreedToTerms")} />
-                            <span>
-                                I agree to the <a href="/terms" className="underline">Terms &amp; Conditions</a> and{" "}
-                                <a href="/privacy" className="underline">Privacy Policy</a>
-                            </span>
-                        </label>
-                        {errors.agreedToTerms && <p role="alert" className="text-sm text-error-500">{errors.agreedToTerms.message}</p>}
+                <FormInput
+                    label="Email"
+                    type="email"
+                    placeholder="amara@yourcompany.com"
+                    required
+                    autoComplete="email"
+                    {...register("email")}
+                    error={errors.email?.message}
+                />
+                <PasswordInput
+                    label="Password"
+                    placeholder="At least 8 characters"
+                    required
+                    showChecklist
+                    autoComplete="new-password"
+                    {...register("password")}
+                    error={errors.password?.message}
+                />
+                <PasswordInput
+                    label="Confirm Password"
+                    required
+                    autoComplete="new-password"
+                    {...register("confirmPassword")}
+                    error={errors.confirmPassword?.message}
+                />
+                <AuthCheckboxRow
+                    checked={agreed}
+                    onCheckedChange={(checked) => {
+                        setAgreed(checked);
+                        setValue("agreedToTerms", checked, { shouldValidate: true });
+                    }}
+                    error={errors.agreedToTerms?.message}
+                />
 
-                        {signUpMutation.isError && (
-                            <p role="alert" className="text-center text-sm text-error-600">
-                                {(signUpMutation.error as AxiosError<{ message?: string }>)?.response?.data?.message ?? "Something went wrong. Please try again."}
-                            </p>
-                        )}
+                {signUpMutation.isError && (
+                    <p role="alert" className="text-center text-sm text-error-600">
+                        {(signUpMutation.error as AxiosError<{ message?: string }>)?.response?.data?.message ?? "Something went wrong. Please try again."}
+                    </p>
+                )}
 
-                        <ActionButton type="submit" variant="primary" size="lg" disabled={!isValid || signUpMutation.isPending}>
-                            {signUpMutation.isPending ? "Creating account..." : "Create account"}
-                        </ActionButton>
+                <ActionButton
+                    type="submit"
+                    className="w-full py-6"
+                    disabled={signUpMutation.isPending}
+                >
+                    {
+                        signUpMutation.isPending
+                            ? (<span className="flex gap-x-3 items-center justify-center">
 
-                        <AuthDivider />
-                        <SocialAuthButton
-                            label="Sign up with Google"
-                            onClick={() => {
-                                window.location.href = `${getBaseURL()}/auth/google?role=JOB_SEEKER`;
-                            }}
-                        />
+                                <img
+                                    src={spinner}
+                                    alt="spinner"
+                                    className="w-4 h-4 animate-spin"
+                                />
+                                <span>Creating account ...</span>
+                            </span>)
+                            : (<span>Create account</span>)
+                    }
 
-                        <p className="text-center text-[16px] text-neutral-700">
-                            Already have an account?{" "}
-                            <Link to={signInHref} className="text-primary-500">Sign in</Link>
-                        </p>
-                    </form>
-                </div>
-            </main>
-        </div>
-    )
+                </ActionButton>
+                <AuthDivider />
+                <SocialAuthButton
+                    label="Sign up with Google"
+                    onClick={() => {
+                        window.location.href = `${getBaseURL()}/auth/google?role=JOB_SEEKER`
+                    }}
+                />
+                <AuthSwitchLink
+                    prompt="Already have an account?"
+                    linkText="Sign in"
+                    to={signInHref}
+                />
 
+            </form>
 
-
+        </AuthCard>
+    );
 }
+
+export default CandidateSignUp;

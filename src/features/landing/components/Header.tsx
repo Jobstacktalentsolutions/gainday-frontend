@@ -5,6 +5,8 @@ import brandLogo from "@/assets/gainday icon.svg";
 import { Menu, X } from "lucide-react";
 import { actionButtonVariants } from "@/components/ui/ActionButton";
 import { cn } from "@/lib/utils";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
+import { UserAvatarMenu } from "@/components/ui/UserAvatarMenu";
 
 const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
@@ -15,11 +17,18 @@ const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) =
 
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
+    const { user, isAuthenticated } = useCurrentUser();
+
+    const logoTarget = isAuthenticated
+        ? user?.role === "EMPLOYER"
+            ? "/employer/dashboard"
+            : "/job-board"
+        : "/";
 
     return (
         <header className="fixed top-0 left-0 z-50 w-full border-t border-t-white/25 border-b border-b-white/15 bg-white/75 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),inset_0_-1px_0_0_rgba(255,255,255,0.1),0_4px_16px_rgba(0,0,0,0.06)] backdrop-blur-xs">
             <div className="flex items-center justify-between px-6 py-4 lg:py-5 md:px-30">
-                <Link to="/" className="shrink-0 cursor-pointer transition-opacity duration-200 hover:opacity-75 active:opacity-50">
+                <Link to={logoTarget} className="shrink-0 cursor-pointer transition-opacity duration-200 hover:opacity-75 active:opacity-50">
                     <img
                         src={brandLogo}
                         alt="Gainday logo"
@@ -44,18 +53,24 @@ const Header = () => {
                 </nav>
 
                 <div className="hidden items-center gap-3 lg:flex">
-                    <Link
-                        to="/login"
-                        className={cn(actionButtonVariants({ variant: "outline", size: "lg" }), "w-auto rounded-xl px-10")}
-                    >
-                        Log in
-                    </Link>
-                    <Link
-                        to="/signup"
-                        className={cn(actionButtonVariants({ variant: "primary", size: "lg" }), "w-auto rounded-xl px-10")}
-                    >
-                        Sign up
-                    </Link>
+                    {isAuthenticated ? (
+                        <UserAvatarMenu />
+                    ) : (
+                        <>
+                            <Link
+                                to="/candidate/signin"
+                                className={cn(actionButtonVariants({ variant: "outline", size: "lg" }), "w-auto rounded-xl px-10")}
+                            >
+                                Log in
+                            </Link>
+                            <Link
+                                to="/candidate/signup"
+                                className={cn(actionButtonVariants({ variant: "primary", size: "lg" }), "w-auto rounded-xl px-10")}
+                            >
+                                Sign up
+                            </Link>
+                        </>
+                    )}
                 </div>
 
                 {/* Mobile hamburger button */}

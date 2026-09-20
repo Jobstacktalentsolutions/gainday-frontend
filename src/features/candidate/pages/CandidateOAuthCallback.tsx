@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/features/auth/store/authStore";
 import { apiClient } from "@/lib/api/client";
-import { PublicNavbar } from "@/features/candidate/components/PublicNavbar";
+import AuthCard from "@/features/auth/component/AuthCard";
 import spinner from "@/assets/Spinner.svg";
 
-export default function CandidateOAuthCallback() {
+const CandidateOAuthCallback = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +21,7 @@ export default function CandidateOAuthCallback() {
 
     const fetchUser = async () => {
       try {
-        useAuthStore.getState().setAuth(token, null as any);
+        useAuthStore.getState().setAuth(token, null as unknown as null);
         const response = await apiClient.get("/auth/me");
         useAuthStore.getState().setAuth(token, response.data.user);
         navigate("/job-board");
@@ -36,20 +36,25 @@ export default function CandidateOAuthCallback() {
   }, [searchParams, navigate]);
 
   return (
-    <div className="min-h-screen w-full bg-neutral-50">
-      <PublicNavbar />
-      <main className="flex w-full justify-center px-4 pt-55 pb-12">
-        <div className="flex w-full max-w-120 flex-col items-center gap-6 rounded-2xl bg-white px-10 py-12 text-center shadow-sm">
-          {error ? (
+    <AuthCard title="" subtitle="">
+      <div className="flex w-full flex-col items-center gap-6 text-center">
+        {error ? (
+          <>
             <p className="text-sm text-error-600">{error}</p>
-          ) : (
-            <>
-              <img src={spinner} alt="Loading" className="h-8 w-8 animate-spin" />
-              <p className="text-sm text-neutral-600">Completing sign in...</p>
-            </>
-          )}
-        </div>
-      </main>
-    </div>
+          </>
+        ) : (
+          <>
+            <img
+              src={spinner}
+              alt="Loading"
+              className="w-8 h-8 animate-spin"
+            />
+            <p className="text-sm text-neutral-600">Completing sign in...</p>
+          </>
+        )}
+      </div>
+    </AuthCard>
   );
-}
+};
+
+export default CandidateOAuthCallback;

@@ -38,6 +38,7 @@ const CandidateResetPassword = lazy(() => import("@/features/candidate/pages/Can
 const CandidateVerifyEmail = lazy(() => import("@/features/candidate/pages/CandidateVerifyEmail"));
 const CandidateOAuthCallback = lazy(() => import("@/features/candidate/pages/CandidateOAuthCallback"));
 const PreSimulation = lazy(() => import("@/features/candidate/pages/PreSimulation"));
+const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
 
 
 const AppRoutes = () => {
@@ -64,6 +65,7 @@ const AppRoutes = () => {
                     <Route element={<EmployerLayout />} >
                         <Route path="dashboard" element={<EmployerDashboard />} />
                         <Route path="jobs" element={<EmployerJobs />} />
+                        <Route path="profile" element={<ProfilePage />} />
                         <Route path="jobs/new" element={<JobPostingWizardLayout />}>
                             <Route index element={<Navigate to="details" replace />} />
                             <Route path="details" element={<JobDetailsStep />} />
@@ -79,6 +81,7 @@ const AppRoutes = () => {
                 <Route path="/job-board" element={<JobBoardPage />} />
                 <Route path="/job-board/:jobId" element={<JobDetailsPage />} />
                 <Route path="/job-board/:jobId/pre-simulation" element={<PreSimulation />} />
+                <Route path="/profile" element={<ProfilePage />} />
 
                 <Route path="/candidate">
                     <Route path="signup" element={<CandidateSignUp />} />
@@ -87,6 +90,7 @@ const AppRoutes = () => {
                     <Route path="reset-password" element={<CandidateResetPassword />} />
                     <Route path="verify-email" element={<CandidateVerifyEmail />} />
                     <Route path="oauth/callback" element={<CandidateOAuthCallback />} />
+                    <Route path="profile" element={<ProfilePage />} />
                 </Route>
 
             </Routes>

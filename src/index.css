@@ -355,3 +355,14 @@
 .group:not(:disabled):hover .group-hover-spiral {
   animation: arrow-spiral 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+
+/* ── Neutralize the browser's blue/yellow autofill background on inputs ── */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  box-shadow: 0 0 0 1000px white inset !important;
+  -webkit-text-fill-color: var(--color-neutral-700);
+  caret-color: var(--color-neutral-700);
+  transition: background-color 9999s ease-in-out 0s;
+}
