@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Clock, MapPin, Wallet, Share2, Sparkles } from "lucide-react";
 import { PublicNavbar } from "../components/PublicNavbar";
 import { ApplyDialog } from "../components/ApplyDialog";
-import { PHONE_COUNTRIES } from "../components/PhoneInput";
+// import { PHONE_COUNTRIES } from "../components/PhoneInput";
 import type { GuestInfoValues } from "../auth/schema";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { StepContinueButton } from "@/components/ui/StepNavigationButtons";
@@ -28,16 +28,18 @@ export default function JobDetailsPage() {
     }
 
     function handleSignUp() {
-        navigate(`/candidate/signup?redirect=/job-board/${job!.id}/apply`);
+        navigate(`/candidate/signup?redirect=${encodeURIComponent(`/job-board/${job.id}/pre-simulation`)}`);
     }
 
     function handleGuestSubmit(values: GuestInfoValues) {
-        const dialCode = PHONE_COUNTRIES.find((c) => c.code === values.phoneCountry)?.dialCode ?? "";
-        const fullPhone = `${dialCode}${values.phoneNumber}`; // e.g. "+2347013716408" (E.164)
+        //un-comment these when you want to POST and Persist
+        // const dialCode = PHONE_COUNTRIES.find((c) => c.code === values.phoneCountry)?.dialCode ?? "";
+        // const fullPhone = `${dialCode}${values.phoneNumber}`; // e.g. "+2347013716408" (E.164)
 
         // TODO: POST guest application once endpoint exists
-        console.log("TODO: POST guest application for", job!.id, { ...values, phone: fullPhone });
-        navigate(`/job-board/${job!.id}/apply`);
+        //also persist guests info
+        navigate(`/job-board/${job.id}/pre-simulation`);
+        console.log("TODO: persist guest info before simulation starts", job.id, values)
     }
 
     return (
