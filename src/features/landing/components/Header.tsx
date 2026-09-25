@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import brandLogo from "@/assets/gainday icon.svg";
-import { Menu, X, ChevronDown, BookOpen, Briefcase } from "lucide-react";
+import { Menu, X, ChevronDown, BookOpen, UserRound } from "lucide-react";
 import { actionButtonVariants } from "@/components/ui/ActionButton";
 import { cn } from "@/lib/utils";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
@@ -217,7 +217,7 @@ const Header = () => {
                                         onClick={(e) => { e.preventDefault(); navigate("/candidate/signup"); }}
                                         className="inline-flex items-start gap-2.5 text-base text-neutral-500 transition-colors duration-200 hover:text-primary-500 cursor-pointer group"
                                     >
-                                        <Briefcase
+                                        <UserRound
                                             size={18}
                                             className="shrink-0 relative top-1 text-neutral-400 group-hover:text-primary-500 transition-colors duration-200"
                                         />
@@ -342,7 +342,7 @@ const Header = () => {
                                     Discover roles matched to your skills.
                                 </p>
                                 <StepContinueButton
-                                    size="md"
+                                    size="sm"
                                     className="shrink-0"
                                     onClick={() => {
                                         navigate("/job-board");

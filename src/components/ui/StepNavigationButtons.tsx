@@ -51,6 +51,7 @@ const stepContinueButtonVariants = cva(
   {
     variants: {
       size: {
+        sm: "h-8 py-0.5 pl-3 pr-0.5 text-sm",
         md: "h-10 py-1 pl-4 pr-1 text-base",
         lg: "h-[52px] py-1 pl-6 pr-1 text-base",
       },
@@ -59,7 +60,7 @@ const stepContinueButtonVariants = cva(
   }
 );
 
-const iconWrapperSize = { md: "size-8", lg: "size-11" } as const;
+const iconWrapperSize = { sm: "size-6", md: "size-8", lg: "size-11" } as const;
 
 export interface StepContinueButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
