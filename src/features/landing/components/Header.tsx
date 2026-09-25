@@ -2,12 +2,13 @@ import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import brandLogo from "@/assets/gainday icon.svg";
-import { Menu, X, ChevronDown, BookOpen } from "lucide-react";
+import { Menu, X, ChevronDown, BookOpen, Briefcase } from "lucide-react";
 import { actionButtonVariants } from "@/components/ui/ActionButton";
 import { cn } from "@/lib/utils";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { UserAvatarMenu } from "@/components/ui/UserAvatarMenu";
 import AddItemButton from "@/components/ui/AddItemButton";
+import { StepContinueButton } from "@/components/ui/StepNavigationButtons";
 
 const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
@@ -92,7 +93,9 @@ const NavItem = ({
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [employerDropOpen, setEmployerDropOpen] = useState(false);
+    const [browseJobsDropOpen, setBrowseJobsDropOpen] = useState(false);
     const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const browseCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const { user, isAuthenticated } = useCurrentUser();
     const navigate = useNavigate();
 
@@ -114,6 +117,15 @@ const Header = () => {
 
     const closeEmployerDrop = () => {
         closeTimer.current = setTimeout(() => setEmployerDropOpen(false), 120);
+    };
+
+    const openBrowseJobsDrop = () => {
+        if (browseCloseTimer.current) clearTimeout(browseCloseTimer.current);
+        setBrowseJobsDropOpen(true);
+    };
+
+    const closeBrowseJobsDrop = () => {
+        browseCloseTimer.current = setTimeout(() => setBrowseJobsDropOpen(false), 120);
     };
 
     return (
@@ -174,10 +186,46 @@ const Header = () => {
                     <NavItem
                         label="Browse jobs"
                         href="/job-board"
+                        isOpen={browseJobsDropOpen}
+                        hasDropdown
+                        onMouseEnter={openBrowseJobsDrop}
+                        onMouseLeave={closeBrowseJobsDrop}
                         onClick={(e) => {
                             e.preventDefault();
                             navigate("/job-board");
                         }}
+                        dropdownContent={
+                            <div className="p-7">
+                                {/* Promo text */}
+                                <p className="text-xl text-neutral-950 leading-snug mb-6">
+                                    Discover roles matched to your skills and start your next chapter.
+                                </p>
+
+                                {/* CTA */}
+                                <StepContinueButton
+                                    size="lg"
+                                    className="w-full"
+                                    onClick={() => navigate("/job-board")}
+                                >
+                                    Go to Job Board
+                                </StepContinueButton>
+
+                                {/* Divider + footer link */}
+                                <div className="mt-6 pt-5 border-t border-neutral-200">
+                                    <a
+                                        href="/candidate/signup"
+                                        onClick={(e) => { e.preventDefault(); navigate("/candidate/signup"); }}
+                                        className="inline-flex items-start gap-2.5 text-base text-neutral-500 transition-colors duration-200 hover:text-primary-500 cursor-pointer group"
+                                    >
+                                        <Briefcase
+                                            size={18}
+                                            className="shrink-0 relative top-1 text-neutral-400 group-hover:text-primary-500 transition-colors duration-200"
+                                        />
+                                        Create a free account to apply for jobs
+                                    </a>
+                                </div>
+                            </div>
+                        }
                     />
                 </nav>
 
@@ -287,6 +335,23 @@ const Header = () => {
                             >
                                 Browse jobs
                             </Link>
+
+                            {/* Mobile Browse Jobs CTA */}
+                            <div className="flex items-center gap-3 py-3 border-b border-neutral-200/50">
+                                <p className="text-sm text-neutral-500 flex-1">
+                                    Discover roles matched to your skills.
+                                </p>
+                                <StepContinueButton
+                                    size="md"
+                                    className="shrink-0"
+                                    onClick={() => {
+                                        navigate("/job-board");
+                                        setMenuOpen(false);
+                                    }}
+                                >
+                                    View Jobs
+                                </StepContinueButton>
+                            </div>
 
                             <div className="flex flex-col gap-3 pt-4">
                                 <Link
