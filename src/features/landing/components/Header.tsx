@@ -77,7 +77,7 @@ const NavItem = ({
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -8, scale: 0.98 }}
                     transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="absolute left-0 top-[calc(100%+32px)] rounded-2xl border w-125 border-neutral-200/80 bg-white shadow-xl shadow-neutral-900/10 overflow-hidden z-50"
+                    className="absolute left-0 top-[calc(100%+32px)] rounded-2xl border w-80 border-neutral-200/80 bg-white shadow-xl shadow-neutral-900/10 overflow-hidden z-50"
                 >
                     {dropdownContent}
                 </motion.div>
@@ -159,11 +159,11 @@ const Header = () => {
                                     <a
                                         href="#assessment-process"
                                         onClick={(e) => scrollToSection(e, "#assessment-process")}
-                                        className="inline-flex items-center gap-2.5 text-base text-neutral-500 transition-colors duration-200 hover:text-primary-500 cursor-pointer group"
+                                        className="inline-flex items-start gap-2.5 text-base text-neutral-500 transition-colors duration-200 hover:text-primary-500 cursor-pointer group"
                                     >
                                         <BookOpen
                                             size={18}
-                                            className="shrink-0 text-neutral-400 group-hover:text-primary-500 transition-colors duration-200"
+                                            className="shrink-0 relative top-1 text-neutral-400 group-hover:text-primary-500 transition-colors duration-200"
                                         />
                                         Learn more about the candidate assessment process
                                     </a>
