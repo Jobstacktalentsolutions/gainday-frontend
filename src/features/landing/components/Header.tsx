@@ -29,6 +29,10 @@ interface NavItemProps {
     onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
+interface NavItemDropdownProps extends NavItemProps {
+    dropdownContent?: React.ReactNode;
+}
+
 const NavItem = ({
     label,
     href = "#",
@@ -37,7 +41,8 @@ const NavItem = ({
     onMouseEnter,
     onMouseLeave,
     onClick,
-}: NavItemProps) => (
+    dropdownContent,
+}: NavItemDropdownProps) => (
     <div
         className="relative"
         onMouseEnter={onMouseEnter}
@@ -62,6 +67,22 @@ const NavItem = ({
                 />
             )}
         </a>
+
+        {/* Fixed-width dropdown panel anchored below this nav item */}
+        <AnimatePresence>
+            {isOpen && dropdownContent && (
+                <motion.div
+                    key="employer-dropdown"
+                    initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                    transition={{ duration: 0.18, ease: "easeOut" }}
+                    className="absolute left-0 top-[calc(100%+32px)] rounded-2xl border w-125 border-neutral-200/80 bg-white shadow-xl shadow-neutral-900/10 overflow-hidden z-50"
+                >
+                    {dropdownContent}
+                </motion.div>
+            )}
+        </AnimatePresence>
     </div>
 );
 
@@ -121,6 +142,34 @@ const Header = () => {
                         onMouseEnter={openEmployerDrop}
                         onMouseLeave={closeEmployerDrop}
                         onClick={(e) => scrollToSection(e, "#for-employers")}
+                        dropdownContent={
+                            <div className="p-7">
+                                {/* Promo text */}
+                                <p className="text-xl text-neutral-950 leading-snug mb-6">
+                                    Post a job and get recommended the most capable candidate.
+                                </p>
+
+                                {/* CTA */}
+                                <AddItemButton onClick={() => navigate(postJobTarget)}>
+                                    Post a Job
+                                </AddItemButton>
+
+                                {/* Divider + footer link */}
+                                <div className="mt-6 pt-5 border-t border-neutral-200">
+                                    <a
+                                        href="#assessment-process"
+                                        onClick={(e) => scrollToSection(e, "#assessment-process")}
+                                        className="inline-flex items-center gap-2.5 text-base text-neutral-500 transition-colors duration-200 hover:text-primary-500 cursor-pointer group"
+                                    >
+                                        <BookOpen
+                                            size={18}
+                                            className="shrink-0 text-neutral-400 group-hover:text-primary-500 transition-colors duration-200"
+                                        />
+                                        Learn more about the candidate assessment process
+                                    </a>
+                                </div>
+                            </div>
+                        }
                     />
                     <NavItem
                         label="Browse jobs"
@@ -170,52 +219,6 @@ const Header = () => {
                 </button>
             </div>
 
-            {/* ── "For employers" full-width dropdown ──
-                Lives inside <header> → renders flush below the top bar,
-                never overlapping it.                                     */}
-            <AnimatePresence>
-                {employerDropOpen && (
-                    <motion.div
-                        key="employer-dropdown"
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.2, ease: "easeOut" }}
-                        className="hidden lg:block overflow-hidden border-t border-neutral-200/60 bg-white shadow-lg shadow-neutral-900/8"
-                        onMouseEnter={openEmployerDrop}
-                        onMouseLeave={closeEmployerDrop}
-                    >
-                        <div className="px-6 md:px-30 py-8">
-                            {/* Promo text */}
-                            <p className="text-2xl font-semibold text-neutral-800 leading-snug mb-6 max-w-md">
-                                Post a job and get recommended the most capable candidate.
-                            </p>
-
-                            {/* CTA */}
-                            <AddItemButton onClick={() => navigate(postJobTarget)}>
-                                Post Job
-                            </AddItemButton>
-
-                            {/* Divider + footer link */}
-                            <div className="mt-7 pt-6 border-t border-neutral-200">
-                                <a
-                                    href="#assessment-process"
-                                    onClick={(e) =>
-                                        scrollToSection(e, "#assessment-process")
-                                    }
-                                    className="inline-flex items-center gap-2.5 text-base text-neutral-500 transition-colors duration-200 hover:text-primary-500 cursor-pointer group"
-                                >
-                                    <BookOpen
-                                        size={18}
-                                        className="shrink-0 text-neutral-400 group-hover:text-primary-500 transition-colors duration-200"
-                                    />
-                                    Learn more about the candidate assessment process
-                                </a>
-                            </div>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
 
             {/* Mobile backdrop */}
             {menuOpen && (
