@@ -70,13 +70,16 @@ export function EnvironmentCheckPage() {
             <PublicNavbar />
             <main className="mx-auto flex w-full max-w-300 flex-col items-center gap-20 px-5 pb-20 pt-33.75 sm:pt-43.75">
                 <div className="relative w-full max-w-158.5 overflow-hidden rounded-3xl bg-white p-10 shadow-[0px_4px_10px_rgba(16,24,40,0.05)]">
+                    {/* Decorative gradient blobs */}
                     <div
                         aria-hidden="true"
-                        className="pointer-events-none absolute -z-10 left-0 top-0 h-105 w-65 rotate-70 rounded-full opacity-60 blur-3xl bg-[linear-gradient(180deg,var(--color-primary-950)_0%,var(--color-secondary-500)_35%,var(--color-secondary-300)_65%,transparent_100%)]"
+                        className={`pointer-events-none block absolute z-50 -left-5 -top-64 h-105 w-95 rotate-[-49deg] rounded-full bg-linear-to-b  opacity-38 blur-3xl
+                            bg-[linear-gradient(180deg,var(--color-primary-500)_40%,var(--color-secondary-500)_55%,var(--color-secondary-300)_65%,transparent_100%)]`}
                     />
                     <div
                         aria-hidden="true"
-                        className="pointer-events-none absolute -z-10 right-32 top-44 h-105 w-65 rotate-70 rounded-full opacity-60 blur-3xl bg-[linear-gradient(180deg,var(--color-primary-950)_0%,var(--color-secondary-500)_35%,var(--color-secondary-300)_65%,transparent_100%)]"
+                        className={`pointer-events-none block absolute z-50 -right-5 -top-64 h-105 w-95 rotate-49 rounded-full bg-linear-to-b  opacity-38 blur-3xl
+                            bg-[linear-gradient(180deg,var(--color-primary-500)_40%,var(--color-secondary-500)_55%,var(--color-secondary-300)_65%,transparent_100%)]`}
                     />
 
                     <div className="relative z-10 flex flex-col items-center gap-6 text-center">
