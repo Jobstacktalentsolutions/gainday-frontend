@@ -64,7 +64,7 @@ export const UserAvatarMenu = ({ className }: UserAvatarMenuProps) => {
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <div className="flex size-9 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-primary-700 text-sm font-semibold text-white shadow-xs">
+        <div className="flex size-9 items-center justify-center rounded-full bg-linear-to-br from-primary-500 to-primary-700 text-sm font-semibold text-white shadow-xs">
           {getInitials()}
         </div>
         <ChevronDown className={`size-4 text-neutral-500 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
