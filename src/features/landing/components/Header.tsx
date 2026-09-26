@@ -202,11 +202,7 @@ const Header = () => {
                                 </p>
 
                                 {/* CTA */}
-                                <StepContinueButton
-                                    size="lg"
-                                    className="w-full"
-                                    onClick={() => navigate("/job-board")}
-                                >
+                                <StepContinueButton size="sm" onClick={() => navigate("/job-board")}>
                                     Go to Job Board
                                 </StepContinueButton>
 
