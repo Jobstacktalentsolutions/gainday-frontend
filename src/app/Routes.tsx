@@ -2,10 +2,6 @@ import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import AppLoader from "@/components/ui/AppLoader";
 
-// // TODO: Remove this — temporary delay to preview AppLoader
-// const simulateLatency = (ms: number) =>
-//     <T,>(mod: T): Promise<T> =>
-//         new Promise((resolve) => setTimeout(() => resolve(mod), ms));
 
 const AdminLogin = lazy(() => import("@/features/admin/pages/AdminLogin"));
 const AdminLayout = lazy(() => import("@/features/admin/layouts/AdminLayout"));
@@ -83,6 +79,10 @@ const AppRoutes = () => {
                 <Route path="/job-board/:jobId" element={<JobDetailsPage />} />
                 <Route path="/job-board/:jobId/pre-simulation" element={<PreSimulation />} />
                 <Route path="/job-board/:jobId/environment-check" element={<EnvironmentCheckPage />} />
+                {/* Dev-only route — quick access without a real jobId */}
+                {import.meta.env.DEV && (
+                    <Route path="/dev/environment-check" element={<EnvironmentCheckPage />} />
+                )}
                 <Route path="/profile" element={<ProfilePage />} />
 
                 <Route path="/candidate">
