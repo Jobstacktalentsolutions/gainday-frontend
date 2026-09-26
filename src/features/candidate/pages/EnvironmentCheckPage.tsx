@@ -32,7 +32,7 @@ function StatusBadge({ status, readyLabel }: { status: CheckStatus; readyLabel: 
     );
 }
 
-export function EnvironmentCheckPage() {
+export default function EnvironmentCheckPage() {
     const { jobId } = useParams<{ jobId: string }>();
     const navigate = useNavigate();
     const addFlag = useSimulationIntegrityStore((state) => state.addFlag);

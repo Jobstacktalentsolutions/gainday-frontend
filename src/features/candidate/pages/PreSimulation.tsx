@@ -8,6 +8,8 @@ import { useJobDetails } from "../hooks/useJobDetails";
 import { formatPostedDate } from "../utils/formatters";
 import { useJobSimulation } from "../hooks/useJobSimulation";
 import BlueSparkles from "@/assets/blue-sparkles.svg";
+import { useFullscreenCheck } from "../hooks/useFullscreenCheck";
+
 
 const CHECKS = [
     {
@@ -32,6 +34,7 @@ export default function PreSimulation() {
     const navigate = useNavigate();
     const { job } = useJobDetails(jobId);
     const [consented, setConsented] = useState(false);
+    const { requestFullscreen } = useFullscreenCheck();
 
     if (!job) {
         // TODO: proper "job not found" state, same open item as JobDetailsPage
@@ -47,9 +50,10 @@ export default function PreSimulation() {
 
     const { data: simulation, isLoading: isSimulationLoading } = useJobSimulation(job);
 
-    function handleBegin() {
-        // TODO: simulation runner isn't built yet — stub only
-        console.log("TODO: begin simulation", job!.id);
+    async function handleBegin() {
+
+        await requestFullscreen(); //fires synchronously
+        navigate(`/job-board/${job.id}/environment-check`);
     }
 
     if (isSimulationLoading || !simulation) {

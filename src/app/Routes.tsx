@@ -39,6 +39,7 @@ const CandidateVerifyEmail = lazy(() => import("@/features/candidate/pages/Candi
 const CandidateOAuthCallback = lazy(() => import("@/features/candidate/pages/CandidateOAuthCallback"));
 const PreSimulation = lazy(() => import("@/features/candidate/pages/PreSimulation"));
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
+const EnvironmentCheckPage = lazy(() => import("@/features/candidate/pages/EnvironmentCheckPage"));
 
 
 const AppRoutes = () => {
@@ -81,6 +82,7 @@ const AppRoutes = () => {
                 <Route path="/job-board" element={<JobBoardPage />} />
                 <Route path="/job-board/:jobId" element={<JobDetailsPage />} />
                 <Route path="/job-board/:jobId/pre-simulation" element={<PreSimulation />} />
+                <Route path="/job-board/:jobId/environment-check" element={<EnvironmentCheckPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
 
                 <Route path="/candidate">
