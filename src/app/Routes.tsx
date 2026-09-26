@@ -81,7 +81,10 @@ const AppRoutes = () => {
                 <Route path="/job-board/:jobId/environment-check" element={<EnvironmentCheckPage />} />
                 {/* Dev-only route — quick access without a real jobId */}
                 {import.meta.env.DEV && (
-                    <Route path="/dev/environment-check" element={<EnvironmentCheckPage />} />
+                    <>
+                        <Route path="/dev/pre-simulation" element={<PreSimulation />} />
+                        <Route path="/dev/environment-check" element={<EnvironmentCheckPage />} />
+                    </>
                 )}
                 <Route path="/profile" element={<ProfilePage />} />
 
