@@ -57,12 +57,15 @@ export const useSimulationRunStore = create<SimulationRunState>()(
             },
 
             setAnswer: (taskId, answer) =>
-                set((state) => ({
-                    answers: {
-                        ...state.answers,
-                        [taskId]: { selectedOptionIndex: null, textResponse: "", ...state.answers[taskId], ...answer },
-                    },
-                })),
+                set((state) => {
+                    const existing = state.answers[taskId] ?? { selectedOptionIndex: null, textResponse: "" };
+                    return {
+                        answers: {
+                            ...state.answers,
+                            [taskId]: { ...existing, ...answer },
+                        },
+                    };
+                }),
 
             advanceTask: () => set((state) => ({ currentTaskIndex: state.currentTaskIndex + 1 })),
 
