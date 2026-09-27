@@ -48,12 +48,14 @@ export default function PreSimulation() {
         );
     }
 
+    // Destructure after the null guard above so TypeScript carries the narrowing
+    // through the hook call below — avoids the "possibly undefined" build error.
+    const { id: jobId_ } = job;
     const { data: simulation, isLoading: isSimulationLoading } = useJobSimulation(job);
 
     async function handleBegin() {
-
         await requestFullscreen(); //fires synchronously
-        navigate(`/job-board/${job.id}/environment-check`);
+        navigate(`/job-board/${jobId_}/environment-check`);
     }
 
     if (isSimulationLoading || !simulation) {

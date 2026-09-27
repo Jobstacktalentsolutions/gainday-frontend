@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 // import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { CloudUpload, Timer } from "lucide-react";
-
 import { ActionButton } from "@/components/ui/ActionButton";
 import { useJobDetails } from "../hooks/useJobDetails";
 import { useJobSimulation } from "../hooks/useJobSimulation";
