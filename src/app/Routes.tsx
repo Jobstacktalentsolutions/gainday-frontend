@@ -22,6 +22,7 @@ const SignInPage = lazy(() => import("@/features/auth/pages/SignIn"))
 const ForgotPassword = lazy(() => import("@/features/auth/pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("@/features/auth/pages/ResetPassword"));
 const VerifyEmail = lazy(() => import("@/features/auth/pages/VerifyEmail"));
+const LegacyVerifyEmailRedirect = lazy(() => import("@/features/auth/pages/LegacyVerifyEmailRedirect"));
 const OAuthCallback = lazy(() => import("@/features/auth/pages/OAuthCallback"));
 const EmployerJobs = lazy(() => import("@/features/employer/pages/EmployerJobs"))
 const EmployerDashboard = lazy(() => import("@/features/employer/pages/EmployerDashboard"));
@@ -45,6 +46,7 @@ const CandidateVerifyEmail = lazy(() => import("@/features/candidate/pages/Candi
 const CandidateOAuthCallback = lazy(() => import("@/features/candidate/pages/CandidateOAuthCallback"));
 const PreSimulation = lazy(() => import("@/features/candidate/pages/PreSimulation"));
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
+const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const EnvironmentCheckPage = lazy(() => import("@/features/candidate/pages/EnvironmentCheckPage"));
 const TaskRunner = lazy(() => import("@/features/candidate/pages/TaskRunner"));
 
@@ -63,6 +65,7 @@ const AppRoutes = () => {
                     <Route path="generation-reviews" element={<GenerationReviews />} />
                 </Route>
                 <Route path="/landing" element={<LandingPage />} />
+                <Route path="/auth/verify-email" element={<LegacyVerifyEmailRedirect />} />
                 <Route path="/employer">
                     <Route path="signup" element={<CreateAccount />} />
                     <Route path="signin" element={<SignInPage />} />
@@ -113,6 +116,7 @@ const AppRoutes = () => {
                     <Route path="profile" element={<ProfilePage />} />
                 </Route>
 
+                <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </Suspense>
 
