@@ -35,10 +35,6 @@ interface BackendJobWithSimulation {
 
 const POSTED_STATUSES: JobStatus[] = ["ACTIVE", "SHORTLIST_READY", "INACTIVE", "TERMINATED"];
 
-// job.role (FINANCE/SALES) is the category source — it's set at job creation and always
-// available, unlike job_extractions.category which only exists once generation has run.
-const CATEGORY_LABELS: Record<JobRole, string> = { FINANCE: "Finance", SALES: "Sales" };
-
 const formatSalary = (range: BackendSalaryRange | null): string => {
     if (!range || (range.min == null && range.max == null)) return "Not disclosed";
     const format = (amount: number) =>
@@ -74,7 +70,7 @@ const toJobPreviewDetails = (
     postedAt: POSTED_STATUSES.includes(job.status) ? job.updatedAt : null,
     shareUrl: `${window.location.origin}/jobs/${job.id}`,
     description: job.description ?? "",
-    category: job.role ? CATEGORY_LABELS[job.role] : "Not set",
+    category: job.role ?? "Not set",
     salary: formatSalary(job.salaryRange),
     deadline: formatDeadline(job.applicationDeadline),
     isRemoteFriendly: job.isRemoteFriendly,

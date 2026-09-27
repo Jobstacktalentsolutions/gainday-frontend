@@ -60,13 +60,3 @@ const ProceduralSequencingAnswer = ({ component, response, onChange }: Props) =>
 };
 
 export default ProceduralSequencingAnswer;
-
-export function describeProceduralSequencing(
-    component: ProceduralSequencingCandidateComponent,
-    response: number[] | null,
-): string {
-    // No response yet == the candidate never touched the ordering — reporting the
-    // as-presented order as their "answer" would credit/penalize a choice they never made.
-    if (!response) return "";
-    return response.map((stepIndex, position) => `${position + 1}. ${component.steps[stepIndex]}`).join("\n");
-}

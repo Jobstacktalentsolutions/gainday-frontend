@@ -39,7 +39,7 @@ function StatusBadge({ status, readyLabel }: { status: CheckStatus; readyLabel: 
 export default function EnvironmentCheckPage() {
     const { jobId } = useParams<{ jobId: string }>();
     const navigate = useNavigate();
-    const addFlag = useSimulationIntegrityStore((state) => state.addFlag);
+    const recordViolation = useSimulationIntegrityStore((state) => state.recordViolation);
     const setSubmissionId = useSimulationRunStore((state) => state.setSubmissionId);
 
     const { job } = useJobDetails(jobId);
@@ -48,7 +48,7 @@ export default function EnvironmentCheckPage() {
     const fullscreenCheck = useFullscreenCheck();
     const connectionCheck = useConnectionCheck();
     const tabGuard = useTabVisibilityGuard({
-        onViolation: (reason) => addFlag(`pre-simulation-${reason}`),
+        onViolation: (reason) => recordViolation(`pre-simulation-${reason}`),
     });
 
     const [fullscreenStatus, setFullscreenStatus] = useState<CheckStatus>("checking");

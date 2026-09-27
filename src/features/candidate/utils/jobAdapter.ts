@@ -1,17 +1,15 @@
 import type { JobBoardListing, JobSalaryRange, JobStatus } from "../types/jobBoard";
 
-// job.role (FINANCE/SALES) is the only category source the backend currently supports —
-// set at job creation and always available. Mirrors the same mapping the employer side
-// uses in features/employer/hooks/useJobPreview.ts.
-type BackendJobRole = "FINANCE" | "SALES";
-const ROLE_CATEGORY_LABELS: Record<BackendJobRole, string> = { FINANCE: "Finance", SALES: "Sales" };
-
 export interface BackendJob {
     id: string;
     title: string | null;
     description: string | null;
     requiredSkills: string[];
-    role: BackendJobRole | null;
+    // Free text, not an enum — a built-in preset (Finance, Sales) or an employer-typed custom
+    // role. The AI generation pipeline supports any role (a generic fallback module handles
+    // ones with no purpose-built module — see backend's RoleRegistry.resolve), so the job board
+    // shows it as-is rather than mapping it through a fixed label set.
+    role: string | null;
     location: string | null;
     employmentType: string | null;
     salaryRange: JobSalaryRange | null;
@@ -30,7 +28,7 @@ export function toJobBoardListing(job: BackendJob): JobBoardListing {
         title: job.title ?? "Untitled role",
         description: job.description ?? "",
         requiredSkills: job.requiredSkills,
-        roleCategory: job.role ? ROLE_CATEGORY_LABELS[job.role] : "General",
+        roleCategory: job.role ?? "General",
         location: job.location ?? "Not set",
         employmentType: job.employmentType ?? "Not set",
         salaryRange: job.salaryRange ?? { min: null, max: null, currency: "USD" },

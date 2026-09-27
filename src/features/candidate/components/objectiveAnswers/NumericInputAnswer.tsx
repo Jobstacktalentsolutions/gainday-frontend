@@ -27,8 +27,3 @@ const NumericInputAnswer = ({ component, response, onChange }: Props) => (
 );
 
 export default NumericInputAnswer;
-
-export function describeNumericInput(component: NumericInputCandidateComponent, response: number | null): string {
-    if (response === null || Number.isNaN(response)) return "";
-    return `Answer: ${response}${component.unit ? ` ${component.unit}` : ""}`;
-}

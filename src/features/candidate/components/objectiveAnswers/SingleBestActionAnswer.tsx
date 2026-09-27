@@ -34,12 +34,3 @@ const SingleBestActionAnswer = ({ component, response, onChange }: Props) => (
 );
 
 export default SingleBestActionAnswer;
-
-export function describeSingleBestAction(
-    component: SingleBestActionCandidateComponent,
-    response: number | null,
-): string {
-    if (response === null) return "";
-    const letter = String.fromCharCode(65 + response);
-    return `Selected option ${letter}: ${component.options[response]}`;
-}

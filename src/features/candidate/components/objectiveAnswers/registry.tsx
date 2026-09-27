@@ -1,10 +1,15 @@
-import SingleBestActionAnswer, { describeSingleBestAction } from "./SingleBestActionAnswer";
-import MultiSelectUnderConstraintAnswer, {
+import SingleBestActionAnswer from "./SingleBestActionAnswer";
+import MultiSelectUnderConstraintAnswer from "./MultiSelectUnderConstraintAnswer";
+import NumericInputAnswer from "./NumericInputAnswer";
+import ClassificationAnswer from "./ClassificationAnswer";
+import ProceduralSequencingAnswer from "./ProceduralSequencingAnswer";
+import {
+    describeSingleBestAction,
     describeMultiSelectUnderConstraint,
-} from "./MultiSelectUnderConstraintAnswer";
-import NumericInputAnswer, { describeNumericInput } from "./NumericInputAnswer";
-import ClassificationAnswer, { describeClassification } from "./ClassificationAnswer";
-import ProceduralSequencingAnswer, { describeProceduralSequencing } from "./ProceduralSequencingAnswer";
+    describeNumericInput,
+    describeClassification,
+    describeProceduralSequencing,
+} from "./describeAnswers";
 import type { CandidateObjectiveComponent, ObjectiveComponentType } from "../../types/simulation";
 
 export interface ObjectiveAnswerProps {

@@ -38,13 +38,3 @@ const ClassificationAnswer = ({ component, response, onChange }: Props) => {
 };
 
 export default ClassificationAnswer;
-
-export function describeClassification(
-    _component: ClassificationCandidateComponent,
-    response: Record<string, string> | null,
-): string {
-    if (!response || Object.keys(response).length === 0) return "";
-    return Object.entries(response)
-        .map(([item, bucket]) => `${item} → ${bucket}`)
-        .join("; ");
-}

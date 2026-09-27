@@ -59,7 +59,20 @@ export default function PreSimulation() {
         );
     }
 
+
+    if (!simulation) {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-neutral-50 text-neutral-700">
+                <PublicNavbar />
+                <main>
+                    This job doesn't have a simulation ready yet.
+                </main>
+            </div>
+        );
+    }
+
     const jobIdForNav = job.id;
+
     async function handleBegin() {
         await requestFullscreen(); //fires synchronously
         navigate(`/job-board/${jobIdForNav}/environment-check`);
