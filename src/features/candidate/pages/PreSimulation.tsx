@@ -59,6 +59,7 @@ export default function PreSimulation() {
         );
     }
 
+
     if (!simulation) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-neutral-50 text-neutral-700">
@@ -71,6 +72,7 @@ export default function PreSimulation() {
     }
 
     const jobIdForNav = job.id;
+
     async function handleBegin() {
         await requestFullscreen(); //fires synchronously
         navigate(`/job-board/${jobIdForNav}/environment-check`);

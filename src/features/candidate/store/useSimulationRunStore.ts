@@ -69,11 +69,16 @@ export const useSimulationRunStore = create<SimulationRunState>()(
                 // idempotent — a remount/refresh for the same active session must not
                 // reset the timer or wipe progress. But a completed run must always
                 // restart — otherwise persisted isComplete:true blocks the new session.
+                // Also restart if the stored endTimestamp is already in the past: that
+                // means the previous session expired and was never properly cleaned up
+                // (e.g. the tab was closed before markComplete ran), so treat it as a
+                // fresh run rather than resuming a dead timer.
                 if (
                     !state.isComplete &&
                     state.jobId === jobId &&
                     state.simulationId === simulationId &&
-                    state.endTimestamp !== null
+                    state.endTimestamp !== null &&
+                    state.endTimestamp > Date.now()
                 ) return;
                 set({
                     jobId,
@@ -91,12 +96,15 @@ export const useSimulationRunStore = create<SimulationRunState>()(
             setSubmissionId: (submissionId) => set({ submissionId }),
 
             setAnswer: (taskId, answer) =>
-                set((state) => ({
-                    answers: {
-                        ...state.answers,
-                        [taskId]: { ...(state.answers[taskId] ?? { objectiveResponse: null, textResponse: "" }), ...answer },
-                    },
-                })),
+                set((state) => {
+                    const existing = state.answers[taskId] ?? { objectiveResponse: null, textResponse: "" };
+                    return {
+                        answers: {
+                            ...state.answers,
+                            [taskId]: { ...existing, ...answer },
+                        },
+                    };
+                }),
 
             advanceTask: (taskId) =>
                 set((state) => ({
