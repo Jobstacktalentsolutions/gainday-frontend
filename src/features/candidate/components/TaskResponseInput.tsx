@@ -1,5 +1,7 @@
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { InterfaceType } from "@/features/simulation-tasks/types";
-import type { SimulationTask } from "@/features/simulation-tasks/types";
+import type { SimulationTask, TextAreaPayload } from "@/features/simulation-tasks/types";
 
 interface TaskResponseInputProps {
     task: SimulationTask;
@@ -26,18 +28,24 @@ export function TaskResponseInput({ task, value, onChange }: TaskResponseInputPr
     }
 
     const wordCount = countWords(value);
+    // interfacePayload's `placeholder` is task-specific and generated per role/scenario —
+    // never a hardcoded example from one particular task (see interface-type.ts).
+    const placeholder = (task.interfacePayload as unknown as TextAreaPayload | undefined)?.placeholder
+        ?? "Type your response here...";
 
     return (
         <div className="flex w-full flex-col gap-1.5">
             <div className="flex w-full items-center justify-between text-[16px]">
-                <span className="text-neutral-950">{task.questionPrompt}</span>
-                
-                <span className="text-neutral-600">Minimum {MIN_WORDS} words</span>
+                <div className="prose prose-sm max-w-none text-neutral-950 prose-p:my-0">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown>
+                </div>
+
+                <span className="shrink-0 text-neutral-600">Minimum {MIN_WORDS} words</span>
             </div>
             <textarea
                 value={value}
                 onChange={(event) => onChange(event.target.value.slice(0, MAX_CHARS))}
-                placeholder="List each field that does not agree, the correct value, and who must amend the record..."
+                placeholder={placeholder}
                 className="h-38.25 w-full resize-none rounded-lg border border-neutral-200 px-3.5 py-2.5 text-[16px] text-neutral-700 shadow-[0px_1px_1px_rgba(10,13,18,0.05)] outline-none placeholder:text-neutral-400 focus:border-primary-500"
             />
             <div className="flex w-full items-center justify-between text-[16px] text-neutral-950">

@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
-import { MOCK_JOBS } from "../mocks/mockJobs"
+import { useQuery } from "@tanstack/react-query";
+import { apiClient } from "@/lib/api/client";
+import { toJobBoardListing, type BackendJob } from "../utils/jobAdapter";
 import {
     DEFAULT_JOB_BOARD_FILTERS,
     SALARY_BUCKETS,
@@ -8,28 +10,15 @@ import {
     type JobBoardListing,
 } from "../types/jobBoard"
 
+// GET /jobs already only returns ACTIVE jobs server-side (JobsService.findAllActive).
+const fetchJobBoard = async (): Promise<JobBoardListing[]> => {
+    const { data } = await apiClient.get<BackendJob[]>("/jobs");
+    return data.map(toJobBoardListing);
+};
 
-
-
-
-/**
- * TODO: replace with a real fetch hook once the public job board endpoint
- * exists, e.g.:
- *
- *   const { data, isLoading } = useQuery({
- *     queryKey: ["job-board"],
- *     queryFn: fetchPublicJobBoard,
- *   });
- *
- * The endpoint is expected to only return ACTIVE jobs and to denormalize
- * `employer.companyName` onto each job (see JobBoardListing). If it instead
- * returns every status or a bare `employerId`, this hook's filtering below
- * and the JobBoardEmployer assumption in job-board.types.ts both need updating.
- */
 function useJobBoardData(): { jobs: JobBoardListing[]; isLoading: boolean } {
-    const jobs = useMemo(() => MOCK_JOBS.filter((job) => job.status === "ACTIVE"), []);
-    return { jobs, isLoading: false };
-
+    const query = useQuery({ queryKey: ["candidate", "job-board"], queryFn: fetchJobBoard });
+    return { jobs: query.data ?? [], isLoading: query.isLoading };
 }
 
 function getUniqueOptions(
@@ -66,7 +55,8 @@ export function useJobBoardFilters() {
                 !filters.employmentType || job.employmentType === filters.employmentType;
             const matchesSalary =
                 !salaryBucket ||
-                (job.salaryRange.min < salaryBucket.max && job.salaryRange.max > salaryBucket.min);
+                ((job.salaryRange.min ?? 0) < salaryBucket.max &&
+                    (job.salaryRange.max ?? Infinity) > salaryBucket.min);
 
             return matchesSearch && matchesRole && matchesLocation && matchesEmploymentType && matchesSalary;
         });

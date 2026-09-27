@@ -1,12 +1,18 @@
-import { useEffect, useState } from "react";
-// import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { CloudUpload, Timer } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { type AxiosError } from "axios";
 
 import { ActionButton } from "@/components/ui/ActionButton";
+import AppLoader from "@/components/ui/AppLoader";
+import { useProtectedRoute } from "@/features/auth/hooks/useProtectedRoute";
+import type { SimulationTask } from "@/features/simulation-tasks/types";
 import { useJobDetails } from "../hooks/useJobDetails";
 import { useJobSimulation } from "../hooks/useJobSimulation";
-import { useSimulationRunStore } from "../store/useSimulationRunStore";
+import { useStartSubmission, useSubmitSimulation } from "../hooks/useSubmission";
+import { useSimulationRunStore, type TaskAnswer } from "../store/useSimulationRunStore";
 import { useSimulationTimer } from "../hooks/useSimulationTimer";
 import { useConnectionMonitor } from "../hooks/useConnectionMonitor";
 import { useAutosaveAnswer } from "../hooks/useAutosaveAnswer";
@@ -17,19 +23,55 @@ import { TaskResponseInput } from "../components/TaskResponseInput";
 import { TimeWarningBanner } from "../components/TimeWarningBanner";
 import { ConnectionBanner } from "../components/ConnectionBanner";
 import { SimulationCompleteModal } from "../components/SimulationCompleteModal";
+import type { CandidateAnswer } from "../types/submission";
 
+// The backend stores one free-text field per task (CandidateAnswer.responseBody — see
+// submissions.schema.ts), so a task's selected option and its written response are
+// collapsed into a single string here before submit.
+function buildResponseBody(task: SimulationTask, answer: TaskAnswer): string {
+    const parts: string[] = [];
 
+    if (task.objectiveComponent != null) {
+        const options = (task.objectiveComponent as { options?: string[] }).options;
+        if (Array.isArray(options) && answer.selectedOptionIndex !== null) {
+            const letter = String.fromCharCode(65 + answer.selectedOptionIndex);
+            parts.push(`Selected option ${letter}: ${options[answer.selectedOptionIndex]}`);
+        }
+    }
+
+    if (answer.textResponse.trim()) {
+        parts.push(answer.textResponse.trim());
+    }
+
+    return parts.join("\n\n");
+}
 
 export default function TaskRunner() {
     const { jobId } = useParams<{ jobId: string }>();
-    // const navigate = useNavigate();
-    const { job } = useJobDetails(jobId);
-    const { data: simulation } = useJobSimulation(job);
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const { isAuthorized, isLoadingProfile } = useProtectedRoute({
+        requiredRole: "JOB_SEEKER",
+        redirectTo: `/candidate/signin?redirect=${encodeURIComponent(location.pathname)}`,
+    });
+
+    const { job, isLoading: isJobLoading } = useJobDetails(jobId);
+    const simulationQuery = useJobSimulation(job);
+    const simulation = simulationQuery.data;
 
     const runStore = useSimulationRunStore();
     const addFlag = useSimulationIntegrityStore((state) => state.addFlag);
     const { scheduleSave, isSaving } = useAutosaveAnswer();
     const connection = useConnectionMonitor();
+
+    const startSubmission = useStartSubmission();
+    const submitSimulation = useSubmitSimulation();
+    // Guards against StrictMode's double-effect-invoke and re-renders firing a second
+    // POST — the backend creates a new Submission row on every call, it isn't idempotent.
+    const hasRequestedSubmissionRef = useRef(false);
+    // Guards the last-task button and the timer-expiry effect from both firing submit.
+    const hasFinalizedRef = useRef(false);
 
     const { arm } = useTabVisibilityGuard({
         onViolation: (reason) => addFlag(`task-${runStore.currentTaskIndex}-${reason}`),
@@ -44,21 +86,79 @@ export default function TaskRunner() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [job?.id, simulation?.id]);
 
+    // Creates the Submission row for this run once job + simulation are known. Skipped
+    // once the store already has a submissionId (a resumed/persisted run).
+    useEffect(() => {
+        if (!job || !simulation || runStore.submissionId || hasRequestedSubmissionRef.current) return;
+        hasRequestedSubmissionRef.current = true;
+        startSubmission.mutate(
+            { jobId: job.id, simulationId: simulation.id },
+            {
+                onSuccess: (submission) => runStore.setSubmissionId(submission.id),
+                onError: () => {
+                    hasRequestedSubmissionRef.current = false;
+                },
+            },
+        );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [job?.id, simulation?.id, runStore.submissionId]);
+
     const timer = useSimulationTimer(runStore.endTimestamp);
 
+    function finalizeSubmission(currentTaskId: string) {
+        if (hasFinalizedRef.current || !simulation) return;
+        hasFinalizedRef.current = true;
+        runStore.markComplete(currentTaskId);
+
+        if (!runStore.submissionId) return; // nothing to submit against — surfaced in the modal below
+        const answers: CandidateAnswer[] = simulation.tasks.map((task) => ({
+            taskId: task.id,
+            responseBody: buildResponseBody(task, runStore.answers[task.id] ?? { selectedOptionIndex: null, textResponse: "" }),
+            timeSpentSeconds: runStore.taskTimeSpentSeconds[task.id] ?? 0,
+        }));
+        submitSimulation.mutate({ submissionId: runStore.submissionId, answers });
+    }
+
     useEffect(() => {
-        if (timer.isExpired && !runStore.isComplete) runStore.markComplete();
+        if (timer.isExpired && !runStore.isComplete && simulation) {
+            const task = simulation.tasks[runStore.currentTaskIndex];
+            finalizeSubmission(task.id);
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [timer.isExpired, runStore.isComplete]);
+    }, [timer.isExpired, runStore.isComplete, simulation]);
 
-    const [connectionBannerDismissed, setConnectionBannerDismissed] = useState(false);
-    useEffect(() => {
-        if (connection.status === "lost") setConnectionBannerDismissed(false);
-    }, [connection.status]);
+    // Keyed by which status was dismissed, not a plain boolean — "lost" and "restored" are
+    // distinct values, so a fresh drop after a dismissed "restored" banner compares unequal
+    // and shows again automatically. No effect/ref needed to "reset" anything.
+    const [dismissedConnectionStatus, setDismissedConnectionStatus] = useState<typeof connection.status | null>(null);
 
-    if (!job || !simulation) {
+    if (isLoadingProfile || !isAuthorized) {
+        return <AppLoader />;
+    }
+
+    if (isJobLoading || (job && simulationQuery.isLoading)) {
+        return <AppLoader />;
+    }
+
+    if (!job) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-neutral-50 text-neutral-700">Loading...</div>
+            <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-neutral-50 text-center text-neutral-700">
+                <p className="text-lg">Job not found.</p>
+                <ActionButton variant="outline" onClick={() => navigate("/job-board")}>
+                    Back to job board
+                </ActionButton>
+            </div>
+        );
+    }
+
+    if (!simulation) {
+        return (
+            <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-neutral-50 text-center text-neutral-700">
+                <p className="text-lg">This job doesn't have a simulation ready yet.</p>
+                <ActionButton variant="outline" onClick={() => navigate(`/job-board/${job.id}`)}>
+                    Back to job details
+                </ActionButton>
+            </div>
         );
     }
 
@@ -77,25 +177,47 @@ export default function TaskRunner() {
 
     function handleNext() {
         if (isLastTask) {
-            runStore.markComplete();
+            finalizeSubmission(task.id);
             return;
         }
-        runStore.advanceTask();
+        runStore.advanceTask(task.id);
     }
 
     if (runStore.isComplete) {
-        return <SimulationCompleteModal timeLimitMinutes={simulation.timeLimitMinutes} />;
+        const submitFailed = submitSimulation.isError;
+        return (
+            <SimulationCompleteModal
+                timeLimitMinutes={simulation.timeLimitMinutes}
+                submitStatus={submitFailed ? "error" : submitSimulation.isPending ? "pending" : "done"}
+                onRetry={
+                    submitFailed && runStore.submissionId
+                        ? () => {
+                            const answers: CandidateAnswer[] = simulation.tasks.map((t) => ({
+                                taskId: t.id,
+                                responseBody: buildResponseBody(t, runStore.answers[t.id] ?? { selectedOptionIndex: null, textResponse: "" }),
+                                timeSpentSeconds: runStore.taskTimeSpentSeconds[t.id] ?? 0,
+                            }));
+                            submitSimulation.mutate({ submissionId: runStore.submissionId!, answers });
+                        }
+                        : undefined
+                }
+            />
+        );
     }
 
     const progressPercent = ((runStore.currentTaskIndex + 1) / simulation.tasks.length) * 100;
+    const submitError = submitSimulation.isError
+        ? (submitSimulation.error as AxiosError<{ message?: string }>)?.response?.data?.message
+        ?? "Couldn't submit your simulation. Check your connection and try again."
+        : null;
 
     return (
         <div className="min-h-screen w-full bg-neutral-50">
             {timer.isWarning && <TimeWarningBanner />}
-            {!timer.isWarning && connection.status !== "online" && !(connection.status === "restored" && connectionBannerDismissed) && (
+            {!timer.isWarning && connection.status !== "online" && connection.status !== dismissedConnectionStatus && (
                 <ConnectionBanner
                     status={connection.status as "lost" | "restored"}
-                    onDismiss={() => setConnectionBannerDismissed(true)}
+                    onDismiss={() => setDismissedConnectionStatus(connection.status)}
                 />
             )}
 
@@ -139,13 +261,17 @@ export default function TaskRunner() {
 
                     <div className="flex flex-col gap-1">
                         <h1 className="text-[40px] leading-12 tracking-[-0.4px] text-primary-950">{task.title}</h1>
-                        <p className="text-[16px] text-neutral-700">{task.scenarioDescription}</p>
+                        <div className="prose prose-sm max-w-none text-neutral-700 prose-p:my-1">
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.scenarioDescription}</ReactMarkdown>
+                        </div>
                     </div>
 
                     <div className="flex w-full flex-col gap-6">
                         <div className="rounded-xl border-l-[3px] border-primary-500 bg-primary-50 p-4">
                             <p className="mb-2 text-[10px] text-primary-500">SCENARIO</p>
-                            <p className="text-[16px] text-neutral-700">{task.scenarioDescription}</p>
+                            <div className="prose prose-sm max-w-none text-neutral-700 prose-p:my-1">
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.scenarioDescription}</ReactMarkdown>
+                            </div>
                         </div>
                         <TaskObjectiveOptions
                             task={task}
@@ -160,22 +286,34 @@ export default function TaskRunner() {
                         />
                     </div>
 
+                    {submitError && (
+                        <p role="alert" className="text-center text-sm text-error-600">
+                            {submitError}
+                        </p>
+                    )}
+
                     <div className="h-px w-full bg-neutral-200" />
 
-                    <div className="flex w-full items-center justify-between opacity-70">
+                    <div className="flex w-full items-center justify-between">
                         {/* Previous Task is permanently disabled — forward-only, per your call */}
-                        <ActionButton variant="outline" size="md" disabled>
+                        <ActionButton variant="outline" size="md" disabled className="opacity-70">
                             Previous Task
                         </ActionButton>
-                        <ActionButton variant="primary" size="md" onClick={handleNext}>
-                            {isLastTask ? "Submit Simulation" : "Next Task"}
+                        <ActionButton
+                            variant="primary"
+                            size="md"
+                            onClick={handleNext}
+                            disabled={isLastTask && submitSimulation.isPending}
+                        >
+                            {isLastTask
+                                ? submitSimulation.isPending
+                                    ? "Submitting..."
+                                    : "Submit Simulation"
+                                : "Next Task"}
                         </ActionButton>
                     </div>
                 </div>
             </main>
         </div>
     );
-
-
-
 }

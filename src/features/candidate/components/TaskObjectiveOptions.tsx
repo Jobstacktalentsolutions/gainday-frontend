@@ -6,13 +6,19 @@ interface TaskObjectiveOptionsProps {
     onSelect: (index: number) => void;
 }
 
-// Only SINGLE_BEST_ACTION (an { options: string[]; correctOptionIndex }
-// shape) is designed in Figma. Everything else — NUMERIC_INPUT,
-// CLASSIFICATION, PROCEDURAL_SEQUENCING, MULTI_SELECT_UNDER_CONSTRAINT —
-// falls back to a placeholder, per your call (4a).
+// objectiveComponent is genuinely optional (task-generation.schema.ts emits an explicit
+// `null` for task types with no objective/multiple-choice part) — that's a normal task
+// shape, not an unsupported one, so it renders nothing here rather than a placeholder.
+//
+// Only SINGLE_BEST_ACTION (an { options: string[]; correctOptionIndex } shape) is designed
+// in Figma. Everything else that DOES have an objectiveComponent — NUMERIC_INPUT,
+// CLASSIFICATION, PROCEDURAL_SEQUENCING, MULTI_SELECT_UNDER_CONSTRAINT — falls back to a
+// placeholder, per your call (4a).
 export function TaskObjectiveOptions({ task, selectedIndex, onSelect }: TaskObjectiveOptionsProps) {
-    const component = task.objectiveComponent as { options?: string[] } | undefined;
-    const options = component?.options;
+    if (task.objectiveComponent == null) return null;
+
+    const component = task.objectiveComponent as { options?: string[] };
+    const options = component.options;
 
     if (!Array.isArray(options)) {
         return (

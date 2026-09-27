@@ -1,8 +1,15 @@
-export type JobStatus = | "DRAFT" | "GENERATING" | "ACTIVE" | "UNDER_REVIEW" | "SHORTLIST_READY" | "CLOSED" | "GENERATION_FAILED";
+export type JobStatus =
+    | "DRAFT"
+    | "GENERATING"
+    | "ACTIVE"
+    | "INACTIVE"
+    | "SHORTLIST_READY"
+    | "GENERATION_FAILED"
+    | "TERMINATED";
 
 export interface JobSalaryRange {
-    min: number;
-    max: number;
+    min: number | null;
+    max: number | null;
     currency: string;
 }
 
@@ -19,7 +26,7 @@ export interface JobBoardListing {
     location: string;
     employmentType: string;
     salaryRange: JobSalaryRange;
-    applicationDeadline: string;
+    applicationDeadline: string | null;
     businessProblem: string;
     status: JobStatus;
     employerId: string;

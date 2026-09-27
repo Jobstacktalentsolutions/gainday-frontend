@@ -1,11 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import { ActionButton } from "@/components/ui/ActionButton";
+import spinner from "@/assets/Spinner.svg";
 
 interface SimulationCompleteModalProps {
     timeLimitMinutes: number;
+    /** "pending" while the final PUT /submissions/:id/submit is in flight, "error" if it
+     *  failed (answers are still safe locally — see useSimulationRunStore's persist), "done"
+     *  once it succeeded. */
+    submitStatus: "pending" | "error" | "done";
+    onRetry?: () => void;
 }
 
-export function SimulationCompleteModal({ timeLimitMinutes }: SimulationCompleteModalProps) {
+export function SimulationCompleteModal({ timeLimitMinutes, submitStatus, onRetry }: SimulationCompleteModalProps) {
     const navigate = useNavigate();
 
     return (
@@ -15,14 +21,36 @@ export function SimulationCompleteModal({ timeLimitMinutes }: SimulationComplete
                     <h2 className="text-[32px] leading-9.5 tracking-[-0.32px] text-primary-950">
                         Your simulation is complete
                     </h2>
-                    <p className="text-[16px] text-neutral-700">
-                        Your {timeLimitMinutes}-minute allocation ended. All saved answers are now locked and have been
-                        submitted for evaluation.
-                    </p>
+                    {submitStatus === "error" ? (
+                        <p role="alert" className="text-[16px] text-error-600">
+                            Your {timeLimitMinutes}-minute allocation ended and your answers are saved on this device,
+                            but we couldn't reach Gainday to submit them for evaluation. Please retry before closing this
+                            tab.
+                        </p>
+                    ) : (
+                        <p className="text-[16px] text-neutral-700">
+                            Your {timeLimitMinutes}-minute allocation ended. All saved answers are now locked and{" "}
+                            {submitStatus === "pending" ? "are being submitted for evaluation." : "have been submitted for evaluation."}
+                        </p>
+                    )}
                 </div>
-                <ActionButton variant="primary" size="lg" onClick={() => navigate("/job-board")}>
-                    Return to job board
-                </ActionButton>
+                {submitStatus === "error" && onRetry ? (
+                    <ActionButton variant="primary" size="lg" onClick={onRetry}>
+                        Retry submission
+                    </ActionButton>
+                ) : (
+                    <ActionButton
+                        variant="primary"
+                        size="lg"
+                        disabled={submitStatus === "pending"}
+                        onClick={() => navigate("/job-board")}
+                    >
+                        {submitStatus === "pending" && (
+                            <img src={spinner} alt="" className="h-4 w-4 animate-spin" />
+                        )}
+                        Return to job board
+                    </ActionButton>
+                )}
             </div>
         </div>
     );

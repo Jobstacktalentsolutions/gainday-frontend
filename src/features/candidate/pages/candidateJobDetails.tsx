@@ -13,8 +13,17 @@ export default function JobDetailsPage() {
 
     const { jobId } = useParams<{ jobId: string }>();
     const navigate = useNavigate();
-    const { job } = useJobDetails(jobId);
+    const { job, isLoading } = useJobDetails(jobId);
     const [authPromptOpen, setAuthPromptOpen] = useState(false);
+
+    if (isLoading) {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-neutral-50 text-neutral-700">
+                <PublicNavbar />
+                Loading...
+            </div>
+        )
+    }
 
     if (!job) {
         //TODO : Ask Tofunmi for a proper job not found state

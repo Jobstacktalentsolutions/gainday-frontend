@@ -32,9 +32,20 @@ const CHECKS = [
 export default function PreSimulation() {
     const { jobId } = useParams<{ jobId: string }>();
     const navigate = useNavigate();
-    const { job } = useJobDetails(jobId);
+    const { job, isLoading: isJobLoading } = useJobDetails(jobId);
     const [consented, setConsented] = useState(false);
     const { requestFullscreen } = useFullscreenCheck();
+
+    const { data: simulation, isLoading: isSimulationLoading } = useJobSimulation(job);
+
+    if (isJobLoading || (job && isSimulationLoading)) {
+        return (
+            <div className="min-h-screen w-full bg-neutral-50">
+                <PublicNavbar />
+                <main className="flex min-h-[60vh] items-center justify-center text-neutral-700">Loading...</main>
+            </div>
+        )
+    }
 
     if (!job) {
         // TODO: proper "job not found" state, same open item as JobDetailsPage
@@ -48,21 +59,21 @@ export default function PreSimulation() {
         );
     }
 
-    const { data: simulation, isLoading: isSimulationLoading } = useJobSimulation(job);
-
-    async function handleBegin() {
-
-        await requestFullscreen(); //fires synchronously
-        navigate(`/job-board/${job.id}/environment-check`);
+    if (!simulation) {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-neutral-50 text-neutral-700">
+                <PublicNavbar />
+                <main>
+                    This job doesn't have a simulation ready yet.
+                </main>
+            </div>
+        );
     }
 
-    if (isSimulationLoading || !simulation) {
-        return (
-            <div className="min-h-screen w-full bg-neutral-50">
-                <PublicNavbar />
-                <main className="flex min-h-[60vh] items-center justify-center text-neutral-700">Loading...</main>
-            </div>
-        )
+    const jobIdForNav = job.id;
+    async function handleBegin() {
+        await requestFullscreen(); //fires synchronously
+        navigate(`/job-board/${jobIdForNav}/environment-check`);
     }
 
     return (

@@ -3,10 +3,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Sparkles, Maximize, Wifi, MonitorCheck, Check, X, Loader2 } from "lucide-react";
 import { PublicNavbar } from "../components/PublicNavbar";
 import { ActionButton } from "@/components/ui/ActionButton";
+import { apiClient } from "@/lib/api/client";
 import { useFullscreenCheck } from "../hooks/useFullscreenCheck";
 import { useConnectionCheck } from "../hooks/useConnectionCheck";
 import { useTabVisibilityGuard } from "../hooks/useTabVisibilityGuard";
 import { useSimulationIntegrityStore } from "../hooks/useSimulationIntegrityStore";
+import { useJobDetails } from "../hooks/useJobDetails";
+import { useJobSimulation } from "../hooks/useJobSimulation";
+import { useSimulationRunStore } from "../store/useSimulationRunStore";
 
 type CheckStatus = "checking" | "ready" | "failed";
 
@@ -36,6 +40,10 @@ export default function EnvironmentCheckPage() {
     const { jobId } = useParams<{ jobId: string }>();
     const navigate = useNavigate();
     const addFlag = useSimulationIntegrityStore((state) => state.addFlag);
+    const setSubmissionId = useSimulationRunStore((state) => state.setSubmissionId);
+
+    const { job } = useJobDetails(jobId);
+    const { data: simulation } = useJobSimulation(job);
 
     const fullscreenCheck = useFullscreenCheck();
     const connectionCheck = useConnectionCheck();
@@ -44,6 +52,8 @@ export default function EnvironmentCheckPage() {
     });
 
     const [fullscreenStatus, setFullscreenStatus] = useState<CheckStatus>("checking");
+    const [isStarting, setIsStarting] = useState(false);
+    const [startError, setStartError] = useState<string | null>(null);
 
     useEffect(() => {
         // Fullscreen was already requested on Pre-Simulation's click — this just
@@ -58,11 +68,26 @@ export default function EnvironmentCheckPage() {
     }, []);
 
     const allReady =
-        fullscreenStatus === "ready" && connectionCheck.status === "secure" && tabGuard.status === "armed";
+        fullscreenStatus === "ready" &&
+        connectionCheck.status === "secure" &&
+        tabGuard.status === "armed" &&
+        Boolean(simulation);
 
-    function handleBegin() {
-        // TODO: task runner isn't built yet — stub only
-        navigate(`/job-board/${jobId}/simulation`);
+    async function handleBegin() {
+        if (!jobId || !simulation) return;
+        setStartError(null);
+        setIsStarting(true);
+        try {
+            const { data: submission } = await apiClient.post<{ id: string }>(
+                `/submissions/job/${jobId}/start`,
+                { simulationId: simulation.id },
+            );
+            setSubmissionId(submission.id);
+            navigate(`/job-board/${jobId}/simulation`);
+        } catch {
+            setStartError("Couldn't start your simulation attempt. Please try again.");
+            setIsStarting(false);
+        }
     }
 
     return (
@@ -140,8 +165,10 @@ export default function EnvironmentCheckPage() {
                             stability.
                         </p>
 
-                        <ActionButton variant="primary" size="lg" disabled={!allReady} onClick={handleBegin}>
-                            Begin Simulation
+                        {startError && <p className="text-[14px] text-error-500">{startError}</p>}
+
+                        <ActionButton variant="primary" size="lg" disabled={!allReady || isStarting} onClick={handleBegin}>
+                            {isStarting ? "Starting..." : "Begin Simulation"}
                         </ActionButton>
                     </div>
                 </div>
