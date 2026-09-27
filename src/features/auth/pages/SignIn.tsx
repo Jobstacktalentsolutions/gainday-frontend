@@ -38,7 +38,7 @@ const SignIn = () => {
             if (!res.data.isEmailVerified) {
                 navigate("/employer/verify-email")
             } else {
-                navigate("/employer/dashboard")
+                navigate("/employer/jobs")
             }
         }
     })

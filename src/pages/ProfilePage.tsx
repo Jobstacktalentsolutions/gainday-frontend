@@ -8,7 +8,7 @@ const ProfilePage = () => {
   const navigate = useNavigate();
 
   const getDashboardPath = () => {
-    if (user?.role === "EMPLOYER") return "/employer/dashboard";
+    if (user?.role === "EMPLOYER") return "/employer/jobs";
     if (user?.role === "CANDIDATE") return "/job-board";
     return "/";
   };

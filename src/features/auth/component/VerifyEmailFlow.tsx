@@ -25,7 +25,7 @@ const ROLE_CONFIG: Record<
   },
   employer: {
     basePath: "/employer",
-    homePath: "/employer/dashboard",
+    homePath: "/employer/jobs",
     homeLabel: "Go to dashboard",
     verifiedCopy: "Your account is fully activated and you can start posting jobs.",
   },
