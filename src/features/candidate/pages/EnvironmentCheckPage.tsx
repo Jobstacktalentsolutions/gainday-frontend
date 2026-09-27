@@ -48,7 +48,8 @@ export default function EnvironmentCheckPage() {
     const fullscreenCheck = useFullscreenCheck();
     const connectionCheck = useConnectionCheck();
     const tabGuard = useTabVisibilityGuard({
-        onViolation: (reason) => recordViolation(`pre-simulation-${reason}`),
+        // No task/submission exists yet at this point in the flow, hence taskId: null.
+        onViolation: (reason) => recordViolation(`pre-simulation-${reason}`, null),
     });
 
     const [fullscreenStatus, setFullscreenStatus] = useState<CheckStatus>("checking");

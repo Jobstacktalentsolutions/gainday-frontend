@@ -20,7 +20,7 @@ import { useAutosaveAnswer } from "../hooks/useAutosaveAnswer";
 import { useTabVisibilityGuard } from "../hooks/useTabVisibilityGuard";
 import { useFullscreenGuard } from "../hooks/useFullscreenGuard";
 import { useIdleDetection } from "../hooks/useIdleDetection";
-import { useSimulationIntegrityStore, formatViolationFlags } from "../hooks/useSimulationIntegrityStore";
+import { useSimulationIntegrityStore } from "../hooks/useSimulationIntegrityStore";
 import { TaskObjectiveOptions } from "../components/TaskObjectiveOptions";
 import { TaskResponseInput } from "../components/TaskResponseInput";
 import { TimeWarningBanner } from "../components/TimeWarningBanner";
@@ -73,6 +73,16 @@ export default function TaskRunner() {
     const simulation = simulationQuery.data;
 
     const runStore = useSimulationRunStore();
+    // Which task was on screen when a proctoring event fires — read via ref (not the `task`
+    // variable computed further down, after the early-return loading/error checks) since the
+    // guards below are wired up unconditionally near the top of the component, before that
+    // variable exists. Kept current by the effect right after.
+    const currentTask = simulation?.tasks[runStore.currentTaskIndex];
+    const currentTaskIdRef = useRef<string | null>(null);
+    useEffect(() => {
+        currentTaskIdRef.current = currentTask?.id ?? null;
+    }, [currentTask?.id]);
+
     const recordViolation = useSimulationIntegrityStore((state) => state.recordViolation);
     const recordIdleSpell = useSimulationIntegrityStore((state) => state.recordIdleSpell);
     const { scheduleSave, isSaving } = useAutosaveAnswer();
@@ -87,15 +97,18 @@ export default function TaskRunner() {
     const hasFinalizedRef = useRef(false);
 
     const { arm } = useTabVisibilityGuard({
-        onViolation: (reason) => recordViolation(reason),
+        onViolation: (reason) => recordViolation(reason, currentTaskIdRef.current),
     });
     useEffect(() => {
         arm(); // arm after mount — calling arm() during render triggers setStatus → infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useFullscreenGuard({ onExit: () => recordViolation("fullscreen-exit") });
-    const idle = useIdleDetection({ thresholdMs: IDLE_THRESHOLD_MS, onIdleSpell: recordIdleSpell });
+    useFullscreenGuard({ onExit: () => recordViolation("fullscreen-exit", currentTaskIdRef.current) });
+    const idle = useIdleDetection({
+        thresholdMs: IDLE_THRESHOLD_MS,
+        onIdleSpell: (durationMs) => recordIdleSpell(durationMs, currentTaskIdRef.current),
+    });
 
     useEffect(() => {
         if (job && simulation) runStore.startRun(job.id, simulation.id, simulation.timeLimitMinutes);
@@ -131,7 +144,10 @@ export default function TaskRunner() {
         // useIdleDetection's flush contract. Read fresh state via getState() right after,
         // rather than a render-time selector, so this flush's own update isn't missed.
         idle.flush();
-        const antiCheatFlags = formatViolationFlags(useSimulationIntegrityStore.getState());
+        // Read fresh state via getState() rather than a render-time selector, so the spell
+        // flush() may have just recorded isn't missed (React state from a hook selector
+        // wouldn't reflect it until next render, but getState() is always current).
+        const antiCheatFlags = useSimulationIntegrityStore.getState().events;
 
         if (!runStore.submissionId) return; // nothing to submit against — surfaced in the modal below
         const answers: CandidateAnswer[] = simulation.tasks.map((task) => ({
@@ -223,7 +239,7 @@ export default function TaskRunner() {
                             submitSimulation.mutate({
                                 submissionId: runStore.submissionId!,
                                 answers,
-                                antiCheatFlags: formatViolationFlags(useSimulationIntegrityStore.getState()),
+                                antiCheatFlags: useSimulationIntegrityStore.getState().events,
                             });
                         }
                         : undefined

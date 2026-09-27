@@ -1,66 +1,59 @@
 import { create } from "zustand";
+import type { AntiCheatEvent } from "../types/submission";
+
+// Bounds the in-memory log against a pathological run (e.g. scripted rapid-fire fullscreen
+// toggling) — the backend enforces its own independent cap
+// (MAX_ANTI_CHEAT_EVENTS in submissions.service.ts), this is just the client-side half of that.
+const MAX_EVENTS = 500;
 
 interface SimulationIntegrityState {
-  /** Occurrence count per violation type (e.g. "tab-hidden": 3, "fullscreen-exit": 1) — every
-   *  occurrence increments its count, unlike an earlier deduped design that only recorded
-   *  whether a violation type happened at all, not how many times. Idle time is tracked
-   *  separately below, since a count alone loses how *long* each idle spell actually was. */
-  violationCounts: Record<string, number>;
-  recordViolation: (type: string) => void;
-  /** How many separate idle spells (each already >= the idle threshold — see
-   *  useIdleDetection) occurred, and their summed real duration. Two idle periods split by a
-   *  moment of activity count as two spells with two durations, not one merged total — see
-   *  useIdleDetection's flush/onIdleSpell contract. */
-  idleSpellCount: number;
-  idleTotalMs: number;
-  recordIdleSpell: (durationMs: number) => void;
+  /** The full per-event log for this run — replaces an earlier design that only kept an
+   *  aggregate count per violation type for the whole run, with no record of *when* each one
+   *  happened or which task was active at the time. Sent as-is (no summarizing) as
+   *  antiCheatFlags in the submit body — see submissions.schema.ts's AntiCheatEvent. */
+  events: AntiCheatEvent[];
+  recordViolation: (type: string, taskId: string | null) => void;
+  /** durationMs is the idle spell's real measured length — see useIdleDetection.ts. */
+  recordIdleSpell: (durationMs: number, taskId: string | null) => void;
   reset: () => void;
 }
 
 // Deliberately NOT persisted — a refresh mid-proctored-simulation is something the tab-
 // visibility guard and the server-side heartbeat-staleness check already surface on their own
-// terms; silently carrying counts across a fresh mount via localStorage would double up with
+// terms; silently carrying a log across a fresh mount via localStorage would double up with
 // that rather than add signal.
 export const useSimulationIntegrityStore = create<SimulationIntegrityState>((set) => ({
-  violationCounts: {},
-  recordViolation: (type) =>
+  events: [],
+
+  recordViolation: (type, taskId) =>
     set((state) => ({
-      violationCounts: { ...state.violationCounts, [type]: (state.violationCounts[type] ?? 0) + 1 },
+      events: [...state.events, { type, taskId, occurredAt: new Date().toISOString() }].slice(-MAX_EVENTS),
     })),
 
-  idleSpellCount: 0,
-  idleTotalMs: 0,
-  recordIdleSpell: (durationMs) =>
+  recordIdleSpell: (durationMs, taskId) =>
     set((state) => ({
-      idleSpellCount: state.idleSpellCount + 1,
-      idleTotalMs: state.idleTotalMs + durationMs,
+      events: [
+        ...state.events,
+        { type: "idle", taskId, occurredAt: new Date().toISOString(), durationMs },
+      ].slice(-MAX_EVENTS),
     })),
 
-  reset: () => set({ violationCounts: {}, idleSpellCount: 0, idleTotalMs: 0 }),
+  reset: () => set({ events: [] }),
 }));
 
-function formatDuration(ms: number): string {
-  const totalSeconds = Math.round(ms / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return minutes > 0 ? `${minutes}m${seconds}s` : `${seconds}s`;
-}
-
-// The wire format for CandidateAnswer's antiCheatFlags: string[] (submissions.schema.ts) — e.g.
-// ["tab-hidden ×3", "fullscreen-exit ×1", "idle ×2 (total 14m6s)"]. Kept alongside the store
-// since it's the one place that knows both the in-memory shape and what the backend expects.
-export function formatViolationFlags(state: {
-  violationCounts: Record<string, number>;
-  idleSpellCount: number;
-  idleTotalMs: number;
-}): string[] {
-  const flags = Object.entries(state.violationCounts)
-    .filter(([, count]) => count > 0)
-    .map(([type, count]) => `${type} ×${count}`);
-
-  if (state.idleSpellCount > 0) {
-    flags.push(`idle ×${state.idleSpellCount} (total ${formatDuration(state.idleTotalMs)})`);
+// A quick human-readable rollup of the event log — e.g. { "tab-hidden": { count: 3 }, "idle": {
+// count: 2, totalDurationMs: 846000 } }. Not sent to the backend (the raw event log is), this is
+// purely for anywhere that wants a summary view (console debugging today; a future employer-
+// facing review UI would more likely want this than the raw log).
+export function summarizeAntiCheatEvents(
+  events: AntiCheatEvent[],
+): Record<string, { count: number; totalDurationMs: number }> {
+  const summary: Record<string, { count: number; totalDurationMs: number }> = {};
+  for (const event of events) {
+    const entry = summary[event.type] ?? { count: 0, totalDurationMs: 0 };
+    entry.count += 1;
+    entry.totalDurationMs += event.durationMs ?? 0;
+    summary[event.type] = entry;
   }
-
-  return flags;
+  return summary;
 }

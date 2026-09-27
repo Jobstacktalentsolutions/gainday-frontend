@@ -9,6 +9,7 @@ import { ActionButton } from "@/components/ui/ActionButton";
 import { StepContinueButton } from "@/components/ui/StepNavigationButtons";
 import { useJobDetails } from "../hooks/useJobDetails";
 import { formatPostedDate, formatSalaryRange } from "../utils/formatters";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 
 
 export default function JobDetailsPage() {
@@ -16,6 +17,7 @@ export default function JobDetailsPage() {
     const { jobId } = useParams<{ jobId: string }>();
     const navigate = useNavigate();
     const { job, isLoading } = useJobDetails(jobId);
+    const { isAuthenticated } = useCurrentUser();
     const [authPromptOpen, setAuthPromptOpen] = useState(false);
 
     if (isLoading) {
@@ -34,6 +36,14 @@ export default function JobDetailsPage() {
                 Job not found
             </div>
         )
+    }
+
+    function handleApplyClick() {
+        if (isAuthenticated) {
+            navigate(`/job-board/${job!.id}/pre-simulation`);
+        } else {
+            setAuthPromptOpen(true);
+        }
     }
 
     function handleSignUp() {
@@ -86,7 +96,7 @@ export default function JobDetailsPage() {
                             </div>
                         </div>
                         <div className="flex shrink-0 items-center gap-4">
-                            <StepContinueButton size="lg" className="w-fit" onClick={() => setAuthPromptOpen(true)}>
+                            <StepContinueButton size="lg" className="w-fit" onClick={handleApplyClick}>
                                 Apply
                             </StepContinueButton>
                             <ActionButton
@@ -168,7 +178,7 @@ export default function JobDetailsPage() {
                                 <p className="text-[16px] text-neutral-700">{job.businessProblem}</p>
                             </>
                         )}
-                        <StepContinueButton size="lg" className="w-fit" onClick={() => setAuthPromptOpen(true)}>
+                        <StepContinueButton size="lg" className="w-fit" onClick={handleApplyClick}>
                             Start Now
                         </StepContinueButton>
                         <p className="text-[16px] text-neutral-400">

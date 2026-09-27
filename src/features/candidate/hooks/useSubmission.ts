@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
-import type { CandidateAnswer } from "../types/submission";
+import type { CandidateAnswer, AntiCheatEvent } from "../types/submission";
 
 // POST /submissions/job/:jobId/start — requires a signed-in JOB_SEEKER (see
 // SubmissionsController). Creates one Submission row per call, so the caller must guard
@@ -19,10 +19,11 @@ export function useStartSubmission() {
   });
 }
 
-// PUT /submissions/:id/submit — locks in the final answers and queues grading. antiCheatFlags
-// is whatever useSimulationIntegrityStore collected client-side (tab-hidden/window-blur) — the
-// backend adds its own server-observed stale-heartbeat flag on top of these, not instead.
-async function submitAnswers(submissionId: string, answers: CandidateAnswer[], antiCheatFlags: string[]) {
+// PUT /submissions/:id/submit — locks in the final answers and queues grading. antiCheatFlags is
+// the raw per-event log useSimulationIntegrityStore collected client-side (tab-hidden/window-
+// blur/fullscreen-exit/idle, each with when + which task) — sent as-is, not pre-summarized; the
+// backend appends its own server-observed stale-heartbeat event on top of these, not instead.
+async function submitAnswers(submissionId: string, answers: CandidateAnswer[], antiCheatFlags: AntiCheatEvent[]) {
   const { data } = await apiClient.put(`/submissions/${submissionId}/submit`, { answers, antiCheatFlags });
   return data;
 }
@@ -36,7 +37,7 @@ export function useSubmitSimulation() {
     }: {
       submissionId: string;
       answers: CandidateAnswer[];
-      antiCheatFlags?: string[];
+      antiCheatFlags?: AntiCheatEvent[];
     }) => submitAnswers(submissionId, answers, antiCheatFlags),
   });
 }

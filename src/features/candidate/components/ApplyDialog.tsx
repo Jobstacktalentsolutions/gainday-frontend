@@ -1,5 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ActionButton } from "@/components/ui/ActionButton";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 
 interface ApplyDialogProps {
   open: boolean;
@@ -8,6 +9,12 @@ interface ApplyDialogProps {
 }
 
 export function ApplyDialog({ open, onOpenChange, onSignUp }: ApplyDialogProps) {
+  const { isAuthenticated } = useCurrentUser();
+
+  if (isAuthenticated) {
+    return null;
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-141.5 gap-15 rounded-2xl p-12">
