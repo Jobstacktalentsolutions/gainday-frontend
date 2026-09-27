@@ -30,8 +30,10 @@ import type { CandidateAnswer } from "../types/submission";
 const EMPTY_ANSWER: TaskAnswer = { objectiveResponse: null, textResponse: "" };
 
 // The pre-simulation screen promises "extended periods of inactivity are flagged for review" —
-// this is that threshold. Every full IDLE_THRESHOLD_MS of continuous inactivity counts as one
-// occurrence (see useIdleDetection), not just a single flag for the whole run.
+// this is that threshold: the minimum length a gap between activity has to reach before it's
+// logged as an idle spell at all. Below this, a pause is just thinking, not idle. See
+// useIdleDetection — each qualifying spell is reported with its own real duration, not counted
+// as a number of fixed-size ticks.
 const IDLE_THRESHOLD_MS = 5 * 60 * 1000;
 
 // The backend stores one free-text field per task (CandidateAnswer.responseBody — see
@@ -71,7 +73,7 @@ export default function TaskRunner() {
 
     const runStore = useSimulationRunStore();
     const recordViolation = useSimulationIntegrityStore((state) => state.recordViolation);
-    const violationCounts = useSimulationIntegrityStore((state) => state.violationCounts);
+    const recordIdleSpell = useSimulationIntegrityStore((state) => state.recordIdleSpell);
     const { scheduleSave, isSaving } = useAutosaveAnswer();
     const connection = useConnectionMonitor(runStore.submissionId);
 
@@ -92,7 +94,7 @@ export default function TaskRunner() {
     }, []);
 
     useFullscreenGuard({ onExit: () => recordViolation("fullscreen-exit") });
-    useIdleDetection({ thresholdMs: IDLE_THRESHOLD_MS, onIdleInterval: () => recordViolation("idle") });
+    const idle = useIdleDetection({ thresholdMs: IDLE_THRESHOLD_MS, onIdleSpell: recordIdleSpell });
 
     useEffect(() => {
         if (job && simulation) runStore.startRun(job.id, simulation.id, simulation.timeLimitMinutes);
@@ -123,13 +125,20 @@ export default function TaskRunner() {
         hasFinalizedRef.current = true;
         runStore.markComplete(currentTaskId);
 
+        // Captures a still-open idle spell that never got closed out by an activity event
+        // (the candidate went idle and the run ended before they came back) — see
+        // useIdleDetection's flush contract. Read fresh state via getState() right after,
+        // rather than a render-time selector, so this flush's own update isn't missed.
+        idle.flush();
+        const antiCheatFlags = formatViolationFlags(useSimulationIntegrityStore.getState());
+
         if (!runStore.submissionId) return; // nothing to submit against — surfaced in the modal below
         const answers: CandidateAnswer[] = simulation.tasks.map((task) => ({
             taskId: task.id,
             responseBody: buildResponseBody(task, runStore.answers[task.id] ?? EMPTY_ANSWER),
             timeSpentSeconds: runStore.taskTimeSpentSeconds[task.id] ?? 0,
         }));
-        submitSimulation.mutate({ submissionId: runStore.submissionId, answers, antiCheatFlags: formatViolationFlags(violationCounts) });
+        submitSimulation.mutate({ submissionId: runStore.submissionId, answers, antiCheatFlags });
     }
 
     useEffect(() => {
@@ -210,7 +219,11 @@ export default function TaskRunner() {
                                 responseBody: buildResponseBody(t, runStore.answers[t.id] ?? EMPTY_ANSWER),
                                 timeSpentSeconds: runStore.taskTimeSpentSeconds[t.id] ?? 0,
                             }));
-                            submitSimulation.mutate({ submissionId: runStore.submissionId!, answers, antiCheatFlags: formatViolationFlags(violationCounts) });
+                            submitSimulation.mutate({
+                                submissionId: runStore.submissionId!,
+                                answers,
+                                antiCheatFlags: formatViolationFlags(useSimulationIntegrityStore.getState()),
+                            });
                         }
                         : undefined
                 }

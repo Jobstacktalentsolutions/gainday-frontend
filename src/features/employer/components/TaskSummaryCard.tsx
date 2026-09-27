@@ -22,7 +22,7 @@ const TaskSummaryCard = ({ index, task }: TaskSummaryCardProps) => {
 
             <p className="text-base font-medium text-neutral-950">{task.title}</p>
 
-            {task.scenarioDescription && (
+            {Boolean(task.scenarioDescription?.trim()) && (
                 <div className="prose prose-sm max-w-none rounded-xl bg-neutral-50/50 p-4 text-neutral-700 prose-p:my-2 prose-ul:my-2">
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                         {task.scenarioDescription}
@@ -30,9 +30,11 @@ const TaskSummaryCard = ({ index, task }: TaskSummaryCardProps) => {
                 </div>
             )}
 
-            <div className="prose prose-sm max-w-none rounded-xl bg-neutral-50/50 p-4 text-neutral-900 prose-p:my-2 prose-ul:my-2">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown>
-            </div>
+            {Boolean(task.questionPrompt?.trim()) && (
+                <div className="prose prose-sm max-w-none rounded-xl bg-neutral-50/50 p-4 text-neutral-900 prose-p:my-2 prose-ul:my-2">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown>
+                </div>
+            )}
 
             <InterfaceRendererView
                 interfaceType={task.interfaceType}

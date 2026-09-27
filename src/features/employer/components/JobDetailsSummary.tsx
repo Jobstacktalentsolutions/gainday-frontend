@@ -85,9 +85,17 @@ const JobDetailsSummary = ({ onEdit }: JobDetailsSummaryProps) => {
       )}
 
       {/* What this hire needs to solve */}
-      {values.description && (
+      {Boolean(values.businessProblem?.trim()) && (
         <div className="flex flex-col gap-1">
           <p className="text-sm text-neutral-400">What this hire needs to solve</p>
+          <p className="text-base text-neutral-700 wrap-break-word">{values.businessProblem}</p>
+        </div>
+      )}
+
+      {/* Description */}
+      {Boolean(values.description?.trim()) && (
+        <div className="flex flex-col gap-1">
+          <p className="text-sm text-neutral-400">Description</p>
           <p className="text-base text-neutral-700 wrap-break-word">{values.description}</p>
         </div>
       )}

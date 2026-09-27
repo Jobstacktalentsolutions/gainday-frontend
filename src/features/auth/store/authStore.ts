@@ -5,6 +5,7 @@ interface AuthUser {
   id: string;
   email: string;
   role: string;
+  authProvider?: string;
   profileId?: string;
   fullName?: string;
   companyName?: string;

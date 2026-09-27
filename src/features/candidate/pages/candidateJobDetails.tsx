@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Clock, MapPin, Wallet, Share2, Sparkles } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { PublicNavbar } from "../components/PublicNavbar";
 import { ApplyDialog } from "../components/ApplyDialog";
 import { ActionButton } from "@/components/ui/ActionButton";
@@ -99,10 +101,17 @@ export default function JobDetailsPage() {
                     </div>
 
                     <div className="h-px w-full bg-neutral-200" />
-                    <section className="flex flex-col gap-3">
-                        <h2 className="text-[16px] text-primary-500">ABOUT THIS ROLE</h2>
-                        <p className="text-[16px] text-primary-950">{job.description}</p>
-                    </section>
+                    {Boolean(job.description?.trim()) && (
+                        <>
+                            <div className="h-px w-full bg-neutral-200" />
+                            <section className="flex flex-col gap-3">
+                                <h2 className="text-[16px] text-primary-500">ABOUT THIS ROLE</h2>
+                                <div className="prose prose-sm max-w-none text-[16px] text-primary-950 prose-headings:font-semibold prose-headings:text-primary-950 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-primary-950">
+                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{job.description}</ReactMarkdown>
+                                </div>
+                            </section>
+                        </>
+                    )}
 
                     <div className="h-px w-full bg-neutral-200" />
 
@@ -128,20 +137,24 @@ export default function JobDetailsPage() {
                         </div>
                     </section>
 
-                    <div className="h-px w-full bg-neutral-200" />
-                    <section className="flex flex-col gap-3">
-                        <h2 className="text-[16px] text-primary-500">REQUIRED SKILLS</h2>
-                        <div className="flex flex-wrap gap-3">
-                            {job.requiredSkills.map((skill) => (
-                                <span
-                                    key={skill}
-                                    className="rounded-full bg-primary-50 px-2 py-1 text-[14px] text-primary-950"
-                                >
-                                    {skill}
-                                </span>
-                            ))}
-                        </div>
-                    </section>
+                    {Boolean(job.requiredSkills && job.requiredSkills.length > 0) && (
+                        <>
+                            <div className="h-px w-full bg-neutral-200" />
+                            <section className="flex flex-col gap-3">
+                                <h2 className="text-[16px] text-primary-500">REQUIRED SKILLS</h2>
+                                <div className="flex flex-wrap gap-3">
+                                    {job.requiredSkills.map((skill) => (
+                                        <span
+                                            key={skill}
+                                            className="rounded-full bg-primary-50 px-2 py-1 text-[14px] text-primary-950"
+                                        >
+                                            {skill}
+                                        </span>
+                                    ))}
+                                </div>
+                            </section>
+                        </>
+                    )}
 
                     <div className="h-px w-full bg-neutral-200" />
                     <section className="flex flex-col gap-4 rounded-xl bg-primary-50 p-4">
@@ -149,8 +162,12 @@ export default function JobDetailsPage() {
                             <Sparkles className="size-3.5 text-secondary-500" />
                             FULL TRANSPARENCY
                         </span>
-                        <p className="text-[16px] text-primary-950">What this hire needs to solve?</p>
-                        <p className="text-[16px] text-neutral-700">{job.businessProblem}</p>
+                        {Boolean(job.businessProblem?.trim()) && (
+                            <>
+                                <p className="text-[16px] text-primary-950">What this hire needs to solve?</p>
+                                <p className="text-[16px] text-neutral-700">{job.businessProblem}</p>
+                            </>
+                        )}
                         <StepContinueButton size="lg" className="w-fit" onClick={() => setAuthPromptOpen(true)}>
                             Start Now
                         </StepContinueButton>

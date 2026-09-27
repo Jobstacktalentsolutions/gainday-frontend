@@ -129,7 +129,7 @@ const TaskAccordionSection = ({ tasks }: { tasks: SimulationTask[] }) => {
                                     <p className="text-base font-medium text-neutral-950">{task.title}</p>
 
                                     {/* Scenario — rendered markdown */}
-                                    {task.scenarioDescription && (
+                                    {Boolean(task.scenarioDescription?.trim()) && (
                                         <div className="prose prose-sm max-w-none rounded-xl bg-neutral-50 p-4 text-sm leading-relaxed text-neutral-700">
                                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                                 {task.scenarioDescription}
@@ -138,11 +138,13 @@ const TaskAccordionSection = ({ tasks }: { tasks: SimulationTask[] }) => {
                                     )}
 
                                     {/* Task prompt — rendered markdown */}
-                                    <div className="prose prose-sm max-w-none rounded-xl bg-neutral-50 p-4 text-neutral-900 prose-headings:font-semibold prose-headings:text-neutral-950 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-neutral-950">
-                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                            {task.questionPrompt}
-                                        </ReactMarkdown>
-                                    </div>
+                                    {Boolean(task.questionPrompt?.trim()) && (
+                                        <div className="prose prose-sm max-w-none rounded-xl bg-neutral-50 p-4 text-neutral-900 prose-headings:font-semibold prose-headings:text-neutral-950 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-neutral-950">
+                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                                {task.questionPrompt}
+                                            </ReactMarkdown>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -154,15 +156,22 @@ const TaskAccordionSection = ({ tasks }: { tasks: SimulationTask[] }) => {
 };
 
 const JobPreviewDetailsCard = ({ job, showTasks }: { job: JobPreviewDetails, showTasks: boolean }) => {
+    const hasDescription = Boolean(job.description?.trim());
+    const hasSkills = Boolean(job.requiredSkills && job.requiredSkills.length > 0);
+    const hasWhatThisHireNeedsToSolve = Boolean(job.whatThisHireNeedsToSolve?.trim());
+    const hasTasks = showTasks && Boolean(job.tasks && job.tasks.length > 0);
+
     return (
         <div className="flex w-full flex-col gap-6 rounded-3xl bg-white p-8">
-            <Section title="DESCRIPTION">
-                <div className="prose prose-sm max-w-none text-base text-neutral-950 prose-headings:font-semibold prose-headings:text-neutral-950 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-neutral-950">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{job.description}</ReactMarkdown>
-                </div>
-            </Section>
+            {hasDescription && (
+                <Section title="DESCRIPTION">
+                    <div className="prose prose-sm max-w-none text-base text-neutral-950 prose-headings:font-semibold prose-headings:text-neutral-950 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-neutral-950">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{job.description}</ReactMarkdown>
+                    </div>
+                </Section>
+            )}
 
-            <Divider />
+            {hasDescription && <Divider />}
 
             <Section title="ROLE DETAILS">
                 <div className="flex flex-col gap-6 sm:flex-row sm:gap-10">
@@ -176,35 +185,39 @@ const JobPreviewDetailsCard = ({ job, showTasks }: { job: JobPreviewDetails, sho
                 <DetailField label="Deadline" value={job.deadline} />
             </Section>
 
-            <Divider />
+            {hasSkills && (
+                <>
+                    <Divider />
+                    <Section title="REQUIRED SKILLS">
+                        <div className="flex flex-wrap gap-3">
+                            {job.requiredSkills.map((skill) => (
+                                <span
+                                    key={skill}
+                                    className="rounded-2xl bg-primary-50 px-2 py-1 text-neutral-950 text-sm"
+                                >
+                                    {skill}
+                                </span>
+                            ))}
+                        </div>
+                    </Section>
+                </>
+            )}
 
-            <Section title="REQUIRED SKILLS">
-                <div className="flex flex-wrap gap-3">
-                    {job.requiredSkills.map((skill) => (
-                        <span
-                            key={skill}
-                            className="rounded-2xl bg-primary-50 px-2 py-1 text-neutral-950 text-sm"
-                        >
-                            {skill}
-                        </span>
-                    ))}
-                </div>
-            </Section>
+            {hasWhatThisHireNeedsToSolve && (
+                <>
+                    <Divider />
+                    <Section title="WHAT THIS HIRE NEEDS TO SOLVE">
+                        <p className="text-base text-neutral-700">{job.whatThisHireNeedsToSolve}</p>
+                    </Section>
+                </>
+            )}
 
-            <Divider />
-
-            <Section title="WHAT THIS HIRE NEEDS TO SOLVE">
-                <p className="text-base text-neutral-700">{job.whatThisHireNeedsToSolve}</p>
-            </Section>
-
-            {showTasks && (
+            {hasTasks && (
                 <>
                     <Divider />
                     <TaskAccordionSection tasks={job.tasks} />
                 </>
             )}
-
-
         </div>
     );
 }

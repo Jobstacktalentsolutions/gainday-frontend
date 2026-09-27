@@ -1,11 +1,102 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, User, Building, Mail, ShieldCheck } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { type AxiosError } from "axios";
+import { ArrowLeft, User, Building, Mail, ShieldCheck, KeyRound } from "lucide-react";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
+import { useChangePassword } from "@/features/auth/hooks/useChangePassword";
+import {
+  changePasswordSchema,
+  type ChangePasswordFormValues,
+} from "@/features/auth/schemas/changePasswordSchema";
+import PasswordInput from "@/features/auth/component/passwordInput";
+import { ActionButton } from "@/components/ui/ActionButton";
 import BrandLogo from "@/assets/gainday icon.svg";
+
+const ChangePasswordCard = () => {
+  const [success, setSuccess] = useState(false);
+  const changePasswordMutation = useChangePassword();
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ChangePasswordFormValues>({
+    resolver: zodResolver(changePasswordSchema),
+  });
+
+  const onSubmit = (values: ChangePasswordFormValues) => {
+    setSuccess(false);
+    changePasswordMutation.mutate(values, {
+      onSuccess: () => {
+        setSuccess(true);
+        reset();
+      },
+    });
+  };
+
+  return (
+    <div className="mt-6 overflow-hidden rounded-3xl border border-neutral-200 bg-white p-8 shadow-sm">
+      <div className="mb-6 flex items-center gap-3">
+        <div className="rounded-xl bg-primary-50 p-2.5 text-primary-500">
+          <KeyRound className="size-5" />
+        </div>
+        <div>
+          <h2 className="text-lg font-bold text-neutral-950">Change password</h2>
+          <p className="text-sm text-neutral-500">Update the password you sign in with</p>
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex max-w-sm flex-col gap-4">
+        <PasswordInput
+          label="Current password"
+          required
+          autoComplete="current-password"
+          {...register("currentPassword")}
+          error={errors.currentPassword?.message}
+        />
+        <PasswordInput
+          label="New password"
+          required
+          showChecklist
+          autoComplete="new-password"
+          {...register("newPassword")}
+          error={errors.newPassword?.message}
+        />
+        <PasswordInput
+          label="Confirm new password"
+          required
+          autoComplete="new-password"
+          {...register("confirmNewPassword")}
+          error={errors.confirmNewPassword?.message}
+        />
+
+        {changePasswordMutation.isError && (
+          <p role="alert" className="text-sm text-error-600">
+            {(changePasswordMutation.error as AxiosError<{ message?: string }>)?.response?.data
+              ?.message ?? "Couldn't change your password. Please try again."}
+          </p>
+        )}
+        {success && (
+          <p role="status" className="text-sm text-primary-600">
+            Password changed successfully.
+          </p>
+        )}
+
+        <ActionButton type="submit" className="w-fit" disabled={changePasswordMutation.isPending}>
+          {changePasswordMutation.isPending ? "Updating..." : "Update password"}
+        </ActionButton>
+      </form>
+    </div>
+  );
+};
 
 const ProfilePage = () => {
   const { user } = useCurrentUser();
   const navigate = useNavigate();
+  const isGoogleAccount = user?.authProvider === "google";
 
   const getDashboardPath = () => {
     if (user?.role === "EMPLOYER") return "/employer/jobs";
@@ -111,6 +202,14 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
+
+        {isGoogleAccount ? (
+          <div className="mt-6 rounded-3xl border border-neutral-200 bg-white p-8 text-sm text-neutral-500 shadow-sm">
+            You sign in with Google, so there's no Gainday password to change here.
+          </div>
+        ) : (
+          <ChangePasswordCard />
+        )}
       </div>
     </div>
   );

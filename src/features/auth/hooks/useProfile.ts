@@ -6,6 +6,7 @@ interface Profile {
   id: string;
   email: string;
   role: string;
+  authProvider?: string;
   profileId?: string;
   fullName?: string;
   companyName?: string;
