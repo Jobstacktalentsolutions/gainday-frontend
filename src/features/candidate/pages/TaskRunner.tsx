@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CloudUpload, Timer } from "lucide-react";
-import { PublicNavbar } from "../components/PublicNavbar";
+
 import { ActionButton } from "@/components/ui/ActionButton";
 import { useJobDetails } from "../hooks/useJobDetails";
 import { useJobSimulation } from "../hooks/useJobSimulation";
@@ -90,8 +90,6 @@ export default function TaskRunner() {
 
     return (
         <div className="min-h-screen w-full bg-neutral-50">
-            <PublicNavbar />
-
             {timer.isWarning && <TimeWarningBanner />}
             {!timer.isWarning && connection.status !== "online" && !(connection.status === "restored" && connectionBannerDismissed) && (
                 <ConnectionBanner

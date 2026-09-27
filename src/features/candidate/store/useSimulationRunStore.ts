@@ -37,9 +37,15 @@ export const useSimulationRunStore = create<SimulationRunState>()(
 
             startRun: (jobId, simulationId, timeLimitMinutes) => {
                 const state = get();
-                // idempotent — a remount/refresh for the same job must not reset the
-                // timer or wipe progress
-                if (state.jobId === jobId && state.simulationId === simulationId && state.endTimestamp !== null) return;
+                // idempotent — a remount/refresh for the same active session must not
+                // reset the timer or wipe progress. But a completed run must always
+                // restart — otherwise persisted isComplete:true blocks the new session.
+                if (
+                    !state.isComplete &&
+                    state.jobId === jobId &&
+                    state.simulationId === simulationId &&
+                    state.endTimestamp !== null
+                ) return;
                 set({
                     jobId,
                     simulationId,
