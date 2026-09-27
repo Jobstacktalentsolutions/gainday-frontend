@@ -1,12 +1,15 @@
 import { z } from "zod";
 import { InterfaceType } from "@/features/simulation-tasks/types";
 
-export const jobRoleEnum = z.enum(["FINANCE", "SALES"]);
-export type JobRole = z.infer<typeof jobRoleEnum>;
+// Free text, not an enum — a built-in preset (Finance, Sales) or an employer-typed custom role
+// label ("Add Yours" in JobDetailsStep). The AI generation pipeline resolves any role text to a
+// role module: a purpose-built one if registered, otherwise a generic fallback (see backend's
+// RoleRegistry.resolve), so this is never validated against a fixed list.
+export type JobRole = string;
 
 export const jobDetailsBaseSchema = z.object({
     title: z.string().min(3, "Job title is required"),
-    role: jobRoleEnum,
+    role: z.string().min(1, "Select or enter a role"),
     skillLevel: z.string().min(1, "Select a skill level"),
     skillCategory: z.string().optional(),
     company: z.string().min(1),

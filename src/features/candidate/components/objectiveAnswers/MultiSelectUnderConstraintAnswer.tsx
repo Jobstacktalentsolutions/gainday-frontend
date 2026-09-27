@@ -54,15 +54,3 @@ const MultiSelectUnderConstraintAnswer = ({ component, response, onChange }: Pro
 };
 
 export default MultiSelectUnderConstraintAnswer;
-
-export function describeMultiSelectUnderConstraint(
-    component: MultiSelectUnderConstraintCandidateComponent,
-    response: number[] | null,
-): string {
-    if (!response || response.length === 0) return "";
-    const labels = response
-        .slice()
-        .sort((a, b) => a - b)
-        .map((index) => `${String.fromCharCode(65 + index)}. ${component.options[index]}`);
-    return `Selected options: ${labels.join("; ")}`;
-}

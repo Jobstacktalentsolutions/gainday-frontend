@@ -22,7 +22,8 @@ export function useAutosaveAnswer() {
 
     useEffect(() => () => clearTimeout(timeoutRef.current), []);
 
-    function scheduleSave(_payload: AutosavePayload) {
+    function scheduleSave(payload: AutosavePayload) {
+        void payload; // kept in the signature so call sites stay unchanged if a real save lands later
         setIsSaving(true);
         clearTimeout(timeoutRef.current);
         timeoutRef.current = setTimeout(() => {

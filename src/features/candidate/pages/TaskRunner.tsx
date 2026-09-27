@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { CloudUpload, Timer } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { type AxiosError } from "axios";
 import { ActionButton } from "@/components/ui/ActionButton";
 import AppLoader from "@/components/ui/AppLoader";
 import { useProtectedRoute } from "@/features/auth/hooks/useProtectedRoute";
@@ -14,7 +17,9 @@ import { useSimulationTimer } from "../hooks/useSimulationTimer";
 import { useConnectionMonitor } from "../hooks/useConnectionMonitor";
 import { useAutosaveAnswer } from "../hooks/useAutosaveAnswer";
 import { useTabVisibilityGuard } from "../hooks/useTabVisibilityGuard";
-import { useSimulationIntegrityStore } from "../hooks/useSimulationIntegrityStore";
+import { useFullscreenGuard } from "../hooks/useFullscreenGuard";
+import { useIdleDetection } from "../hooks/useIdleDetection";
+import { useSimulationIntegrityStore, formatViolationFlags } from "../hooks/useSimulationIntegrityStore";
 import { TaskObjectiveOptions } from "../components/TaskObjectiveOptions";
 import { TaskResponseInput } from "../components/TaskResponseInput";
 import { TimeWarningBanner } from "../components/TimeWarningBanner";
@@ -23,6 +28,11 @@ import { SimulationCompleteModal } from "../components/SimulationCompleteModal";
 import type { CandidateAnswer } from "../types/submission";
 
 const EMPTY_ANSWER: TaskAnswer = { objectiveResponse: null, textResponse: "" };
+
+// The pre-simulation screen promises "extended periods of inactivity are flagged for review" —
+// this is that threshold. Every full IDLE_THRESHOLD_MS of continuous inactivity counts as one
+// occurrence (see useIdleDetection), not just a single flag for the whole run.
+const IDLE_THRESHOLD_MS = 5 * 60 * 1000;
 
 // The backend stores one free-text field per task (CandidateAnswer.responseBody — see
 // submissions.schema.ts), so a task's objective response and its written response are
@@ -60,8 +70,8 @@ export default function TaskRunner() {
     const simulation = simulationQuery.data;
 
     const runStore = useSimulationRunStore();
-    const addFlag = useSimulationIntegrityStore((state) => state.addFlag);
-    const antiCheatFlags = useSimulationIntegrityStore((state) => state.antiCheatFlags);
+    const recordViolation = useSimulationIntegrityStore((state) => state.recordViolation);
+    const violationCounts = useSimulationIntegrityStore((state) => state.violationCounts);
     const { scheduleSave, isSaving } = useAutosaveAnswer();
     const connection = useConnectionMonitor(runStore.submissionId);
 
@@ -74,12 +84,15 @@ export default function TaskRunner() {
     const hasFinalizedRef = useRef(false);
 
     const { arm } = useTabVisibilityGuard({
-        onViolation: (reason) => addFlag(`task-${runStore.currentTaskIndex}-${reason}`),
+        onViolation: (reason) => recordViolation(reason),
     });
     useEffect(() => {
         arm(); // arm after mount — calling arm() during render triggers setStatus → infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useFullscreenGuard({ onExit: () => recordViolation("fullscreen-exit") });
+    useIdleDetection({ thresholdMs: IDLE_THRESHOLD_MS, onIdleInterval: () => recordViolation("idle") });
 
     useEffect(() => {
         if (job && simulation) runStore.startRun(job.id, simulation.id, simulation.timeLimitMinutes);
@@ -116,7 +129,7 @@ export default function TaskRunner() {
             responseBody: buildResponseBody(task, runStore.answers[task.id] ?? EMPTY_ANSWER),
             timeSpentSeconds: runStore.taskTimeSpentSeconds[task.id] ?? 0,
         }));
-        submitSimulation.mutate({ submissionId: runStore.submissionId, answers, antiCheatFlags });
+        submitSimulation.mutate({ submissionId: runStore.submissionId, answers, antiCheatFlags: formatViolationFlags(violationCounts) });
     }
 
     useEffect(() => {
@@ -197,7 +210,7 @@ export default function TaskRunner() {
                                 responseBody: buildResponseBody(t, runStore.answers[t.id] ?? EMPTY_ANSWER),
                                 timeSpentSeconds: runStore.taskTimeSpentSeconds[t.id] ?? 0,
                             }));
-                            submitSimulation.mutate({ submissionId: runStore.submissionId!, answers, antiCheatFlags });
+                            submitSimulation.mutate({ submissionId: runStore.submissionId!, answers, antiCheatFlags: formatViolationFlags(violationCounts) });
                         }
                         : undefined
                 }

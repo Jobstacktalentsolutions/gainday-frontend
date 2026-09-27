@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useFormContext, Controller } from "react-hook-form";
 import { Sparkles } from "lucide-react";
@@ -22,6 +22,11 @@ const ROLES = [
     { value: "FINANCE", label: "Finance" },
     { value: "SALES", label: "Sales" },
 ];
+// Sentinel for the "Add Yours" option — never itself saved as the role value; picking it just
+// switches the field into free-text mode. The AI generation pipeline accepts any role text (a
+// purpose-built role module if one's registered for it, otherwise a generic fallback — see
+// backend's RoleRegistry.resolve), so a custom role here is a first-class value, not a workaround.
+const CUSTOM_ROLE_VALUE = "__custom__";
 const SKILL_LEVELS = ["Entry level", "Mid level", "Senior level"];
 const EMPLOYMENT_TYPES = ["Full-time", "Part-time", "Contract"];
 
@@ -54,6 +59,16 @@ const JobDetailsStep = () => {
     const formValues = watch();
     const skills = formValues.skills ?? [];
     const isStepValid = jobDetailsSchema.safeParse(formValues).success;
+
+    // Free-text mode for the Role field ("Add Yours") — on whenever the current role value isn't
+    // one of the built-in presets, so a draft/parsed role of e.g. "Customer Support" reopens in
+    // free-text mode rather than silently falling back to the dropdown's placeholder.
+    const isPresetRole = useMemo(
+        () => ROLES.some((r) => r.value === formValues.role),
+        [formValues.role],
+    );
+    const [customRoleActive, setCustomRoleActive] = useState(false);
+    const isCustomRole = customRoleActive || (!isPresetRole && Boolean(formValues.role));
 
     // Synchronize company profile name into form state when loaded
     useEffect(() => {
@@ -168,16 +183,47 @@ const JobDetailsStep = () => {
                 </div>
 
                 {/* Role + Skill level — side by side */}
-                <FormSelect
-                    label="Role"
-                    placeholder="Select a role"
-                    error={errors.role?.message}
-                    {...register("role")}
-                >
-                    {ROLES.map((r) => (
-                        <option key={r.value} value={r.value}>{r.label}</option>
-                    ))}
-                </FormSelect>
+                {isCustomRole ? (
+                    <div className="flex flex-col gap-1.5">
+                        <JobFormInput
+                            label="Role"
+                            placeholder="e.g. Customer Support"
+                            error={errors.role?.message}
+                            {...register("role")}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setCustomRoleActive(false);
+                                setValue("role", "", { shouldValidate: true });
+                            }}
+                            className="self-start text-xs text-primary-500 hover:underline"
+                        >
+                            Choose from the list instead
+                        </button>
+                    </div>
+                ) : (
+                    <FormSelect
+                        label="Role"
+                        placeholder="Select a role"
+                        error={errors.role?.message}
+                        value={formValues.role ?? ""}
+                        onChange={(e) => {
+                            const { value } = e.target;
+                            if (value === CUSTOM_ROLE_VALUE) {
+                                setCustomRoleActive(true);
+                                setValue("role", "", { shouldValidate: false });
+                            } else {
+                                setValue("role", value, { shouldValidate: true });
+                            }
+                        }}
+                    >
+                        {ROLES.map((r) => (
+                            <option key={r.value} value={r.value}>{r.label}</option>
+                        ))}
+                        <option value={CUSTOM_ROLE_VALUE}>Add yours...</option>
+                    </FormSelect>
+                )}
 
                 <FormSelect
                     label="Skill level"
