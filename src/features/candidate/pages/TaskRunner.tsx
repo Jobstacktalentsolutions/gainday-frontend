@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { CloudUpload, Timer } from "lucide-react";
 
 import { ActionButton } from "@/components/ui/ActionButton";
@@ -21,7 +22,7 @@ import { SimulationCompleteModal } from "../components/SimulationCompleteModal";
 
 export default function TaskRunner() {
     const { jobId } = useParams<{ jobId: string }>();
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const { job } = useJobDetails(jobId);
     const { data: simulation } = useJobSimulation(job);
 
@@ -98,9 +99,9 @@ export default function TaskRunner() {
                 />
             )}
 
-            {/* header — mirrors PublicNavbar's height/blur so it stacks cleanly */}
-            <div className="fixed left-0 top-0 z-10 flex h-[117px] w-full items-center justify-between border-b-[0.5px] border-neutral-300 bg-white/10 px-[120px] py-5 backdrop-blur-[100px]">
-                <div className="flex w-[202px] flex-col gap-0.5">
+            {/* Simulation header — sits at the very top, 117px tall */}
+            <div className="fixed left-0 top-0 z-10 flex h-29.25 w-full items-center justify-between border-b-[0.5px] border-neutral-300 bg-white/10 px-30 py-5 backdrop-blur-[100px]">
+                <div className="flex w-50.5 flex-col gap-0.5">
                     <p className="text-[16px] text-primary-950">
                         Task {runStore.currentTaskIndex + 1} of {simulation.tasks.length}
                     </p>
@@ -109,7 +110,7 @@ export default function TaskRunner() {
                     </div>
                 </div>
                 <div className="flex flex-col items-center gap-1">
-                    <p className="text-[28px] leading-[1.2] text-[#0a0c12]">{job.title}</p>
+                    <p className="text-[28px] leading-[1.2] text-neutral-950">{job.title}</p>
                     <p className="text-[16px] text-neutral-400">{job.employer.companyName}</p>
                 </div>
                 <div className="flex items-center gap-4">
@@ -118,25 +119,26 @@ export default function TaskRunner() {
                         {isSaving ? "Saving..." : "Autosaved"}
                     </div>
                     <div
-                        className={`flex h-[52px] items-center gap-2 rounded px-3 py-2 ${timer.isWarning ? "bg-error-500" : "bg-primary-950"
+                        className={`flex h-13 items-center gap-2 rounded px-3 py-2 ${timer.isWarning ? "bg-error-500" : "bg-primary-950"
                             }`}
                     >
                         <Timer className="size-6 text-neutral-50" />
-                        <span className="text-[32px] leading-[38px] tracking-[-0.32px] text-neutral-50">{timer.formatted}</span>
+                        <span className="text-[32px] leading-9.5 tracking-[-0.32px] text-neutral-50">{timer.formatted}</span>
                     </div>
                 </div>
             </div>
-            <main className="mx-auto flex w-full max-w-[1200px] flex-col items-center px-5 pb-20 pt-[180px]">
-                <div className="flex w-full max-w-[986px] flex-col gap-10 rounded-3xl bg-white p-10 shadow-[0px_4px_10px_rgba(16,24,40,0.05)]">
+            <main className="mx-auto flex w-full max-w-300 flex-col items-center px-5 pb-20 pt-34.25">
+                <div className="flex w-full max-w-246.5 flex-col gap-10 rounded-3xl bg-white p-10 shadow-[0px_4px_10px_rgba(16,24,40,0.05)]">
                     <div className="flex w-full items-center justify-between">
                         <p className="text-[16px] text-primary-500">Task • {task.category}</p>
-                        <span className="rounded-full border border-secondary-500 bg-[#fef6e5] px-4 py-1 text-[16px] text-secondary-500">
+                        {/*previously no provisions for weight*/}
+                        <span className="rounded-full border border-secondary-500 bg-warning-50 px-4 py-1 text-[16px] text-secondary-500">
                             Weight: —
                         </span>
                     </div>
 
                     <div className="flex flex-col gap-1">
-                        <h1 className="text-[40px] leading-[48px] tracking-[-0.4px] text-primary-950">{task.title}</h1>
+                        <h1 className="text-[40px] leading-12 tracking-[-0.4px] text-primary-950">{task.title}</h1>
                         <p className="text-[16px] text-neutral-700">{task.scenarioDescription}</p>
                     </div>
 
