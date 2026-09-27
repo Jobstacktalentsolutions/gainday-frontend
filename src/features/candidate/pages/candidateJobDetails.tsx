@@ -3,8 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Clock, MapPin, Wallet, Share2, Sparkles } from "lucide-react";
 import { PublicNavbar } from "../components/PublicNavbar";
 import { ApplyDialog } from "../components/ApplyDialog";
-// import { PHONE_COUNTRIES } from "../components/PhoneInput";
-import type { GuestInfoValues } from "../auth/schema";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { StepContinueButton } from "@/components/ui/StepNavigationButtons";
 import { useJobDetails } from "../hooks/useJobDetails";
@@ -31,16 +29,6 @@ export default function JobDetailsPage() {
         navigate(`/candidate/signup?redirect=${encodeURIComponent(`/job-board/${job!.id}/pre-simulation`)}`);
     }
 
-    function handleGuestSubmit(values: GuestInfoValues) {
-        //un-comment these when you want to POST and Persist
-        // const dialCode = PHONE_COUNTRIES.find((c) => c.code === values.phoneCountry)?.dialCode ?? "";
-        // const fullPhone = `${dialCode}${values.phoneNumber}`; // e.g. "+2347013716408" (E.164)
-
-        // TODO: POST guest application once endpoint exists
-        //also persist guests info
-        navigate(`/job-board/${job!.id}/pre-simulation`);
-        console.log("TODO: persist guest info before simulation starts", job!.id, values)
-    }
 
     return (
         <div className="min-h-screen w-full bg-neutral-50">
@@ -51,12 +39,12 @@ export default function JobDetailsPage() {
                     {/* Decorative gradient blobs */}
                     <div
                         aria-hidden="true"
-                        className={`pointer-events-none block absolute z-50 -left-5 -top-64 h-105 w-95 rotate-[-49deg] rounded-full bg-linear-to-b opacity-38 blur-3xl
+                        className={`pointer-events-none block absolute  -left-5 -top-64 h-105 w-95 rotate-[-49deg] rounded-full bg-linear-to-b opacity-38 blur-3xl
                             bg-[linear-gradient(180deg,var(--color-primary-500)_40%,var(--color-secondary-500)_55%,var(--color-secondary-300)_65%,transparent_100%)]`}
                     />
                     <div
                         aria-hidden="true"
-                        className={`pointer-events-none block absolute z-50 -right-5 -top-64 h-105 w-95 rotate-49 rounded-full bg-linear-to-b opacity-38 blur-3xl
+                        className={`pointer-events-none block absolute -right-5 -top-64 h-105 w-95 rotate-49 rounded-full bg-linear-to-b opacity-38 blur-3xl
                             bg-[linear-gradient(180deg,var(--color-primary-500)_40%,var(--color-secondary-500)_55%,var(--color-secondary-300)_65%,transparent_100%)]`}
                     />
 
@@ -169,7 +157,6 @@ export default function JobDetailsPage() {
                 open={authPromptOpen}
                 onOpenChange={setAuthPromptOpen}
                 onSignUp={handleSignUp}
-                onGuestSubmit={handleGuestSubmit}
             />
         </div>
     );

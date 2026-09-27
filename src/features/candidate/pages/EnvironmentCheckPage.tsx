@@ -69,7 +69,7 @@ export default function EnvironmentCheckPage() {
         <div className="min-h-screen w-full bg-neutral-50">
             <PublicNavbar />
             <main className="mx-auto flex w-full max-w-300 flex-col items-center gap-20 px-5 pb-20 pt-33.75 sm:pt-43.75">
-                <div className="relative w-full max-w-158.5 overflow-hidden rounded-3xl bg-white p-10 shadow-[0px_4px_10px_rgba(16,24,40,0.05)]">
+                <div className="relative w-full max-w-246.5 overflow-hidden rounded-3xl bg-white p-10 shadow-[0px_4px_10px_rgba(16,24,40,0.05)]">
                     {/* Decorative gradient blobs */}
                     <div
                         aria-hidden="true"

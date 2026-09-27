@@ -1,11 +1,17 @@
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import AppLoader from "@/components/ui/AppLoader";
+import { useSimulationRunStore } from "@/features/candidate/store/useSimulationRunStore";
 
-// // TODO: Remove this — temporary delay to preview AppLoader
-// const simulateLatency = (ms: number) =>
-//     <T,>(mod: T): Promise<T> =>
-//         new Promise((resolve) => setTimeout(() => resolve(mod), ms));
+// DEV-ONLY: resets any stale completed-run state before entering the simulation.
+// Uses getState() so the reset is synchronous and fires before the first render
+// of TaskRunner — avoiding the localStorage hydration race that shows the
+// "simulation complete" modal immediately.
+function DevSimulationStart() {
+    useSimulationRunStore.getState().resetRun();
+    return <Navigate to="/job-board/job-1/simulation" replace />;
+}
+
 
 const AdminLogin = lazy(() => import("@/features/admin/pages/AdminLogin"));
 const AdminLayout = lazy(() => import("@/features/admin/layouts/AdminLayout"));
@@ -42,6 +48,7 @@ const PreSimulation = lazy(() => import("@/features/candidate/pages/PreSimulatio
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const EnvironmentCheckPage = lazy(() => import("@/features/candidate/pages/EnvironmentCheckPage"));
+const TaskRunner = lazy(() => import("@/features/candidate/pages/TaskRunner"));
 
 
 const AppRoutes = () => {
@@ -86,6 +93,17 @@ const AppRoutes = () => {
                 <Route path="/job-board/:jobId" element={<JobDetailsPage />} />
                 <Route path="/job-board/:jobId/pre-simulation" element={<PreSimulation />} />
                 <Route path="/job-board/:jobId/environment-check" element={<EnvironmentCheckPage />} />
+                <Route path="/job-board/:jobId/simulation" element={<TaskRunner />} />
+                {/* Dev-only route — quick access without a real jobId */}
+                {import.meta.env.DEV && (
+                    <>
+                        <Route path="/dev/pre-simulation" element={<PreSimulation />} />
+                        <Route path="/dev/environment-check" element={<EnvironmentCheckPage />} />
+                        {/* /dev/simulation → resets stale state then loads the real route with mock job-1
+                            (Custody Operations / Finance — 3 tasks) */}
+                        <Route path="/dev/simulation" element={<DevSimulationStart />} />
+                    </>
+                )}
                 <Route path="/profile" element={<ProfilePage />} />
 
                 <Route path="/candidate">
