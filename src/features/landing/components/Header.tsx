@@ -101,7 +101,7 @@ const Header = () => {
 
     const logoTarget = isAuthenticated
         ? user?.role === "EMPLOYER"
-            ? "/employer/dashboard"
+            ? "/employer/jobs"
             : "/job-board"
         : "/";
 

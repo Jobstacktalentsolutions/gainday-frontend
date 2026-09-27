@@ -25,7 +25,6 @@ const VerifyEmail = lazy(() => import("@/features/auth/pages/VerifyEmail"));
 const LegacyVerifyEmailRedirect = lazy(() => import("@/features/auth/pages/LegacyVerifyEmailRedirect"));
 const OAuthCallback = lazy(() => import("@/features/auth/pages/OAuthCallback"));
 const EmployerJobs = lazy(() => import("@/features/employer/pages/EmployerJobs"))
-const EmployerDashboard = lazy(() => import("@/features/employer/pages/EmployerDashboard"));
 const EmployerLayout = lazy(() => import("@/features/employer/layouts/EmployerLayout"));
 const JobPostingWizardLayout = lazy(() => import("@/features/employer/layouts/JobPostingWizardLayout"));
 const JobDetailsStep = lazy(() => import("@/features/employer/pages/JobDetailsStep"));
@@ -74,7 +73,8 @@ const AppRoutes = () => {
                     <Route path="verify-email" element={<VerifyEmail />} />
                     <Route path="oauth/callback" element={<OAuthCallback />} />
                     <Route element={<EmployerLayout />} >
-                        <Route path="dashboard" element={<EmployerDashboard />} />
+                        <Route index element={<Navigate to="jobs" replace />} />
+                        <Route path="dashboard" element={<Navigate to="/employer/jobs" replace />} />
                         <Route path="jobs" element={<EmployerJobs />} />
                         <Route path="profile" element={<ProfilePage />} />
                         <Route path="jobs/new" element={<JobPostingWizardLayout />}>

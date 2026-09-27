@@ -1,31 +1,35 @@
-import { useMutation } from "@tanstack/react-query";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface AutosavePayload {
     taskId: string;
-    selectedOptionIndex: number | null;
+    objectiveResponse: unknown;
     textResponse: string;
-}
-
-// TODO: replace with a real PATCH /submissions/:id/answers call once the
-// backend endpoint exists — same { data } shape so callers don't change.
-async function mockSaveAnswer(payload: AutosavePayload) {
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    return { data: { savedAt: new Date().toISOString(), ...payload } };
 }
 
 const AUTOSAVE_DEBOUNCE_MS = 2000;
 
+// Deliberately local-only, not a network call — every answer already lands in
+// useSimulationRunStore, which zustand's `persist` middleware writes to localStorage
+// synchronously on each setAnswer, so the candidate's progress already survives a refresh
+// with no request in flight. This hook exists purely to drive the header's "Saving..." →
+// "Autosaved" indicator with the same debounced feel a real autosave would have, without
+// implying a server round-trip that doesn't happen (there is no PATCH /submissions/:id/
+// answers endpoint, and answers only reach the backend once, on final submit).
 export function useAutosaveAnswer() {
-    const mutation = useMutation({ mutationFn: mockSaveAnswer });
+    const [isSaving, setIsSaving] = useState(false);
+    const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
     useEffect(() => () => clearTimeout(timeoutRef.current), []);
 
-    function scheduleSave(payload: AutosavePayload) {
+    function scheduleSave(_payload: AutosavePayload) {
+        setIsSaving(true);
         clearTimeout(timeoutRef.current);
-        timeoutRef.current = setTimeout(() => mutation.mutate(payload), AUTOSAVE_DEBOUNCE_MS);
+        timeoutRef.current = setTimeout(() => {
+            setIsSaving(false);
+            setLastSavedAt(new Date().toISOString());
+        }, AUTOSAVE_DEBOUNCE_MS);
     }
 
-    return { scheduleSave, lastSavedAt: mutation.data?.data.savedAt ?? null, isSaving: mutation.isPending };
+    return { scheduleSave, lastSavedAt, isSaving };
 }

@@ -32,9 +32,20 @@ const CHECKS = [
 export default function PreSimulation() {
     const { jobId } = useParams<{ jobId: string }>();
     const navigate = useNavigate();
-    const { job } = useJobDetails(jobId);
+    const { job, isLoading: isJobLoading } = useJobDetails(jobId);
     const [consented, setConsented] = useState(false);
     const { requestFullscreen } = useFullscreenCheck();
+
+    const { data: simulation, isLoading: isSimulationLoading } = useJobSimulation(job);
+
+    if (isJobLoading || (job && isSimulationLoading)) {
+        return (
+            <div className="min-h-screen w-full bg-neutral-50">
+                <PublicNavbar />
+                <main className="flex min-h-[60vh] items-center justify-center text-neutral-700">Loading...</main>
+            </div>
+        )
+    }
 
     if (!job) {
         // TODO: proper "job not found" state, same open item as JobDetailsPage
@@ -48,23 +59,10 @@ export default function PreSimulation() {
         );
     }
 
-    // Destructure after the null guard above so TypeScript carries the narrowing
-    // through the hook call below — avoids the "possibly undefined" build error.
-    const { id: jobId_ } = job;
-    const { data: simulation, isLoading: isSimulationLoading } = useJobSimulation(job);
-
+    const jobIdForNav = job.id;
     async function handleBegin() {
         await requestFullscreen(); //fires synchronously
-        navigate(`/job-board/${jobId_}/environment-check`);
-    }
-
-    if (isSimulationLoading || !simulation) {
-        return (
-            <div className="min-h-screen w-full bg-neutral-50">
-                <PublicNavbar />
-                <main className="flex min-h-[60vh] items-center justify-center text-neutral-700">Loading...</main>
-            </div>
-        )
+        navigate(`/job-board/${jobIdForNav}/environment-check`);
     }
 
     return (

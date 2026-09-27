@@ -24,7 +24,7 @@ const OAuthCallback = () => {
         useAuthStore.getState().setAuth(token, null as any);
         const response = await apiClient.get("/auth/me");
         useAuthStore.getState().setAuth(token, response.data.user);
-        navigate("/employer/dashboard");
+        navigate("/employer/jobs");
       } catch (err) {
         setError("Failed to authenticate. Redirecting to login...");
         useAuthStore.getState().clearAuth();

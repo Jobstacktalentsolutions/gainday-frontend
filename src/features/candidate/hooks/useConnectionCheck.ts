@@ -3,10 +3,15 @@ import { apiClient } from "@/lib/api/client";
 
 export type ConnectionCheckStatus = "idle" | "checking" | "secure" | "failed";
 
-// TODO: confirm a /health (or equivalent lightweight) endpoint exists on the
-// backend — swap the path if it's named differently or doesn't exist yet.
-// This is reused on an interval during the simulation itself to power the
-// connection-lost/restored banners, not just this one-time preflight check.
+// There's no bare /health route — during the simulation itself, the connection-lost/restored
+// banners ping POST /submissions/:id/heartbeat instead (see useConnectionMonitor), since that's
+// authenticated and tied to the candidate's actual submission, doubling as an anti-cheat
+// liveness signal. That endpoint needs a submission (and therefore a signed-in candidate) to
+// exist first, neither of which this page can assume — PreSimulation/EnvironmentCheckPage
+// aren't gated behind sign-in — so this preflight instead pings the root route (`GET /`),
+// which needs no auth and exists purely to prove the API is reachable at all. If this page
+// starts requiring sign-in before showing itself, this can move to the stronger `/auth/me`
+// check (proves "reachable AND still authenticated", not just "reachable").
 const PING_COUNT = 3;
 const PING_TIMEOUT_MS = 4000;
 
@@ -21,7 +26,7 @@ export function useConnectionCheck() {
         try {
             for (let i = 0; i < PING_COUNT; i++) {
                 const start = performance.now();
-                await apiClient.get("/health", { timeout: PING_TIMEOUT_MS });
+                await apiClient.get("/", { timeout: PING_TIMEOUT_MS });
                 samples.push(performance.now() - start);
             }
             const sorted = [...samples].sort((a, b) => a - b);

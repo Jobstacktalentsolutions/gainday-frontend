@@ -1,26 +1,30 @@
 import { useQuery } from "@tanstack/react-query";
-import { getMockSimulation, type JobSimulation } from "../mocks/mockSimulations";
+import { apiClient } from "@/lib/api/client";
+import type { CandidateSimulationTask } from "../types/simulation";
 import type { JobBoardListing } from "../types/jobBoard";
 
-
-
-// TODO: replace with a real GET /jobs/:id/simulation call once it exists, e.g.:
-//   const { data } = await apiClient.get<JobSimulation>(`/jobs/${jobId}/simulation`);
-//   return data;
-// No GENERATING/polling state here (unlike the employer's useJobSimulation) —
-// by the time a candidate reaches this page the job is ACTIVE, so its
-// simulation is already persisted and final.
-async function fetchMockJobSimulation(job : JobBoardListing) : Promise<JobSimulation> {
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    return getMockSimulation(job);
-
+// tasks are CandidateSimulationTask, not the shared SimulationTask — GET /simulations/job/:jobId
+// sanitizes each task's objectiveComponent (strips its answer-key field, tags it with
+// componentType) before it ever reaches a candidate. See gainday-backend's
+// candidate-task.util.ts and this feature's types/simulation.ts.
+export interface JobSimulation {
+  id: string;
+  jobId: string;
+  tasks: CandidateSimulationTask[];
+  timeLimitMinutes: number;
 }
 
+// By the time a candidate reaches this page the job is ACTIVE, so its simulation is already
+// persisted and final — no GENERATING/polling state here (unlike the employer's useJobSimulation).
+async function fetchJobSimulation(jobId: string): Promise<JobSimulation | null> {
+  const { data } = await apiClient.get<JobSimulation | null>(`/simulations/job/${jobId}`);
+  return data;
+}
 
-export function useJobSimulation( job : JobBoardListing | undefined) {
-    return useQuery({
-        queryKey : ["candidate", "job-simulation", job?.id],
-        queryFn: () => fetchMockJobSimulation(job as JobBoardListing),
-        enabled : Boolean(job),
-    })
+export function useJobSimulation(job: JobBoardListing | undefined) {
+  return useQuery({
+    queryKey: ["candidate", "job-simulation", job?.id],
+    queryFn: () => fetchJobSimulation(job!.id),
+    enabled: Boolean(job),
+  })
 }
