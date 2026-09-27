@@ -31,7 +31,7 @@ export function TaskResponseInput({ task, value, onChange }: TaskResponseInputPr
         <div className="flex w-full flex-col gap-1.5">
             <div className="flex w-full items-center justify-between text-[16px]">
                 <span className="text-neutral-950">{task.questionPrompt}</span>
-                {/* Informational only, per your call — never blocks Next Task */}
+                
                 <span className="text-neutral-600">Minimum {MIN_WORDS} words</span>
             </div>
             <textarea
