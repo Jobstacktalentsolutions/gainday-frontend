@@ -59,15 +59,14 @@ export default function PreSimulation() {
         );
     }
 
-    if (!simulation) {
-        return (
-            <div className="flex min-h-screen items-center justify-center bg-neutral-50 text-neutral-700">
-                <PublicNavbar />
-                <main>
-                    This job doesn't have a simulation ready yet.
-                </main>
-            </div>
-        );
+    // Destructure after the null guard above so TypeScript carries the narrowing
+    // through the hook call below — avoids the "possibly undefined" build error.
+    const { id: jobId_ } = job;
+    const { data: simulation, isLoading: isSimulationLoading } = useJobSimulation(job);
+
+    async function handleBegin() {
+        await requestFullscreen(); //fires synchronously
+        navigate(`/job-board/${jobId_}/environment-check`);
     }
 
     const jobIdForNav = job.id;

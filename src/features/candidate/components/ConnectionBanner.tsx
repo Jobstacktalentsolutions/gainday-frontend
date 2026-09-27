@@ -11,7 +11,7 @@ export function ConnectionBanner({ status, onDismiss }: ConnectionBannerProps) {
 
   return (
     <div
-      className={`fixed left-0 top-[117px] z-20 flex w-full items-center justify-center gap-12 border-b p-3 ${
+      className={`fixed left-0 top-29.25 z-20 flex w-full items-center justify-center gap-12 border-b p-3 ${
         isLost ? "border-error-500 bg-error-50" : "border-success-500 bg-success-50"
       }`}
     >
