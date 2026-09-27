@@ -310,12 +310,6 @@ export default function TaskRunner() {
                     </div>
 
                     <div className="flex w-full flex-col gap-6">
-                        <div className="rounded-xl border-l-[3px] border-primary-500 bg-primary-50 p-4">
-                            <p className="mb-2 text-[10px] text-primary-500">SCENARIO</p>
-                            <div className="prose prose-sm max-w-none text-neutral-700 prose-p:my-1">
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.scenarioDescription}</ReactMarkdown>
-                            </div>
-                        </div>
                         <TaskObjectiveOptions
                             task={task}
                             response={answer.objectiveResponse}
