@@ -45,7 +45,10 @@ const CandidateSignUp = () => {
             apiClient.post("/auth/register/candidate", values),
         onSuccess: (res) => {
             useAuthStore.getState().setAuth(res.data.access_token, res.data.user)
-            navigate(redirect ? `/candidate/verify-email?redirect=${encodeURIComponent(redirect)}` : "/candidate/verify-email")
+            navigate(
+                redirect ? `/candidate/verify-email?redirect=${encodeURIComponent(redirect)}` : "/candidate/verify-email",
+                { state: { justSent: true } },
+            )
         },
     })
 

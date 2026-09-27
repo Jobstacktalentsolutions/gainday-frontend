@@ -38,7 +38,7 @@ const CandidateSignIn = () => {
         onSuccess: (res) => {
             useAuthStore.getState().setAuth(res.data.access_token, res.data.user)
             if (!res.data.isEmailVerified) {
-                navigate("/candidate/verify-email")
+                navigate(redirect ? `/candidate/verify-email?redirect=${encodeURIComponent(redirect)}` : "/candidate/verify-email")
             } else {
                 navigate(redirect ?? "/job-board")
             }

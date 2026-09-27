@@ -43,7 +43,7 @@ const CreateAccount = () => {
             apiClient.post("/auth/signup", values),
         onSuccess: (res) => {
             useAuthStore.getState().setAuth(res.data.access_token, res.data.user)
-            navigate("/employer/verify-email")
+            navigate("/employer/verify-email", { state: { justSent: true } })
         },
     })
 
