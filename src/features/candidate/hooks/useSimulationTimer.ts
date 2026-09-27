@@ -23,6 +23,9 @@ export function useSimulationTimer(endTimestamp: number | null) {
     remainingSeconds,
     formatted,
     isWarning: remainingSeconds <= WARNING_THRESHOLD_SECONDS && remainingSeconds > 0,
-    isExpired: remainingSeconds <= 0,
+    // Only report expired when there is an active endTimestamp — a null timestamp
+    // means no run is in progress yet (or the store hasn't initialised), so we must
+    // not treat 0 remaining seconds as a genuine expiry in that case.
+    isExpired: endTimestamp !== null && remainingSeconds <= 0,
   };
 }
