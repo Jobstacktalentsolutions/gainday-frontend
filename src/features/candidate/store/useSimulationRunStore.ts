@@ -2,7 +2,11 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 export interface TaskAnswer {
-    selectedOptionIndex: number | null;
+    /** Shape depends on the task's objectiveComponent.componentType — number for
+     *  SINGLE_BEST_ACTION/NUMERIC_INPUT, number[] for MULTI_SELECT_UNDER_CONSTRAINT/
+     *  PROCEDURAL_SEQUENCING, Record<string,string> for CLASSIFICATION, null until the
+     *  candidate answers. See objectiveAnswers/registry.tsx. */
+    objectiveResponse: unknown;
     textResponse: string;
 }
 
@@ -90,7 +94,7 @@ export const useSimulationRunStore = create<SimulationRunState>()(
                 set((state) => ({
                     answers: {
                         ...state.answers,
-                        [taskId]: { ...(state.answers[taskId] ?? { selectedOptionIndex: null, textResponse: "" }), ...answer },
+                        [taskId]: { ...(state.answers[taskId] ?? { objectiveResponse: null, textResponse: "" }), ...answer },
                     },
                 })),
 

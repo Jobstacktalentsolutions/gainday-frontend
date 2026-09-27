@@ -3,12 +3,10 @@ import { Menu, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
 import EmployerNavDrawer from "./EmployerNavDrawer";
 import BrandLogo from "@/assets/gainday icon.svg";
-import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { UserAvatarMenu } from "@/components/ui/UserAvatarMenu";
 
 const EmployerTopNav = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const { user } = useCurrentUser();
 
     return (
         <>
@@ -21,16 +19,8 @@ const EmployerTopNav = () => {
                     />
                 </Link>
 
-                {/* Right: employer name + bell + avatar dropdown + hamburger (mobile) */}
+                {/* Right: bell + avatar dropdown + hamburger (mobile) */}
                 <div className="flex items-center gap-3">
-                    {user?.companyName && (
-                        <div className="flex items-center gap-1.5">
-                            <div className="size-4 rounded-sm border-[3px] border-neutral-950" aria-hidden="true" />
-                            <span className="text-sm font-bold text-neutral-950">
-                                {user.companyName}
-                            </span>
-                        </div>
-                    )}
                     <span className="flex size-8 items-center justify-center rounded-full bg-primary-50">
                         <Bell className="size-4 text-primary-500" aria-hidden="true" />
                     </span>

@@ -19,15 +19,28 @@ export function useStartSubmission() {
   });
 }
 
-// PUT /submissions/:id/submit — locks in the final answers and queues grading.
-async function submitAnswers(submissionId: string, answers: CandidateAnswer[]) {
-  const { data } = await apiClient.put(`/submissions/${submissionId}/submit`, { answers });
+// PUT /submissions/:id/submit — locks in the final answers and queues grading. antiCheatFlags
+// is whatever useSimulationIntegrityStore collected client-side (tab-hidden/window-blur) — the
+// backend adds its own server-observed stale-heartbeat flag on top of these, not instead.
+async function submitAnswers(submissionId: string, answers: CandidateAnswer[], antiCheatFlags: string[]) {
+  const { data } = await apiClient.put(`/submissions/${submissionId}/submit`, { answers, antiCheatFlags });
   return data;
 }
 
 export function useSubmitSimulation() {
   return useMutation({
-    mutationFn: ({ submissionId, answers }: { submissionId: string; answers: CandidateAnswer[] }) =>
-      submitAnswers(submissionId, answers),
+    mutationFn: ({
+      submissionId,
+      answers,
+      antiCheatFlags = [],
+    }: {
+      submissionId: string;
+      answers: CandidateAnswer[];
+      antiCheatFlags?: string[];
+    }) => submitAnswers(submissionId, answers, antiCheatFlags),
   });
 }
+
+// POST /submissions/:id/heartbeat itself is called directly from useConnectionMonitor's
+// interval (not through a mutation hook here) — it fires on a timer rather than in response to
+// a user action, and needs to read wasLostRef synchronously inside the same interval tick.

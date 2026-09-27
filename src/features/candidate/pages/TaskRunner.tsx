@@ -4,7 +4,8 @@ import { CloudUpload, Timer } from "lucide-react";
 import { ActionButton } from "@/components/ui/ActionButton";
 import AppLoader from "@/components/ui/AppLoader";
 import { useProtectedRoute } from "@/features/auth/hooks/useProtectedRoute";
-import type { SimulationTask } from "@/features/simulation-tasks/types";
+import { OBJECTIVE_ANSWER_DESCRIBERS } from "../components/objectiveAnswers/registry";
+import type { CandidateSimulationTask } from "../types/simulation";
 import { useJobDetails } from "../hooks/useJobDetails";
 import { useJobSimulation } from "../hooks/useJobSimulation";
 import { useStartSubmission, useSubmitSimulation } from "../hooks/useSubmission";
@@ -21,18 +22,20 @@ import { ConnectionBanner } from "../components/ConnectionBanner";
 import { SimulationCompleteModal } from "../components/SimulationCompleteModal";
 import type { CandidateAnswer } from "../types/submission";
 
+const EMPTY_ANSWER: TaskAnswer = { objectiveResponse: null, textResponse: "" };
+
 // The backend stores one free-text field per task (CandidateAnswer.responseBody — see
-// submissions.schema.ts), so a task's selected option and its written response are
-// collapsed into a single string here before submit.
-function buildResponseBody(task: SimulationTask, answer: TaskAnswer): string {
+// submissions.schema.ts), so a task's objective response and its written response are
+// collapsed into a single string here before submit. How the objective part reads is resolved
+// per componentType via OBJECTIVE_ANSWER_DESCRIBERS — this function doesn't special-case any
+// one component type, matching TaskObjectiveOptions' registry-driven rendering.
+function buildResponseBody(task: CandidateSimulationTask, answer: TaskAnswer): string {
     const parts: string[] = [];
 
     if (task.objectiveComponent != null) {
-        const options = (task.objectiveComponent as { options?: string[] }).options;
-        if (Array.isArray(options) && answer.selectedOptionIndex !== null) {
-            const letter = String.fromCharCode(65 + answer.selectedOptionIndex);
-            parts.push(`Selected option ${letter}: ${options[answer.selectedOptionIndex]}`);
-        }
+        const describe = OBJECTIVE_ANSWER_DESCRIBERS[task.objectiveComponent.componentType];
+        const described = describe?.(task.objectiveComponent, answer.objectiveResponse);
+        if (described) parts.push(described);
     }
 
     if (answer.textResponse.trim()) {
@@ -58,8 +61,9 @@ export default function TaskRunner() {
 
     const runStore = useSimulationRunStore();
     const addFlag = useSimulationIntegrityStore((state) => state.addFlag);
+    const antiCheatFlags = useSimulationIntegrityStore((state) => state.antiCheatFlags);
     const { scheduleSave, isSaving } = useAutosaveAnswer();
-    const connection = useConnectionMonitor();
+    const connection = useConnectionMonitor(runStore.submissionId);
 
     const startSubmission = useStartSubmission();
     const submitSimulation = useSubmitSimulation();
@@ -109,10 +113,10 @@ export default function TaskRunner() {
         if (!runStore.submissionId) return; // nothing to submit against — surfaced in the modal below
         const answers: CandidateAnswer[] = simulation.tasks.map((task) => ({
             taskId: task.id,
-            responseBody: buildResponseBody(task, runStore.answers[task.id] ?? { selectedOptionIndex: null, textResponse: "" }),
+            responseBody: buildResponseBody(task, runStore.answers[task.id] ?? EMPTY_ANSWER),
             timeSpentSeconds: runStore.taskTimeSpentSeconds[task.id] ?? 0,
         }));
-        submitSimulation.mutate({ submissionId: runStore.submissionId, answers });
+        submitSimulation.mutate({ submissionId: runStore.submissionId, answers, antiCheatFlags });
     }
 
     useEffect(() => {
@@ -159,14 +163,14 @@ export default function TaskRunner() {
     }
 
     const task = simulation.tasks[runStore.currentTaskIndex];
-    const answer = runStore.answers[task.id] ?? { selectedOptionIndex: null, textResponse: "" };
+    const answer = runStore.answers[task.id] ?? EMPTY_ANSWER;
     const isLastTask = runStore.currentTaskIndex === simulation.tasks.length - 1;
 
-    function updateAnswer(patch: Partial<typeof answer>) {
+    function updateAnswer(patch: Partial<TaskAnswer>) {
         runStore.setAnswer(task.id, patch);
         scheduleSave({
             taskId: task.id,
-            selectedOptionIndex: patch.selectedOptionIndex ?? answer.selectedOptionIndex,
+            objectiveResponse: patch.objectiveResponse ?? answer.objectiveResponse,
             textResponse: patch.textResponse ?? answer.textResponse,
         });
     }
@@ -190,10 +194,10 @@ export default function TaskRunner() {
                         ? () => {
                             const answers: CandidateAnswer[] = simulation.tasks.map((t) => ({
                                 taskId: t.id,
-                                responseBody: buildResponseBody(t, runStore.answers[t.id] ?? { selectedOptionIndex: null, textResponse: "" }),
+                                responseBody: buildResponseBody(t, runStore.answers[t.id] ?? EMPTY_ANSWER),
                                 timeSpentSeconds: runStore.taskTimeSpentSeconds[t.id] ?? 0,
                             }));
-                            submitSimulation.mutate({ submissionId: runStore.submissionId!, answers });
+                            submitSimulation.mutate({ submissionId: runStore.submissionId!, answers, antiCheatFlags });
                         }
                         : undefined
                 }
@@ -271,8 +275,8 @@ export default function TaskRunner() {
                         </div>
                         <TaskObjectiveOptions
                             task={task}
-                            selectedIndex={answer.selectedOptionIndex}
-                            onSelect={(index) => updateAnswer({ selectedOptionIndex: index })}
+                            response={answer.objectiveResponse}
+                            onChange={(response) => updateAnswer({ objectiveResponse: response })}
                         />
 
                         <TaskResponseInput

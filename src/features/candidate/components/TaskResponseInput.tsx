@@ -1,10 +1,10 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { InterfaceType } from "@/features/simulation-tasks/types";
-import type { SimulationTask, TextAreaPayload } from "@/features/simulation-tasks/types";
+import { INTERFACE_ANSWER_RENDERERS } from "./interfaceAnswers/registry";
+import type { CandidateSimulationTask } from "../types/simulation";
 
 interface TaskResponseInputProps {
-    task: SimulationTask;
+    task: CandidateSimulationTask;
     value: string;
     onChange: (value: string) => void;
 }
@@ -18,20 +18,12 @@ function countWords(text: string) {
     return trimmed.length === 0 ? 0 : trimmed.split(/\s+/).length;
 }
 
+// Which widget renders is resolved entirely through INTERFACE_ANSWER_RENDERERS, keyed by
+// task.interfaceType — this component doesn't special-case any one interface type, so a new
+// InterfaceType only needs an entry in that registry (see interfaceAnswers/registry.tsx).
 export function TaskResponseInput({ task, value, onChange }: TaskResponseInputProps) {
-    if (task.interfaceType !== InterfaceType.TEXT_AREA) {
-        return (
-            <div className="w-full rounded-xl border border-dashed border-neutral-300 bg-neutral-50 p-6 text-center text-[16px] text-neutral-400">
-                This response type ("{task.interfaceType}") isn't supported yet.
-            </div>
-        );
-    }
-
+    const Renderer = INTERFACE_ANSWER_RENDERERS[task.interfaceType];
     const wordCount = countWords(value);
-    // interfacePayload's `placeholder` is task-specific and generated per role/scenario —
-    // never a hardcoded example from one particular task (see interface-type.ts).
-    const placeholder = (task.interfacePayload as unknown as TextAreaPayload | undefined)?.placeholder
-        ?? "Type your response here...";
 
     return (
         <div className="flex w-full flex-col gap-1.5">
@@ -42,12 +34,15 @@ export function TaskResponseInput({ task, value, onChange }: TaskResponseInputPr
 
                 <span className="shrink-0 text-neutral-600">Minimum {MIN_WORDS} words</span>
             </div>
-            <textarea
-                value={value}
-                onChange={(event) => onChange(event.target.value.slice(0, MAX_CHARS))}
-                placeholder={placeholder}
-                className="h-38.25 w-full resize-none rounded-lg border border-neutral-200 px-3.5 py-2.5 text-[16px] text-neutral-700 shadow-[0px_1px_1px_rgba(10,13,18,0.05)] outline-none placeholder:text-neutral-400 focus:border-primary-500"
-            />
+
+            {Renderer ? (
+                <Renderer payload={task.interfacePayload} value={value} onChange={onChange} />
+            ) : (
+                <div className="w-full rounded-xl border border-dashed border-neutral-300 bg-neutral-50 p-6 text-center text-[16px] text-neutral-400">
+                    This response type ("{task.interfaceType}") isn't supported yet.
+                </div>
+            )}
+
             <div className="flex w-full items-center justify-between text-[16px] text-neutral-950">
                 <span>{wordCount} / {MAX_WORDS} words</span>
                 <span>{value.length} / {MAX_CHARS} characters</span>
