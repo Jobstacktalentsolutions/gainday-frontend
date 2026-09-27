@@ -16,3 +16,21 @@ import { TaskResponseInput } from "../components/TaskResponseInput";
 import { TimeWarningBanner } from "../components/TimeWarningBanner";
 import { ConnectionBanner } from "../components/ConnectionBanner";
 import { SimulationCompleteModal } from "../components/SimulationCompleteModal";
+
+
+
+export default function TaskRunner() {
+    const { jobId } = useParams<{ jobId: string }>();
+    const navigate = useNavigate();
+    const { job } = useJobDetails(jobId);
+    const { data: simulation } = useJobSimulation(job);
+
+    const runStore = useSimulationRunStore();
+    const addFlag = useSimulationIntegrityStore((state) => state.addFlag);
+    const { scheduleSave, isSaving } = useAutosaveAnswer();
+    const connection = useConnectionMonitor();
+
+    useTabVisibilityGuard({
+    onViolation: (reason) => addFlag(`task-${runStore.currentTaskIndex}-${reason}`),
+  }).arm(); // re-armed here — the guard from EnvironmentCheckPage is a separate hook instance
+}
