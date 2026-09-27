@@ -36,6 +36,7 @@ const CandidateOAuthCallback = lazy(() => import("@/features/candidate/pages/Can
 const PreSimulation = lazy(() => import("@/features/candidate/pages/PreSimulation"));
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
 const EnvironmentCheckPage = lazy(() => import("@/features/candidate/pages/EnvironmentCheckPage"));
+const TaskRunner = lazy(() => import("@/features/candidate/pages/TaskRunner"));
 
 
 const AppRoutes = () => {
@@ -79,6 +80,7 @@ const AppRoutes = () => {
                 <Route path="/job-board/:jobId" element={<JobDetailsPage />} />
                 <Route path="/job-board/:jobId/pre-simulation" element={<PreSimulation />} />
                 <Route path="/job-board/:jobId/environment-check" element={<EnvironmentCheckPage />} />
+                <Route path="/job-board/:jobId/simulation" element={<TaskRunner />} />
                 {/* Dev-only route — quick access without a real jobId */}
                 {import.meta.env.DEV && (
                     <>
