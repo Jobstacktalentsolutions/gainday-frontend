@@ -86,6 +86,9 @@ const AppRoutes = () => {
                     <>
                         <Route path="/dev/pre-simulation" element={<PreSimulation />} />
                         <Route path="/dev/environment-check" element={<EnvironmentCheckPage />} />
+                        {/* /dev/simulation → redirects to the real route with mock job-1
+                            (Custody Operations / Finance — 3 tasks) */}
+                        <Route path="/dev/simulation" element={<Navigate to="/job-board/job-1/simulation" replace />} />
                     </>
                 )}
                 <Route path="/profile" element={<ProfilePage />} />

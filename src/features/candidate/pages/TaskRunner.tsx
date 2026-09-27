@@ -30,9 +30,13 @@ export default function TaskRunner() {
     const { scheduleSave, isSaving } = useAutosaveAnswer();
     const connection = useConnectionMonitor();
 
-    useTabVisibilityGuard({
+    const { arm } = useTabVisibilityGuard({
         onViolation: (reason) => addFlag(`task-${runStore.currentTaskIndex}-${reason}`),
-    }).arm(); // re-armed here — the guard from EnvironmentCheckPage is a separate hook instance
+    });
+    useEffect(() => {
+        arm(); // arm after mount — calling arm() during render triggers setStatus → infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         if (job && simulation) runStore.startRun(job.id, simulation.id, simulation.timeLimitMinutes);
@@ -43,7 +47,8 @@ export default function TaskRunner() {
 
     useEffect(() => {
         if (timer.isExpired && !runStore.isComplete) runStore.markComplete();
-    }, [timer.isExpired, runStore.isComplete, runStore]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [timer.isExpired, runStore.isComplete]);
 
     const [connectionBannerDismissed, setConnectionBannerDismissed] = useState(false);
     useEffect(() => {
