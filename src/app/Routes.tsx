@@ -1,16 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import AppLoader from "@/components/ui/AppLoader";
-import { useSimulationRunStore } from "@/features/candidate/store/useSimulationRunStore";
-
-// DEV-ONLY: resets any stale completed-run state before entering the simulation.
-// Uses getState() so the reset is synchronous and fires before the first render
-// of TaskRunner — avoiding the localStorage hydration race that shows the
-// "simulation complete" modal immediately.
-function DevSimulationStart() {
-    useSimulationRunStore.getState().resetRun();
-    return <Navigate to="/job-board/job-1/simulation" replace />;
-}
 
 
 const AdminLogin = lazy(() => import("@/features/admin/pages/AdminLogin"));
@@ -98,13 +88,7 @@ const AppRoutes = () => {
                 <Route path="/job-board/:jobId/simulation" element={<TaskRunner />} />
                 {/* Dev-only routes — quick access without auth */}
                 {import.meta.env.DEV && (
-                    <>
-                        {/* /dev/simulation → resets stale state then loads the real route with mock job-1
-                            (Custody Operations / Finance — 3 tasks) */}
-                        <Route path="/dev/simulation" element={<DevSimulationStart />} />
-                        {/* /dev/ai-oversight → AI Engine Oversight page without admin auth */}
-                        <Route path="/dev/ai-oversight" element={<AiOversight />} />
-                    </>
+                    <Route path="/dev/ai-oversight" element={<AiOversight />} />
                 )}
                 <Route path="/profile" element={<ProfilePage />} />
 

@@ -14,7 +14,7 @@ const routeGroups = [
       { path: "/admin/dashboard", label: "Admin Dashboard" },
       { path: "/admin/user-management", label: "User Management" },
       { path: "/admin/content-moderation", label: "Content Moderation" },
-      { path: "/dev/ai-oversight", label: "⚙ AI Oversight (dev)" },
+      { path: "/dev/ai-oversight", label: "AI Oversight (dev)" },
     ],
   },
   {
