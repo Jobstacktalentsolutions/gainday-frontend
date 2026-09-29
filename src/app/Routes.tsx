@@ -104,6 +104,8 @@ const AppRoutes = () => {
                         {/* /dev/simulation → resets stale state then loads the real route with mock job-1
                             (Custody Operations / Finance — 3 tasks) */}
                         <Route path="/dev/simulation" element={<DevSimulationStart />} />
+                        {/* /dev/ai-oversight → AI Engine Oversight page without admin auth */}
+                        <Route path="/dev/ai-oversight" element={<AiOversight />} />
                     </>
                 )}
                 <Route path="/profile" element={<ProfilePage />} />
