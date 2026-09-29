@@ -34,6 +34,7 @@ const EmployerManagement = lazy(() => import("@/features/admin/pages/EmployerMan
 const CandidateManagement = lazy(() => import("@/features/admin/pages/CandidateManagement"))
 const ContentModeration = lazy(() => import("@/features/admin/pages/ContentModeration"));
 const GenerationReviews = lazy(() => import("@/features/admin/pages/GenerationReviews"));
+const AiOversight = lazy(() => import("@/features/admin/pages/AiOversight"));
 const JobPreview = lazy(() => import("@/features/employer/pages/JobPreview"));
 const JobBoardPage = lazy(() => import("@/features/candidate/pages/JobBoardPage"));
 const JobDetailsPage = lazy(() => import("@/features/candidate/pages/candidateJobDetails"));
@@ -62,6 +63,7 @@ const AppRoutes = () => {
                     <Route path="candidate-management" element={<CandidateManagement />} />
                     <Route path="content-moderation" element={<ContentModeration />} />
                     <Route path="generation-reviews" element={<GenerationReviews />} />
+                    <Route path="ai-oversight" element={<AiOversight />} />
                 </Route>
                 <Route path="/landing" element={<LandingPage />} />
                 <Route path="/auth/verify-email" element={<LegacyVerifyEmailRedirect />} />

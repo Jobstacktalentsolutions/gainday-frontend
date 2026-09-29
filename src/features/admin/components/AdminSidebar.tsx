@@ -6,6 +6,7 @@ const navItems = [
     { to : "/admin/candidate-management", label : "Candidate Management"},
     { to : "/admin/content-moderation", label : "Content Moderation"},
     { to : "/admin/generation-reviews", label : "Generation Reviews"},
+    { to : "/admin/ai-oversight", label : "AI Oversight"},
 ]
 
 const AdminSidebar = () => {

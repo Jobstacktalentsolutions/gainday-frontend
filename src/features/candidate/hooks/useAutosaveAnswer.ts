@@ -12,9 +12,7 @@ const AUTOSAVE_DEBOUNCE_MS = 2000;
 // useSimulationRunStore, which zustand's `persist` middleware writes to localStorage
 // synchronously on each setAnswer, so the candidate's progress already survives a refresh
 // with no request in flight. This hook exists purely to drive the header's "Saving..." →
-// "Autosaved" indicator with the same debounced feel a real autosave would have, without
-// implying a server round-trip that doesn't happen (there is no PATCH /submissions/:id/
-// answers endpoint, and answers only reach the backend once, on final submit).
+// "Autosaved" indicator 
 export function useAutosaveAnswer() {
     const [isSaving, setIsSaving] = useState(false);
     const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
