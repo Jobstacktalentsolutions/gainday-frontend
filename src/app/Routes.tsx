@@ -86,10 +86,6 @@ const AppRoutes = () => {
                 <Route path="/job-board/:jobId/pre-simulation" element={<PreSimulation />} />
                 <Route path="/job-board/:jobId/environment-check" element={<EnvironmentCheckPage />} />
                 <Route path="/job-board/:jobId/simulation" element={<TaskRunner />} />
-                {/* Dev-only routes — quick access without auth */}
-                {import.meta.env.DEV && (
-                    <Route path="/dev/ai-oversight" element={<AiOversight />} />
-                )}
                 <Route path="/profile" element={<ProfilePage />} />
 
                 <Route path="/candidate">
