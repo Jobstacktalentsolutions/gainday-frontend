@@ -8,13 +8,22 @@ export type ObjectiveComponentType =
     | "SINGLE_BEST_ACTION"
     | "MULTI_SELECT_UNDER_CONSTRAINT";
 
-// Each shape below is the backend's real objectiveComponent shape (component-schemas.ts) MINUS
-// its answer-key field — see gainday-backend/src/modules/simulations/candidate-task.util.ts,
-// the one place that strips it before a task ever reaches this candidate-facing type. Never add
-// a `correct*` field to any of these — the candidate client must never receive one.
+// NEW — the backend's real options/steps shape is still a flat string[] (per the comment
+// above); this is a deliberate, FLAGGED deviation from "mirrors exactly" to support the
+// label+description UI Figma now shows for both SINGLE_BEST_ACTION and PROCEDURAL_SEQUENCING.
+// This MUST be reconciled with whoever owns component-schemas.ts and candidate-task.util.ts
+// on the backend before this hits a real API response — until then, GET /simulations/job/:jobId
+// will keep returning plain strings and this type will not match what's actually received
+
+
+export interface SimulationOption {
+    label : string;
+    description : string;
+}
+
 export interface SingleBestActionCandidateComponent {
     componentType: "SINGLE_BEST_ACTION";
-    options: string[];
+    options: SimulationOption[];
 }
 
 export interface MultiSelectUnderConstraintCandidateComponent {
@@ -36,7 +45,7 @@ export interface ClassificationCandidateComponent {
 
 export interface ProceduralSequencingCandidateComponent {
     componentType: "PROCEDURAL_SEQUENCING";
-    steps: string[];
+    steps: SimulationOption[];
 }
 
 export type CandidateObjectiveComponent =
