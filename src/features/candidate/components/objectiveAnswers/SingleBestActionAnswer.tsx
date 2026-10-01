@@ -13,7 +13,7 @@ const SingleBestActionAnswer = ({ component, response, onChange }: Props) => (
             const isSelected = response === index;
             return (
                 <button
-                    key={option}
+                    key={option.label}
                     type="button"
                     onClick={() => onChange(index)}
                     className="flex w-full items-center gap-6 rounded-xl border border-[#e6e6e8] px-6 py-3 text-left transition-colors hover:border-primary-300"
@@ -24,8 +24,11 @@ const SingleBestActionAnswer = ({ component, response, onChange }: Props) => (
                     >
                         {isSelected && <span className="size-2 rounded-full bg-white" />}
                     </span>
-                    <span className="text-[18px] leading-[1.2] text-primary-950">
-                        {letter}. {option}
+                    <span className ="flex flex-col gap-1">
+                        <span className="text-[18px] leading-[1.2] text-primary-950">
+                            {letter}. {option.label}
+                        </span>
+                        <span className = "text-[14px] text-neutral-400">{option.description}</span>
                     </span>
                 </button>
             );
