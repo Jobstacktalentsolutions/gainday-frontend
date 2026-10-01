@@ -17,7 +17,7 @@ export function describeSingleBestAction(
 ): string {
     if (response === null) return "";
     const letter = String.fromCharCode(65 + response);
-    return `Selected option ${letter}: ${component.options[response]}`;
+    return `Selected option ${letter}: ${component.options[response].label}`;
 }
 
 export function describeMultiSelectUnderConstraint(
@@ -51,8 +51,6 @@ export function describeProceduralSequencing(
     component: ProceduralSequencingCandidateComponent,
     response: number[] | null,
 ): string {
-    // No response yet == the candidate never touched the ordering — reporting the
-    // as-presented order as their "answer" would credit/penalize a choice they never made.
     if (!response) return "";
-    return response.map((stepIndex, position) => `${position + 1}. ${component.steps[stepIndex]}`).join("\n");
+    return response.map((stepIndex, position) => `${position + 1}. ${component.steps[stepIndex].label}`).join("\n");
 }
