@@ -216,27 +216,6 @@ export default function TaskRunner() {
         );
     }
 
-    const task = simulation.tasks[runStore.currentTaskIndex];
-    const answer = runStore.answers[task.id] ?? EMPTY_ANSWER;
-    const isLastTask = runStore.currentTaskIndex === simulation.tasks.length - 1;
-
-    function updateAnswer(patch: Partial<TaskAnswer>) {
-        runStore.setAnswer(task.id, patch);
-        scheduleSave({
-            taskId: task.id,
-            objectiveResponse: patch.objectiveResponse ?? answer.objectiveResponse,
-            textResponse: patch.textResponse ?? answer.textResponse,
-        });
-    }
-
-    function handleNext() {
-        if (isLastTask) {
-            finalizeSubmission(task.id, "manual");
-            return;
-        }
-        runStore.advanceTask(task.id);
-    }
-
     if (runStore.isComplete) {
         const submitFailed = submitSimulation.isError;
         const snapshot = completionSnapshotRef.current;
@@ -266,6 +245,27 @@ export default function TaskRunner() {
                 }
             />
         );
+    }
+
+    const task = simulation.tasks[runStore.currentTaskIndex];
+    const answer = runStore.answers[task.id] ?? EMPTY_ANSWER;
+    const isLastTask = runStore.currentTaskIndex === simulation.tasks.length - 1;
+
+    function updateAnswer(patch: Partial<TaskAnswer>) {
+        runStore.setAnswer(task.id, patch);
+        scheduleSave({
+            taskId: task.id,
+            objectiveResponse: patch.objectiveResponse ?? answer.objectiveResponse,
+            textResponse: patch.textResponse ?? answer.textResponse,
+        });
+    }
+
+    function handleNext() {
+        if (isLastTask) {
+            finalizeSubmission(task.id, "manual");
+            return;
+        }
+        runStore.advanceTask(task.id);
     }
 
     const progressPercent = ((runStore.currentTaskIndex + 1) / simulation.tasks.length) * 100;

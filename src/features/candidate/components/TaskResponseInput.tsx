@@ -31,9 +31,9 @@ export function TaskResponseInput({ task, value, onChange }: TaskResponseInputPr
                 <div className="prose prose-sm max-w-none text-neutral-950 prose-p:my-0">
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown>
                 </div>
-
-                <span className="shrink-0 text-neutral-600">Minimum {MIN_WORDS} words</span>
             </div>
+
+            <span className="text-[14px] text-neutral-600">Minimum {MIN_WORDS} words</span>
 
             {Renderer ? (
                 <Renderer payload={task.interfacePayload} value={value} onChange={onChange} />
