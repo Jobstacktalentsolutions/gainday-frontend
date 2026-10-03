@@ -63,6 +63,8 @@ export default function TaskRunner() {
     const location = useLocation();
     const navigate = useNavigate();
 
+
+
     const { isAuthorized, isLoadingProfile } = useProtectedRoute({
         requiredRole: "JOB_SEEKER",
         redirectTo: `/candidate/signin?redirect=${encodeURIComponent(location.pathname)}`,
@@ -101,7 +103,7 @@ export default function TaskRunner() {
     });
     useEffect(() => {
         arm(); // arm after mount — calling arm() during render triggers setStatus → infinite loop
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useFullscreenGuard({ onExit: () => recordViolation("fullscreen-exit", currentTaskIdRef.current) });
@@ -129,7 +131,7 @@ export default function TaskRunner() {
                 },
             },
         );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [job?.id, simulation?.id, runStore.submissionId]);
 
     const timer = useSimulationTimer(runStore.endTimestamp);
@@ -163,13 +165,15 @@ export default function TaskRunner() {
             const task = simulation.tasks[runStore.currentTaskIndex];
             finalizeSubmission(task.id);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [timer.isExpired, runStore.isComplete, simulation]);
 
     // Keyed by which status was dismissed, not a plain boolean — "lost" and "restored" are
     // distinct values, so a fresh drop after a dismissed "restored" banner compares unequal
     // and shows again automatically. No effect/ref needed to "reset" anything.
     const [dismissedConnectionStatus, setDismissedConnectionStatus] = useState<typeof connection.status | null>(null);
+    const bannerCount = (timer.isWarning ? 1 : 0) + (connection.status !== "online" && connection.status !== dismissedConnectionStatus ? 1 : 0);
+
 
     if (isLoadingProfile || !isAuthorized) {
         return <AppLoader />;
@@ -257,7 +261,7 @@ export default function TaskRunner() {
     return (
         <div className="min-h-screen w-full bg-neutral-50">
             {timer.isWarning && <TimeWarningBanner />}
-            {!timer.isWarning && connection.status !== "online" && connection.status !== dismissedConnectionStatus && (
+            { connection.status !== "online" && connection.status !== dismissedConnectionStatus && (
                 <ConnectionBanner
                     status={connection.status as "lost" | "restored"}
                     onDismiss={() => setDismissedConnectionStatus(connection.status)}
