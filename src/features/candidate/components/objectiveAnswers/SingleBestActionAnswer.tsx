@@ -13,7 +13,7 @@ const SingleBestActionAnswer = ({ component, response, onChange }: Props) => (
             const isSelected = response === index;
             return (
                 <button
-                    key={option.label}
+                    key={option}
                     type="button"
                     onClick={() => onChange(index)}
                     className="flex w-full items-center gap-6 rounded-xl border border-[#e6e6e8] px-6 py-3 text-left transition-colors hover:border-primary-300"
