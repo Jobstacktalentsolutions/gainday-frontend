@@ -261,7 +261,7 @@ export default function TaskRunner() {
     return (
         <div className="min-h-screen w-full bg-neutral-50">
             {timer.isWarning && <TimeWarningBanner />}
-            { connection.status !== "online" && connection.status !== dismissedConnectionStatus && (
+            {connection.status !== "online" && connection.status !== dismissedConnectionStatus && (
                 <ConnectionBanner
                     status={connection.status as "lost" | "restored"}
                     onDismiss={() => setDismissedConnectionStatus(connection.status)}
@@ -296,7 +296,8 @@ export default function TaskRunner() {
                     </div>
                 </div>
             </div>
-            <main className="mx-auto flex w-full max-w-300 flex-col items-center px-5 pb-20 pt-34.25">
+            <main className="mx-auto flex w-full max-w-300 flex-col items-center px-5 pb-20"
+                style={{ paddingTop: `${137 + bannerCount * 56}px` }}>
                 <div className="flex w-full max-w-246.5 flex-col gap-10 rounded-3xl bg-white p-10 shadow-[0px_4px_10px_rgba(16,24,40,0.05)]">
                     <div className="flex w-full items-center justify-between">
                         <p className="text-[16px] text-primary-500">Task • {task.category}</p>
