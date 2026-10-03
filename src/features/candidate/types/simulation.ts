@@ -16,14 +16,9 @@ export type ObjectiveComponentType =
 // will keep returning plain strings and this type will not match what's actually received
 
 
-export interface SimulationOption {
-    label : string;
-    description : string;
-}
-
 export interface SingleBestActionCandidateComponent {
     componentType: "SINGLE_BEST_ACTION";
-    options: SimulationOption[];
+    options: string[];
 }
 
 export interface MultiSelectUnderConstraintCandidateComponent {
@@ -45,7 +40,7 @@ export interface ClassificationCandidateComponent {
 
 export interface ProceduralSequencingCandidateComponent {
     componentType: "PROCEDURAL_SEQUENCING";
-    steps: SimulationOption[];
+    steps: string[];
 }
 
 export type CandidateObjectiveComponent =
