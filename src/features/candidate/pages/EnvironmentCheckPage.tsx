@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Sparkles, Maximize, Wifi, MonitorCheck, Check, X, Loader2 } from "lucide-react";
+import { Maximize, Wifi, MonitorCheck, Check, X, Loader2 } from "lucide-react";
 import { PublicNavbar } from "../components/PublicNavbar";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { apiClient } from "@/lib/api/client";
@@ -11,6 +11,7 @@ import { useSimulationIntegrityStore } from "../hooks/useSimulationIntegrityStor
 import { useJobDetails } from "../hooks/useJobDetails";
 import { useJobSimulation } from "../hooks/useJobSimulation";
 import { useSimulationRunStore } from "../store/useSimulationRunStore";
+import BlueSparkles from "@/assets/blue-sparkles.svg";
 
 type CheckStatus = "checking" | "ready" | "failed";
 
@@ -109,7 +110,11 @@ export default function EnvironmentCheckPage() {
                     />
 
                     <div className="relative z-10 flex flex-col items-center gap-6 text-center">
-                        <Sparkles className="size-8 text-primary-500" strokeWidth={1.5} />
+                        <img
+                            src={BlueSparkles}
+                            alt="sparkles"
+                            className=" h-8 "
+                        />
                         <div className="flex flex-col items-center gap-1">
                             <p className="text-[16px] text-primary-500">System Verification</p>
                             <h1 className="text-[32px] leading-9.5 tracking-[-0.32px] text-primary-950">
