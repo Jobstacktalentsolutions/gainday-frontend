@@ -37,7 +37,7 @@ export function SimulationCompleteModal({
     return (
         <div className="fixed inset-0 z-30 flex items-center justify-center bg-[rgba(178,201,255,0.1)] backdrop-blur-[15px]">
             <div className="flex w-141.5 max-w-[90vw] flex-col items-center gap-10 rounded-2xl bg-white p-12 shadow-[0px_1px_20px_rgba(123,123,123,0.05),0px_4px_10px_rgba(123,123,123,0.05)]">
-                <Lottie src={isTimeout ? timerAnimation : successAnimation} loop={false} className="size-37.5" />
+                <Lottie src={isTimeout ? timerAnimation : successAnimation} autoplay loop={false} className="size-37.5" />
 
                 <div className="flex flex-col items-center gap-2 text-center">
                     <h2 className="text-[32px] leading-9.5 tracking-[-0.32px] text-primary-950">
