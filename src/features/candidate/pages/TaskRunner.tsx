@@ -351,7 +351,12 @@ export default function TaskRunner() {
 
                     <div className="flex w-full items-center justify-between">
                         {/* Previous Task is permanently disabled — forward-only, per your call */}
-                        <ActionButton variant="outline" size="md" disabled className="opacity-70">
+                        <ActionButton
+                            variant="outline"
+                            size="md"
+                            disabled={runStore.currentTaskIndex === 0}
+                            onClick={() => runStore.goToPreviousTask(task.id)}
+                            className="opacity-70">
                             Previous Task
                         </ActionButton>
                         <ActionButton
