@@ -24,11 +24,10 @@ const SingleBestActionAnswer = ({ component, response, onChange }: Props) => (
                     >
                         {isSelected && <span className="size-2 rounded-full bg-white" />}
                     </span>
-                    <span className ="flex flex-col gap-1">
+                    <span className="flex flex-col gap-1">
                         <span className="text-[18px] leading-[1.2] text-primary-950">
-                            {letter}. {option.label}
+                            {letter}. {option}
                         </span>
-                        <span className = "text-[14px] text-neutral-400">{option.description}</span>
                     </span>
                 </button>
             );

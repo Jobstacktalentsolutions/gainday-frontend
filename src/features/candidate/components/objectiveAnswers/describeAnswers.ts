@@ -12,12 +12,12 @@ import type {
 } from "../../types/simulation";
 
 export function describeSingleBestAction(
-    component: SingleBestActionCandidateComponent,
-    response: number | null,
+  component: SingleBestActionCandidateComponent,
+  response: number | null,
 ): string {
-    if (response === null) return "";
-    const letter = String.fromCharCode(65 + response);
-    return `Selected option ${letter}: ${component.options[response].label}`;
+  if (response === null) return "";
+  const letter = String.fromCharCode(65 + response);
+  return `Selected option ${letter}: ${component.options[response]}`;
 }
 
 export function describeMultiSelectUnderConstraint(
@@ -48,9 +48,9 @@ export function describeClassification(
 }
 
 export function describeProceduralSequencing(
-    component: ProceduralSequencingCandidateComponent,
-    response: number[] | null,
+  component: ProceduralSequencingCandidateComponent,
+  response: number[] | null,
 ): string {
-    if (!response) return "";
-    return response.map((stepIndex, position) => `${position + 1}. ${component.steps[stepIndex].label}`).join("\n");
+  if (!response) return "";
+  return response.map((stepIndex, position) => `${position + 1}. ${component.steps[stepIndex]}`).join("\n");
 }
