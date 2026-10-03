@@ -8,10 +8,15 @@ interface SimulationCompleteModalProps {
      *  failed (answers are still safe locally — see useSimulationRunStore's persist), "done"
      *  once it succeeded. */
     submitStatus: "pending" | "error" | "done";
+    /** How the simulation ended — "timeout" when the clock ran out, "manual" when submitted early. */
+    reason: "timeout" | "manual";
+    totalTaskCount: number;
+    tasksSubmittedCount: number;
+    elapsedSeconds: number;
     onRetry?: () => void;
 }
 
-export function SimulationCompleteModal({ timeLimitMinutes, submitStatus, onRetry }: SimulationCompleteModalProps) {
+export function SimulationCompleteModal({ timeLimitMinutes, submitStatus, reason, totalTaskCount, tasksSubmittedCount, elapsedSeconds, onRetry }: SimulationCompleteModalProps) {
     const navigate = useNavigate();
 
     return (

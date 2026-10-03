@@ -136,9 +136,20 @@ export default function TaskRunner() {
 
     const timer = useSimulationTimer(runStore.endTimestamp);
 
-    function finalizeSubmission(currentTaskId: string) {
+    const completionSnapshotRef = useRef<{
+        reason: "timeout" | "manual";
+        tasksSubmittedCount: number;
+        elapsedSeconds: number;
+    } | null>(null);
+
+    function finalizeSubmission(currentTaskId: string, reason: "timeout" | "manual") {
         if (hasFinalizedRef.current || !simulation) return;
         hasFinalizedRef.current = true;
+        completionSnapshotRef.current = {
+            reason,
+            tasksSubmittedCount: runStore.currentTaskIndex + 1,
+            elapsedSeconds: simulation.timeLimitMinutes * 60 - timer.remainingSeconds,
+        };
         runStore.markComplete(currentTaskId);
 
         // Captures a still-open idle spell that never got closed out by an activity event
@@ -163,7 +174,7 @@ export default function TaskRunner() {
     useEffect(() => {
         if (timer.isExpired && !runStore.isComplete && simulation) {
             const task = simulation.tasks[runStore.currentTaskIndex];
-            finalizeSubmission(task.id);
+            finalizeSubmission(task.id, "timeout");
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [timer.isExpired, runStore.isComplete, simulation]);
@@ -220,7 +231,7 @@ export default function TaskRunner() {
 
     function handleNext() {
         if (isLastTask) {
-            finalizeSubmission(task.id);
+            finalizeSubmission(task.id, "manual");
             return;
         }
         runStore.advanceTask(task.id);
@@ -228,10 +239,15 @@ export default function TaskRunner() {
 
     if (runStore.isComplete) {
         const submitFailed = submitSimulation.isError;
+        const snapshot = completionSnapshotRef.current;
         return (
             <SimulationCompleteModal
                 timeLimitMinutes={simulation.timeLimitMinutes}
                 submitStatus={submitFailed ? "error" : submitSimulation.isPending ? "pending" : "done"}
+                reason={snapshot?.reason ?? "manual"}
+                totalTaskCount={simulation.tasks.length}
+                tasksSubmittedCount={snapshot?.tasksSubmittedCount ?? simulation.tasks.length}
+                elapsedSeconds={snapshot?.elapsedSeconds ?? 0}
                 onRetry={
                     submitFailed && runStore.submissionId
                         ? () => {
@@ -301,10 +317,7 @@ export default function TaskRunner() {
                 <div className="flex w-full max-w-246.5 flex-col gap-10 rounded-3xl bg-white p-10 shadow-[0px_4px_10px_rgba(16,24,40,0.05)]">
                     <div className="flex w-full items-center justify-between">
                         <p className="text-[16px] text-primary-500">Task • {task.category}</p>
-                        {/*previously no provisions for weight*/}
-                        <span className="rounded-full border border-secondary-500 bg-warning-50 px-4 py-1 text-[16px] text-secondary-500">
-                            Weight: —
-                        </span>
+
                     </div>
 
                     <div className="flex flex-col gap-1">
