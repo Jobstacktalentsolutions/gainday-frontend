@@ -21,6 +21,7 @@ export interface AdminAccountBase {
     email: string;
     status: UserStatus;
     isActive?: boolean;
+    mustChangePassword?: boolean;
     suspensionReason?: string | null;
     suspendedAt?: string | null;
     createdAt?: string;

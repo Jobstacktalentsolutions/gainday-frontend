@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { UserPlus, AlertCircle } from "lucide-react";
+import { UserPlus, AlertCircle, MailCheck } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -18,7 +18,6 @@ import { useCreateAdmin } from "../hooks/useAdmins";
 const createAdminSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
   email: z.string().email("Enter a valid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
   role: z.enum(["MANAGER", "MODERATOR"]),
 });
 
@@ -43,7 +42,6 @@ export const CreateAdminDialog = ({ open, onOpenChange }: CreateAdminDialogProps
     defaultValues: {
       fullName: "",
       email: "",
-      password: "",
       role: "MANAGER",
     },
   });
@@ -82,7 +80,7 @@ export const CreateAdminDialog = ({ open, onOpenChange }: CreateAdminDialogProps
             Create Admin Account
           </DialogTitle>
           <DialogDescription className="text-sm text-neutral-500">
-            Add a new team member with administrative privileges. They will use their email and password with mandatory 2FA on sign-in.
+            Add a new team member with administrative privileges. An invitation email with temporary login credentials will be dispatched automatically.
           </DialogDescription>
         </DialogHeader>
 
@@ -104,15 +102,6 @@ export const CreateAdminDialog = ({ open, onOpenChange }: CreateAdminDialogProps
             {...register("email")}
           />
 
-          <FormInput
-            label="Initial Password"
-            type="password"
-            placeholder="••••••••"
-            required
-            error={errors.password?.message}
-            {...register("password")}
-          />
-
           <div className="flex flex-col gap-1.5">
             <label className="text-base font-medium text-neutral-800 select-none flex items-center gap-1">
               Admin Role <span className="text-error-500">*</span>
@@ -129,6 +118,19 @@ export const CreateAdminDialog = ({ open, onOpenChange }: CreateAdminDialogProps
                 {errors.role.message}
               </p>
             )}
+          </div>
+
+          {/* Automatic Temporary Password & First-Time Setup Notice */}
+          <div className="flex items-start gap-3 rounded-xl border border-primary-100 bg-primary-50/60 p-4 text-xs text-primary-900">
+            <MailCheck className="size-5 shrink-0 text-primary-600 mt-0.5" />
+            <div className="flex flex-col gap-1">
+              <span className="font-semibold text-primary-950">
+                Automated Temporary Password & Invite
+              </span>
+              <p className="text-primary-800 leading-relaxed">
+                A secure temporary password will be generated and emailed directly to this administrator. Upon their first login (with 2FA verification), they will be required to set their custom permanent password.
+              </p>
+            </div>
           </div>
 
           {serverError && (
@@ -155,7 +157,7 @@ export const CreateAdminDialog = ({ open, onOpenChange }: CreateAdminDialogProps
               size="sm"
               disabled={createAdminMutation.isPending}
             >
-              {createAdminMutation.isPending ? "Creating..." : "Create Admin"}
+              {createAdminMutation.isPending ? "Creating & Sending Invite..." : "Create Admin & Send Invite"}
             </AdminButton>
           </DialogFooter>
         </form>

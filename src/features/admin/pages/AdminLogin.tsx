@@ -1,9 +1,18 @@
 import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { AlertCircle, ArrowLeft, CheckCircle2, KeyRound, RefreshCw, ShieldCheck } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowLeft,
+  CheckCircle2,
+  KeyRound,
+  Lock,
+  RefreshCw,
+  ShieldCheck,
+} from "lucide-react";
 import { type AdminLoginFormValues, adminLoginSchema } from "../schemas/loginSchema";
 import { apiClient } from "@/lib/api/client";
 import { useAuthStore } from "@/features/auth/store/authStore";
@@ -27,12 +36,25 @@ interface AdminVerify2faResponse {
     role: string;
     profileId?: string;
     fullName?: string;
+    mustChangePassword?: boolean;
   };
 }
 
+const setPasswordSchema = z
+  .object({
+    newPassword: z.string().min(8, "Password must be at least 8 characters long"),
+    confirmNewPassword: z.string().min(8, "Please confirm your password"),
+  })
+  .refine((data) => data.newPassword === data.confirmNewPassword, {
+    message: "Passwords do not match",
+    path: ["confirmNewPassword"],
+  });
+
+type SetPasswordFormValues = z.infer<typeof setPasswordSchema>;
+
 const AdminLogin = () => {
   const navigate = useNavigate();
-  const [step, setStep] = useState<"credentials" | "2fa">("credentials");
+  const [step, setStep] = useState<"credentials" | "2fa" | "set-password">("credentials");
   const [challengeToken, setChallengeToken] = useState<string>("");
   const [emailMasked, setEmailMasked] = useState<string>("");
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
@@ -44,11 +66,19 @@ const AdminLogin = () => {
   const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
+    register: registerLogin,
+    handleSubmit: handleSubmitLogin,
+    formState: { errors: loginErrors },
   } = useForm<AdminLoginFormValues>({
     resolver: zodResolver(adminLoginSchema),
+  });
+
+  const {
+    register: registerPassword,
+    handleSubmit: handleSubmitPassword,
+    formState: { errors: passwordErrors },
+  } = useForm<SetPasswordFormValues>({
+    resolver: zodResolver(setPasswordSchema),
   });
 
   // Step 1: Initiate Admin Login
@@ -90,6 +120,32 @@ const AdminLogin = () => {
         useAuthStore.getState().clearAuth();
         return;
       }
+
+      setErrorMessage(null);
+      useAuthStore.getState().setAuth(data.access_token, data.user);
+
+      // Check if this is the admin's first login and they need to choose their permanent password
+      if (data.user?.mustChangePassword) {
+        setStep("set-password");
+      } else {
+        navigate("/admin/dashboard");
+      }
+    },
+    onError: (err: any) => {
+      const msg =
+        err?.response?.data?.message ||
+        "Invalid verification code. Please check your email and try again.";
+      setErrorMessage(Array.isArray(msg) ? msg[0] : msg);
+    },
+  });
+
+  // Step 3: Set Initial Custom Password
+  const setInitialPasswordMutation = useMutation({
+    mutationFn: async (values: SetPasswordFormValues) => {
+      const res = await apiClient.post("/auth/admin/set-initial-password", values);
+      return res.data;
+    },
+    onSuccess: (data) => {
       setErrorMessage(null);
       useAuthStore.getState().setAuth(data.access_token, data.user);
       navigate("/admin/dashboard");
@@ -97,7 +153,7 @@ const AdminLogin = () => {
     onError: (err: any) => {
       const msg =
         err?.response?.data?.message ||
-        "Invalid verification code. Please check your email and try again.";
+        "Failed to set new password. Please make sure it meets security requirements.";
       setErrorMessage(Array.isArray(msg) ? msg[0] : msg);
     },
   });
@@ -153,6 +209,11 @@ const AdminLogin = () => {
   const onCredentialsSubmit = (values: AdminLoginFormValues) => {
     setErrorMessage(null);
     loginMutation.mutate(values);
+  };
+
+  const onSetPasswordSubmit = (values: SetPasswordFormValues) => {
+    setErrorMessage(null);
+    setInitialPasswordMutation.mutate(values);
   };
 
   const handleOtpChange = (index: number, value: string) => {
@@ -211,7 +272,7 @@ const AdminLogin = () => {
       </div>
 
       <div className="w-full max-w-md p-8 bg-white rounded-xl shadow-sm border border-neutral-100">
-        {step === "credentials" ? (
+        {step === "credentials" && (
           <div>
             <div className="space-y-1">
               <h1 className="text-2xl font-semibold text-foreground-admin tracking-tight">
@@ -223,7 +284,7 @@ const AdminLogin = () => {
             </div>
 
             <form
-              onSubmit={handleSubmit(onCredentialsSubmit)}
+              onSubmit={handleSubmitLogin(onCredentialsSubmit)}
               noValidate
               className="mt-6 space-y-5"
             >
@@ -233,8 +294,8 @@ const AdminLogin = () => {
                 placeholder="admin@gainday.com"
                 required
                 autoComplete="email"
-                error={errors.email?.message}
-                {...register("email")}
+                error={loginErrors.email?.message}
+                {...registerLogin("email")}
               />
 
               <FormInput
@@ -243,8 +304,8 @@ const AdminLogin = () => {
                 placeholder="••••••••"
                 required
                 autoComplete="current-password"
-                error={errors.password?.message}
-                {...register("password")}
+                error={loginErrors.password?.message}
+                {...registerLogin("password")}
               />
 
               {errorMessage && (
@@ -269,7 +330,9 @@ const AdminLogin = () => {
               </Button>
             </form>
           </div>
-        ) : (
+        )}
+
+        {step === "2fa" && (
           <div>
             <div className="flex items-center gap-2 mb-4">
               <button
@@ -376,6 +439,77 @@ const AdminLogin = () => {
                   {canResend ? "Resend code" : `Resend in ${resendCountdown}s`}
                 </button>
               </div>
+            </form>
+          </div>
+        )}
+
+        {step === "set-password" && (
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-primary-50 text-primary-600 flex items-center justify-center">
+                <Lock className="w-5 h-5" />
+              </div>
+              <div>
+                <h1 className="text-xl font-semibold text-foreground-admin">
+                  Set Your Permanent Password
+                </h1>
+                <p className="text-xs text-muted-foreground">
+                  First-time administrative security setup
+                </p>
+              </div>
+            </div>
+
+            <p className="text-sm text-neutral-600 mb-6">
+              You signed in with a temporary password. Please establish your private password to secure your admin account.
+            </p>
+
+            <form
+              onSubmit={handleSubmitPassword(onSetPasswordSubmit)}
+              noValidate
+              className="space-y-4"
+            >
+              <FormInput
+                label="New Password"
+                type="password"
+                placeholder="At least 8 characters"
+                required
+                autoComplete="new-password"
+                error={passwordErrors.newPassword?.message}
+                {...registerPassword("newPassword")}
+              />
+
+              <FormInput
+                label="Confirm New Password"
+                type="password"
+                placeholder="Re-enter your new password"
+                required
+                autoComplete="new-password"
+                error={passwordErrors.confirmNewPassword?.message}
+                {...registerPassword("confirmNewPassword")}
+              />
+
+              {errorMessage && (
+                <div
+                  role="alert"
+                  className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm"
+                >
+                  <AlertCircle aria-hidden="true" className="h-4 w-4 shrink-0 mt-0.5" />
+                  <span>{errorMessage}</span>
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                className="w-full flex items-center justify-center gap-x-2 bg-primary-500 hover:bg-primary-600 text-white font-medium py-2.5 rounded-lg shadow-sm transition-all mt-6"
+                disabled={setInitialPasswordMutation.isPending}
+              >
+                {setInitialPasswordMutation.isPending && (
+                  <img src={spinner} alt="spinner" className="w-4 h-4 animate-spin" />
+                )}
+                {setInitialPasswordMutation.isPending
+                  ? "Saving Password..."
+                  : "Save Password & Enter Dashboard"}
+              </Button>
             </form>
           </div>
         )}

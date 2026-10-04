@@ -6,7 +6,7 @@ import type { PaginatedResponse } from "../types/pagination";
 export interface CreateAdminFormValues {
   email: string;
   fullName: string;
-  password: string;
+  password?: string;
   role: "MANAGER" | "MODERATOR";
 }
 

@@ -10,6 +10,7 @@ interface AuthUser {
   fullName?: string;
   companyName?: string;
   phoneNumber?: string;
+  mustChangePassword?: boolean;
 }
 
 interface AuthState {
