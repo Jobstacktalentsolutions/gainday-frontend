@@ -86,8 +86,11 @@ export default function EnvironmentCheckPage() {
             );
             setSubmissionId(submission.id);
             navigate(`/job-board/${jobId}/simulation`);
-        } catch {
-            setStartError("Couldn't start your simulation attempt. Please try again.");
+        } catch (err: any) {
+            const msg =
+                err?.response?.data?.message ||
+                "Couldn't start your simulation attempt. Please try again.";
+            setStartError(Array.isArray(msg) ? msg.join(", ") : msg);
             setIsStarting(false);
         }
     }

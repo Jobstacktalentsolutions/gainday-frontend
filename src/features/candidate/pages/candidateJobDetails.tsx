@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Clock, MapPin, Wallet, Share2, Sparkles } from "lucide-react";
+import { Clock, MapPin, Wallet, Share2, Sparkles, Check } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { PublicNavbar } from "../components/PublicNavbar";
@@ -8,17 +8,19 @@ import { ApplyDialog } from "../components/ApplyDialog";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { StepContinueButton } from "@/components/ui/StepNavigationButtons";
 import { useJobDetails } from "../hooks/useJobDetails";
+import { useAppliedJobIds } from "../hooks/useAppliedJobIds";
 import { formatPostedDate, formatSalaryRange } from "../utils/formatters";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 
-
 export default function JobDetailsPage() {
-
     const { jobId } = useParams<{ jobId: string }>();
     const navigate = useNavigate();
     const { job, isLoading } = useJobDetails(jobId);
+    const { appliedSet } = useAppliedJobIds();
     const { isAuthenticated } = useCurrentUser();
     const [authPromptOpen, setAuthPromptOpen] = useState(false);
+
+    const isApplied = Boolean(job && appliedSet.has(job.id));
 
     if (isLoading) {
         return (
@@ -39,6 +41,7 @@ export default function JobDetailsPage() {
     }
 
     function handleApplyClick() {
+        if (isApplied) return;
         if (isAuthenticated) {
             navigate(`/job-board/${job!.id}/pre-simulation`);
         } else {
@@ -96,8 +99,14 @@ export default function JobDetailsPage() {
                             </div>
                         </div>
                         <div className="flex shrink-0 items-center gap-4">
-                            <StepContinueButton size="lg" className="w-fit" onClick={handleApplyClick}>
-                                Apply
+                            <StepContinueButton
+                                size="lg"
+                                disabled={isApplied}
+                                icon={isApplied ? <Check className="size-4" /> : undefined}
+                                className={`w-fit ${isApplied ? "disabled:bg-neutral-200 disabled:text-neutral-500 disabled:opacity-100 disabled:shadow-none pointer-events-none" : ""}`}
+                                onClick={handleApplyClick}
+                            >
+                                {isApplied ? "Applied" : "Apply"}
                             </StepContinueButton>
                             <ActionButton
                                 variant="outline"
@@ -178,8 +187,14 @@ export default function JobDetailsPage() {
                                 <p className="text-[16px] text-neutral-700">{job.businessProblem}</p>
                             </>
                         )}
-                        <StepContinueButton size="lg" className="w-fit" onClick={handleApplyClick}>
-                            Start Now
+                        <StepContinueButton
+                            size="lg"
+                            disabled={isApplied}
+                            icon={isApplied ? <Check className="size-4" /> : undefined}
+                            className={`w-fit ${isApplied ? "disabled:bg-neutral-200 disabled:text-neutral-500 disabled:opacity-100 disabled:shadow-none pointer-events-none" : ""}`}
+                            onClick={handleApplyClick}
+                        >
+                            {isApplied ? "Applied" : "Start Now"}
                         </StepContinueButton>
                         <p className="text-[16px] text-neutral-400">
                             Uses a 20 to 30 minute work simulation, not a cover letter.

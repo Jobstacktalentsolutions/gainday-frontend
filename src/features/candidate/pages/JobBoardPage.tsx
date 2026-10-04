@@ -6,10 +6,12 @@ import { JobCard } from "../components/JobCard";
 import { EmptyJobBoardState } from "../components/EmptyJobBoardState";
 import { NoResultsState } from "../components/NoFilterResult";
 import { useJobBoardFilters } from "../hooks/useJobBoardFilters";
+import { useAppliedJobIds } from "../hooks/useAppliedJobIds";
 import type { JobBoardListing } from "../types/jobBoard";
 
 export function JobBoardPage() {
     const navigate = useNavigate();
+    const { appliedSet } = useAppliedJobIds();
     const {
         isLoading,
         totalJobs,
@@ -88,7 +90,12 @@ export function JobBoardPage() {
                 {!isLoading && filteredJobs.length > 0 && (
                     <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {filteredJobs.map((job) => (
-                            <JobCard key={job.id} job={job} onApply={handleApply} />
+                            <JobCard
+                                key={job.id}
+                                job={job}
+                                isApplied={appliedSet.has(job.id)}
+                                onApply={handleApply}
+                            />
                         ))}
                     </div>
                 )}
