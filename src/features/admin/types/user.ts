@@ -13,13 +13,17 @@ interface AdminAccountBase {
     status: UserStatus;
 }
 
-export interface AdminEmployer extends AdminAccountBase {
-    role: "Employer";
-    employerProfile: EmployerProfile;
+export interface AdminProfile {
+    fullName: string;
+    adminRole: "SUPER_ADMIN" | "MANAGER" | "MODERATOR";
+    isSuperAdmin?: boolean;
 }
 
-export interface AdminCandidate extends AdminAccountBase {
-    role: "Candidate";
+export interface AdminUserAccount extends AdminAccountBase {
+    role: "ADMIN";
+    isActive: boolean;
+    createdAt: string;
+    adminProfile?: AdminProfile;
 }
 
-export type AdminAccount = AdminEmployer | AdminCandidate;
+export type AdminAccount = AdminEmployer | AdminCandidate | AdminUserAccount;

@@ -1,21 +1,19 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
-import { createSuspendHook } from "./suspendFactory";
-import type { AdminAccount } from "../types/user";
+import type { AdminUserAccount } from "../types/user";
 
-async function fetchAdmins(): Promise<AdminAccount[]> {
-  const { data } = await apiClient.get<AdminAccount[]>("/admin/users", {
+export interface CreateAdminFormValues {
+  email: string;
+  fullName: string;
+  password: string;
+  role: "SUPER_ADMIN" | "MANAGER" | "MODERATOR";
+}
+
+async function fetchAdmins(): Promise<AdminUserAccount[]> {
+  const { data } = await apiClient.get<AdminUserAccount[]>("/admin/users", {
     params: { role: "ADMIN" },
   });
   return data;
-}
-
-async function suspendAdmin(userId: string): Promise<AdminAccount> {
-  const { data } = await apiClient.put<AdminAccount>(
-    `/admin/users/${userId}/status`,
-    { isActive: false }
-  );
-  return { ...data, status: "suspended" };
 }
 
 export function useAdmins() {
@@ -25,7 +23,41 @@ export function useAdmins() {
   });
 }
 
-export const useSuspendAdmin = createSuspendHook(
-  ["admin", "admins"],
-  suspendAdmin
-);
+export function useCreateAdmin() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (values: CreateAdminFormValues) => {
+      const { data } = await apiClient.post<AdminUserAccount>("/admin/admins", values);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "admins"] });
+    },
+  });
+}
+
+export function useDeleteAdmin() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (userId: string) => {
+      const { data } = await apiClient.delete(`/admin/admins/${userId}`);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "admins"] });
+    },
+  });
+}
+
+export function useToggleAdminStatus() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ userId, isActive }: { userId: string; isActive: boolean }) => {
+      const { data } = await apiClient.put(`/admin/users/${userId}/status`, { isActive });
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "admins"] });
+    },
+  });
+}

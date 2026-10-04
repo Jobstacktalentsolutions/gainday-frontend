@@ -265,7 +265,7 @@ const AdminLogin = () => {
                 {loginMutation.isPending && (
                   <img src={spinner} alt="spinner" className="w-4 h-4 animate-spin" />
                 )}
-                {loginMutation.isPending ? "Authenticating..." : "Continue with 2FA"}
+                {loginMutation.isPending ? "Logging in..." : "Login"}
               </Button>
             </form>
           </div>
