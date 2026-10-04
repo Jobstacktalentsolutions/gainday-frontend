@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { HelpCircle, Plus, Search, ShieldCheck } from "lucide-react";
+import { HelpCircle, Plus, Search } from "lucide-react";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { AdminButton } from "@/components/ui/AdminButton";
 import { useAdmins, useDeleteAdmin, useToggleAdminStatus } from "../hooks/useAdmins";
@@ -8,6 +8,7 @@ import { HowRolesWorkModal } from "../components/HowRolesWorkModal";
 import { CreateAdminDialog } from "../components/CreateAdminDialog";
 import { DeleteAdminDialog } from "../components/DeleteAdminDialog";
 import { ToggleAdminStatusDialog } from "../components/ToggleAdminStatusDialog";
+import { ViewAdminDialog } from "../components/ViewAdminDialog";
 import type { AdminUserAccount } from "../types/user";
 
 const AdminManagement = () => {
@@ -16,6 +17,7 @@ const AdminManagement = () => {
 
   const [howRolesWorkOpen, setHowRolesWorkOpen] = useState(false);
   const [createAdminOpen, setCreateAdminOpen] = useState(false);
+  const [viewingAdmin, setViewingAdmin] = useState<AdminUserAccount | null>(null);
   const [pendingStatusAdmin, setPendingStatusAdmin] = useState<AdminUserAccount | null>(null);
   const [pendingDeleteAdmin, setPendingDeleteAdmin] = useState<AdminUserAccount | null>(null);
 
@@ -111,6 +113,7 @@ const AdminManagement = () => {
       {!isLoading && !isError && (
         <AdminsTable
           admins={filteredAdmins}
+          onView={setViewingAdmin}
           onToggleStatus={setPendingStatusAdmin}
           onDelete={setPendingDeleteAdmin}
           isUpdatingStatus={toggleStatusMutation.isPending}
@@ -127,6 +130,16 @@ const AdminManagement = () => {
       <CreateAdminDialog
         open={createAdminOpen}
         onOpenChange={setCreateAdminOpen}
+      />
+
+      <ViewAdminDialog
+        admin={viewingAdmin}
+        open={viewingAdmin !== null}
+        onOpenChange={(open) => !open && setViewingAdmin(null)}
+        onToggleStatus={(adm) => {
+          setViewingAdmin(null);
+          setPendingStatusAdmin(adm);
+        }}
       />
 
       <ToggleAdminStatusDialog

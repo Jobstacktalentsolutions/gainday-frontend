@@ -11,7 +11,8 @@ const EmployerManagement = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const debouncedSearch = useDebouncedValue(searchTerm, 200);
     const [pendingSuspend, setPendingSuspend] = useState<AdminAccount | null>(null);
-    const [editingEmployer, setEditingEmployer] = useState<AdminEmployer | null>(null);
+    const [dialogEmployer, setDialogEmployer] = useState<AdminEmployer | null>(null);
+    const [dialogMode, setDialogMode] = useState<"view" | "edit">("view");
 
     const { data: employers, isLoading, isError } = useEmployers();
     const suspendMutation = useSuspendEmployer();
@@ -38,8 +39,18 @@ const EmployerManagement = () => {
     const handleSaveEmployer = (userId: string, values: EmployerEditFormValues) => {
         updateMutation.mutate(
             { userId, values },
-            { onSuccess: () => setEditingEmployer(null) }
+            { onSuccess: () => setDialogEmployer(null) }
         );
+    };
+
+    const handleViewEmployer = (employer: AdminEmployer) => {
+        setDialogEmployer(employer);
+        setDialogMode("view");
+    };
+
+    const handleEditEmployer = (employer: AdminEmployer) => {
+        setDialogEmployer(employer);
+        setDialogMode("edit");
     };
 
     return (
@@ -73,7 +84,8 @@ const EmployerManagement = () => {
             {!isLoading && !isError && (
                 <EmployersTable
                     employers={filteredEmployers}
-                    onEdit={setEditingEmployer}
+                    onView={handleViewEmployer}
+                    onEdit={handleEditEmployer}
                     onSuspend={setPendingSuspend}
                     isSuspending={suspendMutation.isPending}
                 />
@@ -90,11 +102,12 @@ const EmployerManagement = () => {
             />
 
             <EditEmployerDialog
-                user={editingEmployer}
-                open={editingEmployer !== null}
-                onOpenChange={(open) => !open && setEditingEmployer(null)}
+                user={dialogEmployer}
+                open={dialogEmployer !== null}
+                onOpenChange={(open) => !open && setDialogEmployer(null)}
                 onSave={handleSaveEmployer}
                 isSaving={updateMutation.isPending}
+                initialMode={dialogMode}
             />
         </>
     );

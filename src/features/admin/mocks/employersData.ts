@@ -5,7 +5,7 @@ export const mockEmployers: AdminEmployer[] = [
     id: "usr_1",
     name: "Amaka Nwosu",
     email: "amaka@finpath.co",
-    role: "Employer",
+    role: "EMPLOYER",
     status: "active",
     employerProfile: {
       companyName: "FinPath Capital",
@@ -17,7 +17,7 @@ export const mockEmployers: AdminEmployer[] = [
     id: "usr_4",
     name: "Femi Solarin",
     email: "femi@quantumcap.ng",
-    role: "Employer",
+    role: "EMPLOYER",
     status: "flagged",
     employerProfile: {
       companyName: "Quantum Capital",

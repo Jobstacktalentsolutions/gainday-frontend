@@ -82,6 +82,10 @@ const JobDetailsStep = () => {
     const [customRoleActive, setCustomRoleActive] = useState(false);
     const isCustomRole = customRoleActive || (!isPresetRole && Boolean(formValues.role));
 
+    const isStepValid = useMemo(() => {
+        return jobDetailsSchema.safeParse(formValues).success;
+    }, [formValues]);
+
     // Synchronize company profile name into form state when loaded
     useEffect(() => {
         if (profile?.companyName && !formValues.company) {

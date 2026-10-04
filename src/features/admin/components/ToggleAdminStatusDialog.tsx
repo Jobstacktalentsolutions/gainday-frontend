@@ -59,7 +59,7 @@ export const ToggleAdminStatusDialog = ({
           </AlertDialogCancel>
           <AlertDialogAction asChild>
             <AdminButton
-              variant={willDisable ? "destructive" : "default"}
+              variant={willDisable ? "destructive" : "primary"}
               size="sm"
               disabled={isPending}
               onClick={() => onConfirm(admin)}

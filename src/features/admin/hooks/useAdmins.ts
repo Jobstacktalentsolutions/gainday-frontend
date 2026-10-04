@@ -6,7 +6,7 @@ export interface CreateAdminFormValues {
   email: string;
   fullName: string;
   password: string;
-  role: "SUPER_ADMIN" | "MANAGER" | "MODERATOR";
+  role: "MANAGER" | "MODERATOR";
 }
 
 async function fetchAdmins(): Promise<AdminUserAccount[]> {

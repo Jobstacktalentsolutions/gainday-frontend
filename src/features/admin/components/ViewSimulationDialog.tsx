@@ -1,4 +1,4 @@
-
+import { Pencil, X } from "lucide-react";
 import { AdminButton } from "@/components/ui/AdminButton";
 import type { GeneratedSimulation } from "../types/aiOversight";
 
@@ -6,6 +6,7 @@ interface ViewSimulationDialogProps {
     simulation: GeneratedSimulation | null;
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    onOverride?: (simulation: GeneratedSimulation) => void;
 }
 
 const STATUS_LABELS: Record<GeneratedSimulation["status"], string> = {
@@ -24,6 +25,7 @@ const ViewSimulationDialog = ({
     simulation,
     open,
     onOpenChange,
+    onOverride,
 }: ViewSimulationDialogProps) => {
     if (!open || !simulation) return null;
 
@@ -52,16 +54,30 @@ const ViewSimulationDialog = ({
                         </h2>
                         <p className="mt-0.5 text-sm text-neutral-500">{simulation.jobTitle}</p>
                     </div>
-                    <button
-                        type="button"
-                        aria-label="Close dialog"
-                        onClick={() => onOpenChange(false)}
-                        className="cursor-pointer rounded-md p-1 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700"
-                    >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-                        </svg>
-                    </button>
+                    <div className="flex items-center gap-2">
+                        {onOverride && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    onOpenChange(false);
+                                    onOverride(simulation);
+                                }}
+                                className="inline-flex items-center gap-1.5 rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-xs font-medium text-neutral-700 shadow-xs hover:bg-neutral-50 hover:text-primary-600 transition-colors cursor-pointer"
+                                title="Override simulation"
+                            >
+                                <Pencil className="size-3.5 text-primary-600" />
+                                <span>Edit</span>
+                            </button>
+                        )}
+                        <button
+                            type="button"
+                            aria-label="Close dialog"
+                            onClick={() => onOpenChange(false)}
+                            className="cursor-pointer rounded-md p-1.5 text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700"
+                        >
+                            <X className="size-4" />
+                        </button>
+                    </div>
                 </div>
 
                 <div className="flex flex-col gap-4 px-6 py-5">
@@ -93,14 +109,26 @@ const ViewSimulationDialog = ({
                     </div>
                 </div>
 
-                <div className="border-t border-neutral-100 px-6 py-4">
+                <div className="border-t border-neutral-100 px-6 py-4 flex items-center justify-end gap-2.5">
                     <AdminButton
                         variant="outline"
-                        className="w-full"
+                        size="sm"
                         onClick={() => onOpenChange(false)}
                     >
                         Close
                     </AdminButton>
+                    {onOverride && (
+                        <AdminButton
+                            variant="primary"
+                            size="sm"
+                            onClick={() => {
+                                onOpenChange(false);
+                                onOverride(simulation);
+                            }}
+                        >
+                            <Pencil className="size-3.5 mr-1.5" /> Override Simulation
+                        </AdminButton>
+                    )}
                 </div>
             </div>
         </div>

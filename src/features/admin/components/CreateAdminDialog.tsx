@@ -19,7 +19,7 @@ const createAdminSchema = z.object({
   fullName: z.string().min(2, "Full name must be at least 2 characters"),
   email: z.string().email("Enter a valid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
-  role: z.enum(["SUPER_ADMIN", "MANAGER", "MODERATOR"]),
+  role: z.enum(["MANAGER", "MODERATOR"]),
 });
 
 type CreateAdminFormValues = z.infer<typeof createAdminSchema>;
@@ -121,7 +121,6 @@ export const CreateAdminDialog = ({ open, onOpenChange }: CreateAdminDialogProps
               {...register("role")}
               className="h-11 w-full rounded-lg border border-neutral-200 bg-white px-3 text-sm text-neutral-800 outline-none focus:border-primary-500 focus:ring-3 focus:ring-primary-500/20"
             >
-              <option value="SUPER_ADMIN">Super Admin (Full Root Privileges)</option>
               <option value="MANAGER">Manager (Employers, Candidates & Operations)</option>
               <option value="MODERATOR">Moderator (Content Moderation & AI Reviews)</option>
             </select>

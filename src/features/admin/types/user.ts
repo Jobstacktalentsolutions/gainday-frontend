@@ -4,13 +4,36 @@ export interface EmployerProfile {
     companyName: string;
     isVerified: boolean;
     adminNotes?: string;
+    phoneNumber?: string;
+    jobsCount?: number;
 }
 
-interface AdminAccountBase {
+export interface CandidateProfile {
+    phoneNumber?: string;
+    submissionsCount?: number;
+    location?: string;
+    resumeUrl?: string;
+}
+
+export interface AdminAccountBase {
     id: string;
     name: string;
     email: string;
     status: UserStatus;
+    isActive?: boolean;
+    suspensionReason?: string | null;
+    suspendedAt?: string | null;
+    createdAt?: string;
+}
+
+export interface AdminEmployer extends AdminAccountBase {
+    role?: "EMPLOYER";
+    employerProfile: EmployerProfile;
+}
+
+export interface AdminCandidate extends AdminAccountBase {
+    role?: "JOB_SEEKER" | "CANDIDATE";
+    candidateProfile?: CandidateProfile;
 }
 
 export interface AdminProfile {

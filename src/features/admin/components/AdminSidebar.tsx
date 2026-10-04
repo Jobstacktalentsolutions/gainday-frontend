@@ -14,6 +14,7 @@ import {
   LogOut,
 } from "lucide-react";
 import SidebarNavItem from "./SidebarNavItem";
+import brandLogo from "@/assets/gainday.svg";
 import { useAuthStore } from "@/features/auth/store/authStore";
 import { apiClient } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
@@ -101,19 +102,12 @@ const AdminSidebar = () => {
     <nav className="sticky top-0 flex h-screen w-64 shrink-0 flex-col justify-between overflow-y-auto bg-neutral-900 px-3 py-5 select-none">
       <div className="flex flex-col gap-4">
         {/* Brand Header */}
-        <div className="flex items-center justify-between px-3 py-1">
-          <div className="flex items-center gap-2.5">
-            <div className="flex size-7 items-center justify-center rounded-lg bg-primary-500/20 text-primary-400">
-              <Shield className="size-4 text-primary-500" />
-            </div>
-            <div>
-              <p className="text-sm font-bold text-white tracking-wide">Gainday Admin</p>
-              <p className="text-[10px] font-medium text-neutral-400">Control Console</p>
-            </div>
+        <div className="flex items-center gap-2.5 px-3 py-1">
+          <img src={brandLogo} alt="Gainday" className="h-7 w-auto object-contain" />
+          <div>
+            <p className="text-sm font-bold text-white tracking-wide">Gainday Admin</p>
+            <p className="text-[10px] font-medium text-neutral-400">Control Console</p>
           </div>
-          <span className="rounded-md bg-neutral-800 px-2 py-0.5 text-[10px] font-semibold text-primary-400 border border-neutral-700">
-            PROD
-          </span>
         </div>
 
         <div className="h-px w-full bg-neutral-800" />

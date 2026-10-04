@@ -1,11 +1,13 @@
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useCandidates, useSuspendCandidate } from "../hooks/useCandidates";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import CandidatesTable from "../components/CandidatesTable";
 import SuspendUserDialog from "../components/SuspendUserDialog";
-import type { AdminAccount } from "../types/user";
+import type { AdminAccount, AdminCandidate } from "../types/user";
 
 const CandidateManagement = () => {
+    const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState("");
     const debouncedSearch = useDebouncedValue(searchTerm, 200);
     const [pendingSuspend, setPendingSuspend] = useState<AdminAccount | null>(null);
@@ -28,6 +30,10 @@ const CandidateManagement = () => {
         suspendMutation.mutate(account.id, {
             onSuccess: () => setPendingSuspend(null),
         });
+    };
+
+    const handleViewCandidate = (candidate: AdminCandidate) => {
+        navigate(`/admin/candidate-management/${candidate.id}`);
     };
 
     return (
@@ -61,6 +67,7 @@ const CandidateManagement = () => {
             {!isLoading && !isError && (
                 <CandidatesTable
                     candidates={filteredCandidates}
+                    onView={handleViewCandidate}
                     onSuspend={setPendingSuspend}
                     isSuspending={suspendMutation.isPending}
                 />

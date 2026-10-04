@@ -22,8 +22,10 @@ const SimulationBuilder = lazy(() => import("@/features/employer/pages/Simulatio
 const ReviewPublish = lazy(() => import("@/features/employer/pages/ReviewPublish"))
 const EmployerManagement = lazy(() => import("@/features/admin/pages/EmployerManagement"))
 const CandidateManagement = lazy(() => import("@/features/admin/pages/CandidateManagement"))
+const CandidateDetailPage = lazy(() => import("@/features/admin/pages/CandidateDetailPage"));
 const AdminManagement = lazy(() => import("@/features/admin/pages/AdminManagement"))
 const ContentModeration = lazy(() => import("@/features/admin/pages/ContentModeration"));
+const JobModerationDetailPage = lazy(() => import("@/features/admin/pages/JobModerationDetailPage"));
 const GenerationReviews = lazy(() => import("@/features/admin/pages/GenerationReviews"));
 const AiOversight = lazy(() => import("@/features/admin/pages/AiOversight"));
 const JobPreview = lazy(() => import("@/features/employer/pages/JobPreview"));
@@ -54,8 +56,11 @@ const AppRoutes = () => {
                     <Route path="dashboard" element={<AdminDashboard />} />
                     <Route path="employer-management" element={<EmployerManagement />} />
                     <Route path="candidate-management" element={<CandidateManagement />} />
+                    <Route path="candidate-management/:id" element={<CandidateDetailPage />} />
                     <Route path="admin-management" element={<AdminManagement />} />
                     <Route path="content-moderation" element={<ContentModeration />} />
+                    <Route path="content-moderation/jobs/:id" element={<JobModerationDetailPage />} />
+                    <Route path="content-moderation/:id" element={<JobModerationDetailPage />} />
                     <Route path="generation-reviews" element={<GenerationReviews />} />
                     <Route path="ai-oversight" element={<AiOversight />} />
                 </Route>

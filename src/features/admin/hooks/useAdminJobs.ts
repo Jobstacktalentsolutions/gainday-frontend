@@ -12,6 +12,10 @@ async function removeJobPost(jobId: string): Promise<string> {
     return jobId;
 }
 
+async function updateJobStatus(payload: { jobId: string; status: string }): Promise<void> {
+    await apiClient.put(`/admin/jobs/${payload.jobId}/status`, { status: payload.status });
+}
+
 export function useAdminJobs() {
     return useQuery({
         queryKey: ["admin", "jobs"],
@@ -28,6 +32,17 @@ export function useRemoveJobPost() {
                 prev?.filter((j) => j.id !== removedJobId)
             );
             queryClient.invalidateQueries({ queryKey: ["admin", "jobs"] });
+        },
+    });
+}
+
+export function useUpdateJobStatus() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: updateJobStatus,
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: ["admin", "jobs"] });
+            queryClient.invalidateQueries({ queryKey: ["admin", "job", variables.jobId] });
         },
     });
 }

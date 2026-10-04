@@ -4,6 +4,8 @@ import { createSuspendHook } from "./suspendFactory";
 import type { AdminEmployer } from "../types/user";
 import type { EmployerEditFormValues } from "../schemas/employerEditSchema";
 
+import type { SuspendPayload } from "./suspendFactory";
+
 async function fetchEmployers(): Promise<AdminEmployer[]> {
   const { data } = await apiClient.get<AdminEmployer[]>("/admin/users", {
     params: { role: "EMPLOYER" },
@@ -11,12 +13,18 @@ async function fetchEmployers(): Promise<AdminEmployer[]> {
   return data;
 }
 
-async function suspendEmployer(userId: string): Promise<AdminEmployer> {
+async function suspendEmployer(payload: SuspendPayload): Promise<AdminEmployer> {
+  const userId = typeof payload === "string" ? payload : payload.id;
+  const reason = typeof payload === "string" ? undefined : payload.reason;
   const { data } = await apiClient.put<AdminEmployer>(
     `/admin/users/${userId}/status`,
-    { isActive: false }
+    { isActive: false, suspensionReason: reason }
   );
-  return { ...data, status: "suspended" };
+  return {
+    ...data,
+    status: "suspended",
+    suspensionReason: reason ?? data.suspensionReason,
+  };
 }
 
 async function updateEmployer(

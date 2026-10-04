@@ -116,6 +116,7 @@ const AiOversight = () => {
                 simulation={viewSim}
                 open={viewSim !== null}
                 onOpenChange={(open) => !open && setViewSim(null)}
+                onOverride={(sim) => setOverrideSim(sim)}
             />
 
             <OverrideSimulationDialog

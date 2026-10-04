@@ -5,6 +5,7 @@ import type { AdminUserAccount } from "../types/user";
 
 interface AdminsTableProps {
   admins: AdminUserAccount[];
+  onView?: (admin: AdminUserAccount) => void;
   onToggleStatus: (admin: AdminUserAccount) => void;
   onDelete: (admin: AdminUserAccount) => void;
   isUpdatingStatus: boolean;
@@ -13,6 +14,7 @@ interface AdminsTableProps {
 
 export const AdminsTable = ({
   admins,
+  onView,
   onToggleStatus,
   onDelete,
   isUpdatingStatus,
@@ -105,7 +107,8 @@ export const AdminsTable = ({
           <div
             key={admin.id}
             role="row"
-            className="flex w-full items-center gap-4 py-3.5 border-b border-neutral-100 last:border-b-0 hover:bg-neutral-50/70 transition-colors"
+            onClick={() => onView?.(admin)}
+            className="flex w-full items-center gap-4 py-3.5 border-b border-neutral-100 last:border-b-0 hover:bg-neutral-50/70 transition-colors cursor-pointer px-2 -mx-2 rounded-lg"
           >
             {/* User Info */}
             <div role="cell" className="flex min-w-0 flex-1 items-center gap-3">
@@ -157,9 +160,17 @@ export const AdminsTable = ({
               <AdminButton
                 variant="outline"
                 size="sm"
-                disabled={isSelf || isUpdatingStatus}
+                disabled={isSelf || isPrimaryRoot || isUpdatingStatus}
                 onClick={() => onToggleStatus(admin)}
-                title={isSelf ? "You cannot disable your own account" : admin.isActive ? "Disable account" : "Enable account"}
+                title={
+                  isSelf
+                    ? "You cannot disable your own account"
+                    : isPrimaryRoot
+                    ? "Super Admin cannot be disabled"
+                    : admin.isActive
+                    ? "Disable account"
+                    : "Enable account"
+                }
                 className="h-8 px-2.5 text-xs cursor-pointer"
               >
                 {admin.isActive ? (

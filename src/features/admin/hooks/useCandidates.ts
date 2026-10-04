@@ -3,6 +3,8 @@ import { apiClient } from "@/lib/api/client";
 import { createSuspendHook } from "./suspendFactory";
 import type { AdminCandidate } from "../types/user";
 
+import type { SuspendPayload } from "./suspendFactory";
+
 async function fetchCandidates(): Promise<AdminCandidate[]> {
   const { data } = await apiClient.get<AdminCandidate[]>("/admin/users", {
     params: { role: "JOB_SEEKER" },
@@ -10,12 +12,18 @@ async function fetchCandidates(): Promise<AdminCandidate[]> {
   return data;
 }
 
-async function suspendCandidate(userId: string): Promise<AdminCandidate> {
+async function suspendCandidate(payload: SuspendPayload): Promise<AdminCandidate> {
+  const userId = typeof payload === "string" ? payload : payload.id;
+  const reason = typeof payload === "string" ? undefined : payload.reason;
   const { data } = await apiClient.put<AdminCandidate>(
     `/admin/users/${userId}/status`,
-    { isActive: false }
+    { isActive: false, suspensionReason: reason }
   );
-  return { ...data, status: "suspended" };
+  return {
+    ...data,
+    status: "suspended",
+    suspensionReason: reason ?? data.suspensionReason,
+  };
 }
 
 export function useCandidates() {
