@@ -39,6 +39,8 @@ const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const EnvironmentCheckPage = lazy(() => import("@/features/candidate/pages/EnvironmentCheckPage"));
 const TaskRunner = lazy(() => import("@/features/candidate/pages/TaskRunner"));
+const SubmissionResultPage = lazy(() => import("@/features/candidate/pages/SubmissionResultPage"));
+
 
 
 const AppRoutes = () => {
@@ -86,6 +88,8 @@ const AppRoutes = () => {
                 <Route path="/job-board/:jobId/pre-simulation" element={<PreSimulation />} />
                 <Route path="/job-board/:jobId/environment-check" element={<EnvironmentCheckPage />} />
                 <Route path="/job-board/:jobId/simulation" element={<TaskRunner />} />
+                <Route path="/job-board/submissions/:submissionId/result" element={<SubmissionResultPage />} />
+                <Route path="/candidate/submissions/:submissionId/result" element={<SubmissionResultPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
 
                 <Route path="/candidate">
