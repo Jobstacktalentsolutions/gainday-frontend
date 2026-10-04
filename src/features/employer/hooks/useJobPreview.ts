@@ -37,10 +37,11 @@ const POSTED_STATUSES: JobStatus[] = ["ACTIVE", "SHORTLIST_READY", "INACTIVE", "
 
 const formatSalary = (range: BackendSalaryRange | null): string => {
     if (!range || (range.min == null && range.max == null)) return "Not disclosed";
+    const currency = range.currency === "USD" || !range.currency ? "GBP" : range.currency;
     const format = (amount: number) =>
         new Intl.NumberFormat("en-GB", {
             style: "currency",
-            currency: range.currency,
+            currency,
             maximumFractionDigits: 0,
         }).format(amount);
 

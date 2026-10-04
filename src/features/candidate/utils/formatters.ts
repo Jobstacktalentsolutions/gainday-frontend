@@ -4,9 +4,10 @@ import type { JobSalaryRange } from "../types/jobBoard";
 export function formatSalaryRange({ min, max, currency }: JobSalaryRange): string {
   if (min == null && max == null) return "Not disclosed";
 
-  const formatter = new Intl.NumberFormat("en-US", {
+  const targetCurrency = currency === "USD" || !currency ? "GBP" : currency;
+  const formatter = new Intl.NumberFormat("en-GB", {
     style: "currency",
-    currency,
+    currency: targetCurrency,
     maximumFractionDigits: 0,
   });
 

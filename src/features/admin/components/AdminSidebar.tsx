@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -12,22 +12,26 @@ import {
   Bot,
   ChevronDown,
   LogOut,
+  Crown,
 } from "lucide-react";
 import SidebarNavItem from "./SidebarNavItem";
 import brandLogo from "@/assets/gainday.svg";
 import { useAuthStore } from "@/features/auth/store/authStore";
 import { apiClient } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
+import { isRouteAllowedForRole } from "../utils/rolePermissions";
+
+interface NavItem {
+  to: string;
+  label: string;
+  icon: typeof Building2;
+}
 
 interface NavGroup {
   id: string;
   label: string;
   icon: typeof Users;
-  items: {
-    to: string;
-    label: string;
-    icon: typeof Building2;
-  }[];
+  items: NavItem[];
 }
 
 const NAV_GROUPS: NavGroup[] = [
@@ -59,18 +63,28 @@ const AdminSidebar = () => {
   const user = useAuthStore((state) => state.user);
   const clearAuth = useAuthStore((state) => state.clearAuth);
 
+  const isSuperAdmin = Boolean(user?.isSuperAdmin || user?.adminRole === "SUPER_ADMIN");
+  const adminRole = isSuperAdmin ? "SUPER_ADMIN" : (user?.adminRole || "MANAGER");
+
+  // Dynamically filter nav groups according to the admin's role
+  const visibleNavGroups = useMemo(() => {
+    return NAV_GROUPS.map((group) => ({
+      ...group,
+      items: group.items.filter((item) =>
+        isRouteAllowedForRole(item.to, adminRole, isSuperAdmin)
+      ),
+    })).filter((group) => group.items.length > 0);
+  }, [adminRole, isSuperAdmin]);
+
   // Determine initial open groups based on current path
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
-    const initialState: Record<string, boolean> = {
-      "user-management": true,
-      "content-operations": true,
-    };
-    return initialState;
-  });
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => ({
+    "user-management": true,
+    "content-operations": true,
+  }));
 
   // Auto-expand group if child path is active
   useEffect(() => {
-    NAV_GROUPS.forEach((group) => {
+    visibleNavGroups.forEach((group) => {
       const hasActiveChild = group.items.some((item) =>
         location.pathname.startsWith(item.to)
       );
@@ -78,7 +92,7 @@ const AdminSidebar = () => {
         setOpenGroups((prev) => ({ ...prev, [group.id]: true }));
       }
     });
-  }, [location.pathname]);
+  }, [location.pathname, visibleNavGroups]);
 
   const toggleGroup = (groupId: string) => {
     setOpenGroups((prev) => ({
@@ -96,6 +110,28 @@ const AdminSidebar = () => {
       clearAuth();
       navigate("/admin/login", { replace: true });
     }
+  };
+
+  const renderRoleBadge = () => {
+    if (isSuperAdmin) {
+      return (
+        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-950/80 text-purple-300 border border-purple-700/50">
+          <Crown className="size-2.5" /> Super Admin
+        </span>
+      );
+    }
+    if (adminRole === "MODERATOR") {
+      return (
+        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-950/80 text-amber-300 border border-amber-700/50">
+          Moderator
+        </span>
+      );
+    }
+    return (
+      <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-950/80 text-blue-300 border border-blue-700/50">
+        Manager
+      </span>
+    );
   };
 
   return (
@@ -122,7 +158,7 @@ const AdminSidebar = () => {
           />
 
           {/* Grouped Accordion Sections */}
-          {NAV_GROUPS.map((group) => {
+          {visibleNavGroups.map((group) => {
             const isOpen = !!openGroups[group.id];
             const hasActiveChild = group.items.some((item) =>
               location.pathname.startsWith(item.to)
@@ -184,7 +220,9 @@ const AdminSidebar = () => {
             <p className="truncate text-xs font-semibold text-neutral-200">
               {user?.fullName || "Gainday Admin"}
             </p>
-            <p className="truncate text-[11px] text-neutral-400">{user?.email}</p>
+            <div className="mt-0.5 flex items-center gap-1.5">
+              {renderRoleBadge()}
+            </div>
           </div>
         </div>
 

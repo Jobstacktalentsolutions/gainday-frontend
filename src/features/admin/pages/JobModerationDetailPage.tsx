@@ -7,7 +7,6 @@ import {
   Briefcase,
   Calendar,
   Clock,
-  DollarSign,
   Users,
   Award,
   ShieldAlert,
@@ -117,8 +116,8 @@ const JobModerationDetailPage = () => {
     if (!job.salaryRange || (!job.salaryRange.min && !job.salaryRange.max)) {
       return null;
     }
-    const currency = job.salaryRange.currency || "USD";
-    const symbol = currency === "NGN" ? "₦" : currency === "GBP" ? "£" : "$";
+    const currency = job.salaryRange.currency === "USD" || !job.salaryRange.currency ? "GBP" : job.salaryRange.currency;
+    const symbol = currency === "NGN" ? "₦" : currency === "GBP" || currency === "USD" ? "£" : currency;
     const min = job.salaryRange.min ? `${symbol}${job.salaryRange.min.toLocaleString()}` : null;
     const max = job.salaryRange.max ? `${symbol}${job.salaryRange.max.toLocaleString()}` : null;
 
@@ -340,9 +339,7 @@ const JobModerationDetailPage = () => {
             <div className="flex flex-col gap-3 text-xs">
               {salaryString && (
                 <div className="rounded-lg bg-neutral-50/70 border border-neutral-100 p-3">
-                  <span className="text-neutral-500 font-medium flex items-center gap-1">
-                    <DollarSign className="size-3 text-neutral-400" /> Compensation
-                  </span>
+                  <span className="text-neutral-500 font-medium">Compensation</span>
                   <p className="text-neutral-900 font-bold text-sm mt-0.5">{salaryString}</p>
                 </div>
               )}

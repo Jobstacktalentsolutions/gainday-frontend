@@ -11,6 +11,8 @@ interface AuthUser {
   companyName?: string;
   phoneNumber?: string;
   mustChangePassword?: boolean;
+  adminRole?: 'SUPER_ADMIN' | 'MANAGER' | 'MODERATOR';
+  isSuperAdmin?: boolean;
 }
 
 interface AuthState {

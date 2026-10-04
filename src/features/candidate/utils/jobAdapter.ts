@@ -31,7 +31,7 @@ export function toJobBoardListing(job: BackendJob): JobBoardListing {
         roleCategory: job.role ?? "General",
         location: job.location ?? "Not set",
         employmentType: job.employmentType ?? "Not set",
-        salaryRange: job.salaryRange ?? { min: null, max: null, currency: "USD" },
+        salaryRange: job.salaryRange ?? { min: null, max: null, currency: "GBP" },
         applicationDeadline: job.applicationDeadline,
         businessProblem: job.businessProblem ?? "",
         status: job.status,

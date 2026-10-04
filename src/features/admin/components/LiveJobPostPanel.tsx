@@ -10,10 +10,8 @@ import {
   Award,
   Zap,
   ShieldAlert,
-  Eye,
   Trash2,
   CheckCircle2,
-  DollarSign,
 } from "lucide-react";
 import { AdminButton } from "@/components/ui/AdminButton";
 import StatusBadge from "./StatusBadge";
@@ -53,8 +51,8 @@ const LiveJobPostsPanel = ({
     if (!job.salaryRange || (!job.salaryRange.min && !job.salaryRange.max)) {
       return null;
     }
-    const currency = job.salaryRange.currency || "USD";
-    const symbol = currency === "NGN" ? "₦" : currency === "GBP" ? "£" : "$";
+    const currency = job.salaryRange.currency === "USD" || !job.salaryRange.currency ? "GBP" : job.salaryRange.currency;
+    const symbol = currency === "NGN" ? "₦" : currency === "GBP" || currency === "USD" ? "£" : currency;
     const min = job.salaryRange.min ? `${symbol}${job.salaryRange.min.toLocaleString()}` : null;
     const max = job.salaryRange.max ? `${symbol}${job.salaryRange.max.toLocaleString()}` : null;
 
@@ -172,7 +170,6 @@ const LiveJobPostsPanel = ({
                         )}
                         {salary && (
                           <span className="flex items-center gap-0.5 text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">
-                            <DollarSign className="size-3 text-emerald-600" />
                             {salary}
                           </span>
                         )}
@@ -185,18 +182,6 @@ const LiveJobPostsPanel = ({
                     className="flex items-center gap-2 self-end sm:self-auto shrink-0 pt-2 sm:pt-0"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <AdminButton
-                      variant="outline"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/admin/content-moderation/jobs/${job.id}`);
-                      }}
-                      className="inline-flex items-center gap-1.5 cursor-pointer bg-white hover:bg-neutral-50 text-neutral-700"
-                    >
-                      <Eye className="size-3.5 text-primary-600" /> View Context
-                    </AdminButton>
-
                     <AdminButton
                       variant="destructive"
                       size="sm"
