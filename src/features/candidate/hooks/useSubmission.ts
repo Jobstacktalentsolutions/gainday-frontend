@@ -18,6 +18,7 @@ export interface CandidateSubmissionResultData {
   id: string;
   status: string;
   overallScore: number;
+  percentileText?: string;
   completedDate: string;
   job: {
     id: string;

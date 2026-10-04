@@ -61,7 +61,7 @@ export default function SubmissionResultPage() {
                     </div>
 
                     {/* Main Score Display */}
-                    <div className="flex flex-col items-center justify-center my-2 text-center">
+                    <div className="flex flex-col items-center justify-center my-2 text-center gap-1">
                         <div className="flex items-baseline justify-center gap-1">
                             <span className="text-6xl font-bold tracking-tight text-neutral-950 sm:text-7xl">
                                 {overallScore}
@@ -70,6 +70,9 @@ export default function SubmissionResultPage() {
                                 /100
                             </span>
                         </div>
+                        <p className="text-xs font-medium text-neutral-500 mt-1">
+                            {data.percentileText || "Overall score out of 100"}
+                        </p>
                     </div>
 
                     {/* 5 Category Metric Cards */}
@@ -135,22 +138,38 @@ export default function SubmissionResultPage() {
 
                         {/* Task Feedback Cards List */}
                         <div className="flex flex-col gap-4 mt-2">
-                            {taskEvidence.map((item, idx) => (
-                                <div
-                                    key={item.taskId || idx}
-                                    className="flex flex-col gap-2 rounded-2xl border border-neutral-200/50 bg-neutral-100/60 p-6"
-                                >
-                                    <span className="text-xs font-bold uppercase tracking-wider text-primary-500">
-                                        TASK {item.taskNumber}
-                                    </span>
-                                    <h3 className="text-lg font-bold text-neutral-950">
-                                        {item.title}
-                                    </h3>
-                                    <p className="text-sm leading-relaxed text-neutral-700">
-                                        {item.summary}
-                                    </p>
-                                </div>
-                            ))}
+                            {taskEvidence.map((item, idx) => {
+                                const sentences = item.summary
+                                    ? item.summary.split(/(?<=\.)\s+(?=You\b)|\n+/g).filter(Boolean)
+                                    : [];
+
+                                return (
+                                    <div
+                                        key={item.taskId || idx}
+                                        className="flex flex-col gap-2 rounded-2xl border border-neutral-200/50 bg-neutral-100/60 p-6"
+                                    >
+                                        <span className="text-xs font-bold uppercase tracking-wider text-primary-500">
+                                            TASK {item.taskNumber}
+                                        </span>
+                                        <h3 className="text-lg font-bold text-neutral-950">
+                                            {item.title}
+                                        </h3>
+                                        <div className="flex flex-col gap-2 mt-1">
+                                            {sentences.length > 0 ? (
+                                                sentences.map((sentence, sIdx) => (
+                                                    <p key={sIdx} className="text-sm leading-relaxed text-neutral-700">
+                                                        {sentence.trim()}
+                                                    </p>
+                                                ))
+                                            ) : (
+                                                <p className="text-sm leading-relaxed text-neutral-700">
+                                                    {item.summary}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
 
