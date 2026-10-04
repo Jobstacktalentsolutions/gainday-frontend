@@ -8,12 +8,14 @@ import { HowRolesWorkModal } from "../components/HowRolesWorkModal";
 import { CreateAdminDialog } from "../components/CreateAdminDialog";
 import { DeleteAdminDialog } from "../components/DeleteAdminDialog";
 import { ToggleAdminStatusDialog } from "../components/ToggleAdminStatusDialog";
+import { ViewAdminDialog } from "../components/ViewAdminDialog";
+import { TableLoadMore } from "../components/TableLoadMore";
 import type { AdminUserAccount } from "../types/user";
 import { TableSkeleton } from "../components/skeletons";
 
 const AdminManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const debouncedSearch = useDebouncedValue(searchTerm, 200);
+  const debouncedSearch = useDebouncedValue(searchTerm, 300);
 
   const [howRolesWorkOpen, setHowRolesWorkOpen] = useState(false);
   const [createAdminOpen, setCreateAdminOpen] = useState(false);
@@ -21,21 +23,23 @@ const AdminManagement = () => {
   const [pendingStatusAdmin, setPendingStatusAdmin] = useState<AdminUserAccount | null>(null);
   const [pendingDeleteAdmin, setPendingDeleteAdmin] = useState<AdminUserAccount | null>(null);
 
-  const { data: admins, isLoading, isError } = useAdmins();
+  const {
+    data,
+    isLoading,
+    isError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useAdmins({ search: debouncedSearch, limit: 10 });
+
   const toggleStatusMutation = useToggleAdminStatus();
   const deleteMutation = useDeleteAdmin();
 
-  const filteredAdmins = useMemo(() => {
-    if (!admins) return [];
-    const query = debouncedSearch.trim().toLowerCase();
-    if (!query) return admins;
-    return admins.filter((admin) => {
-      const name = admin.name?.toLowerCase() || "";
-      const email = admin.email?.toLowerCase() || "";
-      const role = admin.adminProfile?.adminRole?.toLowerCase() || "";
-      return name.includes(query) || email.includes(query) || role.includes(query);
-    });
-  }, [admins, debouncedSearch]);
+  const allAdmins = useMemo(
+    () => data?.pages.flatMap((page) => page.items) ?? [],
+    [data]
+  );
+  const totalCount = data?.pages[0]?.pagination.total ?? 0;
 
   const handleConfirmToggleStatus = (admin: AdminUserAccount) => {
     toggleStatusMutation.mutate(
@@ -107,14 +111,24 @@ const AdminManagement = () => {
       )}
 
       {!isLoading && !isError && (
-        <AdminsTable
-          admins={filteredAdmins}
-          onView={setViewingAdmin}
-          onToggleStatus={setPendingStatusAdmin}
-          onDelete={setPendingDeleteAdmin}
-          isUpdatingStatus={toggleStatusMutation.isPending}
-          isDeleting={deleteMutation.isPending}
-        />
+        <div className="flex flex-col gap-3">
+          <AdminsTable
+            admins={allAdmins}
+            onView={setViewingAdmin}
+            onToggleStatus={setPendingStatusAdmin}
+            onDelete={setPendingDeleteAdmin}
+            isUpdatingStatus={toggleStatusMutation.isPending}
+            isDeleting={deleteMutation.isPending}
+          />
+
+          <TableLoadMore
+            currentCount={allAdmins.length}
+            totalCount={totalCount}
+            hasNextPage={hasNextPage}
+            isLoading={isFetchingNextPage}
+            onLoadMore={() => fetchNextPage()}
+          />
+        </div>
       )}
 
       {/* Modals & Dialogs */}

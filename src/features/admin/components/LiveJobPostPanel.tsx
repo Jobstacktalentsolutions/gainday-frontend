@@ -1,4 +1,3 @@
-import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Search,
@@ -11,7 +10,6 @@ import {
   Award,
   Zap,
   ShieldAlert,
-  ExternalLink,
   Eye,
   Trash2,
   CheckCircle2,
@@ -19,38 +17,37 @@ import {
 } from "lucide-react";
 import { AdminButton } from "@/components/ui/AdminButton";
 import StatusBadge from "./StatusBadge";
+import { TableLoadMore } from "./TableLoadMore";
 import type { AdminJob } from "../types/job";
 
 interface LiveJobPostsPanelProps {
   jobs: AdminJob[];
+  totalCount: number;
+  hasNextPage?: boolean;
+  isLoadingMore?: boolean;
+  onLoadMore: () => void;
   onRemove: (job: AdminJob) => void;
   isRemoving: boolean;
+  searchTerm: string;
+  onSearchChange: (value: string) => void;
+  statusFilter: string;
+  onStatusFilterChange: (status: string) => void;
 }
 
-const LiveJobPostsPanel = ({ jobs, onRemove, isRemoving }: LiveJobPostsPanelProps) => {
+const LiveJobPostsPanel = ({
+  jobs,
+  totalCount,
+  hasNextPage = false,
+  isLoadingMore = false,
+  onLoadMore,
+  onRemove,
+  isRemoving,
+  searchTerm,
+  onSearchChange,
+  statusFilter,
+  onStatusFilterChange,
+}: LiveJobPostsPanelProps) => {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("ALL");
-
-  const filteredJobs = useMemo(() => {
-    return jobs.filter((job) => {
-      const query = searchTerm.toLowerCase();
-      const matchesSearch =
-        job.title.toLowerCase().includes(query) ||
-        job.company.toLowerCase().includes(query) ||
-        (job.role && job.role.toLowerCase().includes(query)) ||
-        (job.location && job.location.toLowerCase().includes(query));
-
-      const matchesStatus =
-        statusFilter === "ALL"
-          ? true
-          : statusFilter === "FLAGGED"
-          ? (job.flaggedCount ?? 0) > 0
-          : job.status === statusFilter;
-
-      return matchesSearch && matchesStatus;
-    });
-  }, [jobs, searchTerm, statusFilter]);
 
   const formatSalary = (job: AdminJob) => {
     if (!job.salaryRange || (!job.salaryRange.min && !job.salaryRange.max)) {
@@ -75,31 +72,27 @@ const LiveJobPostsPanel = ({ jobs, onRemove, isRemoving }: LiveJobPostsPanelProp
           <input
             type="text"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search job posts by title, company, role, or location..."
+            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder="Search job posts by title, role..."
             className="h-10 w-full rounded-xl border border-neutral-200 bg-white pl-10 pr-3 text-xs text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all shadow-xs"
           />
         </div>
 
         <div className="flex flex-wrap items-center gap-1.5">
           {[
-            { id: "ALL", label: `All (${jobs.length})` },
-            { id: "live", label: `Live (${jobs.filter((j) => j.status === "live").length})` },
-            { id: "draft", label: `Draft (${jobs.filter((j) => j.status === "draft").length})` },
-            { id: "closed", label: `Closed (${jobs.filter((j) => j.status === "closed").length})` },
-            {
-              id: "FLAGGED",
-              label: `Flagged (${jobs.filter((j) => (j.flaggedCount ?? 0) > 0).length})`,
-            },
+            { id: "ALL", label: "All Posts" },
+            { id: "live", label: "Live" },
+            { id: "draft", label: "Draft" },
+            { id: "closed", label: "Closed" },
           ].map((tab) => (
             <button
               key={tab.id}
               type="button"
-              onClick={() => setStatusFilter(tab.id)}
+              onClick={() => onStatusFilterChange(tab.id)}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                 statusFilter === tab.id
                   ? "bg-primary-600 text-white shadow-xs"
-                  : "bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50"
+                  : "bg-white text-neutral-600 hover:bg-neutral-50 border border-neutral-200"
               }`}
             >
               {tab.label}
@@ -108,74 +101,88 @@ const LiveJobPostsPanel = ({ jobs, onRemove, isRemoving }: LiveJobPostsPanelProp
         </div>
       </div>
 
-      {/* Jobs List */}
-      {filteredJobs.length === 0 ? (
-        <div className="w-full rounded-2xl border border-neutral-200 bg-white p-12 text-center text-xs text-neutral-500">
-          No job posts match the selected criteria.
+      {/* Jobs List / Table */}
+      {jobs.length === 0 ? (
+        <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-neutral-200 bg-white p-12 text-center shadow-xs">
+          <Briefcase className="size-10 text-neutral-300 mb-3" />
+          <p className="text-sm font-semibold text-neutral-800">No job postings found</p>
+          <p className="text-xs text-neutral-400 mt-1 max-w-sm">
+            {searchTerm || statusFilter !== "ALL"
+              ? "Try adjusting your search terms or filter criteria."
+              : "No employers have created job posts yet."}
+          </p>
         </div>
       ) : (
         <div className="flex flex-col gap-3.5">
-          {filteredJobs.map((job) => {
-            const salary = formatSalary(job);
+          {jobs.map((job) => {
             const hasFlags = (job.flaggedCount ?? 0) > 0;
+            const salary = formatSalary(job);
 
             return (
               <div
                 key={job.id}
                 onClick={() => navigate(`/admin/content-moderation/jobs/${job.id}`)}
-                className="group relative flex flex-col gap-4 rounded-2xl border border-neutral-200 bg-white p-5 shadow-xs transition-all hover:border-primary-200 hover:shadow-md cursor-pointer"
+                className={`group flex flex-col gap-3.5 rounded-2xl border bg-white p-5 shadow-xs transition-all hover:shadow-md hover:border-primary-300 cursor-pointer ${
+                  hasFlags
+                    ? "border-error-200 bg-gradient-to-r from-white via-white to-error-50/20"
+                    : "border-neutral-200"
+                }`}
               >
-                {/* Header Row: Title, Company, Status, and CTAs */}
-                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-                  <div className="flex flex-col gap-1 min-w-0">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h3 className="text-base font-bold text-neutral-900 group-hover:text-primary-600 transition-colors truncate">
-                        {job.title}
-                      </h3>
-                      <StatusBadge status={job.status} />
-                      {hasFlags && (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-error-50 text-error-700 border border-error-200">
-                          <ShieldAlert className="size-3 text-error-600" />
-                          {job.flaggedCount} Flagged
-                        </span>
-                      )}
+                {/* Header Row */}
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="flex items-start gap-3.5">
+                    <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 border border-primary-100 group-hover:bg-primary-100 transition-colors">
+                      <Building2 className="size-5" />
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-3 text-xs text-neutral-500">
-                      <span className="flex items-center gap-1 font-medium text-neutral-700">
-                        <Building2 className="size-3.5 text-neutral-400" />
-                        {job.company}
-                        {job.isEmployerVerified && (
-                          <CheckCircle2 className="size-3 text-emerald-600 ml-0.5" />
+                    <div className="flex flex-col gap-1 min-w-0">
+                      <div className="flex items-center gap-2.5 flex-wrap">
+                        <h2 className="text-base font-bold text-neutral-900 group-hover:text-primary-700 transition-colors">
+                          {job.title}
+                        </h2>
+                        <StatusBadge status={job.status} />
+                        {hasFlags && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-error-50 border border-error-200 px-2 py-0.5 text-[10px] font-bold text-error-700">
+                            <ShieldAlert className="size-3 text-error-600" />
+                            {job.flaggedCount} Flagged Submissions
+                          </span>
                         )}
-                      </span>
+                      </div>
 
-                      {job.location && (
-                        <span className="flex items-center gap-1">
-                          <span className="text-neutral-300">·</span>
-                          <MapPin className="size-3.5 text-neutral-400" />
-                          {job.location}
-                          {job.isRemoteFriendly && (
-                            <span className="text-[10px] font-medium text-primary-600 bg-primary-50 px-1.5 py-0.2 rounded">
-                              Remote
+                      <div className="flex items-center gap-3 text-xs text-neutral-500 flex-wrap">
+                        <span className="font-semibold text-neutral-800 flex items-center gap-1">
+                          {job.company}
+                          {job.isEmployerVerified && (
+                            <span title="Verified Employer" className="inline-flex items-center">
+                              <CheckCircle2 className="size-3.5 text-emerald-600" />
                             </span>
                           )}
                         </span>
-                      )}
-
-                      {job.role && (
-                        <span className="flex items-center gap-1">
-                          <span className="text-neutral-300">·</span>
-                          <Briefcase className="size-3.5 text-neutral-400" />
-                          {job.role}
-                        </span>
-                      )}
+                        {job.location && (
+                          <span className="flex items-center gap-1 text-neutral-500">
+                            <MapPin className="size-3 text-neutral-400" />
+                            {job.location} {job.isRemoteFriendly ? "(Remote)" : ""}
+                          </span>
+                        )}
+                        {job.employmentType && (
+                          <span className="flex items-center gap-1 text-neutral-500">
+                            <Clock className="size-3 text-neutral-400" />
+                            {job.employmentType}
+                          </span>
+                        )}
+                        {salary && (
+                          <span className="flex items-center gap-0.5 text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">
+                            <DollarSign className="size-3 text-emerald-600" />
+                            {salary}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
 
-                  {/* Top-Right Action Buttons */}
+                  {/* Actions Buttons */}
                   <div
-                    className="flex shrink-0 items-center gap-2"
+                    className="flex items-center gap-2 self-end sm:self-auto shrink-0 pt-2 sm:pt-0"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <AdminButton
@@ -183,68 +190,50 @@ const LiveJobPostsPanel = ({ jobs, onRemove, isRemoving }: LiveJobPostsPanelProp
                       size="sm"
                       onClick={(e) => {
                         e.stopPropagation();
-                        window.open(`/job-board/${job.id}`, "_blank");
-                      }}
-                      className="h-8 px-2.5 text-xs flex items-center gap-1 cursor-pointer bg-white text-neutral-700 hover:bg-neutral-50"
-                      title="Public Job Board View"
-                    >
-                      <ExternalLink className="size-3" />
-                      Preview
-                    </AdminButton>
-
-                    <AdminButton
-                      variant="outline"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
                         navigate(`/admin/content-moderation/jobs/${job.id}`);
                       }}
-                      className="h-8 px-2.5 text-xs flex items-center gap-1 cursor-pointer text-primary-600 border-primary-200 hover:bg-primary-50"
+                      className="inline-flex items-center gap-1.5 cursor-pointer bg-white hover:bg-neutral-50 text-neutral-700"
                     >
-                      <Eye className="size-3" />
-                      Moderate
+                      <Eye className="size-3.5 text-primary-600" /> View Context
                     </AdminButton>
 
                     <AdminButton
                       variant="destructive"
                       size="sm"
+                      disabled={isRemoving}
                       onClick={(e) => {
                         e.stopPropagation();
                         onRemove(job);
                       }}
-                      disabled={isRemoving}
-                      className="h-8 px-2.5 text-xs flex items-center gap-1 cursor-pointer"
+                      className="inline-flex items-center gap-1 cursor-pointer"
                     >
-                      <Trash2 className="size-3" />
-                      Remove
+                      <Trash2 className="size-3.5" /> Remove
                     </AdminButton>
                   </div>
                 </div>
 
-                {/* Badges / Context Row */}
-                <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-neutral-100 text-xs">
+                {/* Simulation & Skill Pills */}
+                <div className="flex flex-wrap items-center gap-2 border-t border-neutral-100 pt-3">
                   {job.isSimulationReady ? (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-purple-50 text-purple-700 border border-purple-200">
+                    <span className="inline-flex items-center gap-1 rounded-md bg-purple-50 border border-purple-200 px-2 py-1 text-[11px] font-semibold text-purple-700">
                       <Zap className="size-3 text-purple-600" />
-                      {job.simulationTaskCount} Simulation Tasks Ready
+                      Simulation Ready ({job.simulationTaskCount} Tasks)
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-neutral-100 text-neutral-600">
-                      <Clock className="size-3 text-neutral-400" />
+                    <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 border border-amber-200 px-2 py-1 text-[11px] font-semibold text-amber-700">
+                      <Clock className="size-3 text-amber-600" />
                       Simulation Pending
                     </span>
                   )}
 
-                  {job.employmentType && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-neutral-100 text-neutral-700">
-                      {job.employmentType}
+                  {job.role && (
+                    <span className="rounded bg-neutral-100 px-2 py-1 text-[11px] font-medium text-neutral-700">
+                      Role: {job.role}
                     </span>
                   )}
-
-                  {salary && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-                      <DollarSign className="size-3 text-emerald-600" />
-                      {salary}
+                  {job.skillLevel && (
+                    <span className="rounded bg-neutral-100 px-2 py-1 text-[11px] font-medium text-neutral-700">
+                      Level: {job.skillLevel}
                     </span>
                   )}
 
@@ -296,6 +285,14 @@ const LiveJobPostsPanel = ({ jobs, onRemove, isRemoving }: LiveJobPostsPanelProp
               </div>
             );
           })}
+
+          <TableLoadMore
+            currentCount={jobs.length}
+            totalCount={totalCount}
+            hasNextPage={hasNextPage}
+            isLoading={isLoadingMore}
+            onLoadMore={onLoadMore}
+          />
         </div>
       )}
     </div>

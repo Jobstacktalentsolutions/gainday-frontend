@@ -1,14 +1,28 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
 import { createSuspendHook } from "./suspendFactory";
 import type { AdminEmployer } from "../types/user";
+import type { PaginatedResponse } from "../types/pagination";
 import type { EmployerEditFormValues } from "../schemas/employerEditSchema";
-
 import type { SuspendPayload } from "./suspendFactory";
 
-async function fetchEmployers(): Promise<AdminEmployer[]> {
-  const { data } = await apiClient.get<AdminEmployer[]>("/admin/users", {
-    params: { role: "EMPLOYER" },
+export interface EmployersQueryParams {
+  search?: string;
+  status?: string;
+  limit?: number;
+}
+
+async function fetchEmployers(
+  params: EmployersQueryParams & { page: number }
+): Promise<PaginatedResponse<AdminEmployer>> {
+  const { data } = await apiClient.get<PaginatedResponse<AdminEmployer>>("/admin/users", {
+    params: {
+      role: "EMPLOYER",
+      search: params.search || undefined,
+      status: params.status || undefined,
+      page: params.page,
+      limit: params.limit || 10,
+    },
   });
   return data;
 }
@@ -47,10 +61,13 @@ async function updateEmployer(
   };
 }
 
-export function useEmployers() {
-  return useQuery({
-    queryKey: ["admin", "employers"],
-    queryFn: fetchEmployers,
+export function useEmployers(params: EmployersQueryParams = {}) {
+  return useInfiniteQuery({
+    queryKey: ["admin", "employers", params.search, params.status, params.limit],
+    queryFn: ({ pageParam = 1 }) => fetchEmployers({ ...params, page: pageParam }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) =>
+      lastPage.pagination.hasNextPage ? lastPage.pagination.page + 1 : undefined,
   });
 }
 
@@ -62,21 +79,9 @@ export const useSuspendEmployer = createSuspendHook(
 export function useUpdateEmployer() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      userId,
-      values,
-    }: {
-      userId: string;
-      values: EmployerEditFormValues;
-    }) => updateEmployer(userId, values),
-    onSuccess: (updatedEmployer) => {
-      queryClient.setQueryData<AdminEmployer[]>(
-        ["admin", "employers"],
-        (prev) =>
-          prev?.map((e) =>
-            e.id === updatedEmployer.id ? { ...e, ...updatedEmployer } : e
-          )
-      );
+    mutationFn: ({ userId, values }: { userId: string; values: EmployerEditFormValues }) =>
+      updateEmployer(userId, values),
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "employers"] });
     },
   });

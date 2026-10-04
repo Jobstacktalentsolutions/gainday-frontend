@@ -4,32 +4,35 @@ import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import EmployersTable from "../components/EmployersTable";
 import SuspendUserDialog from "../components/SuspendUserDialog";
 import EditEmployerDialog from "../components/EditEmployerDialog";
+import { TableLoadMore } from "../components/TableLoadMore";
 import type { AdminEmployer, AdminAccount } from "../types/user";
 import type { EmployerEditFormValues } from "../schemas/employerEditSchema";
 import { TableSkeleton } from "../components/skeletons";
 
 const EmployerManagement = () => {
     const [searchTerm, setSearchTerm] = useState("");
-    const debouncedSearch = useDebouncedValue(searchTerm, 200);
+    const debouncedSearch = useDebouncedValue(searchTerm, 300);
     const [pendingSuspend, setPendingSuspend] = useState<AdminAccount | null>(null);
     const [dialogEmployer, setDialogEmployer] = useState<AdminEmployer | null>(null);
     const [dialogMode, setDialogMode] = useState<"view" | "edit">("view");
 
-    const { data: employers, isLoading, isError } = useEmployers();
+    const {
+        data,
+        isLoading,
+        isError,
+        hasNextPage,
+        isFetchingNextPage,
+        fetchNextPage,
+    } = useEmployers({ search: debouncedSearch, limit: 10 });
+
     const suspendMutation = useSuspendEmployer();
     const updateMutation = useUpdateEmployer();
 
-    const filteredEmployers = useMemo(() => {
-        if (!employers) return [];
-        const query = debouncedSearch.trim().toLowerCase();
-        if (!query) return employers;
-        return employers.filter(
-            (employer) =>
-                employer.name.toLowerCase().includes(query) ||
-                employer.email.toLowerCase().includes(query) ||
-                employer.employerProfile.companyName.toLowerCase().includes(query)
-        );
-    }, [employers, debouncedSearch]);
+    const allEmployers = useMemo(
+        () => data?.pages.flatMap((page) => page.items) ?? [],
+        [data]
+    );
+    const totalCount = data?.pages[0]?.pagination.total ?? 0;
 
     const handleConfirmSuspend = (account: AdminAccount, reason: string) => {
         suspendMutation.mutate(
@@ -82,13 +85,23 @@ const EmployerManagement = () => {
             )}
 
             {!isLoading && !isError && (
-                <EmployersTable
-                    employers={filteredEmployers}
-                    onView={handleViewEmployer}
-                    onEdit={handleEditEmployer}
-                    onSuspend={setPendingSuspend}
-                    isSuspending={suspendMutation.isPending}
-                />
+                <div className="flex flex-col gap-3">
+                    <EmployersTable
+                        employers={allEmployers}
+                        onView={handleViewEmployer}
+                        onEdit={handleEditEmployer}
+                        onSuspend={setPendingSuspend}
+                        isSuspending={suspendMutation.isPending}
+                    />
+
+                    <TableLoadMore
+                        currentCount={allEmployers.length}
+                        totalCount={totalCount}
+                        hasNextPage={hasNextPage}
+                        isLoading={isFetchingNextPage}
+                        onLoadMore={() => fetchNextPage()}
+                    />
+                </div>
             )}
 
             <SuspendUserDialog

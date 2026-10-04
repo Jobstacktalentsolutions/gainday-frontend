@@ -4,29 +4,32 @@ import { useCandidates, useSuspendCandidate } from "../hooks/useCandidates";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import CandidatesTable from "../components/CandidatesTable";
 import SuspendUserDialog from "../components/SuspendUserDialog";
+import { TableLoadMore } from "../components/TableLoadMore";
 import type { AdminAccount, AdminCandidate } from "../types/user";
-
 import { TableSkeleton } from "../components/skeletons";
 
 const CandidateManagement = () => {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState("");
-    const debouncedSearch = useDebouncedValue(searchTerm, 200);
+    const debouncedSearch = useDebouncedValue(searchTerm, 300);
     const [pendingSuspend, setPendingSuspend] = useState<AdminAccount | null>(null);
 
-    const { data: candidates, isLoading, isError } = useCandidates();
+    const {
+        data,
+        isLoading,
+        isError,
+        hasNextPage,
+        isFetchingNextPage,
+        fetchNextPage,
+    } = useCandidates({ search: debouncedSearch, limit: 10 });
+
     const suspendMutation = useSuspendCandidate();
 
-    const filteredCandidates = useMemo(() => {
-        if (!candidates) return [];
-        const query = debouncedSearch.trim().toLowerCase();
-        if (!query) return candidates;
-        return candidates.filter(
-            (candidate) =>
-                candidate.name.toLowerCase().includes(query) ||
-                candidate.email.toLowerCase().includes(query)
-        );
-    }, [candidates, debouncedSearch]);
+    const allCandidates = useMemo(
+        () => data?.pages.flatMap((page) => page.items) ?? [],
+        [data]
+    );
+    const totalCount = data?.pages[0]?.pagination.total ?? 0;
 
     const handleConfirmSuspend = (account: AdminAccount, reason: string) => {
         suspendMutation.mutate(
@@ -66,12 +69,22 @@ const CandidateManagement = () => {
             )}
 
             {!isLoading && !isError && (
-                <CandidatesTable
-                    candidates={filteredCandidates}
-                    onView={handleViewCandidate}
-                    onSuspend={setPendingSuspend}
-                    isSuspending={suspendMutation.isPending}
-                />
+                <div className="flex flex-col gap-3">
+                    <CandidatesTable
+                        candidates={allCandidates}
+                        onView={handleViewCandidate}
+                        onSuspend={setPendingSuspend}
+                        isSuspending={suspendMutation.isPending}
+                    />
+
+                    <TableLoadMore
+                        currentCount={allCandidates.length}
+                        totalCount={totalCount}
+                        hasNextPage={hasNextPage}
+                        isLoading={isFetchingNextPage}
+                        onLoadMore={() => fetchNextPage()}
+                    />
+                </div>
             )}
 
             <SuspendUserDialog

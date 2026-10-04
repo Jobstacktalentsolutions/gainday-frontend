@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useGenerationReviews } from "../hooks/useGenerationReviews";
 import GenerationReviewDetail from "../components/GenerationReviewDetail";
+import { TableLoadMore } from "../components/TableLoadMore";
 import type { GenerationReviewStatus } from "../types/generationReview";
 import { TableSkeleton } from "../components/skeletons";
 
@@ -15,10 +16,24 @@ const GenerationReviews = () => {
     const [statusFilter, setStatusFilter] = useState<GenerationReviewStatus | undefined>(
         "PENDING",
     );
-    const { data: reviews, isLoading, isError } = useGenerationReviews(statusFilter);
+    const {
+        data,
+        isLoading,
+        isError,
+        hasNextPage,
+        isFetchingNextPage,
+        fetchNextPage,
+    } = useGenerationReviews(statusFilter, 10);
+
     const [selectedId, setSelectedId] = useState<string | null>(null);
 
-    const selected = reviews?.find((r) => r.id === selectedId) ?? null;
+    const allReviews = useMemo(
+        () => data?.pages.flatMap((page) => page.items) ?? [],
+        [data]
+    );
+    const totalCount = data?.pages[0]?.pagination.total ?? 0;
+
+    const selected = allReviews.find((r) => r.id === selectedId) ?? null;
 
     return (
         <>
@@ -37,7 +52,7 @@ const GenerationReviews = () => {
                             setStatusFilter(filter.value);
                             setSelectedId(null);
                         }}
-                        className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                        className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors cursor-pointer ${
                             statusFilter === filter.value
                                 ? "bg-primary-500 text-white"
                                 : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
@@ -58,12 +73,12 @@ const GenerationReviews = () => {
 
             {!isLoading && !isError && (
                 <div className="flex flex-col gap-3">
-                    {(reviews ?? []).length === 0 && (
+                    {allReviews.length === 0 && (
                         <div className="w-full rounded-[10px] border border-neutral-200 bg-white px-5 py-10 text-center text-sm text-neutral-500">
                             No review items here.
                         </div>
                     )}
-                    {reviews?.map((review) => (
+                    {allReviews.map((review) => (
                         <div key={review.id} className="flex flex-col gap-3">
                             <button
                                 type="button"
@@ -72,7 +87,7 @@ const GenerationReviews = () => {
                                         current === review.id ? null : review.id,
                                     )
                                 }
-                                className="flex w-full items-center justify-between rounded-xl border border-neutral-200 bg-white px-5 py-4 text-left transition-colors hover:bg-neutral-50"
+                                className="flex w-full items-center justify-between rounded-xl border border-neutral-200 bg-white px-5 py-4 text-left transition-colors hover:bg-neutral-50 cursor-pointer"
                             >
                                 <div className="flex flex-col gap-1">
                                     <p className="text-sm font-medium text-neutral-900">
@@ -93,6 +108,14 @@ const GenerationReviews = () => {
                             )}
                         </div>
                     ))}
+
+                    <TableLoadMore
+                        currentCount={allReviews.length}
+                        totalCount={totalCount}
+                        hasNextPage={hasNextPage}
+                        isLoading={isFetchingNextPage}
+                        onLoadMore={() => fetchNextPage()}
+                    />
                 </div>
             )}
         </>

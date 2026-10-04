@@ -28,6 +28,7 @@ import { toast } from "sonner";
 import { AdminButton } from "@/components/ui/AdminButton";
 import RemoveJobPostDialog from "../components/RemoveJobPostDialog";
 import { SubmissionDetailModal } from "../components/SubmissionDetailModal";
+import { TableLoadMore } from "../components/TableLoadMore";
 import { useJobDetail } from "../hooks/useJobDetail";
 import { useRemoveJobPost, useUpdateJobStatus } from "../hooks/useAdminJobs";
 import type { CandidateSubmission } from "../types/candidateDetail";
@@ -39,6 +40,7 @@ const JobModerationDetailPage = () => {
   const [selectedSubmission, setSelectedSubmission] = useState<CandidateSubmission | null>(null);
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
   const [expandedTasks, setExpandedTasks] = useState<Record<string, boolean>>({});
+  const [visibleApplicationsCount, setVisibleApplicationsCount] = useState(10);
 
   const toggleTask = (taskId: string) => {
     setExpandedTasks((prev) => ({
@@ -562,92 +564,101 @@ const JobModerationDetailPage = () => {
                 No candidates have applied to this job post yet.
               </div>
             ) : (
-              <div className="flex flex-col rounded-xl border border-neutral-200 overflow-hidden">
-                <div className="flex items-center gap-3 bg-neutral-50 px-4 py-2.5 text-xs font-semibold text-neutral-500 border-b border-neutral-200">
-                  <span className="flex-1">CANDIDATE</span>
-                  <span className="w-24 text-center">SCORE</span>
-                  <span className="w-24 text-center">DURATION</span>
-                  <span className="w-28 text-center">INTEGRITY</span>
-                  <span className="w-24 text-right">ACTION</span>
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-col rounded-xl border border-neutral-200 overflow-hidden">
+                  <div className="flex items-center gap-3 bg-neutral-50 px-4 py-2.5 text-xs font-semibold text-neutral-500 border-b border-neutral-200">
+                    <span className="flex-1">CANDIDATE</span>
+                    <span className="w-24 text-center">SCORE</span>
+                    <span className="w-24 text-center">DURATION</span>
+                    <span className="w-28 text-center">INTEGRITY</span>
+                    <span className="w-24 text-right">ACTION</span>
+                  </div>
+
+                  {submissions.slice(0, visibleApplicationsCount).map((sub) => (
+                    <div
+                      key={sub.id}
+                      className="flex items-center gap-3 px-4 py-3 border-b border-neutral-100 last:border-b-0 hover:bg-neutral-50/70 transition-colors text-xs"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p
+                          onClick={() => {
+                            if (sub.candidateId) {
+                              navigate(`/admin/candidate-management/${sub.candidateId}`);
+                            }
+                          }}
+                          className={`font-semibold text-neutral-900 truncate ${
+                            sub.candidateId ? "hover:text-primary-600 cursor-pointer hover:underline" : ""
+                          }`}
+                        >
+                          {sub.candidateName}
+                        </p>
+                        <p className="text-neutral-500 text-[11px] truncate">{sub.candidateEmail}</p>
+                      </div>
+
+                      <div className="w-24 text-center">
+                        {sub.overallScore !== null ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-bold text-xs bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <Award className="size-3 text-emerald-600" /> {sub.overallScore}%
+                          </span>
+                        ) : (
+                          <span className="text-neutral-400 font-medium">{sub.status}</span>
+                        )}
+                      </div>
+
+                      <div className="w-24 text-center text-neutral-600">
+                        {sub.timeTakenSeconds ? `${Math.round(sub.timeTakenSeconds / 60)} mins` : "N/A"}
+                      </div>
+
+                      <div className="w-28 text-center">
+                        {sub.isAntiCheatFlagged ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-error-50 text-error-700 border border-error-200">
+                            <AlertTriangle className="size-3 text-error-600" /> Flagged
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <CheckCircle2 className="size-3 text-emerald-600" /> Clear
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="w-24 text-right">
+                        <AdminButton
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            setSelectedSubmission({
+                              id: sub.id,
+                              jobId: job.id,
+                              jobTitle: job.title || "Job Assessment",
+                              companyName: employer.companyName,
+                              simulationTitle: job.title || "Job Simulation",
+                              status: sub.status as any,
+                              overallScore: sub.overallScore,
+                              categoryScores: sub.categoryScores as any,
+                              taskScores: sub.taskScores as any,
+                              timeTakenSeconds: sub.timeTakenSeconds,
+                              isAntiCheatFlagged: sub.isAntiCheatFlagged,
+                              antiCheatFlags: sub.antiCheatFlags as any,
+                              startedAt: null,
+                              completedAt: sub.completedAt,
+                              createdAt: sub.createdAt,
+                            })
+                          }
+                          className="h-7 px-2 text-xs flex items-center gap-1 ml-auto cursor-pointer"
+                        >
+                          <Eye className="size-3" /> View
+                        </AdminButton>
+                      </div>
+                    </div>
+                  ))}
                 </div>
 
-                {submissions.map((sub) => (
-                  <div
-                    key={sub.id}
-                    className="flex items-center gap-3 px-4 py-3 border-b border-neutral-100 last:border-b-0 hover:bg-neutral-50/70 transition-colors text-xs"
-                  >
-                    <div className="flex-1 min-w-0">
-                      <p
-                        onClick={() => {
-                          if (sub.candidateId) {
-                            navigate(`/admin/candidate-management/${sub.candidateId}`);
-                          }
-                        }}
-                        className={`font-semibold text-neutral-900 truncate ${
-                          sub.candidateId ? "hover:text-primary-600 cursor-pointer hover:underline" : ""
-                        }`}
-                      >
-                        {sub.candidateName}
-                      </p>
-                      <p className="text-neutral-500 text-[11px] truncate">{sub.candidateEmail}</p>
-                    </div>
-
-                    <div className="w-24 text-center">
-                      {sub.overallScore !== null ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-bold text-xs bg-emerald-50 text-emerald-700 border border-emerald-200">
-                          <Award className="size-3 text-emerald-600" /> {sub.overallScore}%
-                        </span>
-                      ) : (
-                        <span className="text-neutral-400 font-medium">{sub.status}</span>
-                      )}
-                    </div>
-
-                    <div className="w-24 text-center text-neutral-600">
-                      {sub.timeTakenSeconds ? `${Math.round(sub.timeTakenSeconds / 60)} mins` : "N/A"}
-                    </div>
-
-                    <div className="w-28 text-center">
-                      {sub.isAntiCheatFlagged ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-error-50 text-error-700 border border-error-200">
-                          <AlertTriangle className="size-3 text-error-600" /> Flagged
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-                          <CheckCircle2 className="size-3 text-emerald-600" /> Clear
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="w-24 text-right">
-                      <AdminButton
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>
-                          setSelectedSubmission({
-                            id: sub.id,
-                            jobId: job.id,
-                            jobTitle: job.title || "Job Assessment",
-                            companyName: employer.companyName,
-                            simulationTitle: job.title || "Job Simulation",
-                            status: sub.status as any,
-                            overallScore: sub.overallScore,
-                            categoryScores: sub.categoryScores as any,
-                            taskScores: sub.taskScores as any,
-                            timeTakenSeconds: sub.timeTakenSeconds,
-                            isAntiCheatFlagged: sub.isAntiCheatFlagged,
-                            antiCheatFlags: sub.antiCheatFlags as any,
-                            startedAt: null,
-                            completedAt: sub.completedAt,
-                            createdAt: sub.createdAt,
-                          })
-                        }
-                        className="h-7 px-2 text-xs flex items-center gap-1 ml-auto cursor-pointer"
-                      >
-                        <Eye className="size-3" /> View
-                      </AdminButton>
-                    </div>
-                  </div>
-                ))}
+                <TableLoadMore
+                  currentCount={Math.min(submissions.length, visibleApplicationsCount)}
+                  totalCount={submissions.length}
+                  hasNextPage={visibleApplicationsCount < submissions.length}
+                  onLoadMore={() => setVisibleApplicationsCount((prev) => prev + 10)}
+                />
               </div>
             )}
           </div>
