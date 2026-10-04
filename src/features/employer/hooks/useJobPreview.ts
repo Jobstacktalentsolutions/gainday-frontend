@@ -68,7 +68,7 @@ const toJobPreviewDetails = (
     employmentType: job.employmentType ?? "Not set",
     submissionsCount,
     postedAt: POSTED_STATUSES.includes(job.status) ? job.updatedAt : null,
-    shareUrl: `${window.location.origin}/jobs/${job.id}`,
+    shareUrl: `${window.location.origin}/job-board/${job.id}`,
     description: job.description ?? "",
     category: job.role ?? "Not set",
     salary: formatSalary(job.salaryRange),

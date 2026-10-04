@@ -58,7 +58,19 @@ const JobDetailsStep = () => {
 
     const formValues = watch();
     const skills = formValues.skills ?? [];
-    const isStepValid = jobDetailsSchema.safeParse(formValues).success;
+    const hasExistingContent = Boolean(
+        formValues.title?.trim() ||
+        formValues.role?.trim() ||
+        formValues.description?.trim() ||
+        (formValues.skills && formValues.skills.length > 0) ||
+        formValues.companyDescription?.trim() ||
+        formValues.businessProblem?.trim() ||
+        formValues.location?.trim() ||
+        formValues.skillCategory?.trim() ||
+        formValues.salaryFrom ||
+        formValues.salaryTo ||
+        formValues.deadline
+    );
 
     // Free-text mode for the Role field ("Add Yours") — on whenever the current role value isn't
     // one of the built-in presets, so a draft/parsed role of e.g. "Customer Support" reopens in
@@ -168,7 +180,7 @@ const JobDetailsStep = () => {
             </div>
 
             {/* Paste-and-parse entry point — first thing on the page */}
-            <JobDescriptionPasteInput onParsed={handleParsed} />
+            <JobDescriptionPasteInput onParsed={handleParsed} hasExistingContent={hasExistingContent} />
 
             {/* Form fields — two-column grid on desktop */}
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -361,26 +373,14 @@ const JobDetailsStep = () => {
                     />
                 </div>
 
-                {/* AI Simulation callout — full width */}
-                <div className="flex w-full flex-col gap-2.5 rounded-xl bg-primary-50 p-3 lg:col-span-2">
-                    <span className="flex w-fit items-center gap-1 rounded-md border border-primary-500 p-2 text-[10px] text-primary-500">
-                        <Sparkles className="size-3" aria-hidden="true" />
-                        POWERS YOUR AI SIMULATION
-                    </span>
-                    <p className="text-base text-neutral-950">What does this hire need to solve?</p>
-                    <p className="text-base text-neutral-400">
-                        Optional, but the more specific the better — Gainday builds the work simulation
-                        around the exact problem you describe here instead of a generic one.
-                    </p>
-
+                {/* What does this hire need to solve field — full width */}
+                <div className="lg:col-span-2">
                     <FormTextarea
                         label="What does this hire need to solve?"
-                        hideLabel
                         optional
                         placeholder="e.g Reduce onboarding drop-off by improving our KYC follow-up flow"
                         rows={3}
                         error={errors.businessProblem?.message}
-                        className="bg-neutral-50"
                         {...register("businessProblem")}
                     />
                 </div>

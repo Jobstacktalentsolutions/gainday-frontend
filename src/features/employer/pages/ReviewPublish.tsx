@@ -17,11 +17,12 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 
 interface JobPostingOutletContext {
     jobId: string | null;
+    setIsDone?: (done: boolean) => void;
 }
 
 const ReviewPublish = () => {
     const navigate = useNavigate();
-    const { jobId } = useOutletContext<JobPostingOutletContext>();
+    const { jobId, setIsDone } = useOutletContext<JobPostingOutletContext>();
     const { watch, trigger, formState } = useFormContext<JobPostingFormValues>();
     const publishJob = usePublishJob();
     const clearDraft = useJobDraftStore((state) => state.clearDraft);
@@ -30,7 +31,7 @@ const ReviewPublish = () => {
     const [editingJobDetails, setEditingJobDetails] = useState(false);
     const [agreed, setAgreed] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
-    const [publishResult, setPublishResult] = useState<{ jobUrl: string } | null>(null);
+    const [publishResult, setPublishResult] = useState<{ jobUrl: string; jobId: string } | null>(null);
 
     const handleEditSimulation = () => {
 
@@ -54,10 +55,11 @@ const ReviewPublish = () => {
 
         setIsPublishing(true);
         try {
-            await publishJob.mutateAsync(jobId);
+            const published = await publishJob.mutateAsync(jobId);
             clearDraft();
-            const slug = values.title.toLowerCase().replace(/\s+/g, "-");
-            setPublishResult({ jobUrl: `gainday.com/jobs/${slug}` });
+            setIsDone?.(true);
+            const realJobUrl = `${window.location.origin}/job-board/${published.id}`;
+            setPublishResult({ jobUrl: realJobUrl, jobId: published.id });
             toast.success("Job published!");
         } catch {
             toast.error("Couldn't publish this job — try again.");
@@ -72,7 +74,7 @@ const ReviewPublish = () => {
                 <PublishSuccess
                     jobTitle={values.title}
                     jobUrl={publishResult.jobUrl}
-                    onViewJob={() => navigate("/employer/jobs")}
+                    onViewJob={() => navigate(`/employer/jobs/${publishResult.jobId}/preview`)}
                     onViewCandidates={() => navigate("/employer/jobs")}
                 />
             </div>

@@ -31,8 +31,11 @@ const JobPostingWizardLayout = () => {
         mode: "onChange",
     })
 
-    // Derive current step from the URL
+    const [isDone, setIsDone] = useState(false);
+
+    // Derive current step from the URL or published state
     const currentStep = (() => {
+        if (isDone) return "done" as const;
         const path = location.pathname;
         if (path.includes("simulation-builder")) return "simulation-builder" as const;
         if (path.includes("review")) return "review" as const;
@@ -92,6 +95,7 @@ const JobPostingWizardLayout = () => {
                             isSavingExit,
                             jobId,
                             setJobId,
+                            setIsDone,
                         }} />
                     </div>
                 </div>

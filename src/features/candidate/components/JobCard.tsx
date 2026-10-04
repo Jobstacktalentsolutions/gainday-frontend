@@ -9,7 +9,19 @@ interface JobCardProps {
 
 export function JobCard({ job, onApply }: JobCardProps) {
     return (
-        <article className="flex flex-1 flex-col gap-3 rounded-3xl bg-white p-6">
+        <article
+            role="button"
+            tabIndex={0}
+            onClick={() => onApply(job)}
+            onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    onApply(job);
+                }
+            }}
+            aria-label={`View job ${job.title}`}
+            className="flex flex-1 cursor-pointer flex-col justify-between gap-3 rounded-3xl bg-white p-6 transition-all duration-150 hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99]"
+        >
             <div className="flex w-full flex-col items-start gap-2">
                 <span className="rounded-full bg-primary-50 px-2 py-1 text-[10px] text-primary-500">
                     {job.roleCategory}
@@ -25,7 +37,12 @@ export function JobCard({ job, onApply }: JobCardProps) {
             </div>
             <div className="h-px w-full bg-neutral-200" />
             <div className="flex w-full items-center justify-between">
-                <StepContinueButton onClick={() => onApply(job)}>
+                <StepContinueButton
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onApply(job);
+                    }}
+                >
                     Apply Now
                 </StepContinueButton>
                 <p className="text-[14px] text-neutral-400">Posted {formatPostedDate(job.createdAt)}</p>

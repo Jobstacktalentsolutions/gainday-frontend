@@ -11,9 +11,10 @@ const MIN_RAW_TEXT_LENGTH = 40;
 
 interface JobDescriptionPasteInputProps {
     onParsed: (parsed: ParsedJobDetails) => void;
+    hasExistingContent?: boolean;
 }
 
-const JobDescriptionPasteInput = ({ onParsed }: JobDescriptionPasteInputProps) => {
+const JobDescriptionPasteInput = ({ onParsed, hasExistingContent = false }: JobDescriptionPasteInputProps) => {
     const [rawText, setRawText] = useState("");
     const [confirmOpen, setConfirmOpen] = useState(false);
     const parseMutation = useParseJobDescription();
@@ -22,7 +23,11 @@ const JobDescriptionPasteInput = ({ onParsed }: JobDescriptionPasteInputProps) =
 
     const handleParseClick = () => {
         if (!rawText.trim() || isTooShort) return;
-        setConfirmOpen(true);
+        if (hasExistingContent) {
+            setConfirmOpen(true);
+        } else {
+            void handleConfirm();
+        }
     }
 
     const handleConfirm = async () => {
