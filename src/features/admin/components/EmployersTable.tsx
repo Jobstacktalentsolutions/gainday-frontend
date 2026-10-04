@@ -40,8 +40,8 @@ const EmployersTable = ({ employers, onEdit, onSuspend, isSuspending }: Employer
                 <span role="columnheader" className="w-22.5 shrink-0">
                     STATUS
                 </span>
-                <span role="columnheader" className="w-45 shrink-0">
-                    ACTIONS
+                <span role="columnheader" className="w-24 shrink-0 text-right">
+                    ACTION
                 </span>
             </div>
 
@@ -49,7 +49,8 @@ const EmployersTable = ({ employers, onEdit, onSuspend, isSuspending }: Employer
                 <div
                     key={employer.id}
                     role="row"
-                    className="flex w-full items-center gap-4 border-t border-neutral-100 py-3.5 first:border-t-0"
+                    onClick={() => onEdit(employer)}
+                    className="flex w-full items-center gap-4 border-t border-neutral-100 py-3.5 first:border-t-0 hover:bg-neutral-50/80 cursor-pointer transition-colors px-2 -mx-2 rounded-lg"
                 >
                     <div role="cell" className="flex min-w-0 flex-1 flex-col gap-0.5">
                         <p className="truncate text-sm font-medium text-neutral-900">
@@ -78,18 +79,14 @@ const EmployersTable = ({ employers, onEdit, onSuspend, isSuspending }: Employer
                         <StatusBadge status={employer.status} />
                     </div>
 
-                    <div role="cell" className="flex w-45 shrink-0 gap-2">
-                        <AdminButton
-                            variant="outline"
-                            size="sm"
-                            onClick={() => onEdit(employer)}
-                        >
-                            Edit
-                        </AdminButton>
+                    <div role="cell" className="flex w-24 shrink-0 justify-end" onClick={(e) => e.stopPropagation()}>
                         <AdminButton
                             variant="destructive"
                             size="sm"
-                            onClick={() => onSuspend(employer)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onSuspend(employer);
+                            }}
                             disabled={isSuspending}
                         >
                             Suspend

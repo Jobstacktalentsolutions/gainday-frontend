@@ -42,7 +42,7 @@ const CandidatesTable = ({ candidates, onSuspend, isSuspending }: CandidatesTabl
                 <div
                     key={candidate.id}
                     role="row"
-                    className="flex w-full items-center gap-4 border-t border-neutral-100 py-3.5 first:border-t-0"
+                    className="flex w-full items-center gap-4 border-t border-neutral-100 py-3.5 first:border-t-0 hover:bg-neutral-50/80 transition-colors px-2 -mx-2 rounded-lg"
                 >
                     <div role="cell" className="flex min-w-0 flex-1 flex-col gap-0.5">
                         <p className="truncate text-sm font-medium text-neutral-900">
@@ -55,11 +55,14 @@ const CandidatesTable = ({ candidates, onSuspend, isSuspending }: CandidatesTabl
                         <StatusBadge status={candidate.status} />
                     </div>
 
-                    <div role="cell" className="flex w-25 shrink-0 gap-2">
+                    <div role="cell" className="flex w-25 shrink-0 justify-end" onClick={(e) => e.stopPropagation()}>
                         <AdminButton
                             variant="destructive"
                             size="sm"
-                            onClick={() => onSuspend(candidate)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onSuspend(candidate);
+                            }}
                             disabled={isSuspending}
                         >
                             Suspend

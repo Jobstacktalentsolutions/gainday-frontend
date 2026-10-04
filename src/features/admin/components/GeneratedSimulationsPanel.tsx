@@ -44,8 +44,9 @@ const GeneratedSimulationsPanel = ({
             {simulations.map((sim, index) => (
                 <div
                     key={sim.id}
+                    onClick={() => onView(sim)}
                     className={cn(
-                        "flex w-full items-center gap-4 px-5 py-4 transition-colors hover:bg-neutral-50/60",
+                        "flex w-full items-center gap-4 px-5 py-4 transition-colors hover:bg-neutral-50 cursor-pointer",
                         index !== simulations.length - 1 && "border-b border-neutral-100"
                     )}
                 >
@@ -74,21 +75,16 @@ const GeneratedSimulationsPanel = ({
                     </div>
 
                     {/* Actions */}
-                    <div className="flex shrink-0 items-center gap-2">
-                        <AdminButton
-                            id={`view-sim-${sim.id}`}
-                            variant="outline"
-                            size="sm"
-                            onClick={() => onView(sim)}
-                        >
-                            View
-                        </AdminButton>
+                    <div className="flex shrink-0 items-center gap-2" onClick={(e) => e.stopPropagation()}>
                         <AdminButton
                             id={`regenerate-sim-${sim.id}`}
                             variant="outline"
                             size="sm"
                             disabled={regeneratingId === sim.id}
-                            onClick={() => onRegenerate(sim)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onRegenerate(sim);
+                            }}
                         >
                             {regeneratingId === sim.id ? (
                                 <span className="flex items-center gap-1.5">
@@ -103,7 +99,10 @@ const GeneratedSimulationsPanel = ({
                             id={`override-sim-${sim.id}`}
                             variant="primary"
                             size="sm"
-                            onClick={() => onOverride(sim)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onOverride(sim);
+                            }}
                         >
                             Override
                         </AdminButton>

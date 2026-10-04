@@ -1,21 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
-import { mockCandidates } from "../mocks/candidatesData";
+import { apiClient } from "@/lib/api/client";
 import { createSuspendHook } from "./suspendFactory";
 import type { AdminCandidate } from "../types/user";
 
-const SIMULATED_LATENCY_MS = 400;
-
-// Replace with real API call once endpoint exists
 async function fetchCandidates(): Promise<AdminCandidate[]> {
-  await new Promise((resolve) => setTimeout(resolve, SIMULATED_LATENCY_MS));
-  return mockCandidates;
+  const { data } = await apiClient.get<AdminCandidate[]>("/admin/users", {
+    params: { role: "JOB_SEEKER" },
+  });
+  return data;
 }
 
 async function suspendCandidate(userId: string): Promise<AdminCandidate> {
-  await new Promise((resolve) => setTimeout(resolve, SIMULATED_LATENCY_MS));
-  const candidate = mockCandidates.find((c) => c.id === userId);
-  if (!candidate) throw new Error("Candidate not found");
-  return { ...candidate, status: "suspended" };
+  const { data } = await apiClient.put<AdminCandidate>(
+    `/admin/users/${userId}/status`,
+    { isActive: false }
+  );
+  return { ...data, status: "suspended" };
 }
 
 export function useCandidates() {

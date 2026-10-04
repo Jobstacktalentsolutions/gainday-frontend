@@ -91,22 +91,27 @@ const FailedScoringPanel = ({
 
                         {/* Action */}
                         {!isResolved && (
-                            <AdminButton
-                                id={`retry-scoring-${sub.id}`}
-                                variant="primary"
-                                size="sm"
-                                disabled={retryingId === sub.id}
-                                onClick={() => onRetry(sub)}
-                            >
-                                {retryingId === sub.id ? (
-                                    <span className="flex items-center gap-1.5">
-                                        <svg className="size-3.5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                                            <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-                                        </svg>
-                                        Retrying…
-                                    </span>
-                                ) : "Retry Scoring"}
-                            </AdminButton>
+                            <div onClick={(e) => e.stopPropagation()}>
+                                <AdminButton
+                                    id={`retry-scoring-${sub.id}`}
+                                    variant="primary"
+                                    size="sm"
+                                    disabled={retryingId === sub.id}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onRetry(sub);
+                                    }}
+                                >
+                                    {retryingId === sub.id ? (
+                                        <span className="flex items-center gap-1.5">
+                                            <svg className="size-3.5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                                            </svg>
+                                            Retrying…
+                                        </span>
+                                    ) : "Retry Scoring"}
+                                </AdminButton>
+                            </div>
                         )}
 
                         {isResolved && (

@@ -6,7 +6,7 @@ import {
     type ReactNode,
 } from "react";
 import { cn } from "@/lib/utils";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Eye, EyeOff } from "lucide-react";
 
 
 export interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -26,6 +26,7 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
             label,
             error,
             id,
+            type,
             className,
             hint,
             hideLabel,
@@ -40,6 +41,10 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
         ref
     ) => {
         const [focused, setFocused] = useState(false);
+        const [showPassword, setShowPassword] = useState(false);
+
+        const isPasswordType = type === "password";
+        const computedType = isPasswordType ? (showPassword ? "text" : "password") : type;
 
         // unique IDs to increase accessibility
         const generatedId = useId();
@@ -114,6 +119,7 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
                     <input
                         id={inputId}
                         ref={ref}
+                        type={computedType}
                         required={required}
                         aria-required={required || undefined}
                         aria-invalid={hasError ? "true" : undefined}
@@ -135,8 +141,22 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
                         {...props}
                     />
 
-                    {/* End icon — or error icon when in error state */}
-                    {hasError ? (
+                    {/* End icon / Password reveal toggle / Error icon */}
+                    {isPasswordType ? (
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword((prev) => !prev)}
+                            tabIndex={-1}
+                            aria-label={showPassword ? "Hide password" : "Show password"}
+                            className="flex shrink-0 items-center text-neutral-400 hover:text-neutral-600 focus:outline-none transition-colors cursor-pointer"
+                        >
+                            {showPassword ? (
+                                <EyeOff className="size-5" />
+                            ) : (
+                                <Eye className="size-5" />
+                            )}
+                        </button>
+                    ) : hasError ? (
                         <span className="flex shrink-0 items-center text-error-500">
                             <AlertCircle className="size-5" />
                         </span>

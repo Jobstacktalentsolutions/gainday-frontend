@@ -19,21 +19,29 @@ const LiveJobPostsPanel = ({ jobs, onRemove, isRemoving }: LiveJobPostsPanelProp
       )}
 
       {liveJobs.map((job) => (
-        <div key={job.id} className="flex w-full items-center gap-4 py-3">
+        <div
+          key={job.id}
+          className="flex w-full items-center gap-4 py-3 px-2 -mx-2 rounded-lg transition-colors hover:bg-neutral-50/80 cursor-pointer"
+        >
           <div className="flex min-w-0 flex-1 flex-col gap-0.5">
             <p className="truncate text-sm font-medium text-neutral-900">
               {job.title} — {job.company}
             </p>
             <p className="text-xs text-neutral-500">{job.applicantCount} applicants</p>
           </div>
-          <AdminButton
-            variant="destructive"
-            size="sm"
-            onClick={() => onRemove(job)}
-            disabled={isRemoving}
-          >
-            Remove Post
-          </AdminButton>
+          <div onClick={(e) => e.stopPropagation()}>
+            <AdminButton
+              variant="destructive"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onRemove(job);
+              }}
+              disabled={isRemoving}
+            >
+              Remove Post
+            </AdminButton>
+          </div>
         </div>
       ))}
     </div>

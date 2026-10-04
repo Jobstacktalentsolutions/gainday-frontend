@@ -9,6 +9,7 @@ interface AuthUser {
   profileId?: string;
   fullName?: string;
   companyName?: string;
+  phoneNumber?: string;
 }
 
 interface AuthState {

@@ -1,35 +1,34 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { mockEmployers } from "../mocks/employersData";
-
+import { apiClient } from "@/lib/api/client";
 import { createSuspendHook } from "./suspendFactory";
 import type { AdminEmployer } from "../types/user";
 import type { EmployerEditFormValues } from "../schemas/employerEditSchema";
 
-const SIMULATED_LATENCY_MS = 400;
-
-// Replace with real API call once endpoint exists
 async function fetchEmployers(): Promise<AdminEmployer[]> {
-  await new Promise((resolve) => setTimeout(resolve, SIMULATED_LATENCY_MS));
-  return mockEmployers;
+  const { data } = await apiClient.get<AdminEmployer[]>("/admin/users", {
+    params: { role: "EMPLOYER" },
+  });
+  return data;
 }
 
 async function suspendEmployer(userId: string): Promise<AdminEmployer> {
-  await new Promise((resolve) => setTimeout(resolve, SIMULATED_LATENCY_MS));
-  const employer = mockEmployers.find((e) => e.id === userId);
-  if (!employer) throw new Error("Employer not found");
-  return { ...employer, status: "suspended" };
+  const { data } = await apiClient.put<AdminEmployer>(
+    `/admin/users/${userId}/status`,
+    { isActive: false }
+  );
+  return { ...data, status: "suspended" };
 }
 
 async function updateEmployer(
   userId: string,
   values: EmployerEditFormValues
 ): Promise<AdminEmployer> {
-  await new Promise((resolve) => setTimeout(resolve, SIMULATED_LATENCY_MS));
-  const employer = mockEmployers.find((e) => e.id === userId);
-  if (!employer) throw new Error("Employer not found");
-
+  const { data } = await apiClient.put<AdminEmployer>(
+    `/admin/users/${userId}/status`,
+    { isActive: values.status === "active" }
+  );
   return {
-    ...employer,
+    ...data,
     name: values.name,
     status: values.status,
     employerProfile: {
@@ -67,9 +66,10 @@ export function useUpdateEmployer() {
         ["admin", "employers"],
         (prev) =>
           prev?.map((e) =>
-            e.id === updatedEmployer.id ? updatedEmployer : e
+            e.id === updatedEmployer.id ? { ...e, ...updatedEmployer } : e
           )
       );
+      queryClient.invalidateQueries({ queryKey: ["admin", "employers"] });
     },
   });
 }
