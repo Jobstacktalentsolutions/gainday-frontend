@@ -6,6 +6,7 @@ import SuspendUserDialog from "../components/SuspendUserDialog";
 import EditEmployerDialog from "../components/EditEmployerDialog";
 import type { AdminEmployer, AdminAccount } from "../types/user";
 import type { EmployerEditFormValues } from "../schemas/employerEditSchema";
+import { TableSkeleton } from "../components/skeletons";
 
 const EmployerManagement = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -30,10 +31,13 @@ const EmployerManagement = () => {
         );
     }, [employers, debouncedSearch]);
 
-    const handleConfirmSuspend = (account: AdminAccount) => {
-        suspendMutation.mutate(account.id, {
-            onSuccess: () => setPendingSuspend(null),
-        });
+    const handleConfirmSuspend = (account: AdminAccount, reason: string) => {
+        suspendMutation.mutate(
+            { id: account.id, reason },
+            {
+                onSuccess: () => setPendingSuspend(null),
+            }
+        );
     };
 
     const handleSaveEmployer = (userId: string, values: EmployerEditFormValues) => {
@@ -69,11 +73,7 @@ const EmployerManagement = () => {
                 />
             </div>
 
-            {isLoading && (
-                <div className="w-full rounded-[10px] border border-neutral-200 bg-white px-5 py-10 text-center text-sm text-neutral-500">
-                    Loading employers...
-                </div>
-            )}
+            {isLoading && <TableSkeleton rows={6} columns={5} showHeader={false} />}
 
             {isError && (
                 <div className="w-full rounded-[10px] border border-error-200 bg-error-50 px-5 py-10 text-center text-sm text-error-600">

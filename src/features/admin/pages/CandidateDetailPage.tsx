@@ -28,7 +28,10 @@ import { SubmissionDetailModal } from "../components/SubmissionDetailModal";
 import { AllSubmissionsModal } from "../components/AllSubmissionsModal";
 import { useCandidateDetail } from "../hooks/useCandidateDetail";
 import { useSuspendCandidate } from "../hooks/useCandidates";
+import { apiClient } from "@/lib/api/client";
 import type { CandidateSubmission } from "../types/candidateDetail";
+
+import { CandidateDetailSkeleton } from "../components/skeletons";
 
 const CandidateDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -48,36 +51,35 @@ const CandidateDetailPage = () => {
     setTimeout(() => setCopiedEmail(false), 2000);
   };
 
-  const handleConfirmSuspend = () => {
+  const handleConfirmSuspend = (_user: any, reason: string) => {
     if (!candidate) return;
-    suspendMutation.mutate(candidate.id, {
-      onSuccess: () => {
-        setSuspendOpen(false);
-        refetch();
-        toast.success(
-          candidate.isActive
-            ? "Candidate account suspended successfully"
-            : "Candidate account activated successfully"
-        );
-      },
-    });
+    suspendMutation.mutate(
+      { id: candidate.id, reason },
+      {
+        onSuccess: () => {
+          setSuspendOpen(false);
+          refetch();
+          toast.success("Candidate account suspended successfully");
+        },
+      }
+    );
+  };
+
+  const handleActivate = async () => {
+    if (!candidate) return;
+    try {
+      await apiClient.put(`/admin/users/${candidate.id}/status`, {
+        isActive: true,
+      });
+      refetch();
+      toast.success("Candidate account activated successfully");
+    } catch {
+      toast.error("Failed to activate candidate account");
+    }
   };
 
   if (isLoading) {
-    return (
-      <div className="flex w-full flex-col gap-6">
-        <button
-          type="button"
-          onClick={() => navigate("/admin/candidate-management")}
-          className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-500 hover:text-neutral-900 transition-colors w-fit cursor-pointer"
-        >
-          <ArrowLeft className="size-4" /> Back to Candidate Management
-        </button>
-        <div className="w-full rounded-2xl border border-neutral-200 bg-white p-12 text-center text-sm text-neutral-500">
-          Loading candidate profile details...
-        </div>
-      </div>
-    );
+    return <CandidateDetailSkeleton />;
   }
 
   if (isError || !candidate) {
@@ -175,17 +177,58 @@ const CandidateDetailPage = () => {
 
           {/* Action Buttons */}
           <div className="flex items-center gap-2.5">
-            <AdminButton
-              variant={candidate.isActive ? "destructive" : "primary"}
-              size="sm"
-              onClick={() => setSuspendOpen(true)}
-              className="cursor-pointer"
-            >
-              {candidate.isActive ? "Suspend Candidate" : "Activate Candidate"}
-            </AdminButton>
+            {candidate.isActive ? (
+              <AdminButton
+                variant="destructive"
+                size="sm"
+                onClick={() => setSuspendOpen(true)}
+                className="cursor-pointer"
+              >
+                Suspend Candidate
+              </AdminButton>
+            ) : (
+              <AdminButton
+                variant="primary"
+                size="sm"
+                onClick={handleActivate}
+                className="cursor-pointer"
+              >
+                Activate Candidate
+              </AdminButton>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Suspension Alert Callout */}
+      {(!candidate.isActive || candidate.status === "suspended") && (
+        <div className="flex items-start gap-3.5 rounded-xl border border-error-200 bg-error-50 p-4.5 text-sm text-error-900 shadow-xs">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-error-100 text-error-600">
+            <AlertTriangle className="size-5" />
+          </div>
+          <div className="flex flex-col gap-1 min-w-0 flex-1">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h4 className="font-semibold text-error-900">
+                Candidate Account is Suspended
+              </h4>
+              {candidate.suspendedAt && (
+                <span className="text-xs text-error-700">
+                  Suspended on{" "}
+                  {new Date(candidate.suspendedAt).toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-error-800">
+              <span className="font-semibold">Reason: </span>
+              {candidate.suspensionReason || "Platform policy violation"}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* 4 Metric Summary Cards */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">

@@ -1,4 +1,4 @@
-import { Phone, FileCheck, Calendar, ShieldCheck } from "lucide-react";
+import { Phone, FileCheck, Calendar, ShieldCheck, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -35,6 +35,33 @@ export const ViewCandidateDialog = ({
         </DialogHeader>
 
         <div className="flex flex-col gap-4 pt-3">
+          {/* Suspension Banner */}
+          {(candidate.status === "suspended" || candidate.isActive === false) && (
+            <div className="flex items-start gap-3 rounded-lg border border-error-200 bg-error-50 p-3.5 text-xs text-error-900 shadow-xs">
+              <AlertTriangle className="size-4 shrink-0 text-error-600 mt-0.5" />
+              <div className="flex flex-col gap-1 min-w-0 flex-1">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-semibold text-error-900">
+                    Candidate Suspended
+                  </span>
+                  {candidate.suspendedAt && (
+                    <span className="text-[11px] text-error-700">
+                      {new Date(candidate.suspendedAt).toLocaleDateString("en-GB", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </span>
+                  )}
+                </div>
+                <p className="text-error-800">
+                  <span className="font-medium">Reason: </span>
+                  {candidate.suspensionReason || "Platform policy violation"}
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Profile Overview Card */}
           <div className="rounded-lg border border-neutral-100 bg-neutral-50/60 p-4 flex flex-col gap-3">
             <div className="flex items-center gap-3">

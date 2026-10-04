@@ -8,8 +8,8 @@ import { HowRolesWorkModal } from "../components/HowRolesWorkModal";
 import { CreateAdminDialog } from "../components/CreateAdminDialog";
 import { DeleteAdminDialog } from "../components/DeleteAdminDialog";
 import { ToggleAdminStatusDialog } from "../components/ToggleAdminStatusDialog";
-import { ViewAdminDialog } from "../components/ViewAdminDialog";
 import type { AdminUserAccount } from "../types/user";
+import { TableSkeleton } from "../components/skeletons";
 
 const AdminManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -98,11 +98,7 @@ const AdminManagement = () => {
         />
       </div>
 
-      {isLoading && (
-        <div className="w-full rounded-[10px] border border-neutral-200 bg-white px-5 py-12 text-center text-sm text-neutral-500">
-          Loading administrators...
-        </div>
-      )}
+      {isLoading && <TableSkeleton rows={5} columns={4} showHeader={false} />}
 
       {isError && (
         <div className="w-full rounded-[10px] border border-error-200 bg-error-50 px-5 py-10 text-center text-sm text-error-600">

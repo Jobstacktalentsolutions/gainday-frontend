@@ -50,7 +50,7 @@ export const AllSubmissionsModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
+      <DialogContent className="w-full max-w-5xl sm:max-w-5xl max-h-[88vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-lg font-bold text-neutral-900">
             All Assessment Submissions

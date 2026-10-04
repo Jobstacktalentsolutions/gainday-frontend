@@ -52,7 +52,7 @@ export const ViewAdminDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="w-full max-w-xl sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>Administrator Details</DialogTitle>
           <DialogDescription>{admin.email}</DialogDescription>

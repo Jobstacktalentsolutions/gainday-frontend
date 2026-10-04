@@ -20,7 +20,10 @@ import {
   FileText,
   BrainCircuit,
   Eye,
+  ChevronDown,
 } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { toast } from "sonner";
 import { AdminButton } from "@/components/ui/AdminButton";
 import RemoveJobPostDialog from "../components/RemoveJobPostDialog";
@@ -28,12 +31,35 @@ import { SubmissionDetailModal } from "../components/SubmissionDetailModal";
 import { useJobDetail } from "../hooks/useJobDetail";
 import { useRemoveJobPost, useUpdateJobStatus } from "../hooks/useAdminJobs";
 import type { CandidateSubmission } from "../types/candidateDetail";
+import { JobDetailSkeleton } from "../components/skeletons";
 
 const JobModerationDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [selectedSubmission, setSelectedSubmission] = useState<CandidateSubmission | null>(null);
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
+  const [expandedTasks, setExpandedTasks] = useState<Record<string, boolean>>({});
+
+  const toggleTask = (taskId: string) => {
+    setExpandedTasks((prev) => ({
+      ...prev,
+      [taskId]: !prev[taskId],
+    }));
+  };
+
+  const handleExpandAllTasks = () => {
+    if (!simulation?.tasks) return;
+    const allExpanded = simulation.tasks.every((t, i) => expandedTasks[t.id || String(i)]);
+    if (allExpanded) {
+      setExpandedTasks({});
+    } else {
+      const next: Record<string, boolean> = {};
+      simulation.tasks.forEach((t, i) => {
+        next[t.id || String(i)] = true;
+      });
+      setExpandedTasks(next);
+    }
+  };
 
   const { data: job, isLoading, isError, refetch } = useJobDetail(id);
   const removeJobMutation = useRemoveJobPost();
@@ -63,20 +89,7 @@ const JobModerationDetailPage = () => {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex w-full flex-col gap-6">
-        <button
-          type="button"
-          onClick={() => navigate("/admin/content-moderation")}
-          className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-500 hover:text-neutral-900 transition-colors w-fit cursor-pointer"
-        >
-          <ArrowLeft className="size-4" /> Back to Content Moderation
-        </button>
-        <div className="w-full rounded-2xl border border-neutral-200 bg-white p-12 text-center text-sm text-neutral-500">
-          Loading job moderation details...
-        </div>
-      </div>
-    );
+    return <JobDetailSkeleton />;
   }
 
   if (isError || !job) {
@@ -426,8 +439,10 @@ const JobModerationDetailPage = () => {
               <h2 className="text-base font-bold text-neutral-900 mb-3">
                 Job Description
               </h2>
-              <div className="text-xs text-neutral-700 whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto pr-1">
-                {job.description}
+              <div className="prose prose-sm max-w-none text-neutral-700 max-h-60 overflow-y-auto pr-1">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {job.description}
+                </ReactMarkdown>
               </div>
             </div>
           )}
@@ -444,6 +459,17 @@ const JobModerationDetailPage = () => {
                   AI-generated assessment tasks configured for this position (Time Limit: {simulation?.timeLimitMinutes ?? 30} mins)
                 </p>
               </div>
+              {simulation && simulation.tasks.length > 0 && (
+                <button
+                  type="button"
+                  onClick={handleExpandAllTasks}
+                  className="text-xs font-medium text-primary-600 hover:text-primary-700 cursor-pointer"
+                >
+                  {simulation.tasks.every((t, i) => expandedTasks[t.id || String(i)])
+                    ? "Collapse all"
+                    : "Expand all"}
+                </button>
+              )}
             </div>
 
             {!simulation || simulation.tasks.length === 0 ? (
@@ -452,36 +478,68 @@ const JobModerationDetailPage = () => {
               </div>
             ) : (
               <div className="flex flex-col gap-3">
-                {simulation.tasks.map((task, idx) => (
-                  <div
-                    key={task.id || idx}
-                    className="flex flex-col gap-2 rounded-xl border border-neutral-100 bg-neutral-50/60 p-4"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-neutral-900">
-                        Task #{idx + 1}: {task.title}
-                      </span>
-                      <span className="text-[10px] font-semibold bg-neutral-200 text-neutral-700 px-2 py-0.5 rounded">
-                        {task.category}
-                      </span>
+                {simulation.tasks.map((task, idx) => {
+                  const taskKey = task.id || String(idx);
+                  const isExpanded = Boolean(expandedTasks[taskKey]);
+
+                  return (
+                    <div
+                      key={taskKey}
+                      className="flex flex-col rounded-xl border border-neutral-200 bg-neutral-50/60 overflow-hidden transition-colors"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => toggleTask(taskKey)}
+                        className="flex items-center justify-between p-4 text-left cursor-pointer hover:bg-neutral-100/70 transition-colors w-full"
+                        aria-expanded={isExpanded}
+                      >
+                        <div className="flex items-center gap-2.5 flex-1 min-w-0 pr-2">
+                          <span className="text-xs font-bold text-neutral-900 truncate">
+                            Task #{idx + 1}: {task.title}
+                          </span>
+                          <span className="text-[10px] font-semibold bg-neutral-200 text-neutral-700 px-2 py-0.5 rounded shrink-0">
+                            {task.category}
+                          </span>
+                        </div>
+                        <ChevronDown
+                          className={`size-4 text-neutral-400 shrink-0 transition-transform duration-200 ${
+                            isExpanded ? "rotate-180 text-neutral-700" : ""
+                          }`}
+                        />
+                      </button>
+
+                      {isExpanded && (
+                        <div className="flex flex-col gap-3 px-4 pb-4 pt-1 border-t border-neutral-100">
+                          {task.scenarioDescription && (
+                            <div>
+                              <span className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wide">
+                                Scenario & Context
+                              </span>
+                              <div className="prose prose-sm max-w-none text-neutral-700 prose-p:my-1 rounded-lg bg-white border border-neutral-200 p-3">
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                  {task.scenarioDescription}
+                                </ReactMarkdown>
+                              </div>
+                            </div>
+                          )}
+
+                          {task.questionPrompt && (
+                            <div>
+                              <span className="text-[10px] font-semibold text-neutral-500 block mb-1 uppercase tracking-wide">
+                                Question Prompt
+                              </span>
+                              <div className="prose prose-sm max-w-none text-neutral-800 prose-p:my-1 rounded-lg bg-white border border-neutral-200 p-3">
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                  {task.questionPrompt}
+                                </ReactMarkdown>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
-
-                    {task.scenarioDescription && (
-                      <p className="text-xs text-neutral-600 line-clamp-2">
-                        {task.scenarioDescription}
-                      </p>
-                    )}
-
-                    {task.questionPrompt && (
-                      <div className="mt-1 rounded-lg bg-white border border-neutral-200 p-2.5 text-xs text-neutral-800">
-                        <span className="font-semibold text-neutral-500 text-[10px] block mb-0.5 uppercase tracking-wide">
-                          Prompt:
-                        </span>
-                        {task.questionPrompt}
-                      </div>
-                    )}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

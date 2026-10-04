@@ -33,7 +33,7 @@ export const ToggleAdminStatusDialog = ({
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent>
+      <AlertDialogContent className="w-full max-w-lg sm:max-w-lg">
         <AlertDialogHeader>
           <div
             className={`flex size-10 items-center justify-center rounded-full mb-2 ${

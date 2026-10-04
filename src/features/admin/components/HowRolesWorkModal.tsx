@@ -15,7 +15,7 @@ interface HowRolesWorkModalProps {
 export const HowRolesWorkModal = ({ open, onOpenChange }: HowRolesWorkModalProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto p-6 sm:p-8">
+      <DialogContent className="w-full max-w-3xl sm:max-w-3xl max-h-[88vh] overflow-y-auto p-6 sm:p-8">
         <DialogHeader className="mb-4">
           <div className="flex items-center gap-2 text-primary-600 font-semibold text-xs tracking-wider uppercase">
             <Shield className="w-4 h-4" /> Role & Permission Hierarchy

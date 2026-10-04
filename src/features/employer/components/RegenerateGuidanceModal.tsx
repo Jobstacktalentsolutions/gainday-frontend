@@ -30,7 +30,7 @@ const RegenerateGuidanceModal = ({
                 <Dialog.Overlay className="fixed inset-0 z-50 bg-neutral-900/30 backdrop-blur-md data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0" />
                 <Dialog.Content
                     aria-describedby="regenerate-guidance-description"
-                    className="fixed left-1/2 top-1/2 z-50 w-[90vw] max-w-110 -translate-x-1/2 -translate-y-1/2 rounded-[28px] bg-white p-8 shadow-2xl shadow-neutral-950/15 border border-neutral-100/80 outline-none data-[state=open]:animate-in data-[state=open]:zoom-in-95 data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=closed]:fade-out-0"
+                    className="fixed left-1/2 top-1/2 z-50 w-[90vw] max-w-lg sm:max-w-lg -translate-x-1/2 -translate-y-1/2 rounded-[28px] bg-white p-8 shadow-2xl shadow-neutral-950/15 border border-neutral-100/80 outline-none data-[state=open]:animate-in data-[state=open]:zoom-in-95 data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:zoom-out-95 data-[state=closed]:fade-out-0"
                 >
                     <Dialog.Title className="text-xl font-bold tracking-tight text-neutral-900">
                         Regenerate this task

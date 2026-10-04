@@ -4,6 +4,7 @@ import { useAdminJobs, useRemoveJobPost } from "../hooks/useAdminJobs";
 import LiveJobPostsPanel from "../components/LiveJobPostPanel";
 import RemoveJobPostDialog from "../components/RemoveJobPostDialog";
 import type { AdminJob } from "../types/job";
+import { StatCardSkeleton, TableSkeleton } from "../components/skeletons";
 
 const ContentModeration = () => {
     const { data: jobs, isLoading, isError } = useAdminJobs();
@@ -37,6 +38,13 @@ const ContentModeration = () => {
             </div>
 
             {/* Metrics Overview Cards */}
+            {isLoading && (
+                <>
+                    <StatCardSkeleton count={4} />
+                    <TableSkeleton rows={5} columns={5} showHeader={false} />
+                </>
+            )}
+
             {!isLoading && !isError && jobs && (
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                     <div className="flex flex-col gap-1 rounded-xl border border-neutral-200 bg-white p-4.5 shadow-xs">
@@ -88,12 +96,6 @@ const ContentModeration = () => {
                             {stats.flagged === 0 ? "All candidate checks clear" : "Has flagged submissions"}
                         </p>
                     </div>
-                </div>
-            )}
-
-            {isLoading && (
-                <div className="w-full rounded-2xl border border-neutral-200 bg-white px-5 py-12 text-center text-sm text-neutral-500">
-                    Loading job postings and moderation queue...
                 </div>
             )}
 

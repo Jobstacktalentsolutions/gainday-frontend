@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useGenerationReviews } from "../hooks/useGenerationReviews";
 import GenerationReviewDetail from "../components/GenerationReviewDetail";
 import type { GenerationReviewStatus } from "../types/generationReview";
+import { TableSkeleton } from "../components/skeletons";
 
 const STATUS_FILTERS: { label: string; value: GenerationReviewStatus | undefined }[] = [
     { label: "Pending", value: "PENDING" },
@@ -47,11 +48,7 @@ const GenerationReviews = () => {
                 ))}
             </div>
 
-            {isLoading && (
-                <div className="w-full rounded-[10px] border border-neutral-200 bg-white px-5 py-10 text-center text-sm text-neutral-500">
-                    Loading...
-                </div>
-            )}
+            {isLoading && <TableSkeleton rows={5} columns={4} showHeader={false} />}
 
             {isError && (
                 <div className="w-full rounded-[10px] border border-error-200 bg-error-50 px-5 py-10 text-center text-sm text-error-600">

@@ -16,23 +16,15 @@ import { DashboardActionCards } from "../components/DashboardActionCards";
 import StatusBadge from "../components/StatusBadge";
 import { AdminButton } from "@/components/ui/AdminButton";
 
+import { DashboardSkeleton } from "../components/skeletons";
+
 const AdminDashboard = () => {
   const [timeframe, setTimeframe] = useState<Timeframe>("month");
   const { data, isLoading, isError, isFetching } = useDashboardStats(timeframe);
   const navigate = useNavigate();
 
   if (isLoading) {
-    return (
-      <div className="space-y-6 animate-pulse">
-        <div className="h-8 w-48 bg-neutral-200 rounded-md" />
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-28 bg-white border border-neutral-200 rounded-xl" />
-          ))}
-        </div>
-        <div className="h-80 bg-white border border-neutral-200 rounded-xl" />
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   if (isError || !data) {

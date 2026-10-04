@@ -52,7 +52,7 @@ const SuspendUserDialog = ({
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="max-w-md">
+      <AlertDialogContent className="w-full max-w-xl sm:max-w-xl">
         <AlertDialogHeader>
           <div className="flex size-10 items-center justify-center rounded-full bg-error-50">
             <AlertTriangle className="size-5 text-error-500" strokeWidth={2} />

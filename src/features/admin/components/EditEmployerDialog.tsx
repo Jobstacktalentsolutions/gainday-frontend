@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Pencil, Building2, User, Phone, Briefcase, FileText, CheckCircle2, XCircle } from "lucide-react";
+import { Pencil, Building2, User, Phone, Briefcase, FileText, CheckCircle2, XCircle, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -77,7 +77,7 @@ const EditEmployerDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-full max-w-2xl sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
           <div className="flex flex-col gap-1">
             <DialogTitle>
@@ -106,6 +106,33 @@ const EditEmployerDialog = ({
 
         {mode === "view" ? (
           <div className="flex flex-col gap-4 pt-3">
+            {/* Suspension Banner */}
+            {(user.status === "suspended" || user.isActive === false) && (
+              <div className="flex items-start gap-3 rounded-lg border border-error-200 bg-error-50 p-3.5 text-xs text-error-900 shadow-xs">
+                <AlertTriangle className="size-4 shrink-0 text-error-600 mt-0.5" />
+                <div className="flex flex-col gap-1 min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-semibold text-error-900">
+                      Employer Account Suspended
+                    </span>
+                    {user.suspendedAt && (
+                      <span className="text-[11px] text-error-700">
+                        {new Date(user.suspendedAt).toLocaleDateString("en-GB", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-error-800">
+                    <span className="font-medium">Reason: </span>
+                    {user.suspensionReason || "Platform policy violation"}
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Contact & Profile */}
             <div className="rounded-lg border border-neutral-100 bg-neutral-50/60 p-3.5 flex flex-col gap-2.5">
               <p className="text-[11px] font-semibold uppercase tracking-wider text-neutral-400">

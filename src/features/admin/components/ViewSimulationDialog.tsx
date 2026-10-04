@@ -43,7 +43,7 @@ const ViewSimulationDialog = ({
             />
 
             {/* Panel */}
-            <div className="relative z-10 w-full max-w-md rounded-xl border border-neutral-200 bg-white shadow-xl">
+            <div className="relative z-10 w-full max-w-xl sm:max-w-xl rounded-xl border border-neutral-200 bg-white shadow-xl">
                 <div className="flex items-start justify-between border-b border-neutral-100 px-6 py-5">
                     <div>
                         <h2

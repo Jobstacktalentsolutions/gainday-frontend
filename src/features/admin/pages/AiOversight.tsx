@@ -11,6 +11,7 @@ import FailedScoringPanel from "../components/FailedScoringPanel";
 import ViewSimulationDialog from "../components/ViewSimulationDialog";
 import OverrideSimulationDialog from "../components/OverrideSimulationDialog";
 import type { GeneratedSimulation } from "../types/aiOversight";
+import { TableSkeleton } from "../components/skeletons";
 
 const AiOversight = () => {
     // ── Data ─────────────────────────────────────────────────────────────────
@@ -60,11 +61,7 @@ const AiOversight = () => {
             <h1 className="text-2xl font-semibold text-neutral-900">AI Engine Oversight</h1>
 
             {/* Generated Simulations */}
-            {simsLoading && (
-                <div className="w-full rounded-[10px] border border-neutral-200 bg-white px-5 py-10 text-center text-sm text-neutral-500">
-                    Loading simulations…
-                </div>
-            )}
+            {simsLoading && <TableSkeleton rows={4} columns={4} showHeader={false} />}
 
             {simsError && (
                 <div className="w-full rounded-[10px] border border-error-200 bg-error-50 px-5 py-10 text-center text-sm text-error-600">
@@ -87,11 +84,7 @@ const AiOversight = () => {
             )}
 
             {/* Failed Scoring Submissions */}
-            {failedLoading && (
-                <div className="w-full rounded-[10px] border border-neutral-200 bg-white px-5 py-10 text-center text-sm text-neutral-500">
-                    Loading failed scoring submissions…
-                </div>
-            )}
+            {failedLoading && <TableSkeleton rows={3} columns={4} showHeader={false} />}
 
             {failedError && (
                 <div className="w-full rounded-[10px] border border-error-200 bg-error-50 px-5 py-10 text-center text-sm text-error-600">

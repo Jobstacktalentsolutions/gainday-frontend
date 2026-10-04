@@ -6,6 +6,8 @@ import CandidatesTable from "../components/CandidatesTable";
 import SuspendUserDialog from "../components/SuspendUserDialog";
 import type { AdminAccount, AdminCandidate } from "../types/user";
 
+import { TableSkeleton } from "../components/skeletons";
+
 const CandidateManagement = () => {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState("");
@@ -26,10 +28,13 @@ const CandidateManagement = () => {
         );
     }, [candidates, debouncedSearch]);
 
-    const handleConfirmSuspend = (account: AdminAccount) => {
-        suspendMutation.mutate(account.id, {
-            onSuccess: () => setPendingSuspend(null),
-        });
+    const handleConfirmSuspend = (account: AdminAccount, reason: string) => {
+        suspendMutation.mutate(
+            { id: account.id, reason },
+            {
+                onSuccess: () => setPendingSuspend(null),
+            }
+        );
     };
 
     const handleViewCandidate = (candidate: AdminCandidate) => {
@@ -52,11 +57,7 @@ const CandidateManagement = () => {
                 />
             </div>
 
-            {isLoading && (
-                <div className="w-full rounded-[10px] border border-neutral-200 bg-white px-5 py-10 text-center text-sm text-neutral-500">
-                    Loading candidates...
-                </div>
-            )}
+            {isLoading && <TableSkeleton rows={6} columns={4} showHeader={false} />}
 
             {isError && (
                 <div className="w-full rounded-[10px] border border-error-200 bg-error-50 px-5 py-10 text-center text-sm text-error-600">

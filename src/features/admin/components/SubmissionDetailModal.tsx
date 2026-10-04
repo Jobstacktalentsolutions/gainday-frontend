@@ -1,4 +1,6 @@
 import { CheckCircle2, AlertTriangle, Clock, Calendar, Building2, Briefcase, Award, ShieldAlert, ShieldCheck } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -55,7 +57,7 @@ export const SubmissionDetailModal = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+      <DialogContent className="w-full max-w-4xl sm:max-w-4xl max-h-[88vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-start justify-between">
             <div>
@@ -221,9 +223,11 @@ export const SubmissionDetailModal = ({
                       </span>
                     </div>
                     {task.summary && (
-                      <p className="text-xs text-neutral-700 bg-white p-2.5 rounded border border-neutral-200">
-                        {task.summary}
-                      </p>
+                      <div className="prose prose-sm max-w-none text-xs text-neutral-700 bg-white p-2.5 rounded border border-neutral-200 prose-p:my-0.5">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          {task.summary}
+                        </ReactMarkdown>
+                      </div>
                     )}
                   </div>
                 ))}

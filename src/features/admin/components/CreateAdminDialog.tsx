@@ -73,7 +73,7 @@ export const CreateAdminDialog = ({ open, onOpenChange }: CreateAdminDialogProps
         onOpenChange(next);
       }}
     >
-      <DialogContent className="max-w-md p-6">
+      <DialogContent className="w-full max-w-xl sm:max-w-xl p-6 sm:p-7">
         <DialogHeader>
           <div className="flex size-10 items-center justify-center rounded-full bg-primary-50 text-primary-600 mb-2">
             <UserPlus className="size-5" />
