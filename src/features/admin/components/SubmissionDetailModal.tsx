@@ -32,6 +32,35 @@ export const SubmissionDetailModal = ({
     return `${mins}m ${secs}s`;
   };
 
+  const formatAntiCheatEventType = (type: string, durationMs?: number) => {
+    let label = type;
+    if (type === "tab-hidden" || type === "tab_hidden" || type === "tab-out" || type === "tab_switch") {
+      label = "Switched browser tab";
+    } else if (type === "window-blur" || type === "window_blur") {
+      label = "Switched window or application";
+    } else if (type === "fullscreen-exit" || type === "fullscreen_exit") {
+      label = "Exited full-screen mode";
+    } else if (type === "idle") {
+      label = "Inactivity detected";
+    } else if (type === "server-stale-heartbeat") {
+      label = "Unexpected connection loss";
+    } else if (type === "pre-simulation-tab-hidden") {
+      label = "Pre-check: Switched browser tab";
+    } else if (type === "pre-simulation-window-blur") {
+      label = "Pre-check: Switched window or application";
+    }
+
+    if (durationMs && durationMs > 0) {
+      const totalSeconds = Math.round(durationMs / 1000);
+      const mins = Math.floor(totalSeconds / 60);
+      const secs = totalSeconds % 60;
+      const durationStr = mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+      return `${label} (${durationStr})`;
+    }
+
+    return label;
+  };
+
   const getScoreBadge = (score: number | null) => {
     if (score === null) return <span className="text-xs text-neutral-400 font-medium">Pending grading</span>;
     if (score >= 80) {
@@ -142,7 +171,9 @@ export const SubmissionDetailModal = ({
                       key={idx}
                       className="flex items-center justify-between rounded-lg bg-error-50/50 border border-error-100 px-3 py-1.5 text-xs text-error-800"
                     >
-                      <span className="font-mono font-medium">{flag.type}</span>
+                      <span className="font-medium text-error-900">
+                        {formatAntiCheatEventType(flag.type, flag.durationMs)}
+                      </span>
                       <span className="text-[11px] text-neutral-500">
                         {new Date(flag.occurredAt).toLocaleTimeString()}
                       </span>

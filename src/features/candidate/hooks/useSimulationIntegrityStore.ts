@@ -34,7 +34,7 @@ export const useSimulationIntegrityStore = create<SimulationIntegrityState>((set
     set((state) => ({
       events: [
         ...state.events,
-        { type: "idle", taskId, occurredAt: new Date().toISOString(), durationMs },
+        { type: "Inactivity detected", taskId, occurredAt: new Date().toISOString(), durationMs },
       ].slice(-MAX_EVENTS),
     })),
 

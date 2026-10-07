@@ -106,7 +106,7 @@ export default function TaskRunner() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useFullscreenGuard({ onExit: () => recordViolation("fullscreen-exit", currentTaskIdRef.current) });
+    useFullscreenGuard({ onExit: () => recordViolation("Exited full-screen mode", currentTaskIdRef.current) });
     const idle = useIdleDetection({
         thresholdMs: IDLE_THRESHOLD_MS,
         onIdleSpell: (durationMs) => recordIdleSpell(durationMs, currentTaskIdRef.current),

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 export type TabVisibilityStatus = "idle" | "armed";
 
 interface TabVisibilityGuardOptions {
-    onViolation: (reason: "tab-hidden" | "window-blur") => void;
+    onViolation: (reason: "Switched browser tab" | "Switched window or application") => void;
 }
 
 export function useTabVisibilityGuard({ onViolation }: TabVisibilityGuardOptions) {
@@ -11,11 +11,11 @@ export function useTabVisibilityGuard({ onViolation }: TabVisibilityGuardOptions
     const armedRef = useRef(false);
 
     const handleVisibilityChange = useCallback(() => {
-        if (armedRef.current && document.hidden) onViolation("tab-hidden");
+        if (armedRef.current && document.hidden) onViolation("Switched browser tab");
     }, [onViolation]);
 
     const handleBlur = useCallback(() => {
-        if (armedRef.current) onViolation("window-blur");
+        if (armedRef.current) onViolation("Switched window or application");
     }, [onViolation]);
 
     const arm = useCallback(() => {
