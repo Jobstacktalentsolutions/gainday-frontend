@@ -29,6 +29,9 @@ const JobModerationDetailPage = lazy(() => import("@/features/admin/pages/JobMod
 const GenerationReviews = lazy(() => import("@/features/admin/pages/GenerationReviews"));
 const AiOversight = lazy(() => import("@/features/admin/pages/AiOversight"));
 const JobPreview = lazy(() => import("@/features/employer/pages/JobPreview"));
+const JobSubmissions = lazy(() => import("@/features/employer/pages/JobSubmissions"));
+const SubmissionDetail = lazy(() => import("@/features/employer/pages/SubmissionDetail"))
+const EmployerCandidates = lazy(() => import("@/features/employer/pages/EmployerCandidate"))
 const JobBoardPage = lazy(() => import("@/features/candidate/pages/JobBoardPage"));
 const JobDetailsPage = lazy(() => import("@/features/candidate/pages/candidateJobDetails"));
 const CandidateSignUp = lazy(() => import("@/features/candidate/pages/CandidateSignUp"));
@@ -44,7 +47,6 @@ const EnvironmentCheckPage = lazy(() => import("@/features/candidate/pages/Envir
 const TaskRunner = lazy(() => import("@/features/candidate/pages/TaskRunner"));
 const SubmissionResultPage = lazy(() => import("@/features/candidate/pages/SubmissionResultPage"));
 const SupportPage = lazy(() => import("@/pages/SupportPage"));
-
 
 
 const AppRoutes = () => {
@@ -78,6 +80,8 @@ const AppRoutes = () => {
                         <Route index element={<Navigate to="jobs" replace />} />
                         <Route path="dashboard" element={<Navigate to="/employer/jobs" replace />} />
                         <Route path="jobs" element={<EmployerJobs />} />
+                        <Route path="jobs/:jobId/submissions" element={<JobSubmissions />} />
+                        <Route path="candidates" element={<EmployerCandidates />} />
                         <Route path="profile" element={<ProfilePage />} />
                         <Route path="jobs/new" element={<JobPostingWizardLayout />}>
                             <Route index element={<Navigate to="details" replace />} />
@@ -88,6 +92,7 @@ const AppRoutes = () => {
                     </Route>
                     {/* Standalone full-page route, no employer shell */}
                     <Route path="jobs/:jobId/preview" element={<JobPreview />} />
+                    <Route path="jobs/:jobId/submissions/:submissionId" element={<SubmissionDetail />} />
 
                 </Route>
 

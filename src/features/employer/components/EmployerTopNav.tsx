@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Menu, Bell } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Menu } from "lucide-react";
+import { Link, NavLink } from "react-router-dom";
 import EmployerNavDrawer from "./EmployerNavDrawer";
 import BrandLogo from "@/assets/gainday icon.svg";
 import { UserAvatarMenu } from "@/components/ui/UserAvatarMenu";
+import { cn } from "@/lib/utils";
+import { EMPLOYER_NAV_LINKS } from "../utils/employerNavLinks";
 
 const EmployerTopNav = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -19,12 +21,25 @@ const EmployerTopNav = () => {
                     />
                 </Link>
 
+                <nav aria-label="Employer" className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-6 lg:flex">
+                    {EMPLOYER_NAV_LINKS.map((link) => (
+                        <NavLink
+                            key={link.to}
+                            to={link.to}
+                            className={({ isActive }) =>
+                                cn(
+                                    "p-2.5 text-base transition-colors hover:text-primary-500",
+                                    isActive ? "text-primary-500" : "text-neutral-700",
+                                )
+                            }
+                        >
+                            {link.label}
+                        </NavLink>
+                    ))}
+                </nav>
+
                 {/* Right: bell + avatar dropdown + hamburger (mobile) */}
                 <div className="flex items-center gap-3">
-                    <span className="flex size-8 items-center justify-center rounded-full bg-primary-50">
-                        <Bell className="size-4 text-primary-500" aria-hidden="true" />
-                    </span>
-
                     <UserAvatarMenu />
 
                     {/* Hamburger: mobile only */}

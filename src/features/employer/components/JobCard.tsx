@@ -97,12 +97,8 @@ const JobCard = ({ job, onShareLink, onViewSubmissions, onOpenPreview, onDelete 
 
             <button
                 type="button"
-                disabled={!hasSubmissions}
                 onClick={stopAnd(() => onViewSubmissions(job))}
-                className={cn(
-                    "flex h-10 items-center justify-center gap-2 rounded-lg bg-neutral-950 px-4 text-base text-neutral-50 self-start transition-colors",
-                    hasSubmissions ? "hover:bg-neutral-800" : "cursor-not-allowed opacity-80"
-                )}
+                className="flex h-10 cursor-pointer items-center justify-center gap-2 rounded-lg bg-neutral-950 px-4 text-base text-neutral-50 self-start transition-colors hover:bg-neutral-800"
             >
                 <Users className="size-4" aria-hidden="true" />
                 <span>
