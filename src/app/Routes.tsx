@@ -43,6 +43,7 @@ const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const EnvironmentCheckPage = lazy(() => import("@/features/candidate/pages/EnvironmentCheckPage"));
 const TaskRunner = lazy(() => import("@/features/candidate/pages/TaskRunner"));
 const SubmissionResultPage = lazy(() => import("@/features/candidate/pages/SubmissionResultPage"));
+const SupportPage = lazy(() => import("@/pages/SupportPage"));
 
 
 
@@ -109,6 +110,7 @@ const AppRoutes = () => {
                     <Route path="profile" element={<ProfilePage />} />
                 </Route>
 
+                <Route path="/support" element={<SupportPage />} />
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </Suspense>

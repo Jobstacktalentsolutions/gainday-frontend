@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
-import { createSuspendHook } from "./suspendFactory";
+import { createSuspendHook, createUnsuspendHook } from "./suspendFactory";
 import type { AdminEmployer } from "../types/user";
 import type { PaginatedResponse } from "../types/pagination";
 import type { EmployerEditFormValues } from "../schemas/employerEditSchema";
@@ -41,6 +41,18 @@ async function suspendEmployer(payload: SuspendPayload): Promise<AdminEmployer> 
   };
 }
 
+async function unsuspendEmployer(userId: string): Promise<AdminEmployer> {
+  const { data } = await apiClient.put<AdminEmployer>(
+    `/admin/users/${userId}/status`,
+    { isActive: true }
+  );
+  return {
+    ...data,
+    status: "active",
+    suspensionReason: null,
+  };
+}
+
 async function updateEmployer(
   userId: string,
   values: EmployerEditFormValues
@@ -74,6 +86,11 @@ export function useEmployers(params: EmployersQueryParams = {}) {
 export const useSuspendEmployer = createSuspendHook(
   ["admin", "employers"],
   suspendEmployer
+);
+
+export const useUnsuspendEmployer = createUnsuspendHook(
+  ["admin", "employers"],
+  unsuspendEmployer
 );
 
 export function useUpdateEmployer() {

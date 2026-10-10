@@ -1,4 +1,4 @@
-import { Users, ArrowRight, Link as LinkIcon, SquareArrowOutUpRight } from "lucide-react";
+import { Users, ArrowRight, Link as LinkIcon, SquareArrowOutUpRight, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Skeleton from "@/components/ui/skeleton";
 import StatusBadge from "./StatusBadge";
@@ -10,6 +10,7 @@ interface JobCardProps {
     onShareLink: (job: Job) => void;
     onViewSubmissions: (job: Job) => void;
     onOpenPreview: (job: Job) => void;
+    onDelete?: (job: Job) => void;
 }
 
 const formatPostedDate = (postedAt: string | null) => {
@@ -23,7 +24,7 @@ const formatPostedDate = (postedAt: string | null) => {
 
 }
 
-const JobCard = ({ job, onShareLink, onViewSubmissions, onOpenPreview }: JobCardProps) => {
+const JobCard = ({ job, onShareLink, onViewSubmissions, onOpenPreview, onDelete }: JobCardProps) => {
 
     const hasSubmissions = job.submissionsCount > 0;
 
@@ -55,6 +56,20 @@ const JobCard = ({ job, onShareLink, onViewSubmissions, onOpenPreview }: JobCard
                     <JobMetaRow location={job.location} employmentType={job.employmentType} />
                 </div>
                 <div className="flex items-center gap-2">
+                    {/* Delete button: only for non-live jobs (Draft, Inactive, etc.) */}
+                    {job.status !== "ACTIVE" && onDelete && (
+                        <button
+                            type="button"
+                            onClick={stopAnd(() => onDelete(job))}
+                            aria-label="Delete job"
+                            title="Delete job"
+                            className="flex h-10 items-center justify-center gap-1.5 rounded-full border border-neutral-200 px-3 text-sm text-neutral-500 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 lg:size-10 lg:p-0"
+                        >
+                            <Trash2 className="size-4 shrink-0" aria-hidden="true" />
+                            <span className="lg:hidden">Delete</span>
+                        </button>
+                    )}
+
                     {/* Preview button: "Open" + icon on mobile/tablet, icon-only on desktop */}
                     <button
                         type="button"

@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
-import { createSuspendHook } from "./suspendFactory";
+import { createSuspendHook, createUnsuspendHook } from "./suspendFactory";
 import type { AdminCandidate } from "../types/user";
 import type { PaginatedResponse } from "../types/pagination";
 import type { SuspendPayload } from "./suspendFactory";
@@ -40,6 +40,18 @@ async function suspendCandidate(payload: SuspendPayload): Promise<AdminCandidate
   };
 }
 
+async function unsuspendCandidate(userId: string): Promise<AdminCandidate> {
+  const { data } = await apiClient.put<AdminCandidate>(
+    `/admin/users/${userId}/status`,
+    { isActive: true }
+  );
+  return {
+    ...data,
+    status: "active",
+    suspensionReason: null,
+  };
+}
+
 export function useCandidates(params: CandidatesQueryParams = {}) {
   return useInfiniteQuery({
     queryKey: ["admin", "candidates", params.search, params.status, params.limit],
@@ -54,3 +66,9 @@ export const useSuspendCandidate = createSuspendHook(
   ["admin", "candidates"],
   suspendCandidate
 );
+
+export const useUnsuspendCandidate = createUnsuspendHook(
+  ["admin", "candidates"],
+  unsuspendCandidate
+);
+

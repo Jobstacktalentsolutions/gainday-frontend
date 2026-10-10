@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
-import { useEmployers, useSuspendEmployer, useUpdateEmployer } from "../hooks/useEmployers";
+import { useEmployers, useSuspendEmployer, useUnsuspendEmployer, useUpdateEmployer } from "../hooks/useEmployers";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import EmployersTable from "../components/EmployersTable";
 import SuspendUserDialog from "../components/SuspendUserDialog";
+import UnsuspendUserDialog from "../components/UnsuspendUserDialog";
 import EditEmployerDialog from "../components/EditEmployerDialog";
 import { TableLoadMore } from "../components/TableLoadMore";
 import type { AdminEmployer, AdminAccount } from "../types/user";
@@ -13,6 +14,7 @@ const EmployerManagement = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const debouncedSearch = useDebouncedValue(searchTerm, 300);
     const [pendingSuspend, setPendingSuspend] = useState<AdminAccount | null>(null);
+    const [pendingUnsuspend, setPendingUnsuspend] = useState<AdminAccount | null>(null);
     const [dialogEmployer, setDialogEmployer] = useState<AdminEmployer | null>(null);
     const [dialogMode, setDialogMode] = useState<"view" | "edit">("view");
 
@@ -26,6 +28,7 @@ const EmployerManagement = () => {
     } = useEmployers({ search: debouncedSearch, limit: 10 });
 
     const suspendMutation = useSuspendEmployer();
+    const unsuspendMutation = useUnsuspendEmployer();
     const updateMutation = useUpdateEmployer();
 
     const allEmployers = useMemo(
@@ -41,6 +44,12 @@ const EmployerManagement = () => {
                 onSuccess: () => setPendingSuspend(null),
             }
         );
+    };
+
+    const handleConfirmUnsuspend = (account: AdminAccount) => {
+        unsuspendMutation.mutate(account.id, {
+            onSuccess: () => setPendingUnsuspend(null),
+        });
     };
 
     const handleSaveEmployer = (userId: string, values: EmployerEditFormValues) => {
@@ -91,7 +100,9 @@ const EmployerManagement = () => {
                         onView={handleViewEmployer}
                         onEdit={handleEditEmployer}
                         onSuspend={setPendingSuspend}
+                        onUnsuspend={setPendingUnsuspend}
                         isSuspending={suspendMutation.isPending}
+                        isUnsuspending={unsuspendMutation.isPending}
                     />
 
                     <TableLoadMore
@@ -112,6 +123,16 @@ const EmployerManagement = () => {
                 }}
                 onConfirm={handleConfirmSuspend}
                 isPending={suspendMutation.isPending}
+            />
+
+            <UnsuspendUserDialog
+                user={pendingUnsuspend}
+                open={pendingUnsuspend !== null}
+                onOpenChange={(open) => {
+                    if (!open) setPendingUnsuspend(null);
+                }}
+                onConfirm={handleConfirmUnsuspend}
+                isPending={unsuspendMutation.isPending}
             />
 
             <EditEmployerDialog

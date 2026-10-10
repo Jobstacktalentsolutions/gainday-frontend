@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCandidates, useSuspendCandidate } from "../hooks/useCandidates";
+import { useCandidates, useSuspendCandidate, useUnsuspendCandidate } from "../hooks/useCandidates";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import CandidatesTable from "../components/CandidatesTable";
 import SuspendUserDialog from "../components/SuspendUserDialog";
+import UnsuspendUserDialog from "../components/UnsuspendUserDialog";
 import { TableLoadMore } from "../components/TableLoadMore";
 import type { AdminAccount, AdminCandidate } from "../types/user";
 import { TableSkeleton } from "../components/skeletons";
@@ -13,6 +14,7 @@ const CandidateManagement = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const debouncedSearch = useDebouncedValue(searchTerm, 300);
     const [pendingSuspend, setPendingSuspend] = useState<AdminAccount | null>(null);
+    const [pendingUnsuspend, setPendingUnsuspend] = useState<AdminAccount | null>(null);
 
     const {
         data,
@@ -24,6 +26,7 @@ const CandidateManagement = () => {
     } = useCandidates({ search: debouncedSearch, limit: 10 });
 
     const suspendMutation = useSuspendCandidate();
+    const unsuspendMutation = useUnsuspendCandidate();
 
     const allCandidates = useMemo(
         () => data?.pages.flatMap((page) => page.items) ?? [],
@@ -38,6 +41,12 @@ const CandidateManagement = () => {
                 onSuccess: () => setPendingSuspend(null),
             }
         );
+    };
+
+    const handleConfirmUnsuspend = (account: AdminAccount) => {
+        unsuspendMutation.mutate(account.id, {
+            onSuccess: () => setPendingUnsuspend(null),
+        });
     };
 
     const handleViewCandidate = (candidate: AdminCandidate) => {
@@ -74,7 +83,9 @@ const CandidateManagement = () => {
                         candidates={allCandidates}
                         onView={handleViewCandidate}
                         onSuspend={setPendingSuspend}
+                        onUnsuspend={setPendingUnsuspend}
                         isSuspending={suspendMutation.isPending}
+                        isUnsuspending={unsuspendMutation.isPending}
                     />
 
                     <TableLoadMore
@@ -95,6 +106,16 @@ const CandidateManagement = () => {
                 }}
                 onConfirm={handleConfirmSuspend}
                 isPending={suspendMutation.isPending}
+            />
+
+            <UnsuspendUserDialog
+                user={pendingUnsuspend}
+                open={pendingUnsuspend !== null}
+                onOpenChange={(open) => {
+                    if (!open) setPendingUnsuspend(null);
+                }}
+                onConfirm={handleConfirmUnsuspend}
+                isPending={unsuspendMutation.isPending}
             />
         </>
     );

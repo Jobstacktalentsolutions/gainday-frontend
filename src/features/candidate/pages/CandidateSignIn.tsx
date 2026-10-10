@@ -50,6 +50,47 @@ const CandidateSignIn = () => {
         ? `/candidate/forgot-password?email=${encodeURIComponent(email)}`
         : "/candidate/forgot-password";
 
+    const renderErrorMessage = () => {
+        const data = (signInMutation.error as any)?.response?.data;
+        const message = data?.message;
+        const msgStr = Array.isArray(message) ? message[0] : message;
+        if (typeof msgStr === "string" && msgStr.toLowerCase().includes("suspended")) {
+            const supportUrl = `/support?email=${encodeURIComponent(email || "")}&topic=${encodeURIComponent("Account Suspension Appeal")}`;
+            const parts = msgStr.split(/(contact support)/i);
+            if (parts.length > 1) {
+                return (
+                    <span>
+                        {parts.map((part, idx) =>
+                            part.toLowerCase() === "contact support" ? (
+                                <Link
+                                    key={idx}
+                                    to={supportUrl}
+                                    className="underline font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+                                >
+                                    {part}
+                                </Link>
+                            ) : (
+                                part
+                            )
+                        )}
+                    </span>
+                );
+            }
+            return (
+                <span>
+                    {msgStr}{" "}
+                    <Link
+                        to={supportUrl}
+                        className="underline font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+                    >
+                        Contact support
+                    </Link>
+                </span>
+            );
+        }
+        return "Incorrect email or password";
+    };
+
     return (
         <AuthCard
             title="Log in to Gainday"
@@ -93,7 +134,7 @@ const CandidateSignIn = () => {
                             role="alert"
                             className="text-center text-sm text-error-600"
                         >
-                            Incorrect email or password
+                            {renderErrorMessage()}
                         </p>
                     )
                 }

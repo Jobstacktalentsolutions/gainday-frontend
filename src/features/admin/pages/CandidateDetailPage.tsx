@@ -72,9 +72,9 @@ const CandidateDetailPage = () => {
         isActive: true,
       });
       refetch();
-      toast.success("Candidate account activated successfully");
+      toast.success("Candidate account unsuspended successfully");
     } catch {
-      toast.error("Failed to activate candidate account");
+      toast.error("Failed to unsuspend candidate account");
     }
   };
 
@@ -191,9 +191,9 @@ const CandidateDetailPage = () => {
                 variant="primary"
                 size="sm"
                 onClick={handleActivate}
-                className="cursor-pointer"
+                className="cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white"
               >
-                Activate Candidate
+                Unsuspend Candidate
               </AdminButton>
             )}
           </div>

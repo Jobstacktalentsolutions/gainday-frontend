@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useFormContext, Controller } from "react-hook-form";
-import { Sparkles } from "lucide-react";
+import { Sparkles, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import TagInput from "@/components/ui/tagInput";
 import { jobDetailsSchema, type JobPostingFormValues } from "../schemas/jobPosting";
@@ -12,6 +12,7 @@ import type { ParsedJobDetails } from "../hooks/useParseJobDescription";
 import { useSaveJobDetails } from "../hooks/useSaveJobDraft";
 import { useTriggerGeneration } from "../hooks/useTriggerGeneration";
 import { useProfile } from "@/features/auth/hooks/useProfile";
+import { useJobDraftStore } from "../stores/useJobDraftStore";
 
 import { FormSelect } from "@/components/form/FormSelect";
 import { FormTextarea } from "@/components/form/FormTextarea";
@@ -52,6 +53,7 @@ const JobDetailsStep = () => {
         control,
         watch,
         setValue,
+        reset,
         trigger,
         formState: { errors },
     } = useFormContext<JobPostingFormValues>();
@@ -172,6 +174,32 @@ const JobDetailsStep = () => {
         setIsGenerating(false);
     };
 
+    const handleClearAll = () => {
+        useJobDraftStore.getState().clearDraft();
+        setJobId(null);
+        reset({
+            title: "",
+            role: "",
+            skillLevel: "",
+            skillCategory: "",
+            company: profile?.companyName ?? "",
+            location: "",
+            employmentType: "",
+            deadline: "",
+            isRemoteFriendly: false,
+            salaryFrom: undefined,
+            salaryTo: undefined,
+            companyDescription: "",
+            skills: [],
+            description: "",
+            businessProblem: "",
+            tasks: [],
+        });
+        setIsDescriptionAiGenerated(false);
+        setCustomRoleActive(false);
+        toast.success("All fields cleared");
+    };
+
     return (
         <div className="flex flex-col gap-12">
             {/* Header — centered */}
@@ -188,10 +216,31 @@ const JobDetailsStep = () => {
 
             {/* Form fields — two-column grid on desktop */}
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                {/* Job title — full width */}
+                {/* Job title — full width with Clear action */}
                 <div className="lg:col-span-2">
+                    <div className="flex items-center justify-between mb-1.5">
+                        <label
+                            htmlFor="job-title-input"
+                            className="flex items-center gap-1 text-base font-medium text-neutral-800 select-none"
+                        >
+                            Job title
+                            <span aria-hidden="true" className="text-error-500">
+                                *
+                            </span>
+                        </label>
+                        <button
+                            type="button"
+                            onClick={handleClearAll}
+                            className="flex cursor-pointer items-center gap-1.5 text-xs font-medium text-neutral-500 hover:text-red-600 transition-colors"
+                        >
+                            <RotateCcw className="size-3.5" />
+                            <span>Clear</span>
+                        </button>
+                    </div>
                     <JobFormInput
+                        id="job-title-input"
                         label="Job title"
+                        hideLabel
                         placeholder="e.g Customer Operations Business Manager"
                         error={errors.title?.message}
                         {...register("title")}

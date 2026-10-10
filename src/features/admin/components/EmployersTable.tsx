@@ -7,7 +7,9 @@ interface EmployersTableProps {
     onView: (employer: AdminEmployer) => void;
     onEdit: (employer: AdminEmployer) => void;
     onSuspend: (employer: AdminEmployer) => void;
+    onUnsuspend?: (employer: AdminEmployer) => void;
     isSuspending: boolean;
+    isUnsuspending?: boolean;
 }
 
 const EmployersTable = ({
@@ -15,7 +17,9 @@ const EmployersTable = ({
     onView,
     onEdit,
     onSuspend,
+    onUnsuspend,
     isSuspending,
+    isUnsuspending = false,
 }: EmployersTableProps) => {
     if (employers.length === 0) {
         return (
@@ -102,18 +106,33 @@ const EmployersTable = ({
                         >
                             Edit
                         </AdminButton>
-                        <AdminButton
-                            variant="destructive"
-                            size="sm"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onSuspend(employer);
-                            }}
-                            disabled={isSuspending}
-                            className="h-8 px-2.5 text-xs cursor-pointer"
-                        >
-                            Suspend
-                        </AdminButton>
+                        {employer.status === "suspended" || employer.isActive === false ? (
+                            <AdminButton
+                                variant="outline"
+                                size="sm"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onUnsuspend?.(employer);
+                                }}
+                                disabled={isSuspending || isUnsuspending}
+                                className="h-8 px-2.5 text-xs cursor-pointer text-emerald-700 border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800"
+                            >
+                                Unsuspend
+                            </AdminButton>
+                        ) : (
+                            <AdminButton
+                                variant="destructive"
+                                size="sm"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onSuspend(employer);
+                                }}
+                                disabled={isSuspending || isUnsuspending}
+                                className="h-8 px-2.5 text-xs cursor-pointer"
+                            >
+                                Suspend
+                            </AdminButton>
+                        )}
                     </div>
                 </div>
             ))}

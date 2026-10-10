@@ -6,14 +6,18 @@ interface CandidatesTableProps {
     candidates: AdminCandidate[];
     onView: (candidate: AdminCandidate) => void;
     onSuspend: (candidate: AdminCandidate) => void;
+    onUnsuspend?: (candidate: AdminCandidate) => void;
     isSuspending: boolean;
+    isUnsuspending?: boolean;
 }
 
 const CandidatesTable = ({
     candidates,
     onView,
     onSuspend,
+    onUnsuspend,
     isSuspending,
+    isUnsuspending = false,
 }: CandidatesTableProps) => {
     if (candidates.length === 0) {
         return (
@@ -74,18 +78,33 @@ const CandidatesTable = ({
                         >
                             View
                         </AdminButton>
-                        <AdminButton
-                            variant="destructive"
-                            size="sm"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onSuspend(candidate);
-                            }}
-                            disabled={isSuspending}
-                            className="h-8 px-2.5 text-xs cursor-pointer"
-                        >
-                            Suspend
-                        </AdminButton>
+                        {candidate.status === "suspended" || candidate.isActive === false ? (
+                            <AdminButton
+                                variant="outline"
+                                size="sm"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onUnsuspend?.(candidate);
+                                }}
+                                disabled={isSuspending || isUnsuspending}
+                                className="h-8 px-2.5 text-xs cursor-pointer text-emerald-700 border-emerald-300 hover:bg-emerald-50 hover:text-emerald-800"
+                            >
+                                Unsuspend
+                            </AdminButton>
+                        ) : (
+                            <AdminButton
+                                variant="destructive"
+                                size="sm"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onSuspend(candidate);
+                                }}
+                                disabled={isSuspending || isUnsuspending}
+                                className="h-8 px-2.5 text-xs cursor-pointer"
+                            >
+                                Suspend
+                            </AdminButton>
+                        )}
                     </div>
                 </div>
             ))}

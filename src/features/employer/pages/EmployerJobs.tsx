@@ -6,7 +6,9 @@ import JobStatusTabs from "../components/JobStatusTabs";
 import JobCard, { JobCardSkeleton } from "../components/JobCard";
 import JobsEmptyState from "../components/JobsEmptyState";
 import EmployerPageHeader from "../components/EmployerPageHeader";
+import DeleteJobModal from "../components/DeleteJobModal";
 import { useEmployerJobs } from "../hooks/useEmployerJobs";
+import { useDeleteJob } from "../hooks/useDeleteJob";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import type { Job, JobStatusFilter } from "../types/job";
 import { useNavigate } from "react-router-dom";
@@ -14,8 +16,10 @@ import { useNavigate } from "react-router-dom";
 const EmployerJobs = () => {
     const navigate = useNavigate();
     const { data: jobs, isLoading, isError } = useEmployerJobs();
+    const deleteJobMutation = useDeleteJob();
     const { user } = useCurrentUser();
     const [statusFilter, setStatusFilter] = useState<JobStatusFilter>("all");
+    const [jobToDelete, setJobToDelete] = useState<Job | null>(null);
 
     const filteredJobs = useMemo(() => {
         if (!jobs) return [];
@@ -43,6 +47,22 @@ const EmployerJobs = () => {
 
     const handleOpenPreview = (job: Job) => {
         navigate(`/employer/jobs/${job.id}/preview`);
+    };
+
+    const handleDeleteJob = (job: Job) => {
+        setJobToDelete(job);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!jobToDelete) return;
+        try {
+            await deleteJobMutation.mutateAsync(jobToDelete.id);
+            toast.success("Job deleted successfully");
+            setJobToDelete(null);
+        } catch (err: any) {
+            const msg = err?.response?.data?.message || "Failed to delete job. Please try again.";
+            toast.error(Array.isArray(msg) ? msg[0] : msg);
+        }
     };
 
     const hasJobs = !!jobs && jobs.length > 0;
@@ -98,6 +118,7 @@ const EmployerJobs = () => {
                                         onShareLink={handleShareLink}
                                         onViewSubmissions={handleViewSubmissions}
                                         onOpenPreview={handleOpenPreview}
+                                        onDelete={handleDeleteJob}
                                     />
                                 ))}
                             </div>
@@ -108,6 +129,14 @@ const EmployerJobs = () => {
 
                 </div>
             </div>
+
+            <DeleteJobModal
+                open={!!jobToDelete}
+                job={jobToDelete}
+                onConfirm={handleConfirmDelete}
+                onDismiss={() => setJobToDelete(null)}
+                isDeleting={deleteJobMutation.isPending}
+            />
         </div>
     )
 

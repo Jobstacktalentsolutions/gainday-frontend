@@ -33,3 +33,24 @@ export function createSuspendHook<
     });
   };
 }
+
+export function createUnsuspendHook<
+  T extends { id: string; status: UserStatus }
+>(
+  queryKey: readonly unknown[],
+  unsuspendFn: (userId: string) => Promise<T>
+) {
+  return function useHook() {
+    const queryClient = useQueryClient();
+    return useMutation({
+      mutationFn: unsuspendFn,
+      onSuccess: (updated) => {
+        queryClient.setQueryData<T[]>([...queryKey], (prev) =>
+          prev?.map((item) => (item.id === updated.id ? updated : item))
+        );
+        queryClient.invalidateQueries({ queryKey: [...queryKey] });
+      },
+    });
+  };
+}
+
