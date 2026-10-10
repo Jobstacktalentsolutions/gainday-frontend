@@ -241,20 +241,8 @@ const DetailField = ({ label, value }: { label: string; value: string }) => (
 const LiveJobActions = ({ job }: { job: JobPreviewDetails }) => {
     const navigate = useNavigate();
     return (
-        <div className="flex flex-wrap items-center gap-6">
-            {/* <button
-                type="button"
-                // TODO: point this at the submissions route once it exists
-                onClick={() => navigate(`/employer/jobs/${job.id}/submissions`)}
-                className="flex h-13 items-center gap-2 rounded-lg bg-primary-500 py-1 pr-1 pl-6 text-base text-neutral-50"
-            >
-                View Submissions
-                <span className="flex h-full w-11 items-center justify-center rounded-lg bg-secondary-500">
-                    <ArrowRight className="size-4" aria-hidden="true" />
-                </span>
-            </button> */}
+        <div className="flex flex-wrap items-center gap-6">  
             <StepContinueButton
-                // TODO: point this at the submissions route once it exists
                 onClick={() => navigate(`/employer/jobs/${job.id}/submissions`)}
             >
                 View Submissions
