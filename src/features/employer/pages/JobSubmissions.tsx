@@ -8,6 +8,7 @@ import SubmissionsEmptyState from "../components/SubmissionsEmptyState";
 import { useJobSubmissions } from "../hooks/useJobSubmissions";
 import { useSubmissionSort } from "../hooks/useSubmissionSort";
 import { SORT_CONFIG, sortSubmissions } from "../utils/submissionSort";
+import { CATEGORY_ORDER } from "../utils/submissionCategories";
 import { cn } from "@/lib/utils";
 
 const JobSubmissions = () => {
@@ -23,7 +24,7 @@ const JobSubmissions = () => {
     const hasSubmissions = !!data && data.submissions.length > 0;
 
     return (
-        <div className="min-h-screen bg-neutral-50 px-6 pb-10 pt-32 md:px-7.5 lg:px-12 xl:px-20">
+        <div className="min-h-screen bg-neutral-50 px-6 pb-30 pt-32 md:px-7.5 lg:px-12 xl:px-20">
             <div className="mx-auto flex w-full max-w-6xl flex-col gap-10">
                 <PageBackLink to="/employer/jobs">Go back to jobs posted</PageBackLink>
 
@@ -75,7 +76,19 @@ const JobSubmissions = () => {
 
                 {!isLoading && !isError && (
                     hasSubmissions && jobId ? (
-                        <SubmissionsTable jobId={jobId} submissions={sortedSubmissions} />
+                        <div className="flex flex-col gap-2">
+                            <SubmissionsTable jobId={jobId} submissions={sortedSubmissions} />
+                            <div className="flex flex-wrap justify-end gap-x-4 gap-y-1 text-xs text-neutral-400">
+                                <span className="font-medium uppercase tracking-wide text-neutral-500">Breakdown key:</span>
+                                {CATEGORY_ORDER.map((category) => (
+                                    <span key={category.key}>
+                                        <span className="font-semibold text-neutral-600">{category.short}</span>
+                                        {" — "}
+                                        {category.label}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
                     ) : (
                         <SubmissionsEmptyState />
                     )
