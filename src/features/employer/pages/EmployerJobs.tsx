@@ -37,8 +37,7 @@ const EmployerJobs = () => {
     }
 
     const handleViewSubmissions = (job: Job) => {
-        //navigate (/employer/jobs${job.id}/submissions)
-        console.log(job) // to stall deployment issues
+        navigate(`/employer/jobs/${job.id}/submissions`);
     }
 
     const handleOpenPreview = (job: Job) => {
