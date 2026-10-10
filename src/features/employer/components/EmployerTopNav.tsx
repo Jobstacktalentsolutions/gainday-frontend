@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, Bell } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import EmployerNavDrawer from "./EmployerNavDrawer";
 import BrandLogo from "@/assets/gainday icon.svg";
@@ -40,10 +40,6 @@ const EmployerTopNav = () => {
 
                 {/* Right: bell + avatar dropdown + hamburger (mobile) */}
                 <div className="flex items-center gap-3">
-                    <span className="flex size-8 items-center justify-center rounded-full bg-primary-50">
-                        <Bell className="size-4 text-primary-500" aria-hidden="true" />
-                    </span>
-
                     <UserAvatarMenu />
 
                     {/* Hamburger: mobile only */}
