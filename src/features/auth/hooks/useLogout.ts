@@ -7,11 +7,13 @@ export const useLogout = () => {
   const clearAuth = useAuthStore((state) => state.clearAuth);
 
   const logout = async () => {
+    // Read the role first — clearAuth() wipes it, and candidates sign in on their own page.
+    const role = useAuthStore.getState().user?.role;
     try {
       await apiClient.post("/auth/logout");
     } finally {
       clearAuth();
-      navigate("/employer/signin");
+      navigate(role === "JOB_SEEKER" ? "/candidate/signin" : "/employer/signin");
     }
   };
 
