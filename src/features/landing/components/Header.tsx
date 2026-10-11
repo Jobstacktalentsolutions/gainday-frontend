@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import brandLogo from "@/assets/gainday icon.svg";
@@ -381,7 +381,7 @@ const Header = () => {
                 )}
             </AnimatePresence>
         </header>
-        <AuthChoiceModal mode={authMode} onClose={() => setAuthMode(null)} />
+        <AuthChoiceModal mode={authMode} onClose={() => setAuthMode(null)} onSwitchMode={(m) => setAuthMode(m)} />
         </>
     );
 };

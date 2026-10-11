@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 interface AuthChoiceModalProps {
     mode: "login" | "signup" | null;
     onClose: () => void;
+    onSwitchMode: (mode: "login" | "signup") => void;
 }
 
 const OPTIONS = {
@@ -43,7 +44,7 @@ const OPTIONS = {
     },
 };
 
-const AuthChoiceModal = ({ mode, onClose }: AuthChoiceModalProps) => {
+const AuthChoiceModal = ({ mode, onClose, onSwitchMode }: AuthChoiceModalProps) => {
     const navigate = useNavigate();
     const config = mode ? OPTIONS[mode] : null;
 
@@ -143,7 +144,7 @@ const AuthChoiceModal = ({ mode, onClose }: AuthChoiceModalProps) => {
                                     Already have an account?{" "}
                                     <button
                                         type="button"
-                                        onClick={() => handleSelect("/candidate/signin")}
+                                        onClick={() => onSwitchMode("login")}
                                         className="cursor-pointer font-medium text-primary-500 hover:underline"
                                     >
                                         Log in
@@ -154,7 +155,7 @@ const AuthChoiceModal = ({ mode, onClose }: AuthChoiceModalProps) => {
                                     Don't have an account?{" "}
                                     <button
                                         type="button"
-                                        onClick={() => handleSelect("/candidate/signup")}
+                                        onClick={() => onSwitchMode("signup")}
                                         className="cursor-pointer font-medium text-primary-500 hover:underline"
                                     >
                                         Sign up
