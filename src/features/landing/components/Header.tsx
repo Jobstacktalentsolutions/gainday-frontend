@@ -9,6 +9,7 @@ import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { UserAvatarMenu } from "@/components/ui/UserAvatarMenu";
 import AddItemButton from "@/components/ui/AddItemButton";
 import { StepContinueButton } from "@/components/ui/StepNavigationButtons";
+import AuthChoiceModal from "./AuthChoiceModal";
 
 const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
@@ -94,6 +95,7 @@ const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [employerDropOpen, setEmployerDropOpen] = useState(false);
     const [browseJobsDropOpen, setBrowseJobsDropOpen] = useState(false);
+    const [authMode, setAuthMode] = useState<"login" | "signup" | null>(null);
     const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const browseCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const { user, isAuthenticated } = useCurrentUser();
@@ -129,6 +131,7 @@ const Header = () => {
     };
 
     return (
+        <>
         <header className="fixed top-0 left-0 z-50 w-full border-t border-t-white/25 border-b border-b-white/15 bg-white/75 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),inset_0_-1px_0_0_rgba(255,255,255,0.1),0_4px_16px_rgba(0,0,0,0.06)] backdrop-blur-xs">
 
             {/* ── Top bar ── */}
@@ -231,24 +234,26 @@ const Header = () => {
                         <UserAvatarMenu />
                     ) : (
                         <>
-                            <Link
-                                to="/candidate/signin"
+                            <button
+                                type="button"
+                                onClick={() => setAuthMode("login")}
                                 className={cn(
                                     actionButtonVariants({ variant: "outline", size: "lg" }),
-                                    "w-auto rounded-xl px-10"
+                                    "w-auto cursor-pointer rounded-xl px-10"
                                 )}
                             >
                                 Log in
-                            </Link>
-                            <Link
-                                to="/candidate/signup"
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setAuthMode("signup")}
                                 className={cn(
                                     actionButtonVariants({ variant: "primary", size: "lg" }),
-                                    "w-auto rounded-xl px-10"
+                                    "w-auto cursor-pointer rounded-xl px-10"
                                 )}
                             >
                                 Sign up
-                            </Link>
+                            </button>
                         </>
                     )}
                 </div>
@@ -350,32 +355,34 @@ const Header = () => {
                             </div>
 
                             <div className="flex flex-col gap-3 pt-4">
-                                <Link
-                                    to="/candidate/signin"
-                                    onClick={() => setMenuOpen(false)}
+                                <button
+                                    type="button"
+                                    onClick={() => { setMenuOpen(false); setAuthMode("login"); }}
                                     className={cn(
                                         actionButtonVariants({ variant: "outline", size: "lg" }),
-                                        "rounded-xl"
+                                        "cursor-pointer rounded-xl"
                                     )}
                                 >
                                     Log in
-                                </Link>
-                                <Link
-                                    to="/candidate/signup"
-                                    onClick={() => setMenuOpen(false)}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => { setMenuOpen(false); setAuthMode("signup"); }}
                                     className={cn(
                                         actionButtonVariants({ variant: "primary", size: "lg" }),
-                                        "rounded-xl"
+                                        "cursor-pointer rounded-xl"
                                     )}
                                 >
                                     Sign up
-                                </Link>
+                                </button>
                             </div>
                         </div>
                     </motion.nav>
                 )}
             </AnimatePresence>
         </header>
+        <AuthChoiceModal mode={authMode} onClose={() => setAuthMode(null)} />
+        </>
     );
 };
 
