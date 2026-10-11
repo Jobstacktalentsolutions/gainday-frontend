@@ -1,5 +1,5 @@
 import Skeleton from "@/components/ui/skeleton";
-import ScoreBar from "./ScoreBar";
+import ScoreBar from "@/components/ui/ScoreBar";
 import type { TaskResult } from "../types/submission";
 
 const TaskResultCard = ({ task }: { task: TaskResult }) => {
