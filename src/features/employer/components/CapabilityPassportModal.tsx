@@ -33,7 +33,7 @@ const CapabilityPassportModal = ({
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent
                 overlayClassName="bg-[rgba(178,201,255,0.1)] supports-backdrop-filter:backdrop-blur-[15px]"
-                className="max-h-[calc(100vh-2rem)] gap-10 overflow-y-auto rounded-2xl bg-neutral-50 p-6 shadow-[0px_1px_20px_0px_rgba(123,123,123,0.05),0px_4px_10px_0px_rgba(123,123,123,0.05)] ring-0 sm:max-w-269 lg:p-12"
+                className="max-h-[calc(100vh-2rem)] gap-10 overflow-y-auto rounded-2xl bg-neutral-50 p-6 shadow-[0px_1px_20px_0px_rgba(123,123,123,0.05),0px_4px_10px_0px_rgba(123,123,123,0.05)] ring-0 sm:max-w-269 lg:p-12 scrollbar-thin [scrollbar-color:var(--color-neutral-300)_var(--color-neutral-100)] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-neutral-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-neutral-300 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-400"
             >
                 <DialogTitle className="sr-only">{candidateName}'s Capability Passport</DialogTitle>
 
