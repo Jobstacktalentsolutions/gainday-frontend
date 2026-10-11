@@ -47,6 +47,9 @@ const EnvironmentCheckPage = lazy(() => import("@/features/candidate/pages/Envir
 const TaskRunner = lazy(() => import("@/features/candidate/pages/TaskRunner"));
 const SubmissionResultPage = lazy(() => import("@/features/candidate/pages/SubmissionResultPage"));
 const SupportPage = lazy(() => import("@/pages/SupportPage"));
+const CandidateRoute = lazy(() => import("@/features/candidate/components/CandidateRoute"));
+const MyApplications = lazy(() => import("@/features/candidate/pages/MyApplications"));
+const CapabilityPassportPage = lazy(() => import("@/features/candidate/pages/CapabilityPassportPage"));
 
 
 const AppRoutes = () => {
@@ -96,13 +99,19 @@ const AppRoutes = () => {
 
                 </Route>
 
-                <Route path="/job-board" element={<JobBoardPage />} />
-                <Route path="/job-board/:jobId" element={<JobDetailsPage />} />
-                <Route path="/job-board/:jobId/pre-simulation" element={<PreSimulation />} />
-                <Route path="/job-board/:jobId/environment-check" element={<EnvironmentCheckPage />} />
-                <Route path="/job-board/:jobId/simulation" element={<TaskRunner />} />
-                <Route path="/job-board/submissions/:submissionId/result" element={<SubmissionResultPage />} />
-                <Route path="/candidate/submissions/:submissionId/result" element={<SubmissionResultPage />} />
+                {/* Every candidate page requires a signed-in candidate */}
+                <Route element={<CandidateRoute />}>
+                    <Route path="/job-board" element={<JobBoardPage />} />
+                    <Route path="/job-board/:jobId" element={<JobDetailsPage />} />
+                    <Route path="/job-board/:jobId/pre-simulation" element={<PreSimulation />} />
+                    <Route path="/job-board/:jobId/environment-check" element={<EnvironmentCheckPage />} />
+                    <Route path="/job-board/:jobId/simulation" element={<TaskRunner />} />
+                    <Route path="/job-board/submissions/:submissionId/result" element={<SubmissionResultPage />} />
+                    <Route path="/candidate/submissions/:submissionId/result" element={<SubmissionResultPage />} />
+                    <Route path="/candidate/applications" element={<MyApplications />} />
+                    <Route path="/candidate/passport" element={<CapabilityPassportPage />} />
+                    <Route path="/candidate/profile" element={<ProfilePage />} />
+                </Route>
                 <Route path="/profile" element={<ProfilePage />} />
 
                 <Route path="/candidate">
@@ -112,7 +121,6 @@ const AppRoutes = () => {
                     <Route path="reset-password" element={<CandidateResetPassword />} />
                     <Route path="verify-email" element={<CandidateVerifyEmail />} />
                     <Route path="oauth/callback" element={<CandidateOAuthCallback />} />
-                    <Route path="profile" element={<ProfilePage />} />
                 </Route>
 
                 <Route path="/support" element={<SupportPage />} />
