@@ -14,10 +14,11 @@ import {
   KeyRound,
 } from "lucide-react";
 import { toast } from "sonner";
+import CandidateHeader from "@/features/candidate/components/CandidateHeader";
+import { PublicNavbar } from "@/features/candidate/components/PublicNavbar";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { useUpdateProfile } from "@/features/auth/hooks/useProfile";
 import { ActionButton } from "@/components/ui/ActionButton";
-import { PublicNavbar } from "@/features/candidate/components/PublicNavbar";
 
 interface EditableFieldProps {
   label: string;
@@ -193,7 +194,7 @@ const ProfilePage = () => {
   return (
     <div className="min-h-screen w-full bg-neutral-50">
       {/* If accessed standalone or outside employer shell, render candidate/public navbar */}
-      {!isEmployer && <PublicNavbar />}
+      {!isEmployer && (user?.role === "JOB_SEEKER" ? <CandidateHeader /> : <PublicNavbar />)}
 
       <main className="mx-auto flex w-full max-w-3xl flex-col px-4 pb-16 pt-28 sm:px-6 sm:pt-36 lg:px-8">
         {/* Back navigation button */}
