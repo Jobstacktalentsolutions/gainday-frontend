@@ -7,9 +7,11 @@ import { useLogout } from "@/features/auth/hooks/useLogout";
 
 interface UserAvatarMenuProps {
   className?: string;
+  /** "initials" (default): an initials chip. "named": a user icon plus the first name. */
+  variant?: "initials" | "named";
 }
 
-export const UserAvatarMenu = ({ className }: UserAvatarMenuProps) => {
+export const UserAvatarMenu = ({ className, variant = "initials" }: UserAvatarMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -40,7 +42,7 @@ export const UserAvatarMenu = ({ className }: UserAvatarMenuProps) => {
     setIsOpen(false);
     if (user?.role === "EMPLOYER") {
       navigate("/employer/profile");
-    } else if (user?.role === "CANDIDATE") {
+    } else if (user?.role === "JOB_SEEKER") {
       navigate("/candidate/profile");
     } else {
       navigate("/profile");
@@ -53,6 +55,7 @@ export const UserAvatarMenu = ({ className }: UserAvatarMenuProps) => {
   };
 
   const userDisplayName = user?.fullName || user?.companyName || "Account";
+  const firstName = user?.fullName?.trim().split(/\s+/)[0] || "Account";
   const userEmail = user?.email || "";
 
   return (
@@ -64,9 +67,18 @@ export const UserAvatarMenu = ({ className }: UserAvatarMenuProps) => {
         aria-expanded={isOpen}
         aria-haspopup="true"
       >
-        <div className="flex size-9 items-center justify-center rounded-full bg-primary-50 text-sm font-semibold text-primary-600 shadow-xs">
-          {getInitials()}
-        </div>
+        {variant === "named" ? (
+          <>
+            <div className="flex size-9 items-center justify-center rounded-full bg-primary-50">
+              <User className="size-5 text-primary-500" aria-hidden="true" />
+            </div>
+            <span className="max-w-32 truncate text-base text-neutral-700">{firstName}</span>
+          </>
+        ) : (
+          <div className="flex size-9 items-center justify-center rounded-full bg-primary-50 text-sm font-semibold text-primary-600 shadow-xs">
+            {getInitials()}
+          </div>
+        )}
         <ChevronDown className={`size-4 text-neutral-500 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
