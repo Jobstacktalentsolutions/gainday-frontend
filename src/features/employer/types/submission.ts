@@ -2,17 +2,13 @@
 // shapes are the contract the mock data (mocks/submissions.ts) is written against — anything
 // added here has to be added to the backend response too.
 
+import type { CategoryKey, CategoryScores } from "@/features/capability-passport/types/passport";
+
 export type IntegrityStatus = "CLEAN" | "MINOR_FLAGS" | "PENDING" | "REVIEW_NEEDED";
 
-// Mirrors the four keys of the backend's CategoryScores (see CURRENT_SCHEMA.md). Each category
-// only carries its score here — rationale/evidence aren't shown on these pages.
-export type CategoryKey =
-    | "problemSolving"
-    | "judgmentExecution"
-    | "writtenCommunication"
-    | "commercialDomainAwareness";
-
-export type CategoryScores = Record<CategoryKey, number>;
+// The category types live with the shared capability-passport module; re-exported so existing
+// imports from this file keep working.
+export type { CategoryKey, CategoryScores };
 
 // One row of the "All Submissions" table.
 export interface SubmissionSummary {
