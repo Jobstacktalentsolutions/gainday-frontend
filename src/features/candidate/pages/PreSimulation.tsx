@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Maximize, MonitorCheck, Clock, ChevronLeft } from "lucide-react";
-import { PublicNavbar } from "../components/PublicNavbar";
+import CandidateHeader from "../components/CandidateHeader";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useJobDetails } from "../hooks/useJobDetails";
@@ -41,7 +41,7 @@ export default function PreSimulation() {
     if (isJobLoading || (job && isSimulationLoading)) {
         return (
             <div className="min-h-screen w-full bg-neutral-50">
-                <PublicNavbar />
+                <CandidateHeader />
                 <main className="flex min-h-[60vh] items-center justify-center text-neutral-700">Loading...</main>
             </div>
         )
@@ -51,7 +51,7 @@ export default function PreSimulation() {
         // TODO: proper "job not found" state, same open item as JobDetailsPage
         return (
             <div className="flex min-h-screen items-center justify-center bg-neutral-50 text-neutral-700">
-                <PublicNavbar />
+                <CandidateHeader />
                 <main>
                     Job not found.
                 </main>
@@ -63,7 +63,7 @@ export default function PreSimulation() {
     if (!simulation) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-neutral-50 text-neutral-700">
-                <PublicNavbar />
+                <CandidateHeader />
                 <main>
                     This job doesn't have a simulation ready yet.
                 </main>
@@ -80,7 +80,7 @@ export default function PreSimulation() {
 
     return (
         <div className="min-h-screen w-full bg-neutral-50">
-            <PublicNavbar />
+            <CandidateHeader />
 
             <main className="mx-auto flex w-full max-w-300 flex-col items-center gap-20 px-5 pb-20 pt-33.75 sm:pt-43.75">
                 <button

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Maximize, Wifi, MonitorCheck, Check, X, Loader2 } from "lucide-react";
-import { PublicNavbar } from "../components/PublicNavbar";
+import CandidateHeader from "../components/CandidateHeader";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { apiClient } from "@/lib/api/client";
 import { useFullscreenCheck } from "../hooks/useFullscreenCheck";
@@ -97,7 +97,7 @@ export default function EnvironmentCheckPage() {
 
     return (
         <div className="min-h-screen w-full bg-neutral-50">
-            <PublicNavbar />
+            <CandidateHeader />
             <main className="mx-auto flex w-full max-w-300 flex-col items-center gap-20 px-5 pb-20 pt-33.75 sm:pt-43.75">
                 <div className="relative w-full max-w-246.5 overflow-hidden rounded-3xl bg-white p-10 shadow-[0px_4px_10px_rgba(16,24,40,0.05)]">
                     {/* Decorative gradient blobs */}
