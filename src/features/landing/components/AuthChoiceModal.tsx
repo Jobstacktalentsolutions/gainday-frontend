@@ -1,4 +1,4 @@
-﻿import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { X, ArrowRight, Briefcase, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -21,7 +21,7 @@ const OPTIONS = {
         employer: {
             icon: Briefcase,
             label: "I'm hiring talent",
-            description: "Post a role and let Gainday surface the most capable candidates — ranked by evidence.",
+            description: "Post a role and let Gainday surface the most capable candidates, ranked by evidence.",
             href: "/employer/signup",
         },
     },
@@ -78,7 +78,7 @@ const AuthChoiceModal = ({ mode, onClose }: AuthChoiceModalProps) => {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.96, y: 12 }}
                         transition={{ duration: 0.22, ease: "easeOut" }}
-                        className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-neutral-200 bg-white shadow-2xl shadow-neutral-900/15 p-8"
+                        className="fixed left-1/2 top-1/2 z-50 w-full max-w-xl -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-neutral-200 bg-white shadow-2xl shadow-neutral-900/15 p-8"
                     >
                         {/* Close */}
                         <button
