@@ -7,6 +7,7 @@ import type {
     ClassificationCandidateComponent,
     MultiSelectUnderConstraintCandidateComponent,
     NumericInputCandidateComponent,
+    PriorityRankingCandidateComponent,
     ProceduralSequencingCandidateComponent,
     SingleBestActionCandidateComponent,
 } from "../../types/simulation";
@@ -55,4 +56,18 @@ export function describeProceduralSequencing(
     // as-presented order as their "answer" would credit/penalize a choice they never made.
     if (!response) return "";
     return response.map((stepIndex, position) => `${position + 1}. ${component.steps[stepIndex]}`).join("\n");
+}
+
+export function describePriorityRanking(
+    component: PriorityRankingCandidateComponent,
+    response: number[] | null,
+): string {
+    // Same rule as sequencing: an untouched list is not an answer the candidate gave.
+    if (!response) return "";
+    return response
+        .map((itemIndex, position) => {
+            const { label, description } = component.items[itemIndex];
+            return `${position + 1}. ${label} — ${description}`;
+        })
+        .join("\n");
 }

@@ -1,6 +1,7 @@
 import NumericInputEditor from "./objective/NumericInputEditor";
 import ClassificationEditor from "./objective/ClassificationEditor";
 import ProceduralSequencingEditor from "./objective/ProceduralSequencingEditor";
+import PriorityRankingEditor from "./objective/PriorityRankingEditor";
 import SingleBestActionEditor from "./objective/SingleBestActionEditor";
 import MultiSelectUnderConstraintEditor from "./objective/MultiSelectUnderConstraintEditor";
 import WrittenJustificationEditor from "./openEnded/WrittenJustificationEditor";
@@ -15,6 +16,7 @@ import type {
     NumericInputComponent,
     ObjectiveComponentType,
     OpenEndedComponentType,
+    PriorityRankingComponent,
     ProceduralSequencingComponent,
     SingleBestActionComponent,
     StakeholderPushbackResponseComponent,
@@ -66,6 +68,12 @@ export const OBJECTIVE_COMPONENT_EDITORS: Record<
         <MultiSelectUnderConstraintEditor
             value={cast<MultiSelectUnderConstraintComponent>(value)}
             onChange={castChange<MultiSelectUnderConstraintComponent>(onChange)}
+        />
+    ),
+    PRIORITY_RANKING: ({ value, onChange }) => (
+        <PriorityRankingEditor
+            value={cast<PriorityRankingComponent>(value)}
+            onChange={castChange<PriorityRankingComponent>(onChange)}
         />
     ),
 };

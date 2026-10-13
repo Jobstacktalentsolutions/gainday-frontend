@@ -4,7 +4,7 @@ import { persist } from "zustand/middleware";
 export interface TaskAnswer {
     /** Shape depends on the task's objectiveComponent.componentType — number for
      *  SINGLE_BEST_ACTION/NUMERIC_INPUT, number[] for MULTI_SELECT_UNDER_CONSTRAINT/
-     *  PROCEDURAL_SEQUENCING, Record<string,string> for CLASSIFICATION, null until the
+     *  PROCEDURAL_SEQUENCING/PRIORITY_RANKING, Record<string,string> for CLASSIFICATION, null until the
      *  candidate answers. See objectiveAnswers/registry.tsx. */
     objectiveResponse: unknown;
     textResponse: string;

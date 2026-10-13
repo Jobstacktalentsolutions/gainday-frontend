@@ -34,6 +34,7 @@ const EmployerManagement = lazy(() => import("@/features/admin/pages/EmployerMan
 const CandidateManagement = lazy(() => import("@/features/admin/pages/CandidateManagement"))
 const ContentModeration = lazy(() => import("@/features/admin/pages/ContentModeration"));
 const GenerationReviews = lazy(() => import("@/features/admin/pages/GenerationReviews"));
+const SupportMessages = lazy(() => import("@/features/admin/pages/SupportMessages"));
 const JobPreview = lazy(() => import("@/features/employer/pages/JobPreview"));
 const JobBoardPage = lazy(() => import("@/features/candidate/pages/JobBoardPage"));
 const JobDetailsPage = lazy(() => import("@/features/candidate/pages/candidateJobDetails"));
@@ -49,7 +50,6 @@ const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const EnvironmentCheckPage = lazy(() => import("@/features/candidate/pages/EnvironmentCheckPage"));
 const TaskRunner = lazy(() => import("@/features/candidate/pages/TaskRunner"));
 const SubmissionResultPage = lazy(() => import("@/features/candidate/pages/SubmissionResultPage"));
-const SupportPage = lazy(() => import("@/pages/SupportPage"));
 const CandidateRoute = lazy(() => import("@/features/candidate/components/CandidateRoute"));
 const MyApplications = lazy(() => import("@/features/candidate/pages/MyApplications"));
 const CapabilityPassportPage = lazy(() => import("@/features/candidate/pages/CapabilityPassportPage"));
@@ -67,6 +67,7 @@ const AppRoutes = () => {
                     <Route path="candidate-management" element={<CandidateManagement />} />
                     <Route path="content-moderation" element={<ContentModeration />} />
                     <Route path="generation-reviews" element={<GenerationReviews />} />
+                    <Route path="support-messages" element={<SupportMessages />} />
                 </Route>
                 <Route path="/landing" element={<LandingPage />} />
                 <Route path="/auth/verify-email" element={<LegacyVerifyEmailRedirect />} />

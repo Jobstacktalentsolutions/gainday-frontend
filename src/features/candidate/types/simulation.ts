@@ -1,4 +1,4 @@
-import type { InterfaceType } from "@/features/simulation-tasks/types";
+import type { InterfaceType, PriorityRankingItem } from "@/features/simulation-tasks/types";
 
 // Mirrors gainday-backend/src/modules/generation/roles/role-module.interface.ts exactly.
 export type ObjectiveComponentType =
@@ -6,7 +6,8 @@ export type ObjectiveComponentType =
     | "CLASSIFICATION"
     | "PROCEDURAL_SEQUENCING"
     | "SINGLE_BEST_ACTION"
-    | "MULTI_SELECT_UNDER_CONSTRAINT";
+    | "MULTI_SELECT_UNDER_CONSTRAINT"
+    | "PRIORITY_RANKING";
 
 // Each shape below is the backend's real objectiveComponent shape (component-schemas.ts) MINUS
 // its answer-key field — see gainday-backend/src/modules/simulations/candidate-task.util.ts,
@@ -39,12 +40,18 @@ export interface ProceduralSequencingCandidateComponent {
     steps: string[];
 }
 
+export interface PriorityRankingCandidateComponent {
+    componentType: "PRIORITY_RANKING";
+    items: PriorityRankingItem[];
+}
+
 export type CandidateObjectiveComponent =
     | SingleBestActionCandidateComponent
     | MultiSelectUnderConstraintCandidateComponent
     | NumericInputCandidateComponent
     | ClassificationCandidateComponent
-    | ProceduralSequencingCandidateComponent;
+    | ProceduralSequencingCandidateComponent
+    | PriorityRankingCandidateComponent;
 
 // The shape GET /simulations/job/:jobId actually returns — SimulationTask (simulation-tasks/
 // types.ts) with objectiveComponent replaced by its sanitized, componentType-tagged form.
