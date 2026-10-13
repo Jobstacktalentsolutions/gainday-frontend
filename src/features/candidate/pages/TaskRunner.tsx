@@ -63,8 +63,6 @@ export default function TaskRunner() {
     const location = useLocation();
     const navigate = useNavigate();
 
-
-
     const { isAuthorized, isLoadingProfile } = useProtectedRoute({
         requiredRole: "JOB_SEEKER",
         redirectTo: `/candidate/signin?redirect=${encodeURIComponent(location.pathname)}`,
@@ -103,10 +101,10 @@ export default function TaskRunner() {
     });
     useEffect(() => {
         arm(); // arm after mount — calling arm() during render triggers setStatus → infinite loop
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useFullscreenGuard({ onExit: () => recordViolation("Exited full-screen mode", currentTaskIdRef.current) });
+    useFullscreenGuard({ onExit: () => recordViolation("fullscreen-exit", currentTaskIdRef.current) });
     const idle = useIdleDetection({
         thresholdMs: IDLE_THRESHOLD_MS,
         onIdleSpell: (durationMs) => recordIdleSpell(durationMs, currentTaskIdRef.current),
@@ -131,25 +129,14 @@ export default function TaskRunner() {
                 },
             },
         );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [job?.id, simulation?.id, runStore.submissionId]);
 
     const timer = useSimulationTimer(runStore.endTimestamp);
 
-    const completionSnapshotRef = useRef<{
-        reason: "timeout" | "manual";
-        tasksSubmittedCount: number;
-        elapsedSeconds: number;
-    } | null>(null);
-
-    function finalizeSubmission(currentTaskId: string, reason: "timeout" | "manual") {
+    function finalizeSubmission(currentTaskId: string) {
         if (hasFinalizedRef.current || !simulation) return;
         hasFinalizedRef.current = true;
-        completionSnapshotRef.current = {
-            reason,
-            tasksSubmittedCount: runStore.currentTaskIndex + 1,
-            elapsedSeconds: simulation.timeLimitMinutes * 60 - timer.remainingSeconds,
-        };
         runStore.markComplete(currentTaskId);
 
         // Captures a still-open idle spell that never got closed out by an activity event
@@ -174,17 +161,15 @@ export default function TaskRunner() {
     useEffect(() => {
         if (timer.isExpired && !runStore.isComplete && simulation) {
             const task = simulation.tasks[runStore.currentTaskIndex];
-            finalizeSubmission(task.id, "timeout");
+            finalizeSubmission(task.id);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [timer.isExpired, runStore.isComplete, simulation]);
 
     // Keyed by which status was dismissed, not a plain boolean — "lost" and "restored" are
     // distinct values, so a fresh drop after a dismissed "restored" banner compares unequal
     // and shows again automatically. No effect/ref needed to "reset" anything.
     const [dismissedConnectionStatus, setDismissedConnectionStatus] = useState<typeof connection.status | null>(null);
-    const bannerCount = (timer.isWarning ? 1 : 0) + (connection.status !== "online" && connection.status !== dismissedConnectionStatus ? 1 : 0);
-
 
     if (isLoadingProfile || !isAuthorized) {
         return <AppLoader />;
@@ -216,17 +201,33 @@ export default function TaskRunner() {
         );
     }
 
+    const task = simulation.tasks[runStore.currentTaskIndex];
+    const answer = runStore.answers[task.id] ?? EMPTY_ANSWER;
+    const isLastTask = runStore.currentTaskIndex === simulation.tasks.length - 1;
+
+    function updateAnswer(patch: Partial<TaskAnswer>) {
+        runStore.setAnswer(task.id, patch);
+        scheduleSave({
+            taskId: task.id,
+            objectiveResponse: patch.objectiveResponse ?? answer.objectiveResponse,
+            textResponse: patch.textResponse ?? answer.textResponse,
+        });
+    }
+
+    function handleNext() {
+        if (isLastTask) {
+            finalizeSubmission(task.id);
+            return;
+        }
+        runStore.advanceTask(task.id);
+    }
+
     if (runStore.isComplete) {
         const submitFailed = submitSimulation.isError;
-        const snapshot = completionSnapshotRef.current;
         return (
             <SimulationCompleteModal
                 timeLimitMinutes={simulation.timeLimitMinutes}
                 submitStatus={submitFailed ? "error" : submitSimulation.isPending ? "pending" : "done"}
-                reason={snapshot?.reason ?? "manual"}
-                totalTaskCount={simulation.tasks.length}
-                tasksSubmittedCount={snapshot?.tasksSubmittedCount ?? simulation.tasks.length}
-                elapsedSeconds={snapshot?.elapsedSeconds ?? 0}
                 onRetry={
                     submitFailed && runStore.submissionId
                         ? () => {
@@ -247,27 +248,6 @@ export default function TaskRunner() {
         );
     }
 
-    const task = simulation.tasks[runStore.currentTaskIndex];
-    const answer = runStore.answers[task.id] ?? EMPTY_ANSWER;
-    const isLastTask = runStore.currentTaskIndex === simulation.tasks.length - 1;
-
-    function updateAnswer(patch: Partial<TaskAnswer>) {
-        runStore.setAnswer(task.id, patch);
-        scheduleSave({
-            taskId: task.id,
-            objectiveResponse: patch.objectiveResponse ?? answer.objectiveResponse,
-            textResponse: patch.textResponse ?? answer.textResponse,
-        });
-    }
-
-    function handleNext() {
-        if (isLastTask) {
-            finalizeSubmission(task.id, "manual");
-            return;
-        }
-        runStore.advanceTask(task.id);
-    }
-
     const progressPercent = ((runStore.currentTaskIndex + 1) / simulation.tasks.length) * 100;
     const submitError = submitSimulation.isError
         ? (submitSimulation.error as AxiosError<{ message?: string }>)?.response?.data?.message
@@ -277,7 +257,7 @@ export default function TaskRunner() {
     return (
         <div className="min-h-screen w-full bg-neutral-50">
             {timer.isWarning && <TimeWarningBanner />}
-            {connection.status !== "online" && connection.status !== dismissedConnectionStatus && (
+            {!timer.isWarning && connection.status !== "online" && connection.status !== dismissedConnectionStatus && (
                 <ConnectionBanner
                     status={connection.status as "lost" | "restored"}
                     onDismiss={() => setDismissedConnectionStatus(connection.status)}
@@ -312,12 +292,14 @@ export default function TaskRunner() {
                     </div>
                 </div>
             </div>
-            <main className="mx-auto flex w-full max-w-300 flex-col items-center px-5 pb-20"
-                style={{ paddingTop: `${137 + bannerCount * 56}px` }}>
+            <main className="mx-auto flex w-full max-w-300 flex-col items-center px-5 pb-20 pt-34.25">
                 <div className="flex w-full max-w-246.5 flex-col gap-10 rounded-3xl bg-white p-10 shadow-[0px_4px_10px_rgba(16,24,40,0.05)]">
                     <div className="flex w-full items-center justify-between">
                         <p className="text-[16px] text-primary-500">Task • {task.category}</p>
-
+                        {/*previously no provisions for weight*/}
+                        <span className="rounded-full border border-secondary-500 bg-warning-50 px-4 py-1 text-[16px] text-secondary-500">
+                            Weight: —
+                        </span>
                     </div>
 
                     <div className="flex flex-col gap-1">
@@ -351,12 +333,7 @@ export default function TaskRunner() {
 
                     <div className="flex w-full items-center justify-between">
                         {/* Previous Task is permanently disabled — forward-only, per your call */}
-                        <ActionButton
-                            variant="outline"
-                            size="md"
-                            disabled={runStore.currentTaskIndex === 0}
-                            onClick={() => runStore.goToPreviousTask(task.id)}
-                            className="opacity-70">
+                        <ActionButton variant="outline" size="md" disabled className="opacity-70">
                             Previous Task
                         </ActionButton>
                         <ActionButton

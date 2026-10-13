@@ -1,53 +1,6 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
 import type { CandidateAnswer, AntiCheatEvent } from "../types/submission";
-
-export interface MetricDetail {
-  label: string;
-  score: number;
-}
-
-export interface TaskEvidenceDetail {
-  taskId: string;
-  taskNumber: number;
-  title: string;
-  summary: string;
-}
-
-export interface CandidateSubmissionResultData {
-  id: string;
-  status: string;
-  overallScore: number;
-  percentileText?: string;
-  completedDate: string;
-  job: {
-    id: string;
-    title: string;
-    companyName: string;
-    location: string;
-    employmentType: string;
-  };
-  metrics: MetricDetail[];
-  cumulativeCapabilityScore: number;
-  cumulativeDelta: string;
-  taskEvidence: TaskEvidenceDetail[];
-}
-
-// GET /submissions/:id/candidate-result — returns candidate result view payload
-async function fetchSubmissionResult(submissionId: string): Promise<CandidateSubmissionResultData> {
-  const { data } = await apiClient.get<CandidateSubmissionResultData>(
-    `/submissions/${submissionId}/candidate-result`
-  );
-  return data;
-}
-
-export function useSubmissionResult(submissionId?: string) {
-  return useQuery({
-    queryKey: ["submissionResult", submissionId],
-    queryFn: () => fetchSubmissionResult(submissionId!),
-    enabled: !!submissionId,
-  });
-}
 
 // POST /submissions/job/:jobId/start — requires a signed-in JOB_SEEKER (see
 // SubmissionsController). Creates one Submission row per call, so the caller must guard
@@ -88,7 +41,6 @@ export function useSubmitSimulation() {
     }) => submitAnswers(submissionId, answers, antiCheatFlags),
   });
 }
-
 
 // POST /submissions/:id/heartbeat itself is called directly from useConnectionMonitor's
 // interval (not through a mutation hook here) — it fires on a timer rather than in response to
