@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Clock, MapPin, Wallet, Share2, Sparkles, Check } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { PublicNavbar } from "../components/PublicNavbar";
+import CandidateHeader from "../components/CandidateHeader";
 import { ApplyDialog } from "../components/ApplyDialog";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { StepContinueButton } from "@/components/ui/StepNavigationButtons";
@@ -25,7 +25,7 @@ export default function JobDetailsPage() {
     if (isLoading) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-neutral-50 text-neutral-700">
-                <PublicNavbar />
+                <CandidateHeader />
                 Loading...
             </div>
         )
@@ -56,7 +56,7 @@ export default function JobDetailsPage() {
 
     return (
         <div className="min-h-screen w-full bg-neutral-50">
-            <PublicNavbar />
+            <CandidateHeader />
 
             <main className="mx-auto w-full max-w-300 px-5 pb-20 pt-33.75 sm:pt-43.75 lg:px-0">
                 <div className="relative flex flex-col gap-10 overflow-hidden rounded-[32px] bg-white p-8">

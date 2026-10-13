@@ -1,5 +1,4 @@
 import { Users, ArrowRight, Link as LinkIcon, SquareArrowOutUpRight, Trash2 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import Skeleton from "@/components/ui/skeleton";
 import StatusBadge from "./StatusBadge";
 import JobMetaRow from "./JobMetaRow";

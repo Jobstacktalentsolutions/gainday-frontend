@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { TrendingUp, ArrowRight, CheckCircle2, History, X } from "lucide-react";
-import { PublicNavbar } from "../components/PublicNavbar";
+import CandidateHeader from "../components/CandidateHeader";
 import AppLoader from "@/components/ui/AppLoader";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { useSubmissionResult } from "../hooks/useSubmission";
@@ -42,7 +42,7 @@ export default function SubmissionResultPage() {
 
     return (
         <div className="min-h-screen w-full bg-neutral-50 pb-20">
-            <PublicNavbar />
+            <CandidateHeader />
 
             <main className="mx-auto flex w-full max-w-4xl flex-col items-center px-4 pt-28 sm:pt-36">
                 <div className="flex w-full flex-col gap-8 rounded-3xl bg-white p-6 shadow-xs border border-neutral-200/60 sm:p-12">

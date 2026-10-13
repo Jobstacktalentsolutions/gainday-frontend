@@ -1,7 +1,15 @@
+import { Shield, ShieldAlert, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Skeleton from "@/components/ui/skeleton";
 import { INTEGRITY_META } from "../utils/submissionIntegrity";
 import type { IntegrityStatus } from "../types/submission";
+
+const STATUS_ICON: Record<IntegrityStatus, typeof Shield> = {
+    CLEAN: ShieldCheck,
+    PENDING: Shield,
+    MINOR_FLAGS: ShieldAlert,
+    REVIEW_NEEDED: ShieldAlert,
+};
 
 interface IntegrityCardProps {
     status: IntegrityStatus;
@@ -10,6 +18,7 @@ interface IntegrityCardProps {
 
 const IntegrityCard = ({ status, checks }: IntegrityCardProps) => {
     const { label, textClass, summary } = INTEGRITY_META[status];
+    const StatusIcon = STATUS_ICON[status];
 
     return (
         <section className="flex w-full flex-col gap-3 rounded-xl bg-white p-6">
@@ -22,7 +31,10 @@ const IntegrityCard = ({ status, checks }: IntegrityCardProps) => {
                     <li key={check}>{check}</li>
                 ))}
             </ul>
-            <p className={cn("text-sm", textClass)}>{summary}</p>
+            <div className={cn("flex items-center gap-2 text-sm", textClass)}>
+                <StatusIcon className="size-6 shrink-0" aria-hidden="true" />
+                <p>{summary}</p>
+            </div>
         </section>
     );
 };

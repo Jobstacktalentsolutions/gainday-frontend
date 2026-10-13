@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import PageBackLink from "../components/PageBackLink";
@@ -6,7 +7,9 @@ import TaskResultCard, { TaskResultCardSkeleton } from "../components/TaskResult
 import ContactCard, { ContactCardSkeleton } from "../components/ContactCard";
 import CapabilityHistoryCard, { CapabilityHistoryCardSkeleton } from "../components/CapabilityHistoryCard";
 import IntegrityCard, { IntegrityCardSkeleton } from "../components/IntegrityCard";
+import CapabilityPassportModal from "../components/CapabilityPassportModal";
 import { useEmployerSubmission } from "../hooks/useEmployerSubmission";
+import { useSubmissionPassport } from "../hooks/useSubmissionPassport";
 
 const PAGE_SHELL = "min-h-screen bg-neutral-50 px-6 pb-10 pt-40 lg:px-12 xl:px-20";
 const CONTENT_WIDTH = "mx-auto w-full max-w-6xl";
@@ -14,6 +17,9 @@ const CONTENT_WIDTH = "mx-auto w-full max-w-6xl";
 const SubmissionDetail = () => {
     const { jobId = "", submissionId } = useParams<{ jobId: string; submissionId: string }>();
     const { data: submission, isLoading, isError, refetch } = useEmployerSubmission(jobId, submissionId);
+    const [isPassportOpen, setIsPassportOpen] = useState(false);
+    // Only fetched once the modal is opened.
+    const passportQuery = useSubmissionPassport(jobId, submissionId, isPassportOpen);
 
     const listPath = `/employer/jobs/${jobId}/submissions`;
 
@@ -92,10 +98,25 @@ const SubmissionDetail = () => {
                         contact={submission.contact}
                         onUnlock={handleUnlockContact}
                     />
-                    <CapabilityHistoryCard history={submission.capabilityHistory} />
+                    <CapabilityHistoryCard
+                        history={submission.capabilityHistory}
+                        onViewDetails={() => setIsPassportOpen(true)}
+                    />
                     <IntegrityCard status={submission.integrityStatus} checks={submission.integrityChecks} />
                 </aside>
             </div>
+
+            <CapabilityPassportModal
+                open={isPassportOpen}
+                onOpenChange={setIsPassportOpen}
+                candidateName={submission.candidateName}
+                passport={passportQuery.data}
+                isLoading={passportQuery.isPending}
+                isError={passportQuery.isError}
+                onRetry={() => passportQuery.refetch()}
+                isUnlocked={submission.isUnlocked}
+                onUnlockContact={handleUnlockContact}
+            />
         </div>
     );
 };

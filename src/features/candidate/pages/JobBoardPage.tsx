@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { PublicNavbar } from "../components/PublicNavbar";
+import CandidateHeader from "../components/CandidateHeader";
 import { SearchField } from "../components/SearchField";
 import { FilterDropdown } from "../components/Filterdropdown";
 import { JobCard } from "../components/JobCard";
@@ -29,7 +29,7 @@ export function JobBoardPage() {
 
     return (
         <div className="min-h-screen w-full bg-neutral-50">
-            <PublicNavbar />
+            <CandidateHeader />
 
             <main className="mx-auto flex w-full max-w-300 flex-col gap-10 px-5 pb-20 pt-33.75 sm:pt-43.75 lg:px-0">
                 <div className="flex flex-col">

@@ -1,12 +1,4 @@
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-// Built by hand rather than with toLocaleDateString("en-GB") because newer browsers render
-// September as "Sept" there, whereas the design uses "Sep".
-export const formatSubmittedDate = (iso: string): string => {
-    const date = new Date(iso);
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${day} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`;
-};
+export { formatShortDate as formatSubmittedDate } from "@/lib/formatDate";
 
 export const formatDuration = (seconds: number): string => {
     const totalMinutes = Math.max(1, Math.round(seconds / 60));
