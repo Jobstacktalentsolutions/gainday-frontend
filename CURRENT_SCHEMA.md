@@ -130,7 +130,7 @@ A candidate's attempt at a job's simulation.
 | `simulationId` | uuid | FK → Simulation |
 | `candidateId` | uuid \| null | FK → **Job Seeker Profile** (`job_seeker_profiles.id`), not `users.id`; null for guest |
 | `guestInfo` | `{ fullName, email, phoneNumber? }` \| null | present when no `candidateId` |
-| `status` | `PENDING` \| `SCORING` \| `SCORED` \| `DISQUALIFIED` | |
+| `status` | `PENDING` \| `GRADING` \| `GRADED` \| `DISQUALIFIED` \| `WITHDRAWN` \| `SELECTED` \| `NOT_SELECTED` | |
 | `answers` | `CandidateAnswer[]` | `{ taskId, responseBody, timeSpentSeconds }` |
 | `overallScore` | number \| null | |
 | `categoryScores` | `CategoryScores` \| null | see below |

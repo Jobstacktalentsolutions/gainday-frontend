@@ -79,9 +79,6 @@ export interface PriorityRankingItem {
 
 export interface PriorityRankingComponent {
   items: PriorityRankingItem[];
-  /** 0-indexed positions into `items`, highest priority first. */
-  idealOrder: number[];
-  idealOrderRationale: string;
 }
 
 export type ObjectiveComponent =

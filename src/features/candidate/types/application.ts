@@ -1,5 +1,5 @@
 // TODO: align with the real applications endpoint once it exists. The backend has no hiring-stage
-// model yet (submissions are only PENDING | SCORING | SCORED | DISQUALIFIED), so this enum is the
+// model yet (submissions are only PENDING | GRADING | GRADED | DISQUALIFIED), so this enum is the
 // contract the mock data (mocks/applications.ts) is written against.
 
 export type ApplicationStatus =
