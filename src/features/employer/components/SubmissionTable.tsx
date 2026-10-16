@@ -4,12 +4,8 @@ import Skeleton from "@/components/ui/skeleton";
 import IntegrityLabel from "./IntegrityLabel";
 import CategoryBreakdownBars from "./CategoryBreakdownBars";
 import { CATEGORY_ORDER } from "../utils/submissionCategories";
-import {
-    formatAttempts,
-    formatCapabilityDelta,
-    formatDuration,
-    formatSubmittedDate,
-} from "../utils/submissionFormatters";
+import { formatDuration, formatSubmittedDate } from "../utils/submissionFormatters";
+import { formatOverallScore, getCandidateLabel } from "../utils/submissionLabels";
 import type { SubmissionSummary } from "../types/submission";
 
 // Shared by the header, the rows and the skeleton so the columns always line up.
@@ -54,37 +50,26 @@ const SubmissionsTable = ({ jobId, submissions }: SubmissionsTableProps) => {
                     <Link
                         key={submission.id}
                         to={`/employer/jobs/${jobId}/submissions/${submission.id}`}
-                        aria-label={`View ${submission.candidateName}'s submission`}
+                        aria-label={`View ${getCandidateLabel(submission)}'s submission`}
                         className={cn(
                             ROW_GRID,
                             "-mx-3 px-3 py-3 text-base text-neutral-950 transition-colors hover:bg-neutral-50 focus-visible:bg-neutral-50 focus-visible:outline-2 focus-visible:outline-primary-500",
                         )}
                     >
                         <div className="flex flex-col gap-1">
-                            <p className="text-neutral-900">{submission.candidateName}</p>
-                            <p className="text-neutral-500">{submission.displayId}</p>
+                            <p className="text-neutral-900">{getCandidateLabel(submission)}</p>
+                            {submission.candidateName !== null && (
+                                <p className="text-neutral-500">{submission.displayId}</p>
+                            )}
                         </div>
-                        <p>{submission.overallScore}%</p>
-                        <CategoryBreakdownBars scores={submission.categoryScores} />
-                        <div className="flex flex-col items-center gap-1">
-                            <p>
-                                {submission.capabilityScore}{" "}
-                                <span
-                                    className={cn(
-                                        "text-xs",
-                                        submission.capabilityDelta > 0 && "text-success-500",
-                                        submission.capabilityDelta < 0 && "text-error-500",
-                                        submission.capabilityDelta === 0 && "text-neutral-500",
-                                    )}
-                                >
-                                    {formatCapabilityDelta(submission.capabilityDelta)}
-                                </span>
-                            </p>
-                            <p className="text-[10px] leading-tight text-neutral-400">
-                                {formatAttempts(submission.attemptCount)}
-                            </p>
-                        </div>
-                        <p>{formatDuration(submission.timeTakenSeconds)}</p>
+                        <p>{formatOverallScore(submission)}</p>
+                        {submission.categoryScores !== null ? (
+                            <CategoryBreakdownBars scores={submission.categoryScores} />
+                        ) : (
+                            <div className="flex h-14.25 w-41 items-center justify-center text-neutral-400">&mdash;</div>
+                        )}
+                        <p>{submission.capabilityScore === null ? "\u2014" : submission.capabilityScore}</p>
+                        <p>{submission.timeTakenSeconds === null ? "\u2014" : formatDuration(submission.timeTakenSeconds)}</p>
                         <p className="whitespace-nowrap">{formatSubmittedDate(submission.submittedAt)}</p>
                         <IntegrityLabel status={submission.integrityStatus} />
                     </Link>
@@ -106,10 +91,7 @@ export const SubmissionsTableSkeleton = () => {
                         </div>
                         <Skeleton className="h-5 w-10" />
                         <Skeleton className="h-14.25 w-41" />
-                        <div className="flex flex-col items-center gap-1">
-                            <Skeleton className="h-5 w-14" />
-                            <Skeleton className="h-2.5 w-12" />
-                        </div>
+                        <Skeleton className="h-5 w-14" />
                         <Skeleton className="h-5 w-8" />
                         <Skeleton className="h-5 w-24" />
                         <Skeleton className="h-5 w-20" />

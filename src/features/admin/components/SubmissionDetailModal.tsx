@@ -200,8 +200,8 @@ export const SubmissionDetailModal = ({
                   const label = key
                     .replace(/([A-Z])/g, " $1")
                     .replace(/^./, (str) => str.toUpperCase());
-                  const scoreOutOfTen = cat.score ?? 0;
-                  const percentage = Math.round((scoreOutOfTen / 10) * 100);
+                  const score = cat.score ?? 0;
+                  const percentage = score;
 
                   return (
                     <div
@@ -210,7 +210,7 @@ export const SubmissionDetailModal = ({
                     >
                       <div className="flex items-center justify-between text-xs">
                         <span className="font-medium text-neutral-700">{label}</span>
-                        <span className="font-bold text-neutral-900">{scoreOutOfTen} / 10</span>
+                        <span className="font-bold text-neutral-900">{score} / 100</span>
                       </div>
                       <div className="h-1.5 w-full bg-neutral-200 rounded-full overflow-hidden">
                         <div

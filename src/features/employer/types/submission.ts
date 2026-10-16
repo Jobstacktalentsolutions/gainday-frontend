@@ -1,7 +1,3 @@
-// TODO: align with the real employer submissions endpoints once they exist. Until then these
-// shapes are the contract the mock data (mocks/submissions.ts) is written against — anything
-// added here has to be added to the backend response too.
-
 import type { CategoryKey, CategoryScores } from "@/features/capability-passport/types/passport";
 
 export type IntegrityStatus = "CLEAN" | "MINOR_FLAGS" | "PENDING" | "REVIEW_NEEDED";
@@ -10,60 +6,71 @@ export type IntegrityStatus = "CLEAN" | "MINOR_FLAGS" | "PENDING" | "REVIEW_NEED
 // imports from this file keep working.
 export type { CategoryKey, CategoryScores };
 
-// One row of the "All Submissions" table.
+// Mirrors gainday-backend/src/db/schema/submissions.schema.ts SubmissionStatus. Employers never
+// receive WITHDRAWN rows, and only submitted runs are returned.
+export type SubmissionStatus =
+    | "PENDING"
+    | "GRADING"
+    | "GRADED"
+    | "DISQUALIFIED"
+    | "SELECTED"
+    | "NOT_SELECTED";
+
+// Mirrors SubmissionsService.toEmployerListItem (GET /submissions/job/:jobId), one row of the
+// "All Submissions" table.
 export interface SubmissionSummary {
     id: string;
-    candidateName: string;
-    /** Human-friendly candidate reference, e.g. "GD-4809". */
+    /** "GD-" plus the first six characters of the submission id. */
     displayId: string;
-    overallScore: number;
-    categoryScores: CategoryScores;
-    capabilityScore: number;
-    /** Change in capability score since the candidate's previous attempt. */
-    capabilityDelta: number;
-    attemptCount: number;
-    timeTakenSeconds: number;
+    status: SubmissionStatus;
+    /** Null until the employer has unlocked this candidate. */
+    candidateName: string | null;
+    isUnlocked: boolean;
     /** ISO 8601 */
     submittedAt: string;
+    timeTakenSeconds: number | null;
+    /** 0-100, whole number. Null until graded. */
+    overallScore: number | null;
+    /** Each 0-100, whole numbers. Null until graded. */
+    categoryScores: CategoryScores | null;
+    /** Average across the candidate's graded applications in this job's domain, out of 1000.
+     *  Null until this application is graded, and for guest submissions. */
+    capabilityScore: number | null;
+    /** The capability score after each application in the domain up to this one, oldest first;
+     *  the last entry is `capabilityScore`. */
+    capabilityHistory: number[];
     integrityStatus: IntegrityStatus;
-}
-
-export interface JobSubmissionsData {
-    jobTitle: string;
-    submissions: SubmissionSummary[];
 }
 
 export interface TaskResult {
     taskId: string;
     taskNumber: number;
     title: string;
-    /** 0–100 */
+    /** 0-100 */
     score: number;
     evidence: string;
 }
 
 export interface SubmissionContact {
     email: string;
-    phone: string;
+    phone: string | null;
 }
 
-export interface SubmissionDetail {
-    id: string;
+// One kind of proctoring event and how often it was recorded. `type` is an open string on the
+// backend (see AntiCheatEvent); labels live in utils/submissionIntegrity.ts.
+export interface IntegrityEventSummary {
+    type: string;
+    count: number;
+}
+
+// Mirrors SubmissionsService.findByIdForEmployer (GET /submissions/:id).
+export interface SubmissionDetail extends SubmissionSummary {
     jobId: string;
-    candidateName: string;
-    displayId: string;
-    overallScore: number;
-    /** ISO 8601 */
-    submittedAt: string;
-    integrityStatus: IntegrityStatus;
+    /** Graded tasks only, in the simulation's order. */
     tasks: TaskResult[];
-    /** Only populated once the employer has unlocked this candidate — null while locked. */
+    integrityEvents: IntegrityEventSummary[];
+    /** Only populated once the employer has unlocked this candidate. */
     contact: SubmissionContact | null;
-    isUnlocked: boolean;
-    /** Capability scores per attempt, oldest first. The last entry is the current score. */
-    capabilityHistory: number[];
-    /** Proctoring signals that were monitored during the run. */
-    integrityChecks: string[];
 }
 
 export type SubmissionSortKey = "submittedAt" | "capabilityScore" | "integrity";

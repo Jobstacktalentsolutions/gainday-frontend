@@ -11,33 +11,35 @@ export interface TaskEvidenceDetail {
   taskId: string;
   taskNumber: number;
   title: string;
-  score?: number;
+  /** 0-100 */
+  score: number;
   summary: string;
-  strength?: string;
-  gap?: string;
-  nextStep?: string;
 }
 
+// Mirrors SubmissionsService.getCandidateResult.
 export interface CandidateSubmissionResultData {
   id: string;
   status: string;
+  /** 0-100 */
   overallScore: number;
-  percentileText?: string;
   completedDate: string;
   job: {
     id: string;
-    title: string;
-    companyName: string;
-    location: string;
-    employmentType: string;
+    title: string | null;
+    companyName: string | null;
+    location: string | null;
+    employmentType: string | null;
   };
   metrics: MetricDetail[];
-  cumulativeCapabilityScore: number;
-  cumulativeDelta: string;
+  /** Out of 1000: average across the candidate's graded applications in this job's domain.
+   *  Null when there is no history, e.g. a disqualified submission. */
+  cumulativeCapabilityScore: number | null;
+  /** The capability score after each application in the domain up to this one, oldest first. */
+  capabilityHistory: number[];
   taskEvidence: TaskEvidenceDetail[];
 }
 
-// GET /submissions/:id/candidate-result — returns candidate result view payload
+// GET /submissions/:id/candidate-result — 409 until grading has finished
 async function fetchSubmissionResult(submissionId: string): Promise<CandidateSubmissionResultData> {
   const { data } = await apiClient.get<CandidateSubmissionResultData>(
     `/submissions/${submissionId}/candidate-result`

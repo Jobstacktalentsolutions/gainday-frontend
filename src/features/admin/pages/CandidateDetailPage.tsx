@@ -370,12 +370,12 @@ const CandidateDetailPage = () => {
                           <div key={catKey} className="flex flex-col gap-0.5">
                             <div className="flex items-center justify-between text-[11px] text-neutral-600">
                               <span>{catLabel}</span>
-                              <span className="font-semibold text-neutral-800">{scoreVal}/10</span>
+                              <span className="font-semibold text-neutral-800">{scoreVal}/100</span>
                             </div>
                             <div className="h-1.5 w-full bg-neutral-200 rounded-full overflow-hidden">
                               <div
                                 className="h-full bg-primary-600 rounded-full"
-                                style={{ width: `${(scoreVal / 10) * 100}%` }}
+                                style={{ width: `${scoreVal}%` }}
                               />
                             </div>
                           </div>

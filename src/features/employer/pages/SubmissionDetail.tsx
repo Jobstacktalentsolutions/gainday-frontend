@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { isAxiosError } from "axios";
 import { toast } from "sonner";
 import PageBackLink from "../components/PageBackLink";
 import SubmissionDetailHeader from "../components/SubmissionDetailHeader";
@@ -8,8 +9,12 @@ import ContactCard, { ContactCardSkeleton } from "../components/ContactCard";
 import CapabilityHistoryCard, { CapabilityHistoryCardSkeleton } from "../components/CapabilityHistoryCard";
 import IntegrityCard, { IntegrityCardSkeleton } from "../components/IntegrityCard";
 import CapabilityPassportModal from "../components/CapabilityPassportModal";
+import UnlockModal from "../components/UnlockModal";
 import { useEmployerSubmission } from "../hooks/useEmployerSubmission";
 import { useSubmissionPassport } from "../hooks/useSubmissionPassport";
+import { useUnlockCandidates } from "../hooks/useUnlockCandidates";
+import type { PaymentRequiredBody } from "../types/payments";
+import { getCandidateLabel } from "../utils/submissionLabels";
 
 const PAGE_SHELL = "min-h-screen bg-neutral-50 px-6 pb-10 pt-40 lg:px-12 xl:px-20";
 const CONTENT_WIDTH = "mx-auto w-full max-w-6xl";
@@ -21,11 +26,28 @@ const SubmissionDetail = () => {
     // Only fetched once the modal is opened.
     const passportQuery = useSubmissionPassport(jobId, submissionId, isPassportOpen);
 
+    const unlockCandidates = useUnlockCandidates();
+    const [unlockModal, setUnlockModal] = useState<{ open: boolean; recommendedPackId?: string }>({
+        open: false,
+    });
+
     const listPath = `/employer/jobs/${jobId}/submissions`;
 
     const handleUnlockContact = () => {
-        // TODO: navigate to the payment page once it exists.
-        toast.info("This feature is not available yet");
+        if (!submissionId) return;
+        unlockCandidates.mutate([submissionId], {
+            onSuccess: () => {
+                toast.success("Contact unlocked");
+                refetch();
+            },
+            onError: (error) => {
+                if (isAxiosError<PaymentRequiredBody>(error) && error.response?.status === 402) {
+                    setUnlockModal({ open: true, recommendedPackId: error.response.data.recommendedPackId });
+                    return;
+                }
+                toast.error("Couldn't unlock this candidate. Please try again.");
+            },
+        });
     };
 
     if (isLoading) {
@@ -87,6 +109,11 @@ const SubmissionDetail = () => {
                     <h2 id="task-breakdown-heading" className="text-base text-primary-950">
                         Task-by-task breakdown
                     </h2>
+                    {submission.tasks.length === 0 && (
+                        <p className="text-base text-neutral-700">
+                            Task results will appear here once grading is complete.
+                        </p>
+                    )}
                     {submission.tasks.map((task) => (
                         <TaskResultCard key={task.taskId} task={task} />
                     ))}
@@ -102,14 +129,14 @@ const SubmissionDetail = () => {
                         history={submission.capabilityHistory}
                         onViewDetails={() => setIsPassportOpen(true)}
                     />
-                    <IntegrityCard status={submission.integrityStatus} checks={submission.integrityChecks} />
+                    <IntegrityCard status={submission.integrityStatus} events={submission.integrityEvents} />
                 </aside>
             </div>
 
             <CapabilityPassportModal
                 open={isPassportOpen}
                 onOpenChange={setIsPassportOpen}
-                candidateName={submission.candidateName}
+                candidateName={getCandidateLabel(submission)}
                 passport={passportQuery.data}
                 isLoading={passportQuery.isPending}
                 isError={passportQuery.isError}
@@ -117,6 +144,16 @@ const SubmissionDetail = () => {
                 isUnlocked={submission.isUnlocked}
                 onUnlockContact={handleUnlockContact}
             />
+
+            {submissionId && (
+                <UnlockModal
+                    open={unlockModal.open}
+                    onOpenChange={(open) => setUnlockModal((prev) => ({ ...prev, open }))}
+                    submissionIds={[submissionId]}
+                    recommendedPackId={unlockModal.recommendedPackId}
+                    onUnlocked={() => refetch()}
+                />
+            )}
         </div>
     );
 };

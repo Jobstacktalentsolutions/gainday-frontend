@@ -26,7 +26,7 @@ const ContactCard = ({ isUnlocked, contact, onUnlock }: ContactCardProps) => {
             {showContact ? (
                 <div className="flex flex-col gap-1 text-base text-neutral-950">
                     <p>{contact.email}</p>
-                    <p>{contact.phone}</p>
+                    {contact.phone && <p>{contact.phone}</p>}
                 </div>
             ) : (
                 <>

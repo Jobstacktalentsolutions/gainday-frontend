@@ -36,7 +36,7 @@ export default function SubmissionResultPage() {
         job,
         metrics,
         cumulativeCapabilityScore,
-        cumulativeDelta,
+        capabilityHistory,
         taskEvidence,
     } = data;
 
@@ -70,7 +70,7 @@ export default function SubmissionResultPage() {
                             {job.title}
                         </h1>
                         <p className="text-sm text-neutral-500">
-                            {job.companyName} &bull; Completed {completedDate}
+                            {[job.companyName, `Completed ${completedDate}`].filter(Boolean).join(" \u2022 ")}
                         </p>
                     </div>
 
@@ -112,15 +112,13 @@ export default function SubmissionResultPage() {
                             </div>
                             <div className="flex items-baseline gap-2 mt-1">
                                 <span className="text-4xl font-bold tracking-tight text-neutral-950">
-                                    {cumulativeCapabilityScore}
+                                    {cumulativeCapabilityScore === null ? "\u2014" : cumulativeCapabilityScore}
                                 </span>
-                                <span className="flex items-center gap-1 text-xs font-semibold text-emerald-600">
-                                    <TrendingUp className="size-3.5" />
-                                    {cumulativeDelta}
-                                </span>
+                                <span className="text-sm font-medium text-neutral-500">/1000</span>
                             </div>
                         </div>
 
+                        {capabilityHistory.length > 0 && (
                         <button
                             type="button"
                             onClick={() => setShowHistoryModal(true)}
@@ -129,6 +127,7 @@ export default function SubmissionResultPage() {
                             <span>View Score History</span>
                             <ArrowRight className="size-4 text-neutral-500" />
                         </button>
+                        )}
                     </div>
 
                     {/* Task Feedback / Evidence Section */}
@@ -161,7 +160,7 @@ export default function SubmissionResultPage() {
                                         </span>
                                         <div className="text-sm">
                                             <span className="text-base font-bold text-neutral-950">
-                                                {item.score ?? overallScore}
+                                                {item.score}
                                             </span>
                                             <span className="text-neutral-500">/100</span>
                                         </div>
@@ -176,36 +175,6 @@ export default function SubmissionResultPage() {
                                     <p className="text-xs sm:text-sm leading-relaxed text-neutral-600">
                                         {item.summary}
                                     </p>
-
-                                    {/* 3 Structured Feedback Boxes */}
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
-                                        <div className="flex flex-col gap-1 rounded-xl border border-emerald-100/90 bg-emerald-50/60 p-3.5">
-                                            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700">
-                                                STRENGTH
-                                            </span>
-                                            <p className="text-xs leading-relaxed text-neutral-700">
-                                                {item.strength || "Strong field-by-field control"}
-                                            </p>
-                                        </div>
-
-                                        <div className="flex flex-col gap-1 rounded-xl border border-amber-100/90 bg-amber-50/60 p-3.5">
-                                            <span className="text-[11px] font-bold uppercase tracking-wider text-amber-700">
-                                                GAP
-                                            </span>
-                                            <p className="text-xs leading-relaxed text-neutral-700">
-                                                {item.gap || "Follow-up timing is broad"}
-                                            </p>
-                                        </div>
-
-                                        <div className="flex flex-col gap-1 rounded-xl border border-blue-100/90 bg-blue-50/60 p-3.5">
-                                            <span className="text-[11px] font-bold uppercase tracking-wider text-blue-700">
-                                                NEXT STEP
-                                            </span>
-                                            <p className="text-xs leading-relaxed text-neutral-700">
-                                                {item.nextStep || "Include a specific next-update time and escalation trigger."}
-                                            </p>
-                                        </div>
-                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -232,38 +201,38 @@ export default function SubmissionResultPage() {
                             </div>
                             <div>
                                 <h3 className="text-lg font-bold text-neutral-950">Score History</h3>
-                                <p className="text-xs text-neutral-500">Your recent simulation evaluations</p>
+                                <p className="text-xs text-neutral-500">Your capability score after each application in this domain</p>
                             </div>
                         </div>
 
                         <div className="flex flex-col gap-3">
-                            <div className="flex items-center justify-between rounded-2xl border border-primary-200 bg-primary-50/50 p-4">
-                                <div className="flex items-center gap-3">
-                                    <CheckCircle2 className="size-5 text-primary-600" />
-                                    <div>
-                                        <p className="text-sm font-bold text-neutral-950">{job.title}</p>
-                                        <p className="text-xs text-neutral-500">{completedDate}</p>
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-base font-bold text-primary-600">{overallScore}/100</p>
-                                    <p className="text-[10px] font-bold text-emerald-600">{cumulativeDelta}</p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center justify-between rounded-2xl border border-neutral-100 bg-neutral-50 p-4 opacity-75">
-                                <div className="flex items-center gap-3">
-                                    <CheckCircle2 className="size-5 text-neutral-400" />
-                                    <div>
-                                        <p className="text-sm font-bold text-neutral-900">Previous Simulation Assessment</p>
-                                        <p className="text-xs text-neutral-500">12 September 2026</p>
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-base font-bold text-neutral-800">703/1000</p>
-                                    <p className="text-[10px] font-medium text-neutral-500">Baseline score</p>
-                                </div>
-                            </div>
+                            {capabilityHistory
+                                .map((score, index) => ({ score, applicationNumber: index + 1 }))
+                                .reverse()
+                                .map(({ score, applicationNumber }, position) => {
+                                    const isCurrent = position === 0;
+                                    return (
+                                        <div
+                                            key={applicationNumber}
+                                            className={
+                                                isCurrent
+                                                    ? "flex items-center justify-between rounded-2xl border border-primary-200 bg-primary-50/50 p-4"
+                                                    : "flex items-center justify-between rounded-2xl border border-neutral-100 bg-neutral-50 p-4 opacity-75"
+                                            }
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <CheckCircle2
+                                                    className={isCurrent ? "size-5 text-primary-600" : "size-5 text-neutral-400"}
+                                                />
+                                                <p className="text-sm font-bold text-neutral-950">
+                                                    After application {applicationNumber}
+                                                    {isCurrent && " (this result)"}
+                                                </p>
+                                            </div>
+                                            <p className="text-base font-bold text-neutral-800">{score}/1000</p>
+                                        </div>
+                                    );
+                                })}
                         </div>
 
                         <div className="mt-6 flex justify-end">

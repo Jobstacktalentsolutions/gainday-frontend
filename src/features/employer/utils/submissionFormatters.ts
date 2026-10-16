@@ -8,6 +8,3 @@ export const formatDuration = (seconds: number): string => {
     return minutes === 0 ? `${hours}h` : `${hours}h ${minutes}m`;
 };
 
-export const formatCapabilityDelta = (delta: number): string => (delta > 0 ? `+${delta}` : String(delta));
-
-export const formatAttempts = (count: number): string => `${count} attempt${count === 1 ? "" : "s"}`;

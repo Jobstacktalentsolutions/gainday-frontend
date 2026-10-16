@@ -1,8 +1,8 @@
 import { Shield, ShieldAlert, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Skeleton from "@/components/ui/skeleton";
-import { INTEGRITY_META } from "../utils/submissionIntegrity";
-import type { IntegrityStatus } from "../types/submission";
+import { INTEGRITY_META, formatIntegrityEvent } from "../utils/submissionIntegrity";
+import type { IntegrityEventSummary, IntegrityStatus } from "../types/submission";
 
 const STATUS_ICON: Record<IntegrityStatus, typeof Shield> = {
     CLEAN: ShieldCheck,
@@ -13,10 +13,10 @@ const STATUS_ICON: Record<IntegrityStatus, typeof Shield> = {
 
 interface IntegrityCardProps {
     status: IntegrityStatus;
-    checks: string[];
+    events: IntegrityEventSummary[];
 }
 
-const IntegrityCard = ({ status, checks }: IntegrityCardProps) => {
+const IntegrityCard = ({ status, events }: IntegrityCardProps) => {
     const { label, textClass, summary } = INTEGRITY_META[status];
     const StatusIcon = STATUS_ICON[status];
 
@@ -27,8 +27,8 @@ const IntegrityCard = ({ status, checks }: IntegrityCardProps) => {
                 <p className={textClass}>{label}</p>
             </div>
             <ul className="flex flex-col text-xs text-neutral-300">
-                {checks.map((check) => (
-                    <li key={check}>{check}</li>
+                {events.map((event) => (
+                    <li key={event.type}>{formatIntegrityEvent(event)}</li>
                 ))}
             </ul>
             <div className={cn("flex items-center gap-2 text-sm", textClass)}>
