@@ -11,7 +11,11 @@ export interface TaskEvidenceDetail {
   taskId: string;
   taskNumber: number;
   title: string;
+  score?: number;
   summary: string;
+  strength?: string;
+  gap?: string;
+  nextStep?: string;
 }
 
 export interface CandidateSubmissionResultData {

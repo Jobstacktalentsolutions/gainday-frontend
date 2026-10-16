@@ -1,15 +1,19 @@
-import { toast } from "sonner";
+import { useState } from "react";
 import CandidateHeader from "../components/CandidateHeader";
 import ApplicationCard, { ApplicationCardSkeleton } from "../components/ApplicationCard";
 import ApplicationsEmptyState from "../components/ApplicationEmptyState";
+import WithdrawApplicationDialog from "../components/WithdrawApplicationDialog";
 import { useMyApplications } from "../hooks/useMyApplications";
+import { useWithdrawApplication } from "../hooks/useWithdrawApplication";
+import type { Application } from "../types/application";
 
 const MyApplications = () => {
     const { data: applications, isLoading, isError, refetch } = useMyApplications();
+    const withdraw = useWithdrawApplication();
+    const [applicationToWithdraw, setApplicationToWithdraw] = useState<Application | null>(null);
 
-    const handleWithdraw = () => {
-        // TODO: confirm + call the withdraw endpoint once it exists.
-        toast.info("This feature is not available yet");
+    const handleConfirmWithdraw = (application: Application) => {
+        withdraw.mutate(application.id, { onSettled: () => setApplicationToWithdraw(null) });
     };
 
     return (
@@ -49,7 +53,7 @@ const MyApplications = () => {
                                     <ApplicationCard
                                         key={application.id}
                                         application={application}
-                                        onWithdraw={handleWithdraw}
+                                        onWithdraw={setApplicationToWithdraw}
                                     />
                                 ))}
                             </div>
@@ -59,6 +63,16 @@ const MyApplications = () => {
                     )}
                 </div>
             </main>
+
+            <WithdrawApplicationDialog
+                application={applicationToWithdraw}
+                open={applicationToWithdraw !== null}
+                onOpenChange={(open) => {
+                    if (!open && !withdraw.isPending) setApplicationToWithdraw(null);
+                }}
+                onConfirm={handleConfirmWithdraw}
+                isPending={withdraw.isPending}
+            />
         </div>
     );
 };

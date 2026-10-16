@@ -3,16 +3,16 @@ import type { ApplicationStatus } from "../types/application";
 interface ApplicationStatusMeta {
     label: string;
     badgeClass: string;
-    /** In-progress applications can be withdrawn; finished ones can't. */
+    /** Withdrawing is only possible until the employer has decided; after that it's final. */
     canWithdraw: boolean;
 }
 
 export const APPLICATION_STATUS_META: Record<ApplicationStatus, ApplicationStatusMeta> = {
-    PENDING_REVIEW: { label: "Pending Review", badgeClass: "bg-warning-50 text-warning-500", canWithdraw: true },
-    REVIEWED: { label: "Reviewed", badgeClass: "bg-primary-50 text-primary-500", canWithdraw: true },
-    INTERVIEW_SCHEDULED: { label: "Interview Scheduled", badgeClass: "bg-primary-50 text-primary-500", canWithdraw: true },
-    OFFER_EXTENDED: { label: "Offer Extended", badgeClass: "bg-success-50 text-success-500", canWithdraw: true },
+    PENDING: { label: "Pending", badgeClass: "bg-warning-50 text-warning-500", canWithdraw: true },
+    GRADING: { label: "Grading", badgeClass: "bg-warning-50 text-warning-500", canWithdraw: true },
+    GRADED: { label: "Graded", badgeClass: "bg-primary-50 text-primary-500", canWithdraw: true },
+    SELECTED: { label: "Selected", badgeClass: "bg-success-50 text-success-500", canWithdraw: false },
     NOT_SELECTED: { label: "Not Selected", badgeClass: "bg-neutral-50 text-neutral-950", canWithdraw: false },
-    HIRED: { label: "Hired", badgeClass: "bg-success-50 text-success-500", canWithdraw: false },
+    DISQUALIFIED: { label: "Disqualified", badgeClass: "bg-error-50 text-error-600", canWithdraw: false },
     WITHDRAWN: { label: "Withdrawn", badgeClass: "bg-primary-50 text-neutral-950", canWithdraw: false },
 };

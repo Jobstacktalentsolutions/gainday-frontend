@@ -52,6 +52,8 @@ const TaskRunner = lazy(() => import("@/features/candidate/pages/TaskRunner"));
 const SubmissionResultPage = lazy(() => import("@/features/candidate/pages/SubmissionResultPage"));
 const CandidateRoute = lazy(() => import("@/features/candidate/components/CandidateRoute"));
 const MyApplications = lazy(() => import("@/features/candidate/pages/MyApplications"));
+const ApplicationDetailPage = lazy(() => import("@/features/candidate/pages/ApplicationDetailPage"));
+const ApplicationSubmissionPage = lazy(() => import("@/features/candidate/pages/ApplicationSubmissionPage"));
 const CapabilityPassportPage = lazy(() => import("@/features/candidate/pages/CapabilityPassportPage"));
 
 
@@ -105,6 +107,8 @@ const AppRoutes = () => {
                     <Route path="/job-board/submissions/:submissionId/result" element={<SubmissionResultPage />} />
                     <Route path="/candidate/submissions/:submissionId/result" element={<SubmissionResultPage />} />
                     <Route path="/candidate/applications" element={<MyApplications />} />
+                    <Route path="/candidate/applications/:applicationId" element={<ApplicationDetailPage />} />
+                    <Route path="/candidate/applications/:applicationId/submission" element={<ApplicationSubmissionPage />} />
                     <Route path="/candidate/passport" element={<CapabilityPassportPage />} />
                     <Route path="/candidate/profile" element={<ProfilePage />} />
                 </Route>

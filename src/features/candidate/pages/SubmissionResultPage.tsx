@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { TrendingUp, ArrowRight, CheckCircle2, History, X } from "lucide-react";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { TrendingUp, ArrowRight, CheckCircle2, History, X, ChevronLeft } from "lucide-react";
 import CandidateHeader from "../components/CandidateHeader";
 import AppLoader from "@/components/ui/AppLoader";
 import { ActionButton } from "@/components/ui/ActionButton";
@@ -44,12 +44,26 @@ export default function SubmissionResultPage() {
         <div className="min-h-screen w-full bg-neutral-50 pb-20">
             <CandidateHeader />
 
-            <main className="mx-auto flex w-full max-w-4xl flex-col items-center px-4 pt-28 sm:pt-36">
-                <div className="flex w-full flex-col gap-8 rounded-3xl bg-white p-6 shadow-xs border border-neutral-200/60 sm:p-12">
-                    
+            <main className="mx-auto flex w-full max-w-4xl flex-col items-start px-4 pt-28 sm:pt-36">
+                {/* Back to Applications Link */}
+                <Link
+                    to="/candidate/applications"
+                    className="mb-6 flex items-center gap-2 text-sm font-medium text-neutral-600 transition-colors hover:text-neutral-950"
+                >
+                    <ChevronLeft className="size-4" />
+                    <span>Go back to my applications</span>
+                </Link>
+
+                <div className="relative w-full overflow-hidden flex flex-col gap-8 rounded-3xl bg-white p-6 shadow-xs border border-neutral-200/80 sm:p-12">
+                    {/* Top Ambient Glow */}
+                    <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute -top-32 left-1/2 h-72 w-[520px] -translate-x-1/2 rounded-full bg-gradient-to-b from-purple-200/40 via-indigo-100/20 to-transparent blur-3xl"
+                    />
+
                     {/* Header Section */}
-                    <div className="flex flex-col items-center gap-1 text-center">
-                        <span className="text-[11px] font-bold uppercase tracking-widest text-primary-500">
+                    <div className="relative flex flex-col items-center gap-1.5 text-center">
+                        <span className="text-xs font-semibold uppercase tracking-widest text-primary-600">
                             SUBMISSION RESULT
                         </span>
                         <h1 className="text-3xl font-bold tracking-tight text-neutral-950 sm:text-4xl">
@@ -61,31 +75,28 @@ export default function SubmissionResultPage() {
                     </div>
 
                     {/* Main Score Display */}
-                    <div className="flex flex-col items-center justify-center my-2 text-center gap-1">
-                        <div className="flex items-baseline justify-center gap-1">
+                    <div className="relative flex flex-col items-center justify-center my-2 text-center">
+                        <div className="flex items-baseline justify-center">
                             <span className="text-6xl font-bold tracking-tight text-neutral-950 sm:text-7xl">
                                 {overallScore}
                             </span>
-                            <span className="text-sm font-semibold text-primary-600 sm:text-base">
+                            <span className="text-base font-semibold text-primary-600 ml-1">
                                 /100
                             </span>
                         </div>
-                        <p className="text-xs font-medium text-neutral-500 mt-1">
-                            {data.percentileText || "Overall score out of 100"}
-                        </p>
                     </div>
 
-                    {/* 5 Category Metric Cards */}
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+                    {/* 3 Category Metric Cards */}
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                         {metrics.map((metric, idx) => (
                             <div
                                 key={idx}
-                                className="flex flex-col items-center justify-center gap-1 rounded-2xl border border-neutral-200/80 bg-white p-4 text-center transition-colors hover:border-primary-300"
+                                className="flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-primary-200/70 bg-white py-6 px-4 text-center transition-colors hover:border-primary-400"
                             >
-                                <span className="text-2xl font-bold text-neutral-950">
+                                <span className="text-3xl font-bold text-neutral-950">
                                     {metric.score}
                                 </span>
-                                <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500">
+                                <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-500">
                                     {metric.label}
                                 </span>
                             </div>
@@ -95,7 +106,7 @@ export default function SubmissionResultPage() {
                     {/* Cumulative Capability Score Banner */}
                     <div className="flex flex-col items-start justify-between gap-4 rounded-2xl border border-neutral-200/60 bg-neutral-100/60 p-6 md:flex-row md:items-center">
                         <div className="flex flex-col gap-1">
-                            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-neutral-600">
+                            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-neutral-600">
                                 <TrendingUp className="size-4 text-neutral-600" />
                                 <span>CUMULATIVE CAPABILITY SCORE</span>
                             </div>
@@ -103,7 +114,7 @@ export default function SubmissionResultPage() {
                                 <span className="text-4xl font-bold tracking-tight text-neutral-950">
                                     {cumulativeCapabilityScore}
                                 </span>
-                                <span className="flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-600 border border-emerald-200/50">
+                                <span className="flex items-center gap-1 text-xs font-semibold text-emerald-600">
                                     <TrendingUp className="size-3.5" />
                                     {cumulativeDelta}
                                 </span>
@@ -116,21 +127,21 @@ export default function SubmissionResultPage() {
                             className="flex cursor-pointer items-center gap-2 rounded-xl border border-neutral-300/80 bg-white px-4 py-2.5 text-sm font-medium text-neutral-800 shadow-2xs transition-colors hover:bg-neutral-50 hover:text-neutral-950"
                         >
                             <span>View Score History</span>
-                            <ArrowRight className="size-4" />
+                            <ArrowRight className="size-4 text-neutral-500" />
                         </button>
                     </div>
 
                     {/* Task Feedback / Evidence Section */}
                     <div className="flex flex-col gap-4 pt-2">
                         <div className="flex flex-col gap-1">
-                            <span className="text-[11px] font-bold uppercase tracking-widest text-primary-500">
+                            <span className="text-xs font-semibold uppercase tracking-widest text-primary-600">
                                 TASK FEEDBACK
                             </span>
                             <div className="flex items-center justify-between">
                                 <h2 className="text-2xl font-bold text-neutral-950 sm:text-3xl">
                                     Evidence behind your score
                                 </h2>
-                                <span className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-500">
+                                <span className="text-sm font-medium text-neutral-500">
                                     {taskEvidence.length} {taskEvidence.length === 1 ? 'Task' : 'Tasks'}
                                 </span>
                             </div>
@@ -138,38 +149,65 @@ export default function SubmissionResultPage() {
 
                         {/* Task Feedback Cards List */}
                         <div className="flex flex-col gap-4 mt-2">
-                            {taskEvidence.map((item, idx) => {
-                                const sentences = item.summary
-                                    ? item.summary.split(/(?<=\.)\s+(?=You\b)|\n+/g).filter(Boolean)
-                                    : [];
-
-                                return (
-                                    <div
-                                        key={item.taskId || idx}
-                                        className="flex flex-col gap-2 rounded-2xl border border-neutral-200/50 bg-neutral-100/60 p-6"
-                                    >
-                                        <span className="text-xs font-bold uppercase tracking-wider text-primary-500">
+                            {taskEvidence.map((item, idx) => (
+                                <div
+                                    key={item.taskId || idx}
+                                    className="flex flex-col gap-3 rounded-2xl border border-neutral-200/60 bg-neutral-50/70 p-6"
+                                >
+                                    {/* Task Card Header: TASK # and Score */}
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-xs font-semibold uppercase tracking-wider text-primary-600">
                                             TASK {item.taskNumber}
                                         </span>
-                                        <h3 className="text-lg font-bold text-neutral-950">
-                                            {item.title}
-                                        </h3>
-                                        <div className="flex flex-col gap-2 mt-1">
-                                            {sentences.length > 0 ? (
-                                                sentences.map((sentence, sIdx) => (
-                                                    <p key={sIdx} className="text-sm leading-relaxed text-neutral-700">
-                                                        {sentence.trim()}
-                                                    </p>
-                                                ))
-                                            ) : (
-                                                <p className="text-sm leading-relaxed text-neutral-700">
-                                                    {item.summary}
-                                                </p>
-                                            )}
+                                        <div className="text-sm">
+                                            <span className="text-base font-bold text-neutral-950">
+                                                {item.score ?? overallScore}
+                                            </span>
+                                            <span className="text-neutral-500">/100</span>
                                         </div>
                                     </div>
-                                );
-                            })}
+
+                                    {/* Task Title */}
+                                    <h3 className="text-lg font-bold text-neutral-950">
+                                        {item.title}
+                                    </h3>
+
+                                    {/* Summary Paragraph */}
+                                    <p className="text-xs sm:text-sm leading-relaxed text-neutral-600">
+                                        {item.summary}
+                                    </p>
+
+                                    {/* 3 Structured Feedback Boxes */}
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+                                        <div className="flex flex-col gap-1 rounded-xl border border-emerald-100/90 bg-emerald-50/60 p-3.5">
+                                            <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700">
+                                                STRENGTH
+                                            </span>
+                                            <p className="text-xs leading-relaxed text-neutral-700">
+                                                {item.strength || "Strong field-by-field control"}
+                                            </p>
+                                        </div>
+
+                                        <div className="flex flex-col gap-1 rounded-xl border border-amber-100/90 bg-amber-50/60 p-3.5">
+                                            <span className="text-[11px] font-bold uppercase tracking-wider text-amber-700">
+                                                GAP
+                                            </span>
+                                            <p className="text-xs leading-relaxed text-neutral-700">
+                                                {item.gap || "Follow-up timing is broad"}
+                                            </p>
+                                        </div>
+
+                                        <div className="flex flex-col gap-1 rounded-xl border border-blue-100/90 bg-blue-50/60 p-3.5">
+                                            <span className="text-[11px] font-bold uppercase tracking-wider text-blue-700">
+                                                NEXT STEP
+                                            </span>
+                                            <p className="text-xs leading-relaxed text-neutral-700">
+                                                {item.nextStep || "Include a specific next-update time and escalation trigger."}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
 
