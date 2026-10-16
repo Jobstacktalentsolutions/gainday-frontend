@@ -16,6 +16,13 @@ interface IntegrityCardProps {
     events: IntegrityEventSummary[];
 }
 
+const MONITORED_CHECKS = [
+    "Full-screen enforced",
+    "Tab-switch monitoring",
+    "Idle detection",
+    "Window-focus monitoring",
+];
+
 const IntegrityCard = ({ status, events }: IntegrityCardProps) => {
     const { label, textClass, summary } = INTEGRITY_META[status];
     const StatusIcon = STATUS_ICON[status];
@@ -26,10 +33,14 @@ const IntegrityCard = ({ status, events }: IntegrityCardProps) => {
                 <h2 className="uppercase text-neutral-700">Integrity</h2>
                 <p className={textClass}>{label}</p>
             </div>
-            <ul className="flex flex-col text-xs text-neutral-300">
-                {events.map((event) => (
-                    <li key={event.type}>{formatIntegrityEvent(event)}</li>
-                ))}
+            <ul className="flex flex-col text-xs text-neutral-400">
+                {events.length === 0 ? (
+                    MONITORED_CHECKS.map((check) => <li key={check}>{check}</li>)
+                ) : (
+                    events.map((event) => (
+                        <li key={event.type}>{formatIntegrityEvent(event)}</li>
+                    ))
+                )}
             </ul>
             <div className={cn("flex items-center gap-2 text-sm", textClass)}>
                 <StatusIcon className="size-6 shrink-0" aria-hidden="true" />

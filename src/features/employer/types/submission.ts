@@ -48,6 +48,7 @@ export interface TaskResult {
     title: string;
     /** 0-100 */
     score: number;
+    weight?: number;
     evidence: string;
 }
 

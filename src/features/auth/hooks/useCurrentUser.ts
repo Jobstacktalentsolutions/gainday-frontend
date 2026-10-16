@@ -23,10 +23,15 @@ export const useCurrentUser = () => {
     }
   }, [profileQuery.isError, clearAuth]);
 
+  const isLoadingProfile =
+    Boolean(accessToken && !user && !profileQuery.isError) ||
+    profileQuery.isLoading ||
+    profileQuery.isPending;
+
   return {
     user,
     accessToken,
     isAuthenticated,
-    isLoadingProfile: profileQuery.isLoading,
+    isLoadingProfile,
   };
 };

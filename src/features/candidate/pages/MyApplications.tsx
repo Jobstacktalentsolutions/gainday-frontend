@@ -21,7 +21,7 @@ const MyApplications = () => {
             <CandidateHeader />
 
             <main className="px-6 pb-16 pt-32 lg:px-12 lg:pt-44 xl:px-20">
-                <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 lg:gap-20">
+                <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 lg:gap-12">
                     <div className="flex flex-col">
                         <p className="text-base text-primary-500">MY APPLICATIONS</p>
                         <h1 className="text-4xl leading-tight tracking-[-0.48px] text-black lg:text-5xl">

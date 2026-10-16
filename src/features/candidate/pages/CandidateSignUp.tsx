@@ -1,10 +1,13 @@
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, Navigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { type AxiosError } from "axios";
 import { apiClient, getBaseURL } from "@/lib/api/client";
 import { useAuthStore } from "@/features/auth/store/authStore";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
+import AppLoader from "@/components/ui/AppLoader";
 import { FormInput } from "@/components/form/FormInput";
 import AuthCard from "@/features/auth/component/AuthCard";
 import PasswordInput from "@/features/auth/component/passwordInput";
@@ -15,7 +18,6 @@ import AuthSwitchLink from "@/features/auth/component/AuthSwitchLink";
 import { ActionButton } from "@/components/ui/ActionButton";
 import spinner from "@/assets/Spinner.svg";
 import { candidateSignUpSchema, type CandidateSignUpValues } from "../auth/schema";
-import { useState } from "react";
 
 
 const CandidateSignUp = () => {
@@ -23,6 +25,25 @@ const CandidateSignUp = () => {
     const [searchParams] = useSearchParams();
     const redirect = searchParams.get("redirect");
     const [agreed, setAgreed] = useState(false);
+    const { user, accessToken, isAuthenticated, isLoadingProfile } = useCurrentUser();
+
+    const safeRedirect = redirect && redirect.startsWith("/") ? redirect : null;
+    const defaultRoute = user?.role === "EMPLOYER" ? "/employer/jobs" : "/job-board";
+    const target = safeRedirect ?? defaultRoute;
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate(target, { replace: true });
+        }
+    }, [isAuthenticated, target, navigate]);
+
+    if (isAuthenticated) {
+        return <Navigate to={target} replace />;
+    }
+
+    if (accessToken && isLoadingProfile) {
+        return <AppLoader />;
+    }
 
     const {
         register,

@@ -36,6 +36,8 @@ const ContentModeration = lazy(() => import("@/features/admin/pages/ContentModer
 const GenerationReviews = lazy(() => import("@/features/admin/pages/GenerationReviews"));
 const SupportMessages = lazy(() => import("@/features/admin/pages/SupportMessages"));
 const JobPreview = lazy(() => import("@/features/employer/pages/JobPreview"));
+const JobSubmissions = lazy(() => import("@/features/employer/pages/JobSubmissions"));
+const SubmissionDetail = lazy(() => import("@/features/employer/pages/SubmissionDetail"));
 const JobBoardPage = lazy(() => import("@/features/candidate/pages/JobBoardPage"));
 const JobDetailsPage = lazy(() => import("@/features/candidate/pages/candidateJobDetails"));
 const CandidateSignUp = lazy(() => import("@/features/candidate/pages/CandidateSignUp"));
@@ -84,6 +86,7 @@ const AppRoutes = () => {
                         <Route index element={<Navigate to="jobs" replace />} />
                         <Route path="dashboard" element={<Navigate to="/employer/jobs" replace />} />
                         <Route path="jobs" element={<EmployerJobs />} />
+                        <Route path="jobs/:jobId/submissions" element={<JobSubmissions />} />
                         <Route path="profile" element={<ProfilePage />} />
                         <Route path="jobs/new" element={<JobPostingWizardLayout />}>
                             <Route index element={<Navigate to="details" replace />} />
@@ -94,6 +97,7 @@ const AppRoutes = () => {
                     </Route>
                     {/* Standalone full-page route, no employer shell */}
                     <Route path="jobs/:jobId/preview" element={<JobPreview />} />
+                    <Route path="jobs/:jobId/submissions/:submissionId" element={<SubmissionDetail />} />
 
                 </Route>
 

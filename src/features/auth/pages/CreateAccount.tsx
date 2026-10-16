@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams, Navigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { apiClient, getBaseURL } from "@/lib/api/client";
 import { useAuthStore } from "../store/authStore";
+import { useCurrentUser } from "../hooks/useCurrentUser";
+import AppLoader from "@/components/ui/AppLoader";
 import { FormInput } from "@/components/form/FormInput";
 import AuthCard from "../component/AuthCard";
 import PasswordInput from "../component/passwordInput";
@@ -19,7 +21,28 @@ import spinner from "@/assets/Spinner.svg";
 
 const CreateAccount = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirect = searchParams.get("redirect");
     const [agreed, setAgreed] = useState(false);
+    const { user, accessToken, isAuthenticated, isLoadingProfile } = useCurrentUser();
+
+    const safeRedirect = redirect && redirect.startsWith("/") ? redirect : null;
+    const defaultRoute = user?.role === "JOB_SEEKER" ? "/job-board" : "/employer/jobs";
+    const target = safeRedirect ?? defaultRoute;
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate(target, { replace: true });
+        }
+    }, [isAuthenticated, target, navigate]);
+
+    if (isAuthenticated) {
+        return <Navigate to={target} replace />;
+    }
+
+    if (accessToken && isLoadingProfile) {
+        return <AppLoader />;
+    }
 
     const {
         register,

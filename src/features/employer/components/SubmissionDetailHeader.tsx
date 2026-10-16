@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import Skeleton from "@/components/ui/skeleton";
 import { formatSubmittedDate } from "../utils/submissionFormatters";
-import { getCandidateLabel } from "../utils/submissionLabels";
 import type { SubmissionDetail } from "../types/submission";
 
 interface SubmissionDetailHeaderProps {
@@ -36,13 +35,13 @@ const SubmissionDetailHeader = ({ jobId, submission, isLoading = false }: Submis
                 {submission && (
                     <div className="flex min-w-0 flex-col">
                         <p className="truncate text-base text-primary-500">
-                            {submission.candidateName === null
-                                ? `Submitted ${formatSubmittedDate(submission.submittedAt)}`
-                                : `${submission.displayId} \u00b7 ${formatSubmittedDate(submission.submittedAt)}`}
+                            {submission.displayId} &middot; {formatSubmittedDate(submission.submittedAt)}
                         </p>
-                        <h1 className="truncate text-2xl leading-tight text-black lg:text-[28px]">
-                            {getCandidateLabel(submission)}
-                        </h1>
+                        {submission.candidateName && (
+                            <h1 className="truncate text-2xl leading-tight text-black lg:text-[28px]">
+                                {submission.candidateName}
+                            </h1>
+                        )}
                     </div>
                 )}
             </div>
