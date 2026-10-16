@@ -9,9 +9,11 @@ const CandidateRoute = () => {
     const location = useLocation();
     const { user, accessToken, isAuthenticated, isLoadingProfile } = useCurrentUser();
 
+    if (accessToken && (!user || isLoadingProfile)) {
+        return <AppLoader />;
+    }
+
     if (!isAuthenticated) {
-        // A token exists but the profile is still loading — don't bounce them to sign-in yet.
-        if (accessToken && isLoadingProfile) return <AppLoader />;
         const redirect = encodeURIComponent(`${location.pathname}${location.search}`);
         return <Navigate to={`/candidate/signin?redirect=${redirect}`} replace />;
     }

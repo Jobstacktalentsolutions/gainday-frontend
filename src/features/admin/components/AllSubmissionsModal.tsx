@@ -83,8 +83,8 @@ export const AllSubmissionsModal = ({
                 className="h-9 w-full rounded-lg border border-neutral-200 bg-white pl-9 pr-3 text-xs text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
             </div>
-            <div className="flex items-center gap-1.5 w-full sm:w-auto">
-              {["ALL", "SCORED", "SCORING", "PENDING"].map((status) => (
+            <div className="flex flex-wrap items-center gap-1.5 w-full sm:w-auto">
+              {["ALL", "PENDING", "GRADING", "GRADED", "DISQUALIFIED", "WITHDRAWN", "SELECTED", "NOT_SELECTED"].map((status) => (
                 <button
                   key={status}
                   type="button"
@@ -98,7 +98,7 @@ export const AllSubmissionsModal = ({
                       : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
                   }`}
                 >
-                  {status}
+                  {status.replace("_", " ")}
                 </button>
               ))}
             </div>

@@ -32,7 +32,7 @@ export interface CandidateSubmission {
   jobTitle: string;
   companyName: string;
   simulationTitle: string;
-  status: "PENDING" | "SCORING" | "SCORED" | "DISQUALIFIED";
+  status: "PENDING" | "GRADING" | "GRADED" | "DISQUALIFIED" | "WITHDRAWN" | "SELECTED" | "NOT_SELECTED";
   overallScore: number | null;
   categoryScores: CandidateCategoryScores | null;
   taskScores: TaskGradingResult[] | null;

@@ -3,12 +3,14 @@ import MultiSelectUnderConstraintAnswer from "./MultiSelectUnderConstraintAnswer
 import NumericInputAnswer from "./NumericInputAnswer";
 import ClassificationAnswer from "./ClassificationAnswer";
 import ProceduralSequencingAnswer from "./ProceduralSequencingAnswer";
+import PriorityRankingAnswer from "./PriorityRankingAnswer";
 import {
     describeSingleBestAction,
     describeMultiSelectUnderConstraint,
     describeNumericInput,
     describeClassification,
     describeProceduralSequencing,
+    describePriorityRanking,
 } from "./describeAnswers";
 import type { CandidateObjectiveComponent, ObjectiveComponentType } from "../../types/simulation";
 
@@ -68,6 +70,13 @@ export const OBJECTIVE_ANSWER_RENDERERS: Record<
             onChange={castOnChange<number[]>(onChange)}
         />
     ),
+    PRIORITY_RANKING: ({ component, response, onChange }) => (
+        <PriorityRankingAnswer
+            component={cast(component)}
+            response={cast(response)}
+            onChange={castOnChange<number[]>(onChange)}
+        />
+    ),
 };
 
 // Renders the candidate's response as plain text for CandidateAnswer.responseBody (the one
@@ -82,4 +91,5 @@ export const OBJECTIVE_ANSWER_DESCRIBERS: Record<
     NUMERIC_INPUT: (c, r) => describeNumericInput(cast(c), cast(r)),
     CLASSIFICATION: (c, r) => describeClassification(cast(c), cast(r)),
     PROCEDURAL_SEQUENCING: (c, r) => describeProceduralSequencing(cast(c), cast(r)),
+    PRIORITY_RANKING: (c, r) => describePriorityRanking(cast(c), cast(r)),
 };

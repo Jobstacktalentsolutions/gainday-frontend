@@ -6,6 +6,7 @@ import SubmissionSortDropdown from "../components/SubmissionSortDropdown";
 import SubmissionsTable, { SubmissionsTableSkeleton } from "../components/SubmissionTable";
 import SubmissionsEmptyState from "../components/SubmissionsEmptyState";
 import { useJobSubmissions } from "../hooks/useJobSubmissions";
+import { useJobTitle } from "../hooks/useJobTitle";
 import { useSubmissionSort } from "../hooks/useSubmissionSort";
 import { SORT_CONFIG, sortSubmissions } from "../utils/submissionSort";
 import { CATEGORY_ORDER } from "../utils/submissionCategories";
@@ -13,15 +14,16 @@ import { cn } from "@/lib/utils";
 
 const JobSubmissions = () => {
     const { jobId } = useParams<{ jobId: string }>();
-    const { data, isLoading, isError, refetch } = useJobSubmissions(jobId);
+    const { data: submissions, isLoading, isError, refetch } = useJobSubmissions(jobId);
+    const jobTitle = useJobTitle(jobId);
     const { sort, setSort, isDefault, reset } = useSubmissionSort();
 
     const sortedSubmissions = useMemo(
-        () => (data ? sortSubmissions(data.submissions, sort) : []),
-        [data, sort],
+        () => (submissions ? sortSubmissions(submissions, sort) : []),
+        [submissions, sort],
     );
 
-    const hasSubmissions = !!data && data.submissions.length > 0;
+    const hasSubmissions = !!submissions && submissions.length > 0;
 
     return (
         <div className="min-h-screen bg-neutral-50 px-6 pb-30 pt-32 md:px-7.5 lg:px-12 xl:px-20">
@@ -30,10 +32,10 @@ const JobSubmissions = () => {
 
                 <div className="flex flex-col items-start">
                     <h1 className="text-4xl text-black lg:text-5xl">All Submissions</h1>
-                    {isLoading ? (
+                    {jobTitle.isLoading ? (
                         <Skeleton className="mt-2 h-6 w-64" />
                     ) : (
-                        data && <p className="text-base uppercase text-primary-500">{data.jobTitle}</p>
+                        jobTitle.data && <p className="text-base uppercase text-primary-500">{jobTitle.data}</p>
                     )}
                 </div>
 

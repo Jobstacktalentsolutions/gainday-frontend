@@ -35,11 +35,13 @@ const SubmissionDetailHeader = ({ jobId, submission, isLoading = false }: Submis
                 {submission && (
                     <div className="flex min-w-0 flex-col">
                         <p className="truncate text-base text-primary-500">
-                            {submission.displayId} · {formatSubmittedDate(submission.submittedAt)}
+                            {submission.displayId} &middot; {formatSubmittedDate(submission.submittedAt)}
                         </p>
-                        <h1 className="truncate text-2xl leading-tight text-black lg:text-[28px]">
-                            {submission.candidateName}
-                        </h1>
+                        {submission.candidateName && (
+                            <h1 className="truncate text-2xl leading-tight text-black lg:text-[28px]">
+                                {submission.candidateName}
+                            </h1>
+                        )}
                     </div>
                 )}
             </div>
@@ -49,7 +51,7 @@ const SubmissionDetailHeader = ({ jobId, submission, isLoading = false }: Submis
             {submission && (
                 <div className="flex shrink-0 items-center gap-3 border-l border-primary-500 pl-3">
                     <div className="flex flex-col">
-                        <p className="text-2xl leading-tight text-black lg:text-[28px]">{submission.overallScore}</p>
+                        <p className="text-2xl leading-tight text-black lg:text-[28px]">{submission.overallScore === null ? "\u2014" : submission.overallScore}</p>
                         <p className="text-xs text-neutral-500 lg:text-base">OVERALL/100</p>
                     </div>
                 </div>

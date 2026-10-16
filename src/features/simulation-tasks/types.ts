@@ -35,7 +35,8 @@ export type ObjectiveComponentType =
   | "CLASSIFICATION"
   | "PROCEDURAL_SEQUENCING"
   | "SINGLE_BEST_ACTION"
-  | "MULTI_SELECT_UNDER_CONSTRAINT";
+  | "MULTI_SELECT_UNDER_CONSTRAINT"
+  | "PRIORITY_RANKING";
 
 export type OpenEndedComponentType =
   | "WRITTEN_JUSTIFICATION"
@@ -71,12 +72,22 @@ export interface MultiSelectUnderConstraintComponent {
   correctOptionIndices: number[];
 }
 
+export interface PriorityRankingItem {
+  label: string;
+  description: string;
+}
+
+export interface PriorityRankingComponent {
+  items: PriorityRankingItem[];
+}
+
 export type ObjectiveComponent =
   | NumericInputComponent
   | ClassificationComponent
   | ProceduralSequencingComponent
   | SingleBestActionComponent
-  | MultiSelectUnderConstraintComponent;
+  | MultiSelectUnderConstraintComponent
+  | PriorityRankingComponent;
 
 export interface WrittenJustificationComponent {
   decisionAlreadyMade: string;

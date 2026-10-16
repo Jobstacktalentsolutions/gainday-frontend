@@ -32,9 +32,7 @@ const ProceduralSequencingAnswer = ({ component, response, onChange }: Props) =>
                     <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary-50 text-[14px] text-primary-500">
                         {position + 1}
                     </span>
-                    <span className="flex flex-1 flex-col gap-1">
-                        <span className="flex-1 text-[16px] text-primary-950">{component.steps[stepIndex]}</span>
-                    </span>
+                    <span className="flex-1 text-[16px] text-primary-950">{component.steps[stepIndex]}</span>
                     <div className="flex shrink-0 flex-col">
                         <button
                             type="button"

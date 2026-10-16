@@ -7,17 +7,18 @@ import type {
     ClassificationCandidateComponent,
     MultiSelectUnderConstraintCandidateComponent,
     NumericInputCandidateComponent,
+    PriorityRankingCandidateComponent,
     ProceduralSequencingCandidateComponent,
     SingleBestActionCandidateComponent,
 } from "../../types/simulation";
 
 export function describeSingleBestAction(
-  component: SingleBestActionCandidateComponent,
-  response: number | null,
+    component: SingleBestActionCandidateComponent,
+    response: number | null,
 ): string {
-  if (response === null) return "";
-  const letter = String.fromCharCode(65 + response);
-  return `Selected option ${letter}: ${component.options[response]}`;
+    if (response === null) return "";
+    const letter = String.fromCharCode(65 + response);
+    return `Selected option ${letter}: ${component.options[response]}`;
 }
 
 export function describeMultiSelectUnderConstraint(
@@ -48,9 +49,25 @@ export function describeClassification(
 }
 
 export function describeProceduralSequencing(
-  component: ProceduralSequencingCandidateComponent,
-  response: number[] | null,
+    component: ProceduralSequencingCandidateComponent,
+    response: number[] | null,
 ): string {
-  if (!response) return "";
-  return response.map((stepIndex, position) => `${position + 1}. ${component.steps[stepIndex]}`).join("\n");
+    // No response yet == the candidate never touched the ordering — reporting the
+    // as-presented order as their "answer" would credit/penalize a choice they never made.
+    if (!response) return "";
+    return response.map((stepIndex, position) => `${position + 1}. ${component.steps[stepIndex]}`).join("\n");
+}
+
+export function describePriorityRanking(
+    component: PriorityRankingCandidateComponent,
+    response: number[] | null,
+): string {
+    // Same rule as sequencing: an untouched list is not an answer the candidate gave.
+    if (!response) return "";
+    return response
+        .map((itemIndex, position) => {
+            const { label, description } = component.items[itemIndex];
+            return `${position + 1}. ${label} — ${description}`;
+        })
+        .join("\n");
 }

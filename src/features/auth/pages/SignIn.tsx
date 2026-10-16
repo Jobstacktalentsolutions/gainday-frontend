@@ -1,9 +1,12 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useSearchParams, Link, Navigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { apiClient, getBaseURL } from "@/lib/api/client";
 import { useAuthStore } from "../store/authStore";
+import { useCurrentUser } from "../hooks/useCurrentUser";
+import AppLoader from "@/components/ui/AppLoader";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { FormInput } from "@/components/form/FormInput";
 import { AuthDivider } from "../component/AuthDivider";
@@ -18,6 +21,19 @@ import spinner from "@/assets/Spinner.svg";
 
 const SignIn = () => {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const redirect = searchParams.get("redirect");
+    const { user, accessToken, isAuthenticated, isLoadingProfile } = useCurrentUser();
+
+    const safeRedirect = redirect && redirect.startsWith("/") ? redirect : null;
+    const defaultRoute = user?.role === "JOB_SEEKER" ? "/job-board" : "/employer/jobs";
+    const target = safeRedirect ?? defaultRoute;
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate(target, { replace: true });
+        }
+    }, [isAuthenticated, target, navigate]);
 
     const {
         register,
@@ -36,12 +52,20 @@ const SignIn = () => {
         onSuccess: (res) => {
             useAuthStore.getState().setAuth(res.data.access_token, res.data.user)
             if (!res.data.isEmailVerified) {
-                navigate("/employer/verify-email")
+                navigate(redirect ? `/employer/verify-email?redirect=${encodeURIComponent(redirect)}` : "/employer/verify-email")
             } else {
-                navigate("/employer/jobs")
+                navigate(target)
             }
         }
     })
+
+    if (isAuthenticated) {
+        return <Navigate to={target} replace />;
+    }
+
+    if (accessToken && isLoadingProfile) {
+        return <AppLoader />;
+    }
 
     const renderErrorMessage = () => {
         const data = (signInMutation.error as any)?.response?.data;

@@ -5,6 +5,7 @@ import type {
     SubmissionSortKey,
     SubmissionSummary,
 } from "../types/submission";
+import { getCandidateLabel } from "./submissionLabels";
 
 // Landing order: strongest candidates first.
 export const DEFAULT_SORT: SubmissionSort = { key: "capabilityScore", direction: "desc" };
@@ -55,7 +56,8 @@ const sortValue = (submission: SubmissionSummary, key: SubmissionSortKey): numbe
         case "submittedAt":
             return new Date(submission.submittedAt).getTime();
         case "capabilityScore":
-            return submission.capabilityScore;
+            // Not graded yet sorts as the lowest score.
+            return submission.capabilityScore === null ? -1 : submission.capabilityScore;
         case "integrity":
             return INTEGRITY_RANK[submission.integrityStatus];
     }
@@ -67,6 +69,7 @@ export const sortSubmissions = (submissions: SubmissionSummary[], sort: Submissi
         const difference = sortValue(a, sort.key) - sortValue(b, sort.key);
         if (difference !== 0) return difference * modifier;
         // Ties fall back to overall score (best first) so the order is stable and meaningful.
-        return b.overallScore - a.overallScore || a.candidateName.localeCompare(b.candidateName);
+        const scoreOf = (submission: SubmissionSummary) => (submission.overallScore === null ? -1 : submission.overallScore);
+        return scoreOf(b) - scoreOf(a) || getCandidateLabel(a).localeCompare(getCandidateLabel(b));
     });
 };

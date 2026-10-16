@@ -1,9 +1,12 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate, useSearchParams, Link } from "react-router-dom";
+import { useNavigate, useSearchParams, Link, Navigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { apiClient, getBaseURL } from "@/lib/api/client";
 import { useAuthStore } from "@/features/auth/store/authStore";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
+import AppLoader from "@/components/ui/AppLoader";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { FormInput } from "@/components/form/FormInput";
 import { AuthDivider } from "@/features/auth/component/AuthDivider";
@@ -20,6 +23,25 @@ const CandidateSignIn = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const redirect = searchParams.get("redirect");
+    const { user, accessToken, isAuthenticated, isLoadingProfile } = useCurrentUser();
+
+    const safeRedirect = redirect && redirect.startsWith("/") ? redirect : null;
+    const defaultRoute = user?.role === "EMPLOYER" ? "/employer/jobs" : "/job-board";
+    const target = safeRedirect ?? defaultRoute;
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate(target, { replace: true });
+        }
+    }, [isAuthenticated, target, navigate]);
+
+    if (isAuthenticated) {
+        return <Navigate to={target} replace />;
+    }
+
+    if (accessToken && isLoadingProfile) {
+        return <AppLoader />;
+    }
 
     const {
         register,
@@ -49,47 +71,6 @@ const CandidateSignIn = () => {
     const forgotPasswordHref = email
         ? `/candidate/forgot-password?email=${encodeURIComponent(email)}`
         : "/candidate/forgot-password";
-
-    const renderErrorMessage = () => {
-        const data = (signInMutation.error as any)?.response?.data;
-        const message = data?.message;
-        const msgStr = Array.isArray(message) ? message[0] : message;
-        if (typeof msgStr === "string" && msgStr.toLowerCase().includes("suspended")) {
-            const supportUrl = `/support?email=${encodeURIComponent(email || "")}&topic=${encodeURIComponent("Account Suspension Appeal")}`;
-            const parts = msgStr.split(/(contact support)/i);
-            if (parts.length > 1) {
-                return (
-                    <span>
-                        {parts.map((part, idx) =>
-                            part.toLowerCase() === "contact support" ? (
-                                <Link
-                                    key={idx}
-                                    to={supportUrl}
-                                    className="underline font-semibold text-primary-600 hover:text-primary-700 transition-colors"
-                                >
-                                    {part}
-                                </Link>
-                            ) : (
-                                part
-                            )
-                        )}
-                    </span>
-                );
-            }
-            return (
-                <span>
-                    {msgStr}{" "}
-                    <Link
-                        to={supportUrl}
-                        className="underline font-semibold text-primary-600 hover:text-primary-700 transition-colors"
-                    >
-                        Contact support
-                    </Link>
-                </span>
-            );
-        }
-        return "Incorrect email or password";
-    };
 
     return (
         <AuthCard
@@ -134,7 +115,7 @@ const CandidateSignIn = () => {
                             role="alert"
                             className="text-center text-sm text-error-600"
                         >
-                            {renderErrorMessage()}
+                            Incorrect email or password
                         </p>
                     )
                 }

@@ -6,7 +6,10 @@ const TaskResultCard = ({ task }: { task: TaskResult }) => {
     return (
         <article className="flex w-full flex-col gap-3 rounded-xl bg-white p-6">
             <div className="flex items-center justify-between gap-4">
-                <p className="text-sm uppercase text-primary-500">Task {task.taskNumber}</p>
+                <p className="text-sm uppercase text-primary-500">
+                    Task {task.taskNumber}
+                    {task.weight !== undefined ? ` \u00b7 Weight ${task.weight}%` : ""}
+                </p>
                 <p className="text-2xl font-bold text-neutral-900">{task.score}/100</p>
             </div>
             <h3 className="text-2xl leading-8 text-neutral-900">{task.title}</h3>

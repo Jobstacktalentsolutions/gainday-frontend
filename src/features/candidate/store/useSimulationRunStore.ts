@@ -4,7 +4,7 @@ import { persist } from "zustand/middleware";
 export interface TaskAnswer {
     /** Shape depends on the task's objectiveComponent.componentType — number for
      *  SINGLE_BEST_ACTION/NUMERIC_INPUT, number[] for MULTI_SELECT_UNDER_CONSTRAINT/
-     *  PROCEDURAL_SEQUENCING, Record<string,string> for CLASSIFICATION, null until the
+     *  PROCEDURAL_SEQUENCING/PRIORITY_RANKING, Record<string,string> for CLASSIFICATION, null until the
      *  candidate answers. See objectiveAnswers/registry.tsx. */
     objectiveResponse: unknown;
     textResponse: string;
@@ -42,19 +42,15 @@ interface SimulationRunState {
     /** `taskId` is the task being left (whose elapsed time gets recorded), not the one being
      *  entered — the index simply advances by one. */
     advanceTask: (taskId: string) => void;
-    /** Mirrors advanceTask, but moves backward and is clamped at 0. `taskId` is the task being
-     *  left (whose elapsed time gets recorded), same contract as advanceTask. */
-    goToPreviousTask: (taskId: string) => void;
     markComplete: (currentTaskId?: string) => void;
     resetRun: () => void;
-   
 }
 
-// Navigation is store-driven, not route-driven, on purpose: currentTaskIndex lives in Zustand
-// state, not in a route param like /task/:index. That's what keeps the browser back button
-// from becoming a bypass around whatever navigation rules this store enforces — there's no
-// per-task history entry for it to exploit. Backward navigation (goToPreviousTask) is
-// therefore implemented as an explicit, gated state transition here, not as routing freedom.
+// Forward-only by design (your call): there is deliberately no
+// goToPreviousTask — currentTaskIndex only ever increases. Persisted via
+// Zustand's persist middleware, not route params, so refreshing the page
+// resumes from where the candidate was without giving the browser back
+// button a history entry to exploit (see the routing tradeoff discussion).
 export const useSimulationRunStore = create<SimulationRunState>()(
     persist(
         (set, get) => ({
@@ -113,13 +109,6 @@ export const useSimulationRunStore = create<SimulationRunState>()(
             advanceTask: (taskId) =>
                 set((state) => ({
                     currentTaskIndex: state.currentTaskIndex + 1,
-                    taskTimeSpentSeconds: accrueTaskTime(state, taskId),
-                    currentTaskEnteredAt: Date.now(),
-                })),
-
-            goToPreviousTask: (taskId) =>
-                set((state) => ({
-                    currentTaskIndex: Math.max(0, state.currentTaskIndex - 1),
                     taskTimeSpentSeconds: accrueTaskTime(state, taskId),
                     currentTaskEnteredAt: Date.now(),
                 })),

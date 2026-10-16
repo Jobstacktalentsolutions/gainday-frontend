@@ -1,6 +1,16 @@
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import AppLoader from "@/components/ui/AppLoader";
+import { useSimulationRunStore } from "@/features/candidate/store/useSimulationRunStore";
+
+// DEV-ONLY: resets any stale completed-run state before entering the simulation.
+// Uses getState() so the reset is synchronous and fires before the first render
+// of TaskRunner — avoiding the localStorage hydration race that shows the
+// "simulation complete" modal immediately.
+function DevSimulationStart() {
+    useSimulationRunStore.getState().resetRun();
+    return <Navigate to="/job-board/job-1/simulation" replace />;
+}
 
 
 const AdminLogin = lazy(() => import("@/features/admin/pages/AdminLogin"));
@@ -22,16 +32,12 @@ const SimulationBuilder = lazy(() => import("@/features/employer/pages/Simulatio
 const ReviewPublish = lazy(() => import("@/features/employer/pages/ReviewPublish"))
 const EmployerManagement = lazy(() => import("@/features/admin/pages/EmployerManagement"))
 const CandidateManagement = lazy(() => import("@/features/admin/pages/CandidateManagement"))
-const CandidateDetailPage = lazy(() => import("@/features/admin/pages/CandidateDetailPage"));
-const AdminManagement = lazy(() => import("@/features/admin/pages/AdminManagement"))
 const ContentModeration = lazy(() => import("@/features/admin/pages/ContentModeration"));
-const JobModerationDetailPage = lazy(() => import("@/features/admin/pages/JobModerationDetailPage"));
 const GenerationReviews = lazy(() => import("@/features/admin/pages/GenerationReviews"));
-const AiOversight = lazy(() => import("@/features/admin/pages/AiOversight"));
+const SupportMessages = lazy(() => import("@/features/admin/pages/SupportMessages"));
 const JobPreview = lazy(() => import("@/features/employer/pages/JobPreview"));
 const JobSubmissions = lazy(() => import("@/features/employer/pages/JobSubmissions"));
-const SubmissionDetail = lazy(() => import("@/features/employer/pages/SubmissionDetail"))
-const EmployerCandidates = lazy(() => import("@/features/employer/pages/EmployerCandidate"))
+const SubmissionDetail = lazy(() => import("@/features/employer/pages/SubmissionDetail"));
 const JobBoardPage = lazy(() => import("@/features/candidate/pages/JobBoardPage"));
 const JobDetailsPage = lazy(() => import("@/features/candidate/pages/candidateJobDetails"));
 const CandidateSignUp = lazy(() => import("@/features/candidate/pages/CandidateSignUp"));
@@ -46,9 +52,10 @@ const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 const EnvironmentCheckPage = lazy(() => import("@/features/candidate/pages/EnvironmentCheckPage"));
 const TaskRunner = lazy(() => import("@/features/candidate/pages/TaskRunner"));
 const SubmissionResultPage = lazy(() => import("@/features/candidate/pages/SubmissionResultPage"));
-const SupportPage = lazy(() => import("@/pages/SupportPage"));
 const CandidateRoute = lazy(() => import("@/features/candidate/components/CandidateRoute"));
 const MyApplications = lazy(() => import("@/features/candidate/pages/MyApplications"));
+const ApplicationDetailPage = lazy(() => import("@/features/candidate/pages/ApplicationDetailPage"));
+const ApplicationSubmissionPage = lazy(() => import("@/features/candidate/pages/ApplicationSubmissionPage"));
 const CapabilityPassportPage = lazy(() => import("@/features/candidate/pages/CapabilityPassportPage"));
 
 
@@ -62,13 +69,9 @@ const AppRoutes = () => {
                     <Route path="dashboard" element={<AdminDashboard />} />
                     <Route path="employer-management" element={<EmployerManagement />} />
                     <Route path="candidate-management" element={<CandidateManagement />} />
-                    <Route path="candidate-management/:id" element={<CandidateDetailPage />} />
-                    <Route path="admin-management" element={<AdminManagement />} />
                     <Route path="content-moderation" element={<ContentModeration />} />
-                    <Route path="content-moderation/jobs/:id" element={<JobModerationDetailPage />} />
-                    <Route path="content-moderation/:id" element={<JobModerationDetailPage />} />
                     <Route path="generation-reviews" element={<GenerationReviews />} />
-                    <Route path="ai-oversight" element={<AiOversight />} />
+                    <Route path="support-messages" element={<SupportMessages />} />
                 </Route>
                 <Route path="/landing" element={<LandingPage />} />
                 <Route path="/auth/verify-email" element={<LegacyVerifyEmailRedirect />} />
@@ -84,7 +87,6 @@ const AppRoutes = () => {
                         <Route path="dashboard" element={<Navigate to="/employer/jobs" replace />} />
                         <Route path="jobs" element={<EmployerJobs />} />
                         <Route path="jobs/:jobId/submissions" element={<JobSubmissions />} />
-                        <Route path="candidates" element={<EmployerCandidates />} />
                         <Route path="profile" element={<ProfilePage />} />
                         <Route path="jobs/new" element={<JobPostingWizardLayout />}>
                             <Route index element={<Navigate to="details" replace />} />
@@ -109,9 +111,22 @@ const AppRoutes = () => {
                     <Route path="/job-board/submissions/:submissionId/result" element={<SubmissionResultPage />} />
                     <Route path="/candidate/submissions/:submissionId/result" element={<SubmissionResultPage />} />
                     <Route path="/candidate/applications" element={<MyApplications />} />
+                    <Route path="/candidate/applications/:applicationId" element={<ApplicationDetailPage />} />
+                    <Route path="/candidate/applications/:applicationId/submission" element={<ApplicationSubmissionPage />} />
                     <Route path="/candidate/passport" element={<CapabilityPassportPage />} />
                     <Route path="/candidate/profile" element={<ProfilePage />} />
                 </Route>
+
+                {/* Dev-only route — quick access without a real jobId */}
+                {import.meta.env.DEV && (
+                    <>
+                        <Route path="/dev/pre-simulation" element={<PreSimulation />} />
+                        <Route path="/dev/environment-check" element={<EnvironmentCheckPage />} />
+                        {/* /dev/simulation → resets stale state then loads the real route with mock job-1
+                            (Custody Operations / Finance — 3 tasks) */}
+                        <Route path="/dev/simulation" element={<DevSimulationStart />} />
+                    </>
+                )}
                 <Route path="/profile" element={<ProfilePage />} />
 
                 <Route path="/candidate">
@@ -123,7 +138,6 @@ const AppRoutes = () => {
                     <Route path="oauth/callback" element={<CandidateOAuthCallback />} />
                 </Route>
 
-                <Route path="/support" element={<SupportPage />} />
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </Suspense>

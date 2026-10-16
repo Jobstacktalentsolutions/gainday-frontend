@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import Skeleton from "@/components/ui/skeleton";
 import { formatShortDate } from "@/lib/formatDate";
@@ -11,32 +12,49 @@ interface ApplicationCardProps {
 
 const ApplicationCard = ({ application, onWithdraw }: ApplicationCardProps) => {
     const { label, badgeClass, canWithdraw } = APPLICATION_STATUS_META[application.status];
-    const statusLine = `${application.reference} · ${label}${application.statusDate ? ` ${formatShortDate(application.statusDate)}` : ""}`;
+    const statusLine = `${label}${application.decidedAt ? ` ${formatShortDate(application.decidedAt)}` : ""}`;
+    const companyLine = [application.companyName, `Applied ${formatShortDate(application.submittedAt)}`]
+        .filter(Boolean)
+        .join(" · ");
 
     return (
-        <article className="flex w-full flex-col gap-6 rounded-xl border border-white bg-white p-6 lg:flex-row lg:items-center lg:justify-between">
+        <article className="relative flex w-full flex-col gap-6 rounded-xl border border-white bg-white p-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex min-w-0 flex-col gap-2 lg:w-100">
-                <h2 className="text-2xl leading-8 text-neutral-900">{application.jobTitle}</h2>
-                <p className="text-base text-neutral-500">
-                    {application.companyName} · Applied {formatShortDate(application.appliedAt)}
-                </p>
+                {/* The title link's ::after stretches over the whole card, making all of it clickable
+                    without nesting the withdraw button inside an anchor. */}
+                <h2 className="text-2xl leading-8 text-neutral-900">
+                    <Link
+                        to={`/candidate/applications/${application.id}`}
+                        className="after:absolute after:inset-0 after:rounded-xl focus-visible:outline-2 focus-visible:outline-primary-500"
+                    >
+                        {application.jobTitle}
+                    </Link>
+                </h2>
+                <p className="text-base text-neutral-500">{companyLine}</p>
                 <p className="text-base text-neutral-700">{statusLine}</p>
             </div>
 
             {/* Below lg these three sit in one wrapping row; at lg the wrapper disappears and they
                 become direct children of the card so justify-between spaces them out. */}
             <div className="flex flex-wrap items-center justify-between gap-4 lg:contents">
-                <div className="flex w-17.5 flex-col items-center gap-3 text-neutral-900">
-                    {application.rating !== null ? (
+                {application.rating !== null ? (
+                    <Link
+                        to={`/candidate/submissions/${application.id}/result`}
+                        className="relative z-10 flex w-17.5 flex-col items-center gap-3 text-neutral-900 transition-colors hover:text-primary-600"
+                        title="View submission result"
+                    >
                         <p className="whitespace-nowrap">
                             <span className="text-2xl font-bold">{application.rating}</span>
                             <span className="text-lg">/100</span>
                         </p>
-                    ) : (
+                        <p className="text-sm text-primary-500 underline underline-offset-4 decoration-primary-300">RATING</p>
+                    </Link>
+                ) : (
+                    <div className="flex w-17.5 flex-col items-center gap-3 text-neutral-900">
                         <p className="text-2xl">—</p>
-                    )}
-                    <p className="text-sm text-primary-500">RATING</p>
-                </div>
+                        <p className="text-sm text-primary-500">RATING</p>
+                    </div>
+                )}
 
                 <span
                     className={cn(
@@ -51,7 +69,7 @@ const ApplicationCard = ({ application, onWithdraw }: ApplicationCardProps) => {
                     type="button"
                     disabled={!canWithdraw}
                     onClick={() => onWithdraw(application)}
-                    className="flex h-13 w-40 items-center justify-center rounded-xl border border-neutral-700 px-10 py-2 text-base text-neutral-700 transition-colors hover:bg-neutral-50 focus-visible:outline-2 focus-visible:outline-primary-500 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
+                    className="relative z-10 flex h-13 w-40 items-center justify-center rounded-xl border border-neutral-700 px-10 py-2 text-base text-neutral-700 transition-colors hover:bg-neutral-50 focus-visible:outline-2 focus-visible:outline-primary-500 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
                 >
                     {application.status === "WITHDRAWN" ? "Withdrawn" : "Withdraw"}
                 </button>

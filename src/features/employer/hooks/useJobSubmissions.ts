@@ -1,14 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { getMockJobSubmissions } from "../mocks/submission";
-import type { JobSubmissionsData } from "../types/submission";
+import { apiClient } from "@/lib/api/client";
+import type { SubmissionSummary } from "../types/submission";
 
-const MOCK_LATENCY_MS = 600;
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-// TODO: swap for the real employer job-submissions list endpoint once it exists.
-const fetchJobSubmissions = async (_jobId: string): Promise<JobSubmissionsData> => {
-    await wait(MOCK_LATENCY_MS);
-    return getMockJobSubmissions();
+// GET /submissions/job/:jobId - submitted, non-withdrawn applications for one of the employer's
+// jobs. useJobSubmissionsCount shares this endpoint and only needs the array length.
+const fetchJobSubmissions = async (jobId: string): Promise<SubmissionSummary[]> => {
+    const { data } = await apiClient.get<SubmissionSummary[]>(`/submissions/job/${jobId}`);
+    return data;
 };
 
 export const useJobSubmissions = (jobId: string | undefined) => {
