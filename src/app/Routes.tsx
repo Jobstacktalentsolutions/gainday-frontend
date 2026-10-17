@@ -53,6 +53,7 @@ const EnvironmentCheckPage = lazy(() => import("@/features/candidate/pages/Envir
 const TaskRunner = lazy(() => import("@/features/candidate/pages/TaskRunner"));
 const SubmissionResultPage = lazy(() => import("@/features/candidate/pages/SubmissionResultPage"));
 const CandidateRoute = lazy(() => import("@/features/candidate/components/CandidateRoute"));
+const EmployerRoute = lazy(() => import("@/features/employer/components/EmployerRoute"));
 const MyApplications = lazy(() => import("@/features/candidate/pages/MyApplications"));
 const ApplicationDetailPage = lazy(() => import("@/features/candidate/pages/ApplicationDetailPage"));
 const ApplicationSubmissionPage = lazy(() => import("@/features/candidate/pages/ApplicationSubmissionPage"));
@@ -76,29 +77,34 @@ const AppRoutes = () => {
                 <Route path="/landing" element={<LandingPage />} />
                 <Route path="/auth/verify-email" element={<LegacyVerifyEmailRedirect />} />
                 <Route path="/employer">
+                    {/* Public auth routes — reachable while signed out */}
                     <Route path="signup" element={<CreateAccount />} />
                     <Route path="signin" element={<SignInPage />} />
                     <Route path="forgot-password" element={<ForgotPassword />} />
                     <Route path="reset-password" element={<ResetPassword />} />
                     <Route path="verify-email" element={<VerifyEmail />} />
                     <Route path="oauth/callback" element={<OAuthCallback />} />
-                    <Route element={<EmployerLayout />} >
-                        <Route index element={<Navigate to="jobs" replace />} />
-                        <Route path="dashboard" element={<Navigate to="/employer/jobs" replace />} />
-                        <Route path="jobs" element={<EmployerJobs />} />
-                        <Route path="jobs/:jobId/submissions" element={<JobSubmissions />} />
-                        <Route path="profile" element={<ProfilePage />} />
-                        <Route path="jobs/new" element={<JobPostingWizardLayout />}>
-                            <Route index element={<Navigate to="details" replace />} />
-                            <Route path="details" element={<JobDetailsStep />} />
-                            <Route path="simulation-builder" element={<SimulationBuilder />} />
-                            <Route path="review" element={<ReviewPublish />} />
-                        </Route>
-                    </Route>
-                    {/* Standalone full-page route, no employer shell */}
-                    <Route path="jobs/:jobId/preview" element={<JobPreview />} />
-                    <Route path="jobs/:jobId/submissions/:submissionId" element={<SubmissionDetail />} />
 
+                    {/* All pages that require a signed-in employer */}
+                    <Route element={<EmployerRoute />}>
+                        <Route element={<EmployerLayout />}>
+                            <Route index element={<Navigate to="jobs" replace />} />
+                            <Route path="dashboard" element={<Navigate to="/employer/jobs" replace />} />
+                            <Route path="jobs" element={<EmployerJobs />} />
+                            <Route path="jobs/:jobId/submissions" element={<JobSubmissions />} />
+                            <Route path="profile" element={<ProfilePage />} />
+                            <Route path="jobs/new" element={<JobPostingWizardLayout />}>
+                                <Route index element={<Navigate to="details" replace />} />
+                                <Route path="details" element={<JobDetailsStep />} />
+                                <Route path="simulation-builder" element={<SimulationBuilder />} />
+                                <Route path="review" element={<ReviewPublish />} />
+                            </Route>
+                        </Route>
+
+                        {/* Standalone full-page routes, no employer shell, but still guarded */}
+                        <Route path="jobs/:jobId/preview" element={<JobPreview />} />
+                        <Route path="jobs/:jobId/submissions/:submissionId" element={<SubmissionDetail />} />
+                    </Route>
                 </Route>
 
                 {/* Every candidate page requires a signed-in candidate */}
