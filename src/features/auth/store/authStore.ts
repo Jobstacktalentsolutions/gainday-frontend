@@ -42,6 +42,11 @@ export const useAuthStore = create<AuthState>()(
       setAuth: (token, user) => set({ accessToken: token, user }),
       clearAuth: () => set({ accessToken: null, user: null }),
     }),
-    { name: 'gainday-auth' },
+    {
+      name: 'gainday-auth',
+      // Only persist the token — user profile is always re-fetched from the API
+      // on mount so a stale cached user object can never bypass the auth guard.
+      partialize: (state) => ({ accessToken: state.accessToken }),
+    },
   ),
 );
