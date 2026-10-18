@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
+import { getJobShareUrl } from "@/lib/shareLink";
 import type { Job, JobStatus } from "../types/job";
 import { fetchJobSubmissionsCount } from "./useJobSubmissionsCount";
 
@@ -23,7 +24,8 @@ const toJob = (job: BackendJob, submissionsCount: number): Job => ({
     employmentType: job.employmentType ?? "Not set",
     submissionsCount,
     postedAt: POSTED_STATUSES.includes(job.status) ? job.updatedAt : null,
-    shareUrl: `${window.location.origin}/jobs/${job.id}`,
+    // shareUrl: `${window.location.origin}/jobs/${job.id}`,
+    shareUrl: getJobShareUrl(job.id),
 });
 
 const fetchEmployerJobs = async (): Promise<Job[]> => {
