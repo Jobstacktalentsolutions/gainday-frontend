@@ -128,6 +128,7 @@ export default function JobDetailsPage() {
                                 size="lg"
                                 className="w-auto"
                                 endIcon={<Share2 className="size-4" />}
+                                onClick={handleShareClick}
                             >
                                 Share
                             </ActionButton>
