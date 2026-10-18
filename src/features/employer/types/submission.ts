@@ -27,6 +27,7 @@ export interface SubmissionSummary {
     /** "GD-" plus the first six characters of the submission id. */
     displayId: string;
     status: SubmissionStatus;
+    isSelected: boolean;
     /** Null until the employer has unlocked this candidate. */
     candidateName: string | null;
     /** Gender and pronouns are always present; the brief only once unlocked. Null once the
@@ -47,6 +48,8 @@ export interface SubmissionSummary {
      *  the last entry is `capabilityScore`. */
     capabilityHistory: number[];
     integrityStatus: IntegrityStatus;
+    /** Total number of recorded anti-cheat flags/events during the simulation. */
+    integrityIssueCount: number;
 }
 
 export interface TaskResult {

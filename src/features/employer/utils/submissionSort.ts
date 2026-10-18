@@ -59,7 +59,7 @@ const sortValue = (submission: SubmissionSummary, key: SubmissionSortKey): numbe
             // Not graded yet sorts as the lowest score.
             return submission.capabilityScore === null ? -1 : submission.capabilityScore;
         case "integrity":
-            return INTEGRITY_RANK[submission.integrityStatus];
+            return INTEGRITY_RANK[submission.integrityStatus] * 1000 + (submission.integrityIssueCount ?? 0);
     }
 };
 

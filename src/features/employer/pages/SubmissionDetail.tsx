@@ -14,6 +14,7 @@ import UnlockModal from "../components/UnlockModal";
 import { useEmployerSubmission } from "../hooks/useEmployerSubmission";
 import { useSubmissionPassport } from "../hooks/useSubmissionPassport";
 import { useUnlockCandidates } from "../hooks/useUnlockCandidates";
+import { useSelectCandidate } from "../hooks/useSelectCandidate";
 import type { PaymentRequiredBody } from "../types/payments";
 import type { SubmissionStatus } from "../types/submission";
 import { getCandidateLabel } from "../utils/submissionLabels";
@@ -39,6 +40,7 @@ const SubmissionDetail = () => {
     const passportQuery = useSubmissionPassport(submissionId, isPassportOpen);
 
     const unlockCandidates = useUnlockCandidates();
+    const selectCandidate = useSelectCandidate();
     const [unlockModal, setUnlockModal] = useState<{ open: boolean; recommendedPackId?: string }>({
         open: false,
     });
@@ -60,6 +62,27 @@ const SubmissionDetail = () => {
                 toast.error("Couldn't unlock this candidate. Please try again.");
             },
         });
+    };
+
+    const handleToggleSelect = () => {
+        if (!submission) return;
+        const currentlySelected = submission.isSelected || submission.status === "SELECTED";
+        selectCandidate.mutate(
+            {
+                submissionId: submission.id,
+                selected: !currentlySelected,
+                jobId,
+            },
+            {
+                onSuccess: (data) => {
+                    toast.success(data.isSelected ? "Candidate selected" : "Candidate unselected");
+                    refetch();
+                },
+                onError: () => {
+                    toast.error("Failed to update candidate selection status.");
+                },
+            },
+        );
     };
 
     if (isLoading) {
@@ -115,7 +138,12 @@ const SubmissionDetail = () => {
 
     return (
         <div className={PAGE_SHELL}>
-            <SubmissionDetailHeader jobId={jobId} submission={submission} />
+            <SubmissionDetailHeader
+                jobId={jobId}
+                submission={submission}
+                onToggleSelect={handleToggleSelect}
+                isUpdatingSelect={selectCandidate.isPending}
+            />
             <div className={`${CONTENT_WIDTH} flex flex-col gap-10 lg:flex-row`}>
                 <section className="flex min-w-0 flex-1 flex-col gap-6" aria-labelledby="task-breakdown-heading">
                     <h2 id="task-breakdown-heading" className="text-base text-primary-950">
@@ -143,6 +171,7 @@ const SubmissionDetail = () => {
                         isUnlocked={submission.isUnlocked}
                         contact={submission.contact}
                         onUnlock={handleUnlockContact}
+                        isSelected={submission.isSelected || submission.status === "SELECTED"}
                     />
                     {submission.candidateProfile && <CandidateProfileCard profile={submission.candidateProfile} />}
                     <CapabilityHistoryCard
@@ -157,12 +186,15 @@ const SubmissionDetail = () => {
                 open={isPassportOpen}
                 onOpenChange={setIsPassportOpen}
                 candidateName={getCandidateLabel(submission)}
+                displayId={submission.displayId}
                 candidateProfile={submission.candidateProfile}
                 passport={passportQuery.data}
                 isLoading={passportQuery.isPending}
                 isError={passportQuery.isError}
                 onRetry={() => passportQuery.refetch()}
                 isUnlocked={submission.isUnlocked}
+                isSelected={submission.isSelected || submission.status === "SELECTED"}
+                contact={submission.contact}
                 onUnlockContact={handleUnlockContact}
             />
 
