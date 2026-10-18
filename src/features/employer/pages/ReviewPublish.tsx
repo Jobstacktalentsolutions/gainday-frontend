@@ -10,7 +10,9 @@ import JobDetailsEditForm from "../components/JobDetailsEditForm";
 import PublishSuccess from "../components/PublishSuccess";
 import TaskSummaryCard from "../components/TaskSummaryCard";
 import { usePublishJob } from "../hooks/usePublishJob";
+import { useJobSimulation } from "../hooks/useJobSimulation";
 import { useJobDraftStore } from "../stores/useJobDraftStore";
+import { DEFAULT_SIMULATION_TIME_LIMIT_MINUTES } from "../constants/jobPostingOptions";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -27,6 +29,9 @@ const ReviewPublish = () => {
     const publishJob = usePublishJob();
     const clearDraft = useJobDraftStore((state) => state.clearDraft);
     const values = watch();
+    const { data: jobSimulation } = useJobSimulation(jobId);
+    const timeLimitMinutes =
+        jobSimulation?.simulation?.timeLimitMinutes ?? DEFAULT_SIMULATION_TIME_LIMIT_MINUTES;
 
     const [editingJobDetails, setEditingJobDetails] = useState(false);
     const [agreed, setAgreed] = useState(false);
@@ -154,7 +159,7 @@ const ReviewPublish = () => {
                         <p className="text-sm text-neutral-500">Tasks</p>
                     </div>
                     <div className="flex flex-col gap-1 rounded-2xl border border-neutral-200 p-5">
-                        <p className="text-3xl font-bold text-neutral-950">20 minutes</p>
+                        <p className="text-3xl font-bold text-neutral-950">{timeLimitMinutes} minutes</p>
                         <p className="text-sm text-neutral-500">Estimated completion time</p>
                     </div>
                 </div>

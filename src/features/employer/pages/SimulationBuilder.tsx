@@ -15,6 +15,7 @@ import { useJobSimulation } from "../hooks/useJobSimulation";
 import { useRegenerateTask } from "../hooks/useRegenerateTask";
 import { useRegenerateAllTasks } from "../hooks/useRegenerateAllTasks";
 import { useUpdateSimulationTasks } from "../hooks/useUpdateSimulationTasks";
+import { DEFAULT_SIMULATION_TIME_LIMIT_MINUTES } from "../constants/jobPostingOptions";
 import type { SimulationTask } from "@/features/simulation-tasks/types";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -239,6 +240,8 @@ const SimulationBuilder = () => {
     };
 
     const isAnyTaskBusy = Boolean(regeneratingTaskId) || isAddingTask || isRegeneratingAll;
+    const timeLimitMinutes =
+        jobSimulation?.simulation?.timeLimitMinutes ?? DEFAULT_SIMULATION_TIME_LIMIT_MINUTES;
 
     return (
         <div className="flex flex-col gap-12">
@@ -247,7 +250,7 @@ const SimulationBuilder = () => {
                 <h1 className="text-3xl font-bold text-black lg:text-4xl">Challenge generation</h1>
                 <p className="max-w-lg text-base text-neutral-500">
                     A realistic work simulation assessment built from the capabilities you approved.
-                    Estimated completion time: 20 minutes.
+                    Estimated completion time: {timeLimitMinutes} minutes.
                 </p>
             </div>
 
@@ -257,7 +260,7 @@ const SimulationBuilder = () => {
                     <p className="text-sm text-primary-500">CHALLENGE GENERATION</p>
                     <p className="text-base text-neutral-950">
                         A realistic work simulation assessment built from the capabilities you approved.
-                        Estimated completion time: 20 minutes.
+                        Estimated completion time: {timeLimitMinutes} minutes.
                     </p>
                     <button
                         type="button"
