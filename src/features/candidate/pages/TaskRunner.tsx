@@ -118,7 +118,26 @@ export default function TaskRunner() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useFullscreenGuard({ onExit: () => recordViolation("fullscreen-exit", currentTaskIdRef.current) });
+    useFullscreenGuard({
+        enabled: !runStore.isComplete,
+        onExit: () => recordViolation("fullscreen-exit", currentTaskIdRef.current),
+    });
+
+    // Automatically exit fullscreen when simulation is complete or when unmounting
+    useEffect(() => {
+        if (runStore.isComplete && document.fullscreenElement) {
+            document.exitFullscreen().catch(() => {});
+        }
+    }, [runStore.isComplete]);
+
+    useEffect(() => {
+        return () => {
+            if (document.fullscreenElement) {
+                document.exitFullscreen().catch(() => {});
+            }
+        };
+    }, []);
+
     const idle = useIdleDetection({
         thresholdMs: IDLE_THRESHOLD_MS,
         onIdleSpell: (durationMs) => recordIdleSpell(durationMs, currentTaskIdRef.current),
@@ -152,6 +171,10 @@ export default function TaskRunner() {
         if (hasFinalizedRef.current || !simulation) return;
         hasFinalizedRef.current = true;
         runStore.markComplete(currentTaskId);
+
+        if (document.fullscreenElement) {
+            document.exitFullscreen().catch(() => {});
+        }
 
         // Captures a still-open idle spell that never got closed out by an activity event
         // (the candidate went idle and the run ended before they came back) — see

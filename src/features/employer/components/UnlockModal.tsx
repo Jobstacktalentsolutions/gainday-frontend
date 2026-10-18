@@ -1,23 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
-import { Loader2, XCircle } from "lucide-react";
+import { Loader2, XCircle, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { cn } from "@/lib/utils";
 import { getStripe } from "@/lib/stripe";
+import successAnimation from "@/assets/successAnimation.gif";
 import { useCreditPacks } from "../hooks/useCreditPacks";
 import { usePurchasePack } from "../hooks/usePurchasePack";
 import { usePurchaseStatus } from "../hooks/usePurchaseStatus";
 import { useUnlockCandidates } from "../hooks/useUnlockCandidates";
-import type { UnlockResult } from "../types/payments";
+import type { CreditPack, UnlockResult } from "../types/payments";
 
 // Stops polling and shows a "still confirming" message if the webhook never lands — e.g. local
 // dev without `stripe listen` running. The purchase itself is unaffected; the employer can just
 // retry the unlock later for free.
 const CONFIRM_TIMEOUT_MS = 30_000;
 
-type Step = "select" | "checkout" | "confirming" | "error";
+type Step = "select" | "checkout" | "confirming" | "success" | "error";
 
 interface UnlockModalProps {
     open: boolean;
@@ -37,6 +38,8 @@ const UnlockModal = ({ open, onOpenChange, submissionIds, recommendedPackId, onU
     const [selectedPackId, setSelectedPackId] = useState<string | null>(null);
     const [purchaseId, setPurchaseId] = useState<string | null>(null);
     const [clientSecret, setClientSecret] = useState<string | null>(null);
+    const [purchasedPack, setPurchasedPack] = useState<CreditPack | null>(null);
+    const [unlockResult, setUnlockResult] = useState<UnlockResult | null>(null);
     const [errorMessage, setErrorMessage] = useState("");
     const hasRetriedUnlock = useRef(false);
     const confirmTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -52,6 +55,8 @@ const UnlockModal = ({ open, onOpenChange, submissionIds, recommendedPackId, onU
             setSelectedPackId(recommendedPackId ?? null);
             setPurchaseId(null);
             setClientSecret(null);
+            setPurchasedPack(null);
+            setUnlockResult(null);
             setErrorMessage("");
             hasRetriedUnlock.current = false;
         }
@@ -93,9 +98,9 @@ const UnlockModal = ({ open, onOpenChange, submissionIds, recommendedPackId, onU
             hasRetriedUnlock.current = true;
             unlockCandidates.mutate(submissionIds, {
                 onSuccess: (result) => {
-                    toast.success("Credits purchased — contact unlocked");
                     onUnlocked(result);
-                    onOpenChange(false);
+                    setUnlockResult(result);
+                    setStep("success");
                 },
                 onError: () => {
                     setStep("error");
@@ -114,10 +119,12 @@ const UnlockModal = ({ open, onOpenChange, submissionIds, recommendedPackId, onU
 
     const handlePayAndUnlock = () => {
         if (!effectivePackId) return;
+        const pack = packsQuery.data?.find((p) => p.id === effectivePackId) ?? null;
         purchasePack.mutate(effectivePackId, {
             onSuccess: ({ purchaseId: newPurchaseId, clientSecret: newClientSecret }) => {
                 setPurchaseId(newPurchaseId);
                 setClientSecret(newClientSecret);
+                setPurchasedPack(pack);
                 setStep("checkout");
             },
             onError: () => {
@@ -232,6 +239,52 @@ const UnlockModal = ({ open, onOpenChange, submissionIds, recommendedPackId, onU
                         <Loader2 className="size-8 animate-spin text-primary-500" aria-hidden="true" />
                         <DialogTitle>Confirming payment...</DialogTitle>
                         <DialogDescription>This usually takes a few seconds.</DialogDescription>
+                    </div>
+                )}
+
+                {step === "success" && unlockResult && (
+                    <div className="flex flex-col items-center gap-4 py-2 text-center">
+                        <img src={successAnimation} alt="" className="h-28 w-28" />
+                        <div className="flex flex-col gap-1">
+                            <DialogTitle className="text-xl">Payment successful!</DialogTitle>
+                            <DialogDescription>
+                                {purchasedPack
+                                    ? `${purchasedPack.name} pack purchased — ${purchasedPack.credits} credit${purchasedPack.credits === 1 ? "" : "s"} added to your account.`
+                                    : "Your credits have been added to your account."}
+                            </DialogDescription>
+                        </div>
+
+                        <div className="flex w-full flex-col gap-3 rounded-xl bg-neutral-50 p-4 text-left text-sm">
+                            {purchasedPack && (
+                                <div className="flex items-center justify-between">
+                                    <span className="text-neutral-500">Amount charged</span>
+                                    <span className="font-medium text-neutral-950">
+                                        {formatPrice(purchasedPack.pricePence)}
+                                    </span>
+                                </div>
+                            )}
+                            {unlockResult.creditsUsed > 0 && (
+                                <div className="flex items-center justify-between">
+                                    <span className="text-neutral-500">Contact{unlockResult.creditsUsed === 1 ? "" : "s"} unlocked</span>
+                                    <span className="font-medium text-neutral-950">{unlockResult.creditsUsed}</span>
+                                </div>
+                            )}
+                            <div className="flex items-center justify-between">
+                                <span className="text-neutral-500">New balance</span>
+                                <span className="font-medium text-neutral-950">
+                                    {unlockResult.balance} credit{unlockResult.balance === 1 ? "" : "s"}
+                                </span>
+                            </div>
+                        </div>
+
+                        <p className="flex items-center gap-1.5 text-xs text-neutral-400">
+                            <Sparkles className="size-3.5" aria-hidden="true" />
+                            Credits never expire — use them whenever you're ready.
+                        </p>
+
+                        <ActionButton size="lg" onClick={() => onOpenChange(false)}>
+                            Done
+                        </ActionButton>
                     </div>
                 )}
 

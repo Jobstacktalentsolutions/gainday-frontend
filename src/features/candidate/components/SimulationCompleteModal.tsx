@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ActionButton } from "@/components/ui/ActionButton";
 import spinner from "@/assets/Spinner.svg";
@@ -13,6 +14,19 @@ interface SimulationCompleteModalProps {
 
 export function SimulationCompleteModal({ timeLimitMinutes, submitStatus, onRetry }: SimulationCompleteModalProps) {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (document.fullscreenElement) {
+            document.exitFullscreen().catch(() => {});
+        }
+    }, []);
+
+    const handleReturn = () => {
+        if (document.fullscreenElement) {
+            document.exitFullscreen().catch(() => {});
+        }
+        navigate("/job-board");
+    };
 
     return (
         <div className="fixed inset-0 z-30 flex items-center justify-center bg-[rgba(178,201,255,0.1)] backdrop-blur-[15px]">
@@ -43,7 +57,7 @@ export function SimulationCompleteModal({ timeLimitMinutes, submitStatus, onRetr
                         variant="primary"
                         size="lg"
                         disabled={submitStatus === "pending"}
-                        onClick={() => navigate("/job-board")}
+                        onClick={handleReturn}
                     >
                         {submitStatus === "pending" && (
                             <img src={spinner} alt="" className="h-4 w-4 animate-spin" />

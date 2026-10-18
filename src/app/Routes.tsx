@@ -41,6 +41,7 @@ const JobPreview = lazy(() => import("@/features/employer/pages/JobPreview"));
 const JobSubmissions = lazy(() => import("@/features/employer/pages/JobSubmissions"));
 const EmployerCandidates = lazy(() => import("@/features/employer/pages/EmployerCandidate"));
 const SubmissionDetail = lazy(() => import("@/features/employer/pages/SubmissionDetail"));
+const BillingPage = lazy(() => import("@/features/employer/pages/BillingPage"));
 const JobBoardPage = lazy(() => import("@/features/candidate/pages/JobBoardPage"));
 const JobDetailsPage = lazy(() => import("@/features/candidate/pages/candidateJobDetails"));
 const CandidateSignUp = lazy(() => import("@/features/candidate/pages/CandidateSignUp"));
@@ -99,6 +100,7 @@ const AppRoutes = () => {
                             <Route path="candidates" element={<EmployerCandidates />} />
                             <Route path="jobs/:jobId/submissions" element={<JobSubmissions />} />
                             <Route path="profile" element={<ProfilePage />} />
+                            <Route path="billing" element={<BillingPage />} />
                             <Route path="jobs/new" element={<JobPostingWizardLayout />}>
                                 <Route index element={<Navigate to="details" replace />} />
                                 <Route path="details" element={<JobDetailsStep />} />

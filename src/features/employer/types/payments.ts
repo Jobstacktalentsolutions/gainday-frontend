@@ -12,6 +12,9 @@ export interface CreditPack {
 
 export interface CreditBalance {
     balance: number;
+    /** ISO 8601, or null if the employer has never bought a pack (a signup bonus alone doesn't
+     *  count). */
+    lastRechargedAt: string | null;
 }
 
 export interface UnlockResult {

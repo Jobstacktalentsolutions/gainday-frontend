@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Menu } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import EmployerNavDrawer from "./EmployerNavDrawer";
+import CreditIndicator from "./CreditIndicator";
 import BrandLogo from "@/assets/gainday icon.svg";
 import { UserAvatarMenu } from "@/components/ui/UserAvatarMenu";
 import { cn } from "@/lib/utils";
@@ -38,8 +39,9 @@ const EmployerTopNav = () => {
                     ))}
                 </nav>
 
-                {/* Right: bell + avatar dropdown + hamburger (mobile) */}
+                {/* Right: credit balance + avatar dropdown + hamburger (mobile) */}
                 <div className="flex items-center gap-3">
+                    <CreditIndicator />
                     <UserAvatarMenu />
 
                     {/* Hamburger: mobile only */}
