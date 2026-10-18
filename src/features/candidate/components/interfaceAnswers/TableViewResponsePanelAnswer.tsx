@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { TableViewResponsePanelPayload } from "@/features/simulation-tasks/types";
 import BucketSelect from "../objectiveAnswers/BucketSelect";
 import ClassificationAnswer from "../objectiveAnswers/ClassificationAnswer";
+import ReadOnlyAnswerText from "./ReadOnlyAnswerText";
 import type { ClassificationAnswerState } from "./types";
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
     onChange: (value: string) => void;
     objectiveSlot?: ReactNode;
     classification?: ClassificationAnswerState;
+    readOnly?: boolean;
 }
 
 const MAX_CHARS = 1000;
@@ -18,7 +20,14 @@ const MAX_CHARS = 1000;
 // prioritise), so it comes first. A classification is answered on the table itself — one bucket
 // picker per row, matched to its item by the row's first cell — rather than in a separate list
 // of bare names. Any other structured answer sits between the table and the written response.
-const TableViewResponsePanelAnswer = ({ payload, value, onChange, objectiveSlot, classification }: Props) => {
+const TableViewResponsePanelAnswer = ({
+    payload,
+    value,
+    onChange,
+    objectiveSlot,
+    classification,
+    readOnly,
+}: Props) => {
     const { columns, rows } = payload.table;
     const rowLabels = rows.map((row) => row[0]?.trim() ?? "");
 
@@ -43,7 +52,9 @@ const TableViewResponsePanelAnswer = ({ payload, value, onChange, objectiveSlot,
                                 </th>
                             ))}
                             {hasInlineBuckets && (
-                                <th className="whitespace-nowrap px-3.5 py-2.5 font-medium text-neutral-700 align-bottom w-36">Your bucket</th>
+                                <th className="whitespace-nowrap px-3.5 py-2.5 font-medium text-neutral-700 align-bottom w-36">
+                                    {readOnly ? "Candidate's bucket" : "Your bucket"}
+                                </th>
                             )}
                         </tr>
                     </thead>
@@ -64,6 +75,7 @@ const TableViewResponsePanelAnswer = ({ payload, value, onChange, objectiveSlot,
                                                     value={mapping[item]}
                                                     buckets={classification.component.buckets}
                                                     ariaLabel={`Bucket for ${item}`}
+                                                    readOnly={readOnly}
                                                     onChange={(bucket) =>
                                                         classification.onChange({ ...mapping, [item]: bucket })
                                                     }
@@ -83,16 +95,21 @@ const TableViewResponsePanelAnswer = ({ payload, value, onChange, objectiveSlot,
                     component={{ ...classification.component, items: unmatchedItems }}
                     response={classification.response}
                     onChange={classification.onChange}
+                    readOnly={readOnly}
                 />
             )}
             {!hasInlineBuckets && objectiveSlot}
 
-            <textarea
-                value={value}
-                onChange={(event) => onChange(event.target.value.slice(0, MAX_CHARS))}
-                placeholder={payload.placeholder ?? "Type your response here..."}
-                className="h-38.25 w-full resize-none rounded-lg border border-neutral-200 px-3.5 py-2.5 text-[16px] text-neutral-700 shadow-[0px_1px_1px_rgba(10,13,18,0.05)] outline-none placeholder:text-neutral-400 focus:border-primary-500"
-            />
+            {readOnly ? (
+                <ReadOnlyAnswerText value={value} />
+            ) : (
+                <textarea
+                    value={value}
+                    onChange={(event) => onChange(event.target.value.slice(0, MAX_CHARS))}
+                    placeholder={payload.placeholder ?? "Type your response here..."}
+                    className="h-38.25 w-full resize-none rounded-lg border border-neutral-200 px-3.5 py-2.5 text-[16px] text-neutral-700 shadow-[0px_1px_1px_rgba(10,13,18,0.05)] outline-none placeholder:text-neutral-400 focus:border-primary-500"
+                />
+            )}
         </div>
     );
 };

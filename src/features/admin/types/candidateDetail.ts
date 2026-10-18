@@ -38,7 +38,13 @@ export interface CandidateSubmission {
   taskScores: TaskGradingResult[] | null;
   /** The candidate's raw answers. Only some endpoints send them; the modal skips the section
    *  when absent. */
-  answers?: Array<{ taskId: string; responseBody: string; timeSpentSeconds: number }>;
+  answers?: Array<{
+    taskId: string;
+    responseBody: string;
+    objectiveResponse: unknown;
+    textResponse: string;
+    timeSpentSeconds: number;
+  }>;
   timeTakenSeconds: number | null;
   isAntiCheatFlagged: boolean;
   antiCheatFlags: AntiCheatEvent[];

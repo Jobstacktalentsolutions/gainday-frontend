@@ -1,3 +1,6 @@
+import type { InterfaceType } from "@/features/simulation-tasks/types";
+import type { CandidateObjectiveComponent } from "@/features/candidate/types/simulation";
+
 export type JobStatus = "live" | "draft" | "closed";
 
 export interface SalaryRange {
@@ -40,8 +43,10 @@ export interface SimulationTask {
   scenarioDescription: string;
   questionPrompt: string;
   businessProblemDerived?: boolean;
-  interfaceType?: string;
-  interfacePayload?: Record<string, unknown>;
+  interfaceType: InterfaceType;
+  interfacePayload: Record<string, unknown>;
+  /** Tagged with its component type and stripped of answer keys by the backend. */
+  objectiveComponent: CandidateObjectiveComponent | null;
 }
 
 export interface AdminJobSubmission {
@@ -70,6 +75,8 @@ export interface AdminJobSubmission {
   answers: Array<{
     taskId: string;
     responseBody: string;
+    objectiveResponse: unknown;
+    textResponse: string;
     timeSpentSeconds: number;
   }>;
   completedAt: string | null;

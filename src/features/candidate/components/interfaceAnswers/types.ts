@@ -19,4 +19,7 @@ export interface InterfaceAnswerProps {
     objectiveSlot?: ReactNode;
     /** Present when the structured answer is a classification. */
     classification?: ClassificationAnswerState;
+    /** Show a submitted answer instead of collecting one: same layout, no inputs. Used by the
+     *  employer and admin review pages. */
+    readOnly?: boolean;
 }

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Maximize, MonitorCheck, Clock, ChevronLeft } from "lucide-react";
 import CandidateHeader from "../components/CandidateHeader";
+import { CompleteProfileDialog } from "../components/CompleteProfileDialog";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useJobDetails } from "../hooks/useJobDetails";
@@ -35,6 +37,7 @@ export default function PreSimulation() {
     const { job, isLoading: isJobLoading } = useJobDetails(jobId);
     const [consented, setConsented] = useState(false);
     const { requestFullscreen } = useFullscreenCheck();
+    const { user } = useCurrentUser();
 
     const { data: simulation, isLoading: isSimulationLoading } = useJobSimulation(job);
 
@@ -188,6 +191,13 @@ export default function PreSimulation() {
                     </div>
                 </div>
             </main>
+
+            {/* Reached by direct link without a complete profile — applying needs pronouns. */}
+            <CompleteProfileDialog
+                open={user?.isProfileComplete === false}
+                onOpenChange={() => navigate(`/job-board/${job.id}`)}
+                onCompleteProfile={() => navigate("/candidate/profile")}
+            />
         </div>
     );
 }

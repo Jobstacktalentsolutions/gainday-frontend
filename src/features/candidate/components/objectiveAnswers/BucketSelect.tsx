@@ -6,11 +6,16 @@ interface Props {
     onChange: (bucket: string) => void;
     ariaLabel: string;
     className?: string;
+    /** Shows the chosen bucket as text instead of a picker (review pages). */
+    readOnly?: boolean;
 }
 
 // The bucket picker shared by the standalone classification list and by table rows that take
 // the choice inline, so both look and behave the same.
-const BucketSelect = ({ value, buckets, onChange, ariaLabel, className }: Props) => (
+const BucketSelect = ({ value, buckets, onChange, ariaLabel, className, readOnly }: Props) =>
+    readOnly ? (
+        <span className="text-sm font-medium text-neutral-900">{value ?? "—"}</span>
+    ) : (
     <select
         aria-label={ariaLabel}
         value={value ?? ""}
@@ -29,6 +34,6 @@ const BucketSelect = ({ value, buckets, onChange, ariaLabel, className }: Props)
             </option>
         ))}
     </select>
-);
+    );
 
 export default BucketSelect;

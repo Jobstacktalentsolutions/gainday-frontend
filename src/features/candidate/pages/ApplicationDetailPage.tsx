@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
 import { formatShortDate } from "@/lib/formatDate";
 import Skeleton from "@/components/ui/skeleton";
@@ -141,7 +143,9 @@ const ApplicationDetailContent = ({ application }: { application: ApplicationDet
                             {job.description && (
                                 <div className="flex flex-col gap-2">
                                     <p className="text-sm text-neutral-500">Description</p>
-                                    <p className="whitespace-pre-line text-base text-neutral-700">{job.description}</p>
+                                    <div className="prose prose-sm max-w-none text-base text-neutral-700 prose-headings:font-semibold prose-headings:text-neutral-900 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-neutral-900">
+                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{job.description}</ReactMarkdown>
+                                    </div>
                                 </div>
                             )}
                         </section>

@@ -9,10 +9,16 @@ interface Props {
      *  until the candidate reorders anything. */
     response: number[] | null;
     onChange: (response: number[]) => void;
+    /** Show the submitted ranking without the reorder controls (review pages). */
+    readOnly?: boolean;
 }
 
-const PriorityRankingAnswer = ({ component, response, onChange }: Props) => {
+const PriorityRankingAnswer = ({ component, response, onChange, readOnly }: Props) => {
     const order = response ?? component.items.map((_, index) => index);
+
+    if (readOnly && response === null) {
+        return <p className="text-sm text-neutral-500">No ranking was submitted.</p>;
+    }
 
     function move(position: number, direction: -1 | 1) {
         const target = position + direction;
@@ -24,7 +30,7 @@ const PriorityRankingAnswer = ({ component, response, onChange }: Props) => {
 
     return (
         <div className="flex w-full flex-col gap-3">
-            <p className="text-[14px] text-neutral-600">Rank from highest to lowest priority</p>
+            {!readOnly && <p className="text-[14px] text-neutral-600">Rank from highest to lowest priority</p>}
             {order.map((itemIndex, position) => {
                 const item = component.items[itemIndex];
                 return (
@@ -42,6 +48,7 @@ const PriorityRankingAnswer = ({ component, response, onChange }: Props) => {
                             <span className="text-[18px] text-primary-950">{item.label}</span>
                             <span className="text-[14px] text-neutral-500">{item.description}</span>
                         </div>
+                        {!readOnly && (
                         <div className="flex shrink-0 flex-col gap-1">
                             <button
                                 type="button"
@@ -62,6 +69,7 @@ const PriorityRankingAnswer = ({ component, response, onChange }: Props) => {
                                 <ChevronDown className="size-5" />
                             </button>
                         </div>
+                        )}
                     </motion.div>
                 );
             })}

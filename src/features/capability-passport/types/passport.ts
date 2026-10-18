@@ -1,6 +1,6 @@
-// TODO: align with the real passport endpoints once they exist. These shapes are the contract
-// the mock data (mocks/passport.ts) is written against — anything added here has to be added
-// to the backend response too.
+// Mirrors gainday-backend/src/modules/capability-passport/capability-passport.types.ts exactly —
+// GET /capability-passport/me and GET /submissions/:id/passport return these shapes directly, no
+// mapping layer on either side.
 
 // Mirrors the four keys of the backend's CategoryScores (see CURRENT_SCHEMA.md).
 export type CategoryKey =

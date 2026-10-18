@@ -2,6 +2,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import Skeleton from "@/components/ui/skeleton";
 import ScoreBar from "@/components/ui/ScoreBar";
+import { SubmittedAnswer } from "@/features/candidate/components/SubmittedAnswer";
 import type { TaskResult } from "../types/submission";
 
 const TaskResultCard = ({ task }: { task: TaskResult }) => {
@@ -27,18 +28,11 @@ const TaskResultCard = ({ task }: { task: TaskResult }) => {
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown>
             </div>
 
-            <div className="flex flex-col gap-1 bg-neutral-50 p-3 text-base">
-                <p className="text-neutral-500">CANDIDATE'S ANSWER</p>
-                {task.answer !== null ? (
-                    <p className="whitespace-pre-wrap text-neutral-700">{task.answer}</p>
-                ) : (
-                    <p className="text-neutral-500">No answer was submitted for this task.</p>
-                )}
-            </div>
+            <SubmittedAnswer task={task} answer={task.answer} />
 
             {evidence !== null && (
                 <div className="flex flex-col gap-1 bg-neutral-50 p-3 text-base">
-                    <p className="text-neutral-500">EVIDENCE FROM ANSWER</p>
+                    <p className="text-neutral-500">Reviewer Notes</p>
                     <p className="text-neutral-700">{evidence}</p>
                 </div>
             )}

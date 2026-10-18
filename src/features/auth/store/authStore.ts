@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import type { Gender, Pronouns } from '../utils/profileOptions';
 
 interface AuthUser {
   id: string;
@@ -10,6 +11,11 @@ interface AuthUser {
   fullName?: string;
   companyName?: string;
   phoneNumber?: string;
+  // Candidate-only. `isProfileComplete` is false until pronouns have been set.
+  gender?: Gender | null;
+  pronouns?: Pronouns | null;
+  brief?: string | null;
+  isProfileComplete?: boolean;
   mustChangePassword?: boolean;
   adminRole?: 'SUPER_ADMIN' | 'MANAGER' | 'MODERATOR';
   isSuperAdmin?: boolean;

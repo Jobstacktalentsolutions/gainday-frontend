@@ -1,12 +1,14 @@
 import RichTextComposerView from "./RichTextComposerView";
 import TextAreaView from "./TextAreaView";
 import TableViewResponsePanelView from "./TableViewResponsePanelView";
+import CsvDataPanelView from "./CsvDataPanelView";
 import {
     InterfaceType,
     type InterfacePayload,
     type RichTextComposerPayload,
     type TextAreaPayload,
     type TableViewResponsePanelPayload,
+    type CsvDataPanelPayload,
 } from "../types";
 
 interface InterfaceRendererProps {
@@ -40,6 +42,13 @@ const INTERFACE_RENDERERS: Record<
             payload={payload as unknown as TableViewResponsePanelPayload}
             mode={mode}
             onChange={onChange as unknown as (p: TableViewResponsePanelPayload) => void}
+        />
+    ),
+    [InterfaceType.CSV_DATA_PANEL]: ({ payload, mode, onChange }) => (
+        <CsvDataPanelView
+            payload={payload as unknown as CsvDataPanelPayload}
+            mode={mode}
+            onChange={onChange as unknown as (p: CsvDataPanelPayload) => void}
         />
     ),
 };

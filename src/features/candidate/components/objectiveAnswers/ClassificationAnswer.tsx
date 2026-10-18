@@ -5,9 +5,10 @@ interface Props {
     component: ClassificationCandidateComponent;
     response: Record<string, string> | null;
     onChange: (response: Record<string, string>) => void;
+    readOnly?: boolean;
 }
 
-const ClassificationAnswer = ({ component, response, onChange }: Props) => {
+const ClassificationAnswer = ({ component, response, onChange, readOnly }: Props) => {
     const mapping = response ?? {};
 
     return (
@@ -22,6 +23,7 @@ const ClassificationAnswer = ({ component, response, onChange }: Props) => {
                         value={mapping[item]}
                         buckets={component.buckets}
                         ariaLabel={`Bucket for ${item}`}
+                        readOnly={readOnly}
                         onChange={(bucket) => onChange({ ...mapping, [item]: bucket })}
                     />
                 </div>

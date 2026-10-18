@@ -1,5 +1,6 @@
 import CandidateHeader from "../components/CandidateHeader";
 import PassportEmptyState from "../components/PassportEmptyState";
+import CandidateProfileCard from "@/features/capability-passport/components/CandidateProfileCard";
 import CapabilityPassportView from "@/features/capability-passport/components/CapabilityPassportView";
 import CapabilityPassportSkeleton from "@/features/capability-passport/components/CapabilityPassportSkeleton";
 import { useCandidatePassport } from "@/features/capability-passport/hooks/useCandidatePassport";
@@ -26,6 +27,8 @@ const CapabilityPassportPage = () => {
                             Here is your Capability Passport and everything you have applied to so far.
                         </p>
                     </div>
+
+                    {user && <CandidateProfileCard profile={user} />}
 
                     {isLoading && <CapabilityPassportSkeleton variant="candidate" />}
 

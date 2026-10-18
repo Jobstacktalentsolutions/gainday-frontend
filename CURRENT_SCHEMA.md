@@ -128,8 +128,7 @@ A candidate's attempt at a job's simulation.
 | `id` | uuid | |
 | `jobId` | uuid | FK → Job |
 | `simulationId` | uuid | FK → Simulation |
-| `candidateId` | uuid \| null | FK → **Job Seeker Profile** (`job_seeker_profiles.id`), not `users.id`; null for guest |
-| `guestInfo` | `{ fullName, email, phoneNumber? }` \| null | present when no `candidateId` |
+| `candidateId` | uuid \| null | FK → **Job Seeker Profile** (`job_seeker_profiles.id`), not `users.id`; null once the candidate's account is deleted |
 | `status` | `PENDING` \| `GRADING` \| `GRADED` \| `DISQUALIFIED` \| `WITHDRAWN` \| `SELECTED` \| `NOT_SELECTED` | |
 | `answers` | `CandidateAnswer[]` | `{ taskId, responseBody, timeSpentSeconds }` |
 | `overallScore` | number \| null | |

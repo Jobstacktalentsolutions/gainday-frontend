@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { User, LogOut, ChevronDown } from "lucide-react";
+import { User, LogOut, ChevronDown, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { useLogout } from "@/features/auth/hooks/useLogout";
@@ -57,6 +57,16 @@ export const UserAvatarMenu = ({ className, variant = "initials" }: UserAvatarMe
   const userDisplayName = user?.fullName || user?.companyName || "Account";
   const firstName = user?.fullName?.trim().split(/\s+/)[0] || "Account";
   const userEmail = user?.email || "";
+  const needsProfileCompletion = user?.role === "JOB_SEEKER" && user.isProfileComplete === false;
+
+  const avatarBadge = needsProfileCompletion && (
+    <span
+      className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-error-500 text-[10px] font-bold leading-none text-white ring-2 ring-white"
+      title="Your profile is incomplete"
+    >
+      !
+    </span>
+  );
 
   return (
     <div ref={menuRef} className={`relative inline-block ${className || ""}`}>
@@ -69,14 +79,16 @@ export const UserAvatarMenu = ({ className, variant = "initials" }: UserAvatarMe
       >
         {variant === "named" ? (
           <>
-            <div className="flex size-9 items-center justify-center rounded-full bg-primary-50">
+            <div className="relative flex size-9 items-center justify-center rounded-full bg-primary-50">
               <User className="size-5 text-primary-500" aria-hidden="true" />
+              {avatarBadge}
             </div>
             <span className="max-w-32 truncate text-base text-neutral-700">{firstName}</span>
           </>
         ) : (
-          <div className="flex size-9 items-center justify-center rounded-full bg-primary-50 text-sm font-semibold text-primary-600 shadow-xs">
+          <div className="relative flex size-9 items-center justify-center rounded-full bg-primary-50 text-sm font-semibold text-primary-600 shadow-xs">
             {getInitials()}
+            {avatarBadge}
           </div>
         )}
         <ChevronDown className={`size-4 text-neutral-500 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
@@ -104,6 +116,17 @@ export const UserAvatarMenu = ({ className, variant = "initials" }: UserAvatarMe
 
             {/* Menu Options */}
             <div className="pt-1">
+              {needsProfileCompletion && (
+                <button
+                  type="button"
+                  onClick={handleProfileClick}
+                  className="mb-1 flex w-full items-center gap-2.5 rounded-xl bg-warning-50 px-3 py-2.5 text-left text-sm font-medium text-warning-900 transition-colors hover:bg-warning-100"
+                >
+                  <AlertCircle className="size-4 text-warning-700" />
+                  Complete your profile
+                </button>
+              )}
+
               <button
                 type="button"
                 onClick={handleProfileClick}

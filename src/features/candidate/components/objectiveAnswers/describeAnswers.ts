@@ -1,5 +1,6 @@
 // Renders each objective-component type's candidate response as plain text for
-// CandidateAnswer.responseBody. Split out from the answer components themselves (rather than
+// CandidateAnswer.responseBody (the flattened copy the grader reads; review pages use the
+// structured response instead). Split out from the answer components themselves (rather than
 // co-exported) because this project's react-refresh/only-export-components lint rule requires
 // component files to export only components — see registry.tsx, which pairs each of these with
 // its matching Component.

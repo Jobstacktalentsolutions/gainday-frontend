@@ -8,10 +8,16 @@ interface Props {
      *  order until the candidate reorders anything. */
     response: number[] | null;
     onChange: (response: number[]) => void;
+    /** Show the submitted order without the reorder controls (review pages). */
+    readOnly?: boolean;
 }
 
-const ProceduralSequencingAnswer = ({ component, response, onChange }: Props) => {
+const ProceduralSequencingAnswer = ({ component, response, onChange, readOnly }: Props) => {
     const order = response ?? component.steps.map((_, index) => index);
+
+    if (readOnly && response === null) {
+        return <p className="text-sm text-neutral-500">No order was submitted.</p>;
+    }
 
     function move(position: number, direction: -1 | 1) {
         const target = position + direction;
@@ -23,7 +29,7 @@ const ProceduralSequencingAnswer = ({ component, response, onChange }: Props) =>
 
     return (
         <div className="flex w-full flex-col gap-3">
-            <p className="text-[14px] text-neutral-600">Arrange these steps in the correct order</p>
+            {!readOnly && <p className="text-[14px] text-neutral-600">Arrange these steps in the correct order</p>}
             {order.map((stepIndex, position) => (
                 <div
                     key={stepIndex}
@@ -33,6 +39,7 @@ const ProceduralSequencingAnswer = ({ component, response, onChange }: Props) =>
                         {position + 1}
                     </span>
                     <span className="flex-1 text-[16px] text-primary-950">{component.steps[stepIndex]}</span>
+                    {!readOnly && (
                     <div className="flex shrink-0 flex-col">
                         <button
                             type="button"
@@ -53,6 +60,7 @@ const ProceduralSequencingAnswer = ({ component, response, onChange }: Props) =>
                             <ChevronDown className="size-5" />
                         </button>
                     </div>
+                    )}
                 </div>
             ))}
         </div>

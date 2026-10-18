@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { RichTextComposerPayload, TextAreaPayload } from "@/features/simulation-tasks/types";
+import ReadOnlyAnswerText from "./ReadOnlyAnswerText";
 
 interface Props {
     // TEXT_AREA and RICH_TEXT_COMPOSER share an identical payload shape today (see
@@ -11,19 +12,24 @@ interface Props {
     onChange: (value: string) => void;
     /** The task's structured answer widget, shown above the written response. */
     objectiveSlot?: ReactNode;
+    readOnly?: boolean;
 }
 
 const MAX_CHARS = 1000;
 
-const TextAreaAnswer = ({ payload, value, onChange, objectiveSlot }: Props) => (
+const TextAreaAnswer = ({ payload, value, onChange, objectiveSlot, readOnly }: Props) => (
     <div className="flex w-full flex-col gap-4">
         {objectiveSlot}
-        <textarea
-            value={value}
-            onChange={(event) => onChange(event.target.value.slice(0, MAX_CHARS))}
-            placeholder={payload.placeholder ?? "Type your response here..."}
-            className="h-38.25 w-full resize-none rounded-lg border border-neutral-200 px-3.5 py-2.5 text-[16px] text-neutral-700 shadow-[0px_1px_1px_rgba(10,13,18,0.05)] outline-none placeholder:text-neutral-400 focus:border-primary-500"
-        />
+        {readOnly ? (
+            <ReadOnlyAnswerText value={value} />
+        ) : (
+            <textarea
+                value={value}
+                onChange={(event) => onChange(event.target.value.slice(0, MAX_CHARS))}
+                placeholder={payload.placeholder ?? "Type your response here..."}
+                className="h-38.25 w-full resize-none rounded-lg border border-neutral-200 px-3.5 py-2.5 text-[16px] text-neutral-700 shadow-[0px_1px_1px_rgba(10,13,18,0.05)] outline-none placeholder:text-neutral-400 focus:border-primary-500"
+            />
+        )}
     </div>
 );
 

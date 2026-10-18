@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import type { CandidateSubmission } from "../types/candidateDetail";
 import type { SimulationTask } from "../types/job";
+import { SubmittedAnswer } from "@/features/candidate/components/SubmittedAnswer";
 
 interface SubmissionDetailModalProps {
   submission: CandidateSubmission | null;
@@ -32,7 +33,7 @@ export const SubmissionDetailModal = ({
   if (!submission) return null;
 
   const isGradingFailed = submission.status === "GRADING_FAILED";
-  const answerByTaskId = new Map((submission.answers ?? []).map((answer) => [answer.taskId, answer.responseBody]));
+  const answerByTaskId = new Map((submission.answers ?? []).map((answer) => [answer.taskId, answer]));
 
   const formatDuration = (seconds?: number | null) => {
     if (!seconds) return "N/A";
@@ -229,7 +230,7 @@ export const SubmissionDetailModal = ({
               </p>
               <div className="flex flex-col gap-3">
                 {tasks.map((task, idx) => {
-                  const answer = answerByTaskId.get(task.id)?.trim();
+                  const answer = answerByTaskId.get(task.id);
                   return (
                     <div
                       key={task.id}
@@ -241,13 +242,14 @@ export const SubmissionDetailModal = ({
                       <div className="prose prose-sm max-w-none text-xs text-neutral-600 prose-p:my-0.5">
                         <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown>
                       </div>
-                      {answer ? (
-                        <p className="whitespace-pre-wrap rounded border border-neutral-200 bg-white p-2.5 text-xs text-neutral-800">
-                          {answer}
-                        </p>
-                      ) : (
-                        <p className="text-xs text-neutral-500">No answer was submitted for this task.</p>
-                      )}
+                      <SubmittedAnswer
+                        task={task}
+                        answer={
+                          answer
+                            ? { objectiveResponse: answer.objectiveResponse, textResponse: answer.textResponse }
+                            : null
+                        }
+                      />
                     </div>
                   );
                 })}

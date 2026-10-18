@@ -18,6 +18,8 @@ export interface ObjectiveAnswerProps {
     component: CandidateObjectiveComponent;
     response: unknown;
     onChange: (response: unknown) => void;
+    /** Show a submitted answer instead of collecting one (employer and admin review pages). */
+    readOnly?: boolean;
 }
 
 const cast = <T,>(value: unknown) => value as T;
@@ -56,22 +58,25 @@ export const OBJECTIVE_ANSWER_RENDERERS: Record<
             onChange={castOnChange<number | null>(onChange)}
         />
     ),
-    CLASSIFICATION: ({ component, response, onChange }) => (
+    CLASSIFICATION: ({ component, response, onChange, readOnly }) => (
         <ClassificationAnswer
+            readOnly={readOnly}
             component={cast(component)}
             response={cast(response)}
             onChange={castOnChange<Record<string, string>>(onChange)}
         />
     ),
-    PROCEDURAL_SEQUENCING: ({ component, response, onChange }) => (
+    PROCEDURAL_SEQUENCING: ({ component, response, onChange, readOnly }) => (
         <ProceduralSequencingAnswer
+            readOnly={readOnly}
             component={cast(component)}
             response={cast(response)}
             onChange={castOnChange<number[]>(onChange)}
         />
     ),
-    PRIORITY_RANKING: ({ component, response, onChange }) => (
+    PRIORITY_RANKING: ({ component, response, onChange, readOnly }) => (
         <PriorityRankingAnswer
+            readOnly={readOnly}
             component={cast(component)}
             response={cast(response)}
             onChange={castOnChange<number[]>(onChange)}

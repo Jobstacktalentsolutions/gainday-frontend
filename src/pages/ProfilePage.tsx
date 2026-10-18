@@ -12,17 +12,37 @@ import {
   Lock,
   Loader2,
   KeyRound,
+  UserRound,
+  FileText,
+  AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 import CandidateHeader from "@/features/candidate/components/CandidateHeader";
 import { PublicNavbar } from "@/features/candidate/components/PublicNavbar";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
-import { useUpdateProfile } from "@/features/auth/hooks/useProfile";
+import { useUpdateProfile, type UpdateProfilePayload } from "@/features/auth/hooks/useProfile";
 import { ActionButton } from "@/components/ui/ActionButton";
+import {
+  GENDER_OPTIONS,
+  PRONOUN_OPTIONS,
+  type Gender,
+  type Pronouns,
+} from "@/features/auth/utils/profileOptions";
+
+interface FieldOption {
+  value: string;
+  label: string;
+}
 
 interface EditableFieldProps {
   label: string;
   value: string | undefined | null;
+  /** How the field is edited. Defaults to a single-line text input. */
+  input?: "text" | "textarea" | "select";
+  /** Required for `select`. */
+  options?: FieldOption[];
+  /** Marks the field as mandatory and flags it while it is empty. */
+  required?: boolean;
   placeholder?: string;
   icon: typeof User;
   editable?: boolean;
@@ -31,9 +51,17 @@ interface EditableFieldProps {
   isSaving?: boolean;
 }
 
+const BRIEF_MAX_LENGTH = 1000;
+
+const EDIT_CONTROL_CLASS =
+  "flex-1 min-w-0 rounded-lg border border-primary-400 px-3 py-1.5 text-sm font-medium text-neutral-900 outline-none focus:ring-2 focus:ring-primary-500/20 disabled:opacity-50";
+
 const EditableProfileField = ({
   label,
   value,
+  input = "text",
+  options,
+  required = false,
   placeholder = "Not specified",
   icon: Icon,
   editable = false,
@@ -65,15 +93,25 @@ const EditableProfileField = ({
     }
   };
 
+  const displayValue = input === "select" ? options?.find((option) => option.value === value)?.label : value;
+  const isMissingRequired = required && !value;
+
   return (
-    <div className="relative flex flex-col justify-between rounded-2xl border border-neutral-200/70 bg-neutral-50/70 p-4 transition-all hover:border-neutral-300 sm:p-4.5">
+    <div
+      className={`relative flex flex-col justify-between rounded-2xl border bg-neutral-50/70 p-4 transition-all hover:border-neutral-300 sm:p-4.5 ${
+        isMissingRequired ? "border-warning-300" : "border-neutral-200/70"
+      } ${input === "textarea" ? "sm:col-span-2" : ""}`}
+    >
       {/* Top Header Row: Icon + Label on Left, Edit / Lock status on Right */}
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0">
           <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-white text-primary-500 shadow-2xs border border-neutral-100">
             <Icon className="size-3.5" />
           </div>
-          <p className="truncate text-xs font-medium text-neutral-500">{label}</p>
+          <p className="truncate text-xs font-medium text-neutral-500">
+            {label}
+            {required && <span className="text-error-500"> *</span>}
+          </p>
         </div>
 
         <div>
@@ -103,16 +141,47 @@ const EditableProfileField = ({
       {/* Bottom Content Row: Full-width Input in Edit Mode or Display Value */}
       <div className="mt-2.5 min-w-0">
         {isEditing ? (
-          <form onSubmit={handleSave} className="flex items-center gap-1.5 w-full">
-            <input
-              type="text"
-              value={draftValue}
-              onChange={(e) => setDraftValue(e.target.value)}
-              placeholder={placeholder}
-              disabled={isSaving}
-              autoFocus
-              className="flex-1 min-w-0 rounded-lg border border-primary-400 bg-white px-3 py-1.5 text-sm font-medium text-neutral-900 outline-none focus:ring-2 focus:ring-primary-500/20 disabled:opacity-50"
-            />
+          <form
+            onSubmit={handleSave}
+            className={`flex w-full gap-1.5 ${input === "textarea" ? "items-start" : "items-center"}`}
+          >
+            {input === "select" && options ? (
+              <select
+                value={draftValue}
+                onChange={(e) => setDraftValue(e.target.value)}
+                disabled={isSaving}
+                autoFocus
+                className={`${EDIT_CONTROL_CLASS} bg-white`}
+              >
+                <option value="">{placeholder}</option>
+                {options.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            ) : input === "textarea" ? (
+              <textarea
+                value={draftValue}
+                onChange={(e) => setDraftValue(e.target.value)}
+                placeholder={placeholder}
+                disabled={isSaving}
+                maxLength={BRIEF_MAX_LENGTH}
+                rows={4}
+                autoFocus
+                className={`${EDIT_CONTROL_CLASS} resize-y`}
+              />
+            ) : (
+              <input
+                type="text"
+                value={draftValue}
+                onChange={(e) => setDraftValue(e.target.value)}
+                placeholder={placeholder}
+                disabled={isSaving}
+                autoFocus
+                className={EDIT_CONTROL_CLASS}
+              />
+            )}
             <button
               type="submit"
               disabled={isSaving}
@@ -136,8 +205,10 @@ const EditableProfileField = ({
             </button>
           </form>
         ) : (
-          <p className="truncate text-sm font-semibold text-neutral-900">
-            {value || <span className="font-normal italic text-neutral-400">{placeholder}</span>}
+          <p
+            className={`text-sm font-semibold text-neutral-900 ${input === "textarea" ? "whitespace-pre-line" : "truncate"}`}
+          >
+            {displayValue || <span className="font-normal italic text-neutral-400">{placeholder}</span>}
           </p>
         )}
       </div>
@@ -180,10 +251,11 @@ const ProfilePage = () => {
   const updateProfileMutation = useUpdateProfile();
   const isGoogleAccount = user?.authProvider === "google";
   const isEmployer = user?.role === "EMPLOYER";
+  const isCandidate = user?.role === "JOB_SEEKER";
 
-  const handleUpdateField = async (field: "fullName" | "companyName" | "phoneNumber", value: string) => {
+  const handleUpdateProfile = async (payload: UpdateProfilePayload) => {
     try {
-      await updateProfileMutation.mutateAsync({ [field]: value });
+      await updateProfileMutation.mutateAsync(payload);
       toast.success("Profile updated successfully");
     } catch {
       toast.error("Couldn't update profile. Please try again.");
@@ -239,6 +311,16 @@ const ProfilePage = () => {
               </div>
             </div>
 
+            {isCandidate && user?.isProfileComplete === false && (
+              <div
+                role="status"
+                className="flex items-start gap-3 rounded-2xl border border-warning-200 bg-warning-50 p-4 text-sm text-warning-900"
+              >
+                <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+                <p>Your profile is incomplete. Add your pronouns to be able to apply for jobs.</p>
+              </div>
+            )}
+
             <div className="h-px w-full bg-neutral-100" />
 
             {/* Editable Profile Fields */}
@@ -249,7 +331,7 @@ const ProfilePage = () => {
                 placeholder="Enter your full name"
                 icon={User}
                 editable
-                onSave={(val) => handleUpdateField("fullName", val)}
+                onSave={(val) => handleUpdateProfile({ fullName: val })}
                 isSaving={updateProfileMutation.isPending}
               />
 
@@ -268,7 +350,7 @@ const ProfilePage = () => {
                   placeholder="Enter your company name"
                   icon={Building}
                   editable
-                  onSave={(val) => handleUpdateField("companyName", val)}
+                  onSave={(val) => handleUpdateProfile({ companyName: val })}
                   isSaving={updateProfileMutation.isPending}
                 />
               )}
@@ -279,9 +361,49 @@ const ProfilePage = () => {
                 placeholder="Enter your phone number"
                 icon={Phone}
                 editable
-                onSave={(val) => handleUpdateField("phoneNumber", val)}
+                onSave={(val) => handleUpdateProfile({ phoneNumber: val })}
                 isSaving={updateProfileMutation.isPending}
               />
+
+              {isCandidate && (
+                <>
+                  <EditableProfileField
+                    label="Pronouns"
+                    value={user?.pronouns}
+                    input="select"
+                    options={PRONOUN_OPTIONS}
+                    required
+                    placeholder="Select your pronouns"
+                    icon={UserRound}
+                    editable
+                    onSave={(val) => handleUpdateProfile({ pronouns: val as Pronouns })}
+                    isSaving={updateProfileMutation.isPending}
+                  />
+
+                  <EditableProfileField
+                    label="Gender (optional)"
+                    value={user?.gender}
+                    input="select"
+                    options={GENDER_OPTIONS}
+                    placeholder="Prefer not to say"
+                    icon={UserRound}
+                    editable
+                    onSave={(val) => handleUpdateProfile({ gender: val === "" ? null : (val as Gender) })}
+                    isSaving={updateProfileMutation.isPending}
+                  />
+
+                  <EditableProfileField
+                    label="Brief (optional)"
+                    value={user?.brief}
+                    input="textarea"
+                    placeholder="A short introduction employers will see once they unlock you"
+                    icon={FileText}
+                    editable
+                    onSave={(val) => handleUpdateProfile({ brief: val })}
+                    isSaving={updateProfileMutation.isPending}
+                  />
+                </>
+              )}
             </div>
           </div>
         </div>

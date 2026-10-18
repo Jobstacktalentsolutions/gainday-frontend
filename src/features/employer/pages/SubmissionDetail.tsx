@@ -9,6 +9,7 @@ import ContactCard, { ContactCardSkeleton } from "../components/ContactCard";
 import CapabilityHistoryCard, { CapabilityHistoryCardSkeleton } from "../components/CapabilityHistoryCard";
 import IntegrityCard, { IntegrityCardSkeleton } from "../components/IntegrityCard";
 import CapabilityPassportModal from "../components/CapabilityPassportModal";
+import CandidateProfileCard from "@/features/capability-passport/components/CandidateProfileCard";
 import UnlockModal from "../components/UnlockModal";
 import { useEmployerSubmission } from "../hooks/useEmployerSubmission";
 import { useSubmissionPassport } from "../hooks/useSubmissionPassport";
@@ -35,7 +36,7 @@ const SubmissionDetail = () => {
     const { data: submission, isLoading, isError, refetch } = useEmployerSubmission(jobId, submissionId);
     const [isPassportOpen, setIsPassportOpen] = useState(false);
     // Only fetched once the modal is opened.
-    const passportQuery = useSubmissionPassport(jobId, submissionId, isPassportOpen);
+    const passportQuery = useSubmissionPassport(submissionId, isPassportOpen);
 
     const unlockCandidates = useUnlockCandidates();
     const [unlockModal, setUnlockModal] = useState<{ open: boolean; recommendedPackId?: string }>({
@@ -143,6 +144,7 @@ const SubmissionDetail = () => {
                         contact={submission.contact}
                         onUnlock={handleUnlockContact}
                     />
+                    {submission.candidateProfile && <CandidateProfileCard profile={submission.candidateProfile} />}
                     <CapabilityHistoryCard
                         history={submission.capabilityHistory}
                         onViewDetails={() => setIsPassportOpen(true)}
@@ -155,6 +157,7 @@ const SubmissionDetail = () => {
                 open={isPassportOpen}
                 onOpenChange={setIsPassportOpen}
                 candidateName={getCandidateLabel(submission)}
+                candidateProfile={submission.candidateProfile}
                 passport={passportQuery.data}
                 isLoading={passportQuery.isPending}
                 isError={passportQuery.isError}

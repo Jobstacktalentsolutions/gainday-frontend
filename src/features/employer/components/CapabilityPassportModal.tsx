@@ -2,13 +2,16 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ActionButton } from "@/components/ui/ActionButton";
 import CapabilityPassportView from "@/features/capability-passport/components/CapabilityPassportView";
 import CapabilityPassportSkeleton from "@/features/capability-passport/components/CapabilityPassportSkeleton";
+import CandidateProfileCard from "@/features/capability-passport/components/CandidateProfileCard";
 import type { CapabilityPassportSummary } from "@/features/capability-passport/types/passport";
+import type { CandidateProfileInfo } from "@/features/auth/utils/profileOptions";
 
 interface CapabilityPassportModalProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     candidateName: string;
-    passport?: CapabilityPassportSummary;
+    candidateProfile: CandidateProfileInfo | null;
+    passport: CapabilityPassportSummary | null | undefined;
     isLoading: boolean;
     isError: boolean;
     onRetry: () => void;
@@ -17,11 +20,13 @@ interface CapabilityPassportModalProps {
     onUnlockContact: () => void;
 }
 
-// The full passport is visible before unlock — the lock only gates the candidate's contact details.
+// The full passport is visible before unlock — the lock only gates the candidate's contact details
+// (and their brief; gender and pronouns show either way).
 const CapabilityPassportModal = ({
     open,
     onOpenChange,
     candidateName,
+    candidateProfile,
     passport,
     isLoading,
     isError,
@@ -36,6 +41,8 @@ const CapabilityPassportModal = ({
                 className="max-h-[calc(100vh-2rem)] gap-10 overflow-y-auto rounded-2xl bg-neutral-50 p-6 shadow-[0px_1px_20px_0px_rgba(123,123,123,0.05),0px_4px_10px_0px_rgba(123,123,123,0.05)] ring-0 sm:max-w-269 lg:p-12 scrollbar-thin [scrollbar-color:var(--color-neutral-300)_var(--color-neutral-100)] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-neutral-100 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-neutral-300 hover:[&::-webkit-scrollbar-thumb]:bg-neutral-400"
             >
                 <DialogTitle className="sr-only">{candidateName}'s Capability Passport</DialogTitle>
+
+                {candidateProfile && <CandidateProfileCard profile={candidateProfile} />}
 
                 {isLoading && <CapabilityPassportSkeleton variant="employer" />}
 

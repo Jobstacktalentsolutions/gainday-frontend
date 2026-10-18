@@ -6,6 +6,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import CandidateHeader from "../components/CandidateHeader";
 import { ApplyDialog } from "../components/ApplyDialog";
+import { CompleteProfileDialog } from "../components/CompleteProfileDialog";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { StepContinueButton } from "@/components/ui/StepNavigationButtons";
 import { useJobDetails } from "../hooks/useJobDetails";
@@ -19,8 +20,9 @@ export default function JobDetailsPage() {
     const navigate = useNavigate();
     const { job, isLoading } = useJobDetails(jobId);
     const { appliedSet } = useAppliedJobIds();
-    const { isAuthenticated } = useCurrentUser();
+    const { user, isAuthenticated } = useCurrentUser();
     const [authPromptOpen, setAuthPromptOpen] = useState(false);
+    const [profilePromptOpen, setProfilePromptOpen] = useState(false);
 
     const isApplied = Boolean(job && appliedSet.has(job.id));
     const isClosed = job?.status === "CLOSED";
@@ -59,6 +61,10 @@ export default function JobDetailsPage() {
     function handleApplyClick() {
         if (isApplied || isClosed) return;
         if (isAuthenticated) {
+            if (user?.isProfileComplete === false) {
+                setProfilePromptOpen(true);
+                return;
+            }
             navigate(`/job-board/${job!.id}/pre-simulation`);
         } else {
             setAuthPromptOpen(true);
@@ -225,6 +231,11 @@ export default function JobDetailsPage() {
                 open={authPromptOpen}
                 onOpenChange={setAuthPromptOpen}
                 onSignUp={handleSignUp}
+            />
+            <CompleteProfileDialog
+                open={profilePromptOpen}
+                onOpenChange={setProfilePromptOpen}
+                onCompleteProfile={() => navigate("/candidate/profile")}
             />
         </div>
     );

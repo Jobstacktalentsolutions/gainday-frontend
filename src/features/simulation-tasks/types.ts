@@ -6,6 +6,7 @@ export const InterfaceType = {
   RICH_TEXT_COMPOSER: "RICH_TEXT_COMPOSER",
   TEXT_AREA: "TEXT_AREA",
   TABLE_VIEW_RESPONSE_PANEL: "TABLE_VIEW_RESPONSE_PANEL",
+  CSV_DATA_PANEL: "CSV_DATA_PANEL",
 } as const;
 export type InterfaceType = (typeof InterfaceType)[keyof typeof InterfaceType];
 
@@ -25,10 +26,18 @@ export interface TableViewResponsePanelPayload {
   placeholder: string | null;
 }
 
+export interface CsvDataPanelPayload {
+  interfaceType: typeof InterfaceType.CSV_DATA_PANEL;
+  /** The data set: a header row, then data rows. Parsed with simulation-tasks/csv.ts. */
+  csv: string;
+  placeholder: string | null;
+}
+
 export type InterfacePayload =
   | RichTextComposerPayload
   | TextAreaPayload
-  | TableViewResponsePanelPayload;
+  | TableViewResponsePanelPayload
+  | CsvDataPanelPayload;
 
 export type ObjectiveComponentType =
   | "NUMERIC_INPUT"

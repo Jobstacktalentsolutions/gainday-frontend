@@ -36,9 +36,10 @@ const EMPTY_ANSWER: TaskAnswer = { objectiveResponse: null, textResponse: "" };
 // as a number of fixed-size ticks.
 const IDLE_THRESHOLD_MS = 5 * 60 * 1000;
 
-// The backend stores one free-text field per task (CandidateAnswer.responseBody — see
+// The grader reads one text field per task (CandidateAnswer.responseBody — see
 // submissions.schema.ts), so a task's objective response and its written response are
-// collapsed into a single string here before submit. How the objective part reads is resolved
+// collapsed into a single string here. The structured answer is sent too (toCandidateAnswer), so
+// review pages can show it the way the candidate gave it. How the objective part reads is resolved
 // per componentType via OBJECTIVE_ANSWER_DESCRIBERS — this function doesn't special-case any
 // one component type, matching TaskObjectiveOptions' registry-driven rendering.
 function buildResponseBody(task: CandidateSimulationTask, answer: TaskAnswer): string {
@@ -55,6 +56,20 @@ function buildResponseBody(task: CandidateSimulationTask, answer: TaskAnswer): s
     }
 
     return parts.join("\n\n");
+}
+
+function toCandidateAnswer(
+    task: CandidateSimulationTask,
+    answer: TaskAnswer,
+    timeSpentSeconds: number,
+): CandidateAnswer {
+    return {
+        taskId: task.id,
+        responseBody: buildResponseBody(task, answer),
+        objectiveResponse: answer.objectiveResponse,
+        textResponse: answer.textResponse,
+        timeSpentSeconds,
+    };
 }
 
 export default function TaskRunner() {
@@ -149,11 +164,13 @@ export default function TaskRunner() {
         const antiCheatFlags = useSimulationIntegrityStore.getState().events;
 
         if (!runStore.submissionId) return; // nothing to submit against — surfaced in the modal below
-        const answers: CandidateAnswer[] = simulation.tasks.map((task) => ({
-            taskId: task.id,
-            responseBody: buildResponseBody(task, runStore.answers[task.id] ?? EMPTY_ANSWER),
-            timeSpentSeconds: runStore.taskTimeSpentSeconds[task.id] ?? 0,
-        }));
+        const answers = simulation.tasks.map((task) =>
+            toCandidateAnswer(
+                task,
+                runStore.answers[task.id] ?? EMPTY_ANSWER,
+                runStore.taskTimeSpentSeconds[task.id] ?? 0,
+            ),
+        );
         submitSimulation.mutate({ submissionId: runStore.submissionId, answers, antiCheatFlags });
     }
 
@@ -243,11 +260,13 @@ export default function TaskRunner() {
                 onRetry={
                     submitFailed && runStore.submissionId
                         ? () => {
-                            const answers: CandidateAnswer[] = simulation.tasks.map((t) => ({
-                                taskId: t.id,
-                                responseBody: buildResponseBody(t, runStore.answers[t.id] ?? EMPTY_ANSWER),
-                                timeSpentSeconds: runStore.taskTimeSpentSeconds[t.id] ?? 0,
-                            }));
+                            const answers = simulation.tasks.map((t) =>
+                                toCandidateAnswer(
+                                    t,
+                                    runStore.answers[t.id] ?? EMPTY_ANSWER,
+                                    runStore.taskTimeSpentSeconds[t.id] ?? 0,
+                                ),
+                            );
                             submitSimulation.mutate({
                                 submissionId: runStore.submissionId!,
                                 answers,

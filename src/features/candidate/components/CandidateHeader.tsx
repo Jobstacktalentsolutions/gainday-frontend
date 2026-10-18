@@ -5,6 +5,7 @@ import brandLogo from "@/assets/gainday icon.svg";
 import { cn } from "@/lib/utils";
 import { UserAvatarMenu } from "@/components/ui/UserAvatarMenu";
 import { useLogout } from "@/features/auth/hooks/useLogout";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { CANDIDATE_NAV_LINKS } from "../utils/candidateNavLinks";
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
@@ -13,11 +14,12 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
         isActive ? "text-primary-950" : "text-neutral-700",
     );
 
-// Header for signed-in candidates. Kept separate from the landing Header (which handles guests,
+// Header for signed-in candidates. Kept separate from the landing Header (which handles signed-out visitors,
 // the promo dropdowns and the auth modal) so neither grows to carry the other's concerns.
 const CandidateHeader = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const { logout } = useLogout();
+    const { user } = useCurrentUser();
 
     const closeMenu = () => setMenuOpen(false);
 
@@ -78,6 +80,11 @@ const CandidateHeader = () => {
                     >
                         <User className="size-4 text-neutral-500" aria-hidden="true" />
                         Profile
+                        {user?.isProfileComplete === false && (
+                            <span className="rounded-full bg-error-500 px-2 py-0.5 text-xs font-semibold text-white">
+                                Incomplete
+                            </span>
+                        )}
                     </Link>
                     <button
                         type="button"
