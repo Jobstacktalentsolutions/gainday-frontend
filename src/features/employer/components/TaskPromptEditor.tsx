@@ -3,8 +3,9 @@ import { useEditor, EditorContent, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
+import { TableKit } from "@tiptap/extension-table";
 import { Markdown } from "tiptap-markdown";
-import { Bold, Italic, Link as LinkIcon, List, Heading1, Heading2, Heading3 } from "lucide-react";
+import { Bold, Italic, Link as LinkIcon, List, Heading1, Heading2, Heading3, Table2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 
@@ -20,12 +21,13 @@ interface TaskPromptEditorProps {
 }
 
 const ToolbarButton = ({
-    active, onClick, label, children
+    active, onClick, label, children, className
 }: {
     active?: boolean;
     onClick: () => void;
     label: string;
     children: ReactNode;
+    className?: string;
 }) => {
     return (
         <button
@@ -39,7 +41,8 @@ const ToolbarButton = ({
             className={cn(
                 "flex size-8 cursor-pointer items-center justify-center rounded-md text-neutral-500 transition-colors duration-150",
                 "hover:bg-neutral-100 hover:text-neutral-900",
-                active && "bg-primary-50 text-primary-600"
+                active && "bg-primary-50 text-primary-600",
+                className
             )}
         >
             {children}
@@ -63,6 +66,10 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder, contentClassNam
         extensions: [
             StarterKit.configure({ heading: { levels: [1, 2, 3] } }),
             Link.configure({ openOnClick: false, autolink: true }),
+            // Tasks often present data as a table (an inbox, a lead list). Without the table
+            // nodes the editor flattens a Markdown table into run-together text, and saving an
+            // edit would write that flattened text back.
+            TableKit.configure({ table: { resizable: false } }),
             Placeholder.configure({
                 placeholder: placeholder ?? "Write your detailed prompt instructions here...",
             }),
@@ -175,6 +182,40 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder, contentClassNam
                     >
                         <List className="size-3.5" />
                     </ToolbarButton>
+
+                    <span className="mx-1 h-4 w-px bg-neutral-200" aria-hidden="true" />
+
+                    {/* Tables. The row/column/delete buttons do nothing unless the cursor is
+                        inside a table, so they need no active state. */}
+                    <ToolbarButton
+                        label="Insert table"
+                        onClick={() =>
+                            editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
+                        }
+                    >
+                        <Table2 className="size-3.5" />
+                    </ToolbarButton>
+                    <ToolbarButton
+                        label="Add row below"
+                        className="w-auto px-2 text-xs"
+                        onClick={() => editor?.chain().focus().addRowAfter().run()}
+                    >
+                        + Row
+                    </ToolbarButton>
+                    <ToolbarButton
+                        label="Add column to the right"
+                        className="w-auto px-2 text-xs"
+                        onClick={() => editor?.chain().focus().addColumnAfter().run()}
+                    >
+                        + Column
+                    </ToolbarButton>
+                    <ToolbarButton
+                        label="Delete table"
+                        className="w-auto px-2 text-xs"
+                        onClick={() => editor?.chain().focus().deleteTable().run()}
+                    >
+                        Delete table
+                    </ToolbarButton>
                 </div>
                 <div className={cn("min-h-45 px-4 py-3 scrollbar-modern", contentClassName)}>
                     {/* Scoped prose styles — keeps heading/list/link rules self-contained
@@ -191,6 +232,13 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder, contentClassNam
                         .tpe-content code       { background: #f5f5f5; border-radius: 0.25rem; padding: 0 0.25rem; font-size: 0.875rem; font-family: monospace; }
                         .tpe-content strong     { font-weight: 700; }
                         .tpe-content em         { font-style: italic; }
+                        .tpe-content table      { border-collapse: collapse; width: 100%; table-layout: fixed; margin: 0.5rem 0; }
+                        .tpe-content th,
+                        .tpe-content td         { border: 1px solid #e5e5e5; padding: 0.375rem 0.5rem; vertical-align: top; text-align: left; font-size: 0.875rem; }
+                        .tpe-content th         { background: #fafafa; font-weight: 600; }
+                        .tpe-content td p,
+                        .tpe-content th p       { margin: 0; min-height: 1.25em; }
+                        .tpe-content .selectedCell { background: #eef2ff; }
                     `}</style>
                     <EditorContent editor={editor} />
                 </div>

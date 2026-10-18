@@ -6,7 +6,6 @@ import { JobFormInput } from "@/components/form/JobFormInput";
 import TaskTypeBadge from "./TaskTypeBadge";
 import TaskPromptEditor from "./TaskPromptEditor";
 import { InterfaceRendererView } from "@/features/simulation-tasks/interfaceRenderers/registry";
-import ComponentSummary from "@/features/simulation-tasks/ComponentSummary";
 import { cn } from "@/lib/utils";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
 
@@ -34,8 +33,6 @@ const TaskCard = ({
     const taskType = watch(`tasks.${index}.taskType` as const);
     const interfaceType = watch(`tasks.${index}.interfaceType` as const);
     const interfacePayload = watch(`tasks.${index}.interfacePayload` as const);
-    const objectiveComponent = watch(`tasks.${index}.objectiveComponent` as const);
-    const openEndedComponent = watch(`tasks.${index}.openEndedComponent` as const);
     const businessProblemDerived = watch(`tasks.${index}.businessProblemDerived` as const);
     const questionPrompt = watch(`tasks.${index}.questionPrompt` as const);
     const taskErrors = errors.tasks?.[index];
@@ -197,12 +194,6 @@ const TaskCard = ({
                                     mode="preview"
                                 />
                             </div>
-
-                            {/* Read-only grading data — what the candidate's answer is actually scored
-                                against. Not editable here: fixing flagged content is an admin action
-                                (Generation Reviews), employers just need visibility into it. */}
-                            <ComponentSummary label="Grading criteria" data={objectiveComponent} />
-                            <ComponentSummary label="Prompt framing" data={openEndedComponent} />
 
                             {businessProblemDerived && (
                                 <p className="flex items-center gap-1.5 text-left text-sm text-primary-600">

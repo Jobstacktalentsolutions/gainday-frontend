@@ -2,7 +2,6 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import TaskTypeBadge from "./TaskTypeBadge";
 import { InterfaceRendererView } from "@/features/simulation-tasks/interfaceRenderers/registry";
-import ComponentSummary from "@/features/simulation-tasks/ComponentSummary";
 import type { SimulationTask } from "@/features/simulation-tasks/types";
 
 interface TaskSummaryCardProps {
@@ -41,9 +40,6 @@ const TaskSummaryCard = ({ index, task }: TaskSummaryCardProps) => {
                 payload={task.interfacePayload}
                 mode="preview"
             />
-
-            <ComponentSummary label="Grading criteria" data={task.objectiveComponent} />
-            <ComponentSummary label="Prompt framing" data={task.openEndedComponent} />
         </div>
     );
 };
