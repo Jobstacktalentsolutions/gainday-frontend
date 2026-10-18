@@ -1,17 +1,12 @@
 import TextAreaAnswer from "./TextAreaAnswer";
 import TableViewResponsePanelAnswer from "./TableViewResponsePanelAnswer";
+import type { InterfaceAnswerProps } from "./types";
 import {
     InterfaceType,
     type RichTextComposerPayload,
     type TextAreaPayload,
     type TableViewResponsePanelPayload,
 } from "@/features/simulation-tasks/types";
-
-export interface InterfaceAnswerProps {
-    payload: Record<string, unknown>;
-    value: string;
-    onChange: (value: string) => void;
-}
 
 const cast = <T,>(value: Record<string, unknown>) => value as unknown as T;
 
@@ -22,17 +17,29 @@ export const INTERFACE_ANSWER_RENDERERS: Record<
     InterfaceType,
     (props: InterfaceAnswerProps) => React.JSX.Element
 > = {
-    [InterfaceType.TEXT_AREA]: ({ payload, value, onChange }) => (
-        <TextAreaAnswer payload={cast<TextAreaPayload>(payload)} value={value} onChange={onChange} />
+    [InterfaceType.TEXT_AREA]: ({ payload, value, onChange, objectiveSlot }) => (
+        <TextAreaAnswer
+            payload={cast<TextAreaPayload>(payload)}
+            value={value}
+            onChange={onChange}
+            objectiveSlot={objectiveSlot}
+        />
     ),
-    [InterfaceType.RICH_TEXT_COMPOSER]: ({ payload, value, onChange }) => (
-        <TextAreaAnswer payload={cast<RichTextComposerPayload>(payload)} value={value} onChange={onChange} />
+    [InterfaceType.RICH_TEXT_COMPOSER]: ({ payload, value, onChange, objectiveSlot }) => (
+        <TextAreaAnswer
+            payload={cast<RichTextComposerPayload>(payload)}
+            value={value}
+            onChange={onChange}
+            objectiveSlot={objectiveSlot}
+        />
     ),
-    [InterfaceType.TABLE_VIEW_RESPONSE_PANEL]: ({ payload, value, onChange }) => (
+    [InterfaceType.TABLE_VIEW_RESPONSE_PANEL]: ({ payload, value, onChange, objectiveSlot, classification }) => (
         <TableViewResponsePanelAnswer
             payload={cast<TableViewResponsePanelPayload>(payload)}
             value={value}
             onChange={onChange}
+            objectiveSlot={objectiveSlot}
+            classification={classification}
         />
     ),
 };

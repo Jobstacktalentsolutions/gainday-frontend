@@ -53,7 +53,6 @@ export interface NumericInputComponent {
 export interface ClassificationComponent {
   items: string[];
   buckets: string[];
-  correctMapping: { item: string; bucket: string }[];
 }
 
 export interface ProceduralSequencingComponent {

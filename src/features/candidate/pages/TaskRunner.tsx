@@ -21,7 +21,6 @@ import { useTabVisibilityGuard } from "../hooks/useTabVisibilityGuard";
 import { useFullscreenGuard } from "../hooks/useFullscreenGuard";
 import { useIdleDetection } from "../hooks/useIdleDetection";
 import { useSimulationIntegrityStore } from "../hooks/useSimulationIntegrityStore";
-import { TaskObjectiveOptions } from "../components/TaskObjectiveOptions";
 import { TaskResponseInput } from "../components/TaskResponseInput";
 import { TimeWarningBanner } from "../components/TimeWarningBanner";
 import { ConnectionBanner } from "../components/ConnectionBanner";
@@ -310,16 +309,12 @@ export default function TaskRunner() {
                     </div>
 
                     <div className="flex w-full flex-col gap-6">
-                        <TaskObjectiveOptions
-                            task={task}
-                            response={answer.objectiveResponse}
-                            onChange={(response) => updateAnswer({ objectiveResponse: response })}
-                        />
-
                         <TaskResponseInput
                             task={task}
                             value={answer.textResponse}
                             onChange={(value) => updateAnswer({ textResponse: value })}
+                            objectiveResponse={answer.objectiveResponse}
+                            onObjectiveChange={(response) => updateAnswer({ objectiveResponse: response })}
                         />
                     </div>
 

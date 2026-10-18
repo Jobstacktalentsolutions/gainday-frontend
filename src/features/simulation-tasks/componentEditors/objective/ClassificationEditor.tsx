@@ -6,6 +6,9 @@ interface Props {
     onChange: (value: ClassificationComponent) => void;
 }
 
+// No correct bucket is stored per item: what a strong bucketing looks like is decided later,
+// during anchor generation. For a task that shows a table, each item should equal the first
+// cell of one table row — that is how the candidate's bucket picker lands on that row.
 const ClassificationEditor = ({ value, onChange }: Props) => {
     const setItem = (index: number, text: string) => {
         const items = [...value.items];
@@ -15,47 +18,19 @@ const ClassificationEditor = ({ value, onChange }: Props) => {
 
     const setBucket = (index: number, text: string) => {
         const buckets = [...value.buckets];
-        const old = buckets[index];
         buckets[index] = text;
-        onChange({
-            ...value,
-            buckets,
-            correctMapping: value.correctMapping.map((m) =>
-                m.bucket === old ? { ...m, bucket: text } : m,
-            ),
-        });
+        onChange({ ...value, buckets });
     };
 
-    const setMapping = (item: string, bucket: string) => {
-        const rest = value.correctMapping.filter((m) => m.item !== item);
-        onChange({ ...value, correctMapping: [...rest, { item, bucket }] });
-    };
+    const addItem = () => onChange({ ...value, items: [...value.items, ""] });
 
-    const addItem = () =>
-        onChange({ ...value, items: [...value.items, ""] });
+    const removeItem = (index: number) =>
+        onChange({ ...value, items: value.items.filter((_, i) => i !== index) });
 
-    const removeItem = (index: number) => {
-        const removed = value.items[index];
-        onChange({
-            ...value,
-            items: value.items.filter((_, i) => i !== index),
-            correctMapping: value.correctMapping.filter((m) => m.item !== removed),
-        });
-    };
+    const addBucket = () => onChange({ ...value, buckets: [...value.buckets, ""] });
 
-    const addBucket = () =>
-        onChange({ ...value, buckets: [...value.buckets, ""] });
-
-    const removeBucket = (index: number) => {
-        const removed = value.buckets[index];
-        onChange({
-            ...value,
-            buckets: value.buckets.filter((_, i) => i !== index),
-            correctMapping: value.correctMapping.filter(
-                (m) => m.bucket !== removed,
-            ),
-        });
-    };
+    const removeBucket = (index: number) =>
+        onChange({ ...value, buckets: value.buckets.filter((_, i) => i !== index) });
 
     return (
         <div className="flex flex-col gap-4">
@@ -91,7 +66,7 @@ const ClassificationEditor = ({ value, onChange }: Props) => {
 
             <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium text-neutral-700">
-                    Items and their correct bucket
+                    Items to sort (match the first cell of a table row)
                 </label>
                 {value.items.map((item, i) => (
                     <div key={i} className="flex items-center gap-2">
@@ -100,20 +75,6 @@ const ClassificationEditor = ({ value, onChange }: Props) => {
                             value={item}
                             onChange={(e) => setItem(i, e.target.value)}
                         />
-                        <select
-                            className="w-36 rounded border border-neutral-200 px-2 py-1.5 text-sm"
-                            value={
-                                value.correctMapping.find((m) => m.item === item)?.bucket ?? ""
-                            }
-                            onChange={(e) => setMapping(item, e.target.value)}
-                        >
-                            <option value="">Select bucket</option>
-                            {value.buckets.map((bucket, bi) => (
-                                <option key={bi} value={bucket}>
-                                    {bucket}
-                                </option>
-                            ))}
-                        </select>
                         <button
                             type="button"
                             onClick={() => removeItem(i)}

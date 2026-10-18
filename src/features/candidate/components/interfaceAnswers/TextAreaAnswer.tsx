@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { RichTextComposerPayload, TextAreaPayload } from "@/features/simulation-tasks/types";
 
 interface Props {
@@ -8,17 +9,22 @@ interface Props {
     payload: TextAreaPayload | RichTextComposerPayload;
     value: string;
     onChange: (value: string) => void;
+    /** The task's structured answer widget, shown above the written response. */
+    objectiveSlot?: ReactNode;
 }
 
 const MAX_CHARS = 1000;
 
-const TextAreaAnswer = ({ payload, value, onChange }: Props) => (
-    <textarea
-        value={value}
-        onChange={(event) => onChange(event.target.value.slice(0, MAX_CHARS))}
-        placeholder={payload.placeholder ?? "Type your response here..."}
-        className="h-38.25 w-full resize-none rounded-lg border border-neutral-200 px-3.5 py-2.5 text-[16px] text-neutral-700 shadow-[0px_1px_1px_rgba(10,13,18,0.05)] outline-none placeholder:text-neutral-400 focus:border-primary-500"
-    />
+const TextAreaAnswer = ({ payload, value, onChange, objectiveSlot }: Props) => (
+    <div className="flex w-full flex-col gap-4">
+        {objectiveSlot}
+        <textarea
+            value={value}
+            onChange={(event) => onChange(event.target.value.slice(0, MAX_CHARS))}
+            placeholder={payload.placeholder ?? "Type your response here..."}
+            className="h-38.25 w-full resize-none rounded-lg border border-neutral-200 px-3.5 py-2.5 text-[16px] text-neutral-700 shadow-[0px_1px_1px_rgba(10,13,18,0.05)] outline-none placeholder:text-neutral-400 focus:border-primary-500"
+        />
+    </div>
 );
 
 export default TextAreaAnswer;
