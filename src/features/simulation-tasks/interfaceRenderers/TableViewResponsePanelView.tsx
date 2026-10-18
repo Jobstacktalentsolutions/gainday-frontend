@@ -27,7 +27,7 @@ const TableViewResponsePanelView = ({ payload, mode, onChange }: Props) => {
                 <TableHeader>
                     <TableRow>
                         {columns.map((col, i) => (
-                            <TableHead key={i}>{col}</TableHead>
+                            <TableHead key={i} className="whitespace-normal break-words">{col}</TableHead>
                         ))}
                     </TableRow>
                 </TableHeader>
@@ -35,7 +35,7 @@ const TableViewResponsePanelView = ({ payload, mode, onChange }: Props) => {
                     {rows.map((row, ri) => (
                         <TableRow key={ri}>
                             {row.map((cell, ci) => (
-                                <TableCell key={ci}>{cell}</TableCell>
+                                <TableCell key={ci} className="whitespace-normal break-words">{cell}</TableCell>
                             ))}
                         </TableRow>
                     ))}

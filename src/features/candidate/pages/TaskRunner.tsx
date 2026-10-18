@@ -200,6 +200,13 @@ export default function TaskRunner() {
         );
     }
 
+    // The persisted run store can still hold a previous simulation's state (including a
+    // currentTaskIndex past this simulation's last task) until the startRun effect above
+    // resets it — wait for that instead of indexing into tasks with a stale index.
+    if (runStore.simulationId !== simulation.id) {
+        return <AppLoader />;
+    }
+
     const task = simulation.tasks[runStore.currentTaskIndex];
     const answer = runStore.answers[task.id] ?? EMPTY_ANSWER;
     const isLastTask = runStore.currentTaskIndex === simulation.tasks.length - 1;
@@ -219,6 +226,12 @@ export default function TaskRunner() {
             return;
         }
         runStore.advanceTask(task.id);
+    }
+
+    function handlePrevious() {
+        if (runStore.currentTaskIndex > 0) {
+            runStore.previousTask(task.id);
+        }
     }
 
     if (runStore.isComplete) {
@@ -295,10 +308,6 @@ export default function TaskRunner() {
                 <div className="flex w-full max-w-246.5 flex-col gap-10 rounded-3xl bg-white p-10 shadow-[0px_4px_10px_rgba(16,24,40,0.05)]">
                     <div className="flex w-full items-center justify-between">
                         <p className="text-[16px] text-primary-500">Task • {task.category}</p>
-                        {/*previously no provisions for weight*/}
-                        <span className="rounded-full border border-secondary-500 bg-warning-50 px-4 py-1 text-[16px] text-secondary-500">
-                            Weight: —
-                        </span>
                     </div>
 
                     <div className="flex flex-col gap-1">
@@ -327,8 +336,13 @@ export default function TaskRunner() {
                     <div className="h-px w-full bg-neutral-200" />
 
                     <div className="flex w-full items-center justify-between">
-                        {/* Previous Task is permanently disabled — forward-only, per your call */}
-                        <ActionButton variant="outline" size="md" disabled className="opacity-70">
+                        <ActionButton
+                            variant="outline"
+                            size="md"
+                            onClick={handlePrevious}
+                            disabled={runStore.currentTaskIndex === 0}
+                            className={runStore.currentTaskIndex === 0 ? "opacity-70" : undefined}
+                        >
                             Previous Task
                         </ActionButton>
                         <ActionButton

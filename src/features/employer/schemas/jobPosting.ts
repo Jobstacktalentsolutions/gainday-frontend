@@ -70,7 +70,7 @@ export const simulationTaskSchema = z.object({
 });
 
 export const simulationBuilderSchema = z.object({
-    tasks: z.array(simulationTaskSchema).min(1, "Add at least one task"),
+    tasks: z.array(simulationTaskSchema).min(1, "Add at least one task").max(4, "A simulation can have at most 4 tasks"),
 });
 
 export type SimulationBuilderFormValues = z.infer<typeof simulationBuilderSchema>;

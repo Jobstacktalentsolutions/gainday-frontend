@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import { Plus, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
@@ -337,7 +337,8 @@ const SimulationBuilder = () => {
                     </AnimatePresence>
                 </div>
 
-                <button
+                {/* Add Task button temporarily commented out - restricted to 4 tasks max */}
+                {/* <button
                     type="button"
                     onClick={handleAddTask}
                     disabled={isAnyTaskBusy || isWholeScenarioGenerating}
@@ -345,7 +346,7 @@ const SimulationBuilder = () => {
                 >
                     <Plus className="size-4" aria-hidden="true" />
                     {isAddingTask ? "Generating task..." : "Add Task"}
-                </button>
+                </button> */}
             </div>
 
             {/* Navigation buttons */}

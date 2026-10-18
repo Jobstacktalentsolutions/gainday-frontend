@@ -38,12 +38,12 @@ const TableViewResponsePanelAnswer = ({ payload, value, onChange, objectiveSlot,
                     <thead className="bg-neutral-50">
                         <tr>
                             {columns.map((column) => (
-                                <th key={column} className="whitespace-nowrap px-4 py-2.5 font-medium text-neutral-700">
+                                <th key={column} className="px-3.5 py-2.5 font-medium text-neutral-700 align-bottom">
                                     {column}
                                 </th>
                             ))}
                             {hasInlineBuckets && (
-                                <th className="whitespace-nowrap px-4 py-2.5 font-medium text-neutral-700">Your bucket</th>
+                                <th className="whitespace-nowrap px-3.5 py-2.5 font-medium text-neutral-700 align-bottom w-36">Your bucket</th>
                             )}
                         </tr>
                     </thead>
@@ -53,12 +53,12 @@ const TableViewResponsePanelAnswer = ({ payload, value, onChange, objectiveSlot,
                             return (
                                 <tr key={rowIndex} className="border-t border-neutral-200">
                                     {row.map((cell, cellIndex) => (
-                                        <td key={cellIndex} className="whitespace-nowrap px-4 py-2.5 text-neutral-950">
+                                        <td key={cellIndex} className="px-3.5 py-2.5 text-neutral-950 align-middle">
                                             {cell}
                                         </td>
                                     ))}
                                     {hasInlineBuckets && (
-                                        <td className="px-4 py-1.5">
+                                        <td className="whitespace-nowrap px-3.5 py-1.5 align-middle w-36">
                                             {item !== undefined && classification && (
                                                 <BucketSelect
                                                     value={mapping[item]}

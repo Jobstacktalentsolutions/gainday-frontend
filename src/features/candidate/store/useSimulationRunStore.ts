@@ -42,6 +42,7 @@ interface SimulationRunState {
     /** `taskId` is the task being left (whose elapsed time gets recorded), not the one being
      *  entered — the index simply advances by one. */
     advanceTask: (taskId: string) => void;
+    previousTask: (taskId: string) => void;
     markComplete: (currentTaskId?: string) => void;
     resetRun: () => void;
 }
@@ -109,6 +110,13 @@ export const useSimulationRunStore = create<SimulationRunState>()(
             advanceTask: (taskId) =>
                 set((state) => ({
                     currentTaskIndex: state.currentTaskIndex + 1,
+                    taskTimeSpentSeconds: accrueTaskTime(state, taskId),
+                    currentTaskEnteredAt: Date.now(),
+                })),
+
+            previousTask: (taskId) =>
+                set((state) => ({
+                    currentTaskIndex: Math.max(0, state.currentTaskIndex - 1),
                     taskTimeSpentSeconds: accrueTaskTime(state, taskId),
                     currentTaskEnteredAt: Date.now(),
                 })),
