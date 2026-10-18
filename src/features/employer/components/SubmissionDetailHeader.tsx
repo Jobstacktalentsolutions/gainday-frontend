@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Check } from "lucide-react";
+import { ArrowLeft, Check, Lock } from "lucide-react";
 import Skeleton from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { formatSubmittedDate } from "../utils/submissionFormatters";
@@ -8,7 +8,10 @@ import type { SubmissionDetail } from "../types/submission";
 interface SubmissionDetailHeaderProps {
     jobId: string;
     /** Omit while loading, or when the submission couldn't be loaded. */
-    submission?: Pick<SubmissionDetail, "id" | "candidateName" | "displayId" | "submittedAt" | "overallScore" | "status" | "isSelected">;
+    submission?: Pick<
+        SubmissionDetail,
+        "id" | "candidateName" | "displayId" | "submittedAt" | "overallScore" | "status" | "isSelected" | "isUnlocked"
+    >;
     isLoading?: boolean;
     onToggleSelect?: () => void;
     isUpdatingSelect?: boolean;
@@ -77,11 +80,27 @@ const SubmissionDetailHeader = ({
                                 "flex h-11 items-center gap-1.5 rounded-lg px-4 text-sm font-semibold transition-colors disabled:opacity-50",
                                 isSelected
                                     ? "border border-success-300 bg-success-100 text-success-800 hover:bg-success-200"
-                                    : "border border-neutral-300 bg-white text-neutral-800 hover:bg-neutral-50",
+                                    : !submission.isUnlocked
+                                      ? "border border-neutral-300 bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
+                                      : "border border-primary-500 bg-white text-primary-600 hover:bg-primary-50",
                             )}
                         >
-                            <Check className="size-4" />
-                            {isSelected ? "Selected" : "Select Candidate"}
+                            {isSelected ? (
+                                <>
+                                    <Check className="size-4 text-success-700" />
+                                    Selected
+                                </>
+                            ) : !submission.isUnlocked ? (
+                                <>
+                                    <Lock className="size-4" />
+                                    Unlock to Select
+                                </>
+                            ) : (
+                                <>
+                                    <Check className="size-4" />
+                                    Select Candidate
+                                </>
+                            )}
                         </button>
                     )}
                     <div className="flex shrink-0 items-center gap-3 border-l border-primary-500 pl-3">

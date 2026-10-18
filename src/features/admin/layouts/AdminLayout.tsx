@@ -1,20 +1,21 @@
 import { Outlet, useLocation, Navigate } from "react-router-dom";
 import AdminSidebar from "../components/AdminSidebar";
-import { useProtectedRoute } from "@/features/auth/hooks/useProtectedRoute";
-import { useAuthStore } from "@/features/auth/store/authStore";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import AppLoader from "@/components/ui/AppLoader";
 import { isRouteAllowedForRole } from "../utils/rolePermissions";
 
 const AdminLayout = () => {
     const location = useLocation();
-    const user = useAuthStore((state) => state.user);
-    const { isAuthorized, isLoadingProfile } = useProtectedRoute({
-        requiredRole: "ADMIN",
-        redirectTo: "/admin/login",
-    });
+    const { user, accessToken, isAuthenticated, isLoadingProfile } = useCurrentUser();
 
-    if (isLoadingProfile || !isAuthorized) {
+    // A token exists but the profile hasn't resolved yet — show loader
+    if (accessToken && (!user || isLoadingProfile)) {
         return <AppLoader />;
+    }
+
+    if (!isAuthenticated || user?.role !== "ADMIN") {
+        const redirect = encodeURIComponent(`${location.pathname}${location.search}`);
+        return <Navigate to={`/admin/login?redirect=${redirect}`} replace />;
     }
 
     const isPathAllowed = isRouteAllowedForRole(

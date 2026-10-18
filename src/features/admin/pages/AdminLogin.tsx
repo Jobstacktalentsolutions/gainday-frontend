@@ -1,8 +1,8 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import {
   AlertCircle,
@@ -16,6 +16,7 @@ import {
 import { type AdminLoginFormValues, adminLoginSchema } from "../schemas/loginSchema";
 import { apiClient } from "@/lib/api/client";
 import { useAuthStore } from "@/features/auth/store/authStore";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 
 import { Button } from "@/components/ui/button";
 import { FormInput } from "@/components/form/FormInput";
@@ -54,6 +55,23 @@ type SetPasswordFormValues = z.infer<typeof setPasswordSchema>;
 
 const AdminLogin = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { user, isAuthenticated } = useCurrentUser();
+
+  const redirect = searchParams.get("redirect");
+  const target = useMemo(() => {
+    if (redirect && redirect.startsWith("/admin") && redirect !== "/admin" && redirect !== "/admin/login") {
+      return redirect;
+    }
+    return "/admin/dashboard";
+  }, [redirect]);
+
+  useEffect(() => {
+    if (isAuthenticated && user?.role === "ADMIN") {
+      navigate(target, { replace: true });
+    }
+  }, [isAuthenticated, user?.role, target, navigate]);
+
   const [step, setStep] = useState<"credentials" | "2fa" | "set-password">("credentials");
   const [challengeToken, setChallengeToken] = useState<string>("");
   const [emailMasked, setEmailMasked] = useState<string>("");
@@ -128,7 +146,7 @@ const AdminLogin = () => {
       if (data.user?.mustChangePassword) {
         setStep("set-password");
       } else {
-        navigate("/admin/dashboard");
+        navigate(target);
       }
     },
     onError: (err: any) => {
@@ -148,7 +166,7 @@ const AdminLogin = () => {
     onSuccess: (data) => {
       setErrorMessage(null);
       useAuthStore.getState().setAuth(data.access_token, data.user);
-      navigate("/admin/dashboard");
+      navigate(target);
     },
     onError: (err: any) => {
       const msg =

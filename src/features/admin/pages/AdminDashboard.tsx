@@ -9,10 +9,13 @@ import {
   Sparkles,
   Building2,
   UserCheck,
+  Bell,
 } from "lucide-react";
 import { useDashboardStats, type Timeframe } from "../hooks/useDashboardStats";
+import { useAdminNotificationStats } from "../hooks/useAdminNotifications";
 import { AnalyticsChart } from "../components/AnalyticsChart";
 import { DashboardActionCards } from "../components/DashboardActionCards";
+import { DashboardSystemAlerts } from "../components/DashboardSystemAlerts";
 import StatusBadge from "../components/StatusBadge";
 import { AdminButton } from "@/components/ui/AdminButton";
 
@@ -21,6 +24,7 @@ import { DashboardSkeleton } from "../components/skeletons";
 const AdminDashboard = () => {
   const [timeframe, setTimeframe] = useState<Timeframe>("month");
   const { data, isLoading, isError, isFetching } = useDashboardStats(timeframe);
+  const { data: notificationStats } = useAdminNotificationStats();
   const navigate = useNavigate();
 
   if (isLoading) {
@@ -72,6 +76,9 @@ const AdminDashboard = () => {
           </AdminButton>
         </div>
       </div>
+
+      {/* System Alerts Section (visible if any exist or are marked unread) */}
+      <DashboardSystemAlerts />
 
       {/* 1. Quick Action CTAs */}
       <DashboardActionCards stats={stats} />
@@ -285,6 +292,32 @@ const AdminDashboard = () => {
                     <p className="text-xs font-semibold text-neutral-900">AI Task Review Queue</p>
                     <p className="text-[11px] text-neutral-500">
                       {stats.pendingReviewsCount} items awaiting approval
+                    </p>
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-neutral-400" />
+              </div>
+
+              {/* System Alerts & Notifications */}
+              <div
+                onClick={() => navigate("/admin/notifications")}
+                className="flex items-center justify-between p-3 rounded-lg border border-neutral-100 hover:border-neutral-300 hover:bg-neutral-50/60 transition-all cursor-pointer"
+              >
+                <div className="flex items-center gap-2.5">
+                  <div className="p-1.5 rounded-md bg-rose-50 text-rose-600">
+                    <Bell className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-xs font-semibold text-neutral-900">System Alerts</p>
+                      {notificationStats && notificationStats.unread > 0 && (
+                        <span className="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">
+                          {notificationStats.unread} unread
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-neutral-500">
+                      {notificationStats?.total ?? 0} automated system notices
                     </p>
                   </div>
                 </div>

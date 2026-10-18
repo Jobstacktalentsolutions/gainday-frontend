@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { CircleCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Skeleton from "@/components/ui/skeleton";
 import { formatShortDate } from "@/lib/formatDate";
@@ -25,9 +26,15 @@ const ApplicationCard = ({ application, onWithdraw }: ApplicationCardProps) => {
                 <h2 className="text-2xl leading-8 text-neutral-900">
                     <Link
                         to={`/candidate/applications/${application.id}`}
-                        className="after:absolute after:inset-0 after:rounded-xl focus-visible:outline-2 focus-visible:outline-primary-500"
+                        className="flex items-center gap-2 after:absolute after:inset-0 after:rounded-xl focus-visible:outline-2 focus-visible:outline-primary-500"
                     >
                         {application.jobTitle}
+                        {application.status === "SELECTED" && (
+                            <CircleCheck
+                                className="size-6 shrink-0 text-success-500"
+                                aria-label="Selected"
+                            />
+                        )}
                     </Link>
                 </h2>
                 <p className="text-base text-neutral-500">{companyLine}</p>

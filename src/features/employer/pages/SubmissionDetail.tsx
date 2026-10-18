@@ -67,6 +67,11 @@ const SubmissionDetail = () => {
     const handleToggleSelect = () => {
         if (!submission) return;
         const currentlySelected = submission.isSelected || submission.status === "SELECTED";
+        if (!currentlySelected && !submission.isUnlocked) {
+            toast.info("Please unlock this candidate before selecting them.");
+            handleUnlockContact();
+            return;
+        }
         selectCandidate.mutate(
             {
                 submissionId: submission.id,
@@ -78,8 +83,13 @@ const SubmissionDetail = () => {
                     toast.success(data.isSelected ? "Candidate selected" : "Candidate unselected");
                     refetch();
                 },
-                onError: () => {
-                    toast.error("Failed to update candidate selection status.");
+                onError: (error) => {
+                    if (isAxiosError(error) && error.response?.status === 403) {
+                        toast.error(error.response.data?.message || "You must unlock this candidate before selecting them.");
+                        handleUnlockContact();
+                    } else {
+                        toast.error("Failed to update candidate selection status.");
+                    }
                 },
             },
         );

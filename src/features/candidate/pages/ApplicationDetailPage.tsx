@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, CircleCheck } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
@@ -37,8 +37,14 @@ const ApplicationDetailContent = ({ application }: { application: ApplicationDet
                         <section className="flex flex-col gap-6 rounded-xl bg-white p-6 lg:p-8">
                             <div className="flex flex-wrap items-start justify-between gap-4">
                                 <div className="flex flex-col gap-2">
-                                    <h1 className="text-3xl leading-tight text-neutral-900 lg:text-4xl">
+                                    <h1 className="flex items-center gap-3 text-3xl leading-tight text-neutral-900 lg:text-4xl">
                                         {application.jobTitle}
+                                        {application.status === "SELECTED" && (
+                                            <CircleCheck
+                                                className="size-8 shrink-0 text-success-500"
+                                                aria-label="Selected"
+                                            />
+                                        )}
                                     </h1>
                                     <p className="text-base text-neutral-500">{companyLine}</p>
                                 </div>

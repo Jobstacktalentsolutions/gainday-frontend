@@ -7,6 +7,7 @@ import { UserAvatarMenu } from "@/components/ui/UserAvatarMenu";
 import { useLogout } from "@/features/auth/hooks/useLogout";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { CANDIDATE_NAV_LINKS } from "../utils/candidateNavLinks";
+import NotificationBell from "./NotificationBell";
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     cn(
@@ -38,19 +39,22 @@ const CandidateHeader = () => {
                     ))}
                 </nav>
 
-                <div className="hidden lg:block">
-                    <UserAvatarMenu />
-                </div>
+                <div className="flex items-center gap-2">
+                    <NotificationBell />
+                    <div className="hidden lg:block">
+                        <UserAvatarMenu />
+                    </div>
 
-                <button
-                    type="button"
-                    aria-label={menuOpen ? "Close menu" : "Open menu"}
-                    aria-expanded={menuOpen}
-                    onClick={() => setMenuOpen((open) => !open)}
-                    className="flex size-10 cursor-pointer items-center justify-center transition-colors hover:text-neutral-500 lg:hidden"
-                >
-                    {menuOpen ? <X size={24} /> : <Menu size={24} />}
-                </button>
+                    <button
+                        type="button"
+                        aria-label={menuOpen ? "Close menu" : "Open menu"}
+                        aria-expanded={menuOpen}
+                        onClick={() => setMenuOpen((open) => !open)}
+                        className="flex size-10 cursor-pointer items-center justify-center transition-colors hover:text-neutral-500 lg:hidden"
+                    >
+                        {menuOpen ? <X size={24} /> : <Menu size={24} />}
+                    </button>
+                </div>
             </div>
 
             {menuOpen && (

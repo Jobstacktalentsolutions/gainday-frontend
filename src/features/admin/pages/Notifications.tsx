@@ -45,7 +45,7 @@ const Notifications = () => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Notifications</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-neutral-900">System Alerts</h1>
           <p className="mt-0.5 text-xs text-neutral-500">
             System alerts that need an admin, such as submissions that could not be graded
           </p>

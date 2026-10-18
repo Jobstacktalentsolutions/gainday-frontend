@@ -59,7 +59,7 @@ const NAV_GROUPS: NavGroup[] = [
       { to: "/admin/generation-reviews", label: "Generation Reviews", icon: CheckSquare },
       { to: "/admin/ai-oversight", label: "AI Oversight", icon: Bot },
       { to: "/admin/support-messages", label: "Support Inquiries", icon: LifeBuoy },
-      { to: NOTIFICATIONS_PATH, label: "Notifications", icon: Bell },
+      { to: NOTIFICATIONS_PATH, label: "System Alerts", icon: Bell },
     ],
   },
 ];
