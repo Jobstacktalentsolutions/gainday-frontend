@@ -13,7 +13,7 @@ const SolutionSection = () => {
             viewport={{ once: true, amount: 0.15 }}
             className="py-16 lg:py-25 px-6 gap-16 lg:gap-30 flex flex-col"
         >
-            <div className="flex flex-col gap-4 lg:flex-row  lg:px-30 lg:gap-44.5" id="for-candidates">
+            <div className="scroll-mt-28 flex flex-col gap-4 lg:flex-row  lg:px-30 lg:gap-44.5" id="for-candidates">
                 <motion.div variants={fadeUp} className="lg:flex-1">
                     <SectionTag label="FOR CANDIDATES" />
                     <h3 className="text-[32px] tracking-[-0.32px] leading-9.5 pt-4 lg:text-[48px] lg:tracking-[-0.48px] lg:leading-14.5">
@@ -45,7 +45,7 @@ const SolutionSection = () => {
 
 
             </div>
-            <div className="flex flex-col gap-4 lg:flex-row-reverse lg:px-30 lg:gap-44.5 " id="for-employers">
+            <div className="scroll-mt-28 flex flex-col gap-4 lg:flex-row-reverse lg:px-30 lg:gap-44.5 " id="for-employers">                
                 <motion.div variants={fadeUp} className="lg:flex-1">
                     <SectionTag label="FOR EMPLOYERS" />
                     <h3 className="text-[32px] tracking-[-0.32px] leading-9.5 pt-4 lg:text-[48px] lg:tracking-[-0.48px] lg:leading-14.5">

@@ -9,8 +9,11 @@ import LiveRolesSection from "../components/liveRoles/LiveRolesSection";
 import { MarqueeStrip } from "../components/MarqueeStrip";
 import ProblemSection from "../components/ProblemSection";
 import SolutionSection from "../components/solutionSection/SolutionSection";
+import { useScrollToHash } from "../utils/useScrollToHash";
 
 const LandingPage = () => {
+    useScrollToHash();
+
     return (
         <div className="bg-neutral-50">
             <Header />

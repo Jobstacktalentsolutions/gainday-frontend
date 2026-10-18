@@ -27,8 +27,7 @@ const HowItWorksSection = () => {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.20 }}
-            className="flex w-full flex-col items-center gap-15 bg-neutral-950 px-6 py-20 lg:gap-20 lg:px-30 lg:py-30"
-        >
+            className="scroll-mt-28 flex w-full flex-col items-center gap-15 bg-neutral-950 px-6 py-20 lg:gap-20 lg:px-30 lg:py-30"        >
             <motion.div
                 variants={fadeUp}
                 className="flex flex-col items-center gap-3"
