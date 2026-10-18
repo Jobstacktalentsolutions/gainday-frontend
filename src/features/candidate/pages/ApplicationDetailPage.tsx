@@ -94,14 +94,6 @@ const ApplicationDetailContent = ({ application }: { application: ApplicationDet
                                         View submission
                                     </Link>
                                 )}
-                                {application.rating !== null && (
-                                    <Link
-                                        to={`/candidate/applications/${application.id}/submission`}
-                                        className={cn(actionButtonVariants({ variant: "outline", size: "md" }), "sm:w-48")}
-                                    >
-                                        View submission
-                                    </Link>
-                                )}
                                 {canWithdraw && (
                                     <button
                                         type="button"
