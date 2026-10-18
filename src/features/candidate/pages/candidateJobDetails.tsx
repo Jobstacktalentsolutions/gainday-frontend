@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Clock, MapPin, Wallet, Share2, Sparkles, Check } from "lucide-react";
+import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import CandidateHeader from "../components/CandidateHeader";
@@ -11,6 +12,7 @@ import { useJobDetails } from "../hooks/useJobDetails";
 import { useAppliedJobIds } from "../hooks/useAppliedJobIds";
 import { formatPostedDate, formatSalaryRange } from "../utils/formatters";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
+import { getJobShareUrl, shareLink } from "@/lib/shareLink";
 
 export default function JobDetailsPage() {
     const { jobId } = useParams<{ jobId: string }>();
@@ -38,6 +40,19 @@ export default function JobDetailsPage() {
                 Job not found
             </div>
         )
+    }
+
+    async function handleShareClick() {
+        if (!job) return;
+        const result = await shareLink({
+            title: `${job.title} at ${job.employer.companyName}`,
+            text: "Take a look at this role on Gainday",
+            url: getJobShareUrl(job.id),
+        });
+        // "shared" needs no toast (the share sheet is its own confirmation), and neither does
+        // "cancelled" — the person closed the sheet on purpose.
+        if (result === "copied") toast.success("Job link copied to clipboard");
+        if (result === "failed") toast.error("Couldn't share the link — try again.");
     }
 
     function handleApplyClick() {
