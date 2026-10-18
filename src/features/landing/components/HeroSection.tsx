@@ -4,9 +4,16 @@ import { Button } from "@/components/ui/button";
 import { StatsRow } from "./StatsRow";
 import { fadeUp, heroStagger } from "@/lib/motion/variants";
 import { motion } from "motion/react";
+import { useNavigate } from "react-router-dom";
+import { useTryChallengePath } from "../utils/useTryChallengePath";
+import { scrollToSectionById } from "../utils/scrollToSection";
 import GradientCard from "./GradientCard";
 
 const HeroSection = () => {
+
+    const navigate = useNavigate();
+    const tryChallengePath = useTryChallengePath();
+
     return (
         <motion.section
             variants={heroStagger}
@@ -48,10 +55,14 @@ const HeroSection = () => {
                     <motion.div
                         variants={fadeUp}
                         className="flex flex-col items-center justify-center gap-4 py-4 lg:flex-row">
-                        <StepContinueButton size="lg" className="w-auto">
+                        <StepContinueButton size="lg" className="w-auto" onClick={() => navigate(tryChallengePath)}>
                             Try a candidate challenge
                         </StepContinueButton>
-                        <Button variant="outline" className="text-base cursor-pointer rounded-[8px] px-10 py-2 leading-6 h-13 hover:bg-neutral-100">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => scrollToSectionById("for-employers")}
+                            className="text-base cursor-pointer rounded-[8px] px-10 py-2 leading-6 h-13 hover:bg-neutral-100">
                             See the employer view
                         </Button>
 
