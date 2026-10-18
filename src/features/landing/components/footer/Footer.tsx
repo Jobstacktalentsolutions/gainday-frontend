@@ -1,13 +1,33 @@
 import { motion } from "motion/react"
 import { fadeUp } from "@/lib/motion/variants"
-import { FooterColumn } from "./FooterColumn"
+import { FooterColumn, type FooterLinkItem } from "./FooterColumn";
+import { useTryChallengePath } from "../../utils/useTryChallengePath";
+import { landingSectionPath } from "../../utils/scrollToSection";
 import brandLogo from "@/assets/gainday icon.svg";
 
-const productLinks = ["How it works", "Try a challenge", "For candidates", "For employers"]
-const companyLinks = ["Privacy", "Terms", "Contact"]
-const contactLinks = ["hello@gainday.org", "Partners", "Social Media"]
+
+const companyLinks: FooterLinkItem[] = [
+    { label: "Privacy" },
+    { label: "Terms" },
+    { label: "Contact" }
+]
+const contactLinks: FooterLinkItem[] = [
+    { label: "hello@gainday.org" },
+    { label: "Partners" },
+    { label: "Social Media" }
+]
 
 export function Footer() {
+
+    const tryChallengePath = useTryChallengePath()
+
+    const productLinks: FooterLinkItem[] = [
+        { label: "How it works", to: landingSectionPath("assessment-process") },
+        { label: "Try a challenge", to: tryChallengePath },
+        { label: "For candidates", to: landingSectionPath("for-candidates") },
+        { label: "For employers", to: landingSectionPath("for-employers") },
+    ]
+
     return (
         <motion.footer
             variants={fadeUp}
