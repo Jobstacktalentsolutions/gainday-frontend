@@ -66,6 +66,12 @@ export interface AdminJobSubmission {
     categoryScores: Record<string, { score: number; rationale: string; evidence: string }>;
     summary: string;
   }>;
+  /** The candidate's raw answer per task. */
+  answers: Array<{
+    taskId: string;
+    responseBody: string;
+    timeSpentSeconds: number;
+  }>;
   completedAt: string | null;
   createdAt: string;
 }

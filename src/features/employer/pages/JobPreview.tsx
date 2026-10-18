@@ -5,6 +5,8 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import TaskTypeBadge from "../components/TaskTypeBadge";
 import StatusBadge from "../components/StatusBadge";
+import CloseJobDialog from "../components/CloseJobDialog";
+import { useCloseJob } from "../hooks/useCloseJob";
 import { useJobPreview } from "../hooks/useJobPreview";
 import type { JobPreviewDetails } from "../types/jobPreview";
 import type { JobStatus } from "../types/job";
@@ -23,10 +25,8 @@ const STATUS_LABELS: Record<JobStatus, string> = {
     DRAFT: "Draft",
     GENERATING: "Generating",
     ACTIVE: "Active",
-    INACTIVE: "Under review",
-    SHORTLIST_READY: "Shortlist ready",
+    CLOSED: "Closed",
     GENERATION_FAILED: "Generation failed",
-    TERMINATED: "Closed",
 };
 
 const JobPreview = () => {
@@ -240,8 +240,11 @@ const DetailField = ({ label, value }: { label: string; value: string }) => (
 
 const LiveJobActions = ({ job }: { job: JobPreviewDetails }) => {
     const navigate = useNavigate();
+    const closeJob = useCloseJob();
+    const [closeDialogOpen, setCloseDialogOpen] = useState(false);
+
     return (
-        <div className="flex flex-wrap items-center gap-6">  
+        <div className="flex flex-wrap items-center gap-6">
             <StepContinueButton
                 onClick={() => navigate(`/employer/jobs/${job.id}/submissions`)}
             >
@@ -255,21 +258,41 @@ const LiveJobActions = ({ job }: { job: JobPreviewDetails }) => {
             >
                 Preview as a candidate
             </a>
+            {job.status === "ACTIVE" && (
+                <>
+                    <button
+                        type="button"
+                        onClick={() => setCloseDialogOpen(true)}
+                        className="flex h-10 items-center rounded-lg border border-neutral-300 px-6 text-base text-neutral-700 transition-colors hover:bg-neutral-100"
+                    >
+                        Close job
+                    </button>
+                    <CloseJobDialog
+                        jobTitle={job.title}
+                        open={closeDialogOpen}
+                        onOpenChange={(open) => {
+                            if (!open && !closeJob.isPending) setCloseDialogOpen(false);
+                        }}
+                        onConfirm={() => closeJob.mutate(job.id, { onSettled: () => setCloseDialogOpen(false) })}
+                        isPending={closeJob.isPending}
+                    />
+                </>
+            )}
         </div>
     );
 };
 
 const StatsRow = ({ job }: { job: JobPreviewDetails }) => {
-    const isTerminated = job.status === "TERMINATED";
+    const isClosed = job.status === "CLOSED";
     return (
-        <div className={`grid w-full grid-cols-1 gap-6 sm:grid-cols-3 ${isTerminated ? "lg:grid-cols-4" : ""}`}>
+        <div className={`grid w-full grid-cols-1 gap-6 sm:grid-cols-3 ${isClosed ? "lg:grid-cols-4" : ""}`}>
             <StatBox value={String(job.submissionsCount)} label="Applicants" />
             <StatBox value={job.deadline} label="Deadline" />
             <StatBox value={STATUS_LABELS[job.status]} label="Status" />
             {/* TODO: wire up the real hired candidate once a "mark as hired" concept exists on
                 the backend — no such field currently exists on jobs or submissions, so this is
                 shown blurred rather than fabricating a value. */}
-            {isTerminated && <StatBox value="Hired candidate" label="Hired candidate" blurValue />}
+            {isClosed && <StatBox value="Hired candidate" label="Hired candidate" blurValue />}
         </div>
     );
 };

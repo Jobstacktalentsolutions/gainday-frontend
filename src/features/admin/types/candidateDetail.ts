@@ -32,10 +32,13 @@ export interface CandidateSubmission {
   jobTitle: string;
   companyName: string;
   simulationTitle: string;
-  status: "PENDING" | "GRADING" | "GRADED" | "DISQUALIFIED" | "WITHDRAWN" | "SELECTED" | "NOT_SELECTED";
+  status: "PENDING" | "GRADING" | "GRADED" | "GRADING_FAILED" | "DISQUALIFIED" | "WITHDRAWN" | "SELECTED" | "NOT_SELECTED";
   overallScore: number | null;
   categoryScores: CandidateCategoryScores | null;
   taskScores: TaskGradingResult[] | null;
+  /** The candidate's raw answers. Only some endpoints send them; the modal skips the section
+   *  when absent. */
+  answers?: Array<{ taskId: string; responseBody: string; timeSpentSeconds: number }>;
   timeTakenSeconds: number | null;
   isAntiCheatFlagged: boolean;
   antiCheatFlags: AntiCheatEvent[];

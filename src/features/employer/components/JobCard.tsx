@@ -48,14 +48,10 @@ const JobCard = ({ job, onShareLink, onViewSubmissions, onOpenPreview, onDelete 
             aria-label={`Open preview for ${job.title}`}
             className="flex w-full cursor-pointer flex-col gap-3 rounded-3xl bg-white px-3 py-6 shadow-sm transition-all duration-150 hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99] active:shadow-sm lg:px-6 lg:py-8"
         >
-            <div className="flex items-start justify-between gap-4">
-                <div className="flex flex-col items-start gap-1">
-                    <StatusBadge status={job.status} />
-                    <h3 className="text-lg text-neutral-950">{job.title}</h3>
-                    <JobMetaRow location={job.location} employmentType={job.employmentType} />
-                </div>
+            <div className="flex items-center justify-between gap-4">
+                <StatusBadge status={job.status} />
                 <div className="flex items-center gap-2">
-                    {/* Delete button: only for non-live jobs (Draft, Inactive, etc.) */}
+                    {/* Delete button: only for non-live jobs (Draft, Closed, etc.) */}
                     {job.status !== "ACTIVE" && onDelete && (
                         <button
                             type="button"
@@ -91,7 +87,11 @@ const JobCard = ({ job, onShareLink, onViewSubmissions, onOpenPreview, onDelete 
                         <span className="lg:hidden">Share Link</span>
                     </button>
                 </div>
+            </div>
 
+            <div className="flex flex-col items-start gap-1">
+                <h3 className="text-lg text-neutral-950">{job.title}</h3>
+                <JobMetaRow location={job.location} employmentType={job.employmentType} />
             </div>
 
             <button

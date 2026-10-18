@@ -14,10 +14,21 @@ import { useEmployerSubmission } from "../hooks/useEmployerSubmission";
 import { useSubmissionPassport } from "../hooks/useSubmissionPassport";
 import { useUnlockCandidates } from "../hooks/useUnlockCandidates";
 import type { PaymentRequiredBody } from "../types/payments";
+import type { SubmissionStatus } from "../types/submission";
 import { getCandidateLabel } from "../utils/submissionLabels";
 
 const PAGE_SHELL = "min-h-screen bg-neutral-50 px-6 pb-10 pt-40 lg:px-12 xl:px-20";
 const CONTENT_WIDTH = "mx-auto w-full max-w-6xl";
+
+// Shown above the task list while there is no score, so the answers below don't read as an
+// incomplete page. The tasks and answers themselves are always listed.
+const UNGRADED_NOTICE: Partial<Record<SubmissionStatus, string>> = {
+    PENDING: "Grading is queued. The candidate's answers are shown below; scores will appear once grading is complete.",
+    GRADING: "Grading is in progress. The candidate's answers are shown below; scores will appear once it finishes.",
+    GRADING_FAILED:
+        "We couldn't grade this submission. The candidate's answers are shown below without a score; our team has been alerted.",
+    DISQUALIFIED: "This submission was disqualified, so it has no score. The candidate's answers are shown below.",
+};
 
 const SubmissionDetail = () => {
     const { jobId = "", submissionId } = useParams<{ jobId: string; submissionId: string }>();
@@ -109,9 +120,16 @@ const SubmissionDetail = () => {
                     <h2 id="task-breakdown-heading" className="text-base text-primary-950">
                         Task-by-task breakdown
                     </h2>
-                    {submission.tasks.length === 0 && (
-                        <p className="text-base text-neutral-700">
-                            Task results will appear here once grading is complete.
+                    {submission.overallScore === null && (
+                        <p
+                            role="status"
+                            className={`rounded-xl px-4 py-3 text-sm ${
+                                submission.status === "GRADING_FAILED"
+                                    ? "bg-error-50 text-error-600"
+                                    : "bg-neutral-100 text-neutral-700"
+                            }`}
+                        >
+                            {UNGRADED_NOTICE[submission.status] ?? "This submission has no grade."}
                         </p>
                     )}
                     {submission.tasks.map((task) => (

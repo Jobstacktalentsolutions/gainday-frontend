@@ -23,6 +23,7 @@ export default function JobDetailsPage() {
     const [authPromptOpen, setAuthPromptOpen] = useState(false);
 
     const isApplied = Boolean(job && appliedSet.has(job.id));
+    const isClosed = job?.status === "CLOSED";
 
     if (isLoading) {
         return (
@@ -56,7 +57,7 @@ export default function JobDetailsPage() {
     }
 
     function handleApplyClick() {
-        if (isApplied) return;
+        if (isApplied || isClosed) return;
         if (isAuthenticated) {
             navigate(`/job-board/${job!.id}/pre-simulation`);
         } else {
@@ -116,12 +117,12 @@ export default function JobDetailsPage() {
                         <div className="flex shrink-0 items-center gap-4">
                             <StepContinueButton
                                 size="lg"
-                                disabled={isApplied}
+                                disabled={isApplied || isClosed}
                                 icon={isApplied ? <Check className="size-4" /> : undefined}
-                                className={`w-fit ${isApplied ? "disabled:bg-neutral-200 disabled:text-neutral-500 disabled:opacity-100 disabled:shadow-none pointer-events-none" : ""}`}
+                                className={`w-fit ${isApplied || isClosed ? "disabled:bg-neutral-200 disabled:text-neutral-500 disabled:opacity-100 disabled:shadow-none pointer-events-none" : ""}`}
                                 onClick={handleApplyClick}
                             >
-                                {isApplied ? "Applied" : "Apply"}
+                                {isApplied ? "Applied" : isClosed ? "Closed" : "Apply"}
                             </StepContinueButton>
                             <ActionButton
                                 variant="outline"
@@ -205,12 +206,12 @@ export default function JobDetailsPage() {
                         )}
                         <StepContinueButton
                             size="lg"
-                            disabled={isApplied}
+                            disabled={isApplied || isClosed}
                             icon={isApplied ? <Check className="size-4" /> : undefined}
-                            className={`w-fit ${isApplied ? "disabled:bg-neutral-200 disabled:text-neutral-500 disabled:opacity-100 disabled:shadow-none pointer-events-none" : ""}`}
+                            className={`w-fit ${isApplied || isClosed ? "disabled:bg-neutral-200 disabled:text-neutral-500 disabled:opacity-100 disabled:shadow-none pointer-events-none" : ""}`}
                             onClick={handleApplyClick}
                         >
-                            {isApplied ? "Applied" : "Start Now"}
+                            {isApplied ? "Applied" : isClosed ? "Closed" : "Start Now"}
                         </StepContinueButton>
                         <p className="text-[16px] text-neutral-400">
                             Uses a 20 to 30 minute work simulation, not a cover letter.

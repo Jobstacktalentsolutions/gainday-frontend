@@ -85,7 +85,7 @@ The JWT payload also carries `profileId` alongside `sub` (users.id), `email`, an
 | `salaryRange` | `{ min, max, currency }` | |
 | `applicationDeadline` | timestamp | |
 | `businessProblem` | string | |
-| `status` | `DRAFT` \| `GENERATING` \| `ACTIVE` \| `UNDER_REVIEW` \| `SHORTLIST_READY` \| `CLOSED` \| `GENERATION_FAILED` | |
+| `status` | `DRAFT` \| `GENERATING` \| `ACTIVE` \| `CLOSED` \| `GENERATION_FAILED` | |
 | `employerId` | uuid | FK → **Employer Profile** (`employer_profiles.id`), not `users.id` |
 | `createdAt` / `updatedAt` | timestamp | |
 

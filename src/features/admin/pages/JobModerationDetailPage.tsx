@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import {
+  AlertOctagon,
   ArrowLeft,
   Building2,
   MapPin,
@@ -36,7 +37,10 @@ import { JobDetailSkeleton } from "../components/skeletons";
 const JobModerationDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [selectedSubmission, setSelectedSubmission] = useState<CandidateSubmission | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  // Starts from `?submission=<id>` so a link (for example from an admin notification) opens that
+  // submission straight away.
+  const [selectedSubmissionId, setSelectedSubmissionId] = useState<string | null>(() => searchParams.get("submission"));
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
   const [expandedTasks, setExpandedTasks] = useState<Record<string, boolean>>({});
   const [visibleApplicationsCount, setVisibleApplicationsCount] = useState(10);
@@ -111,6 +115,37 @@ const JobModerationDetailPage = () => {
   }
 
   const { employer, simulation, stats, submissions } = job;
+
+  const selectedJobSubmission = submissions.find((sub) => sub.id === selectedSubmissionId);
+  const selectedSubmission: CandidateSubmission | null = selectedJobSubmission
+    ? {
+        id: selectedJobSubmission.id,
+        jobId: job.id,
+        jobTitle: job.title || "Job Assessment",
+        companyName: employer.companyName,
+        simulationTitle: job.title || "Job Simulation",
+        status: selectedJobSubmission.status as CandidateSubmission["status"],
+        overallScore: selectedJobSubmission.overallScore,
+        categoryScores: selectedJobSubmission.categoryScores as CandidateSubmission["categoryScores"],
+        taskScores: selectedJobSubmission.taskScores as CandidateSubmission["taskScores"],
+        answers: selectedJobSubmission.answers,
+        timeTakenSeconds: selectedJobSubmission.timeTakenSeconds,
+        isAntiCheatFlagged: selectedJobSubmission.isAntiCheatFlagged,
+        antiCheatFlags: selectedJobSubmission.antiCheatFlags,
+        startedAt: null,
+        completedAt: selectedJobSubmission.completedAt,
+        createdAt: selectedJobSubmission.createdAt,
+      }
+    : null;
+
+  const closeSubmission = () => {
+    setSelectedSubmissionId(null);
+    if (searchParams.has("submission")) {
+      const next = new URLSearchParams(searchParams);
+      next.delete("submission");
+      setSearchParams(next, { replace: true });
+    }
+  };
 
   const formatSalary = () => {
     if (!job.salaryRange || (!job.salaryRange.min && !job.salaryRange.max)) {
@@ -216,7 +251,7 @@ const JobModerationDetailPage = () => {
               <AdminButton
                 variant="outline"
                 size="sm"
-                onClick={() => handleToggleStatus("INACTIVE")}
+                onClick={() => handleToggleStatus("CLOSED")}
                 disabled={updateStatusMutation.isPending}
                 className="cursor-pointer text-amber-600 border-amber-200 hover:bg-amber-50"
               >
@@ -597,6 +632,10 @@ const JobModerationDetailPage = () => {
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-bold text-xs bg-emerald-50 text-emerald-700 border border-emerald-200">
                             <Award className="size-3 text-emerald-600" /> {sub.overallScore}%
                           </span>
+                        ) : sub.status === "GRADING_FAILED" ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-error-50 text-error-700 border border-error-200">
+                            <AlertOctagon className="size-3 text-error-600" /> Grading failed
+                          </span>
                         ) : (
                           <span className="text-neutral-400 font-medium">{sub.status}</span>
                         )}
@@ -622,25 +661,7 @@ const JobModerationDetailPage = () => {
                         <AdminButton
                           variant="outline"
                           size="sm"
-                          onClick={() =>
-                            setSelectedSubmission({
-                              id: sub.id,
-                              jobId: job.id,
-                              jobTitle: job.title || "Job Assessment",
-                              companyName: employer.companyName,
-                              simulationTitle: job.title || "Job Simulation",
-                              status: sub.status as any,
-                              overallScore: sub.overallScore,
-                              categoryScores: sub.categoryScores as any,
-                              taskScores: sub.taskScores as any,
-                              timeTakenSeconds: sub.timeTakenSeconds,
-                              isAntiCheatFlagged: sub.isAntiCheatFlagged,
-                              antiCheatFlags: sub.antiCheatFlags as any,
-                              startedAt: null,
-                              completedAt: sub.completedAt,
-                              createdAt: sub.createdAt,
-                            })
-                          }
+                          onClick={() => setSelectedSubmissionId(sub.id)}
                           className="h-7 px-2 text-xs flex items-center gap-1 ml-auto cursor-pointer"
                         >
                           <Eye className="size-3" /> View
@@ -666,7 +687,8 @@ const JobModerationDetailPage = () => {
       <SubmissionDetailModal
         submission={selectedSubmission}
         open={selectedSubmission !== null}
-        onOpenChange={(open) => !open && setSelectedSubmission(null)}
+        onOpenChange={(open) => !open && closeSubmission()}
+        tasks={simulation?.tasks}
       />
 
       <RemoveJobPostDialog

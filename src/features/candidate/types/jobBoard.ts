@@ -2,10 +2,8 @@ export type JobStatus =
     | "DRAFT"
     | "GENERATING"
     | "ACTIVE"
-    | "INACTIVE"
-    | "SHORTLIST_READY"
-    | "GENERATION_FAILED"
-    | "TERMINATED";
+    | "CLOSED"
+    | "GENERATION_FAILED";
 
 export interface JobSalaryRange {
     min: number | null;

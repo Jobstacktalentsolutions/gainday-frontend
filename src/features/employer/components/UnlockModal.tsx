@@ -210,9 +210,9 @@ const UnlockModal = ({ open, onOpenChange, submissionIds, recommendedPackId, onU
                 {step === "checkout" && clientSecret && (
                     <>
                         <DialogTitle>Complete payment</DialogTitle>
-                        <DialogDescription>
+                        {/*<DialogDescription>
                             Your credits will apply automatically once payment completes — you won't leave this page.
-                        </DialogDescription>
+                        </DialogDescription>*/}
                         <div className="max-h-[70vh] overflow-y-auto">
                             <EmbeddedCheckoutProvider
                                 stripe={getStripe()}

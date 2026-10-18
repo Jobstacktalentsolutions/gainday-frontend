@@ -33,7 +33,7 @@ interface BackendJobWithSimulation {
     } | null;
 }
 
-const POSTED_STATUSES: JobStatus[] = ["ACTIVE", "SHORTLIST_READY", "INACTIVE", "TERMINATED"];
+const POSTED_STATUSES: JobStatus[] = ["ACTIVE", "CLOSED"];
 
 const formatSalary = (range: BackendSalaryRange | null): string => {
     if (!range || (range.min == null && range.max == null)) return "Not disclosed";

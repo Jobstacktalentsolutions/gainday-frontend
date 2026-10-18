@@ -7,9 +7,11 @@ interface SidebarNavItemProps {
   label: string;
   icon?: LucideIcon;
   nested?: boolean;
+  /** Count shown as a pill at the end of the row; hidden when zero or undefined. */
+  badge?: number;
 }
 
-const SidebarNavItem = ({ to, label, icon: Icon, nested = false }: SidebarNavItemProps) => {
+const SidebarNavItem = ({ to, label, icon: Icon, nested = false, badge }: SidebarNavItemProps) => {
   return (
     <NavLink
       to={to}
@@ -49,6 +51,12 @@ const SidebarNavItem = ({ to, label, icon: Icon, nested = false }: SidebarNavIte
           )}
 
           <span className="truncate">{label}</span>
+
+          {badge !== undefined && badge > 0 && (
+            <span className="ml-auto rounded-full bg-rose-500 px-1.5 py-0.5 text-[10px] font-semibold leading-none text-white">
+              {badge > 99 ? "99+" : badge}
+            </span>
+          )}
         </>
       )}
     </NavLink>

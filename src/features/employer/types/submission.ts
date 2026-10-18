@@ -12,6 +12,7 @@ export type SubmissionStatus =
     | "PENDING"
     | "GRADING"
     | "GRADED"
+    | "GRADING_FAILED"
     | "DISQUALIFIED"
     | "SELECTED"
     | "NOT_SELECTED";
@@ -46,10 +47,15 @@ export interface TaskResult {
     taskId: string;
     taskNumber: number;
     title: string;
-    /** 0-100 */
-    score: number;
+    /** Markdown. */
+    questionPrompt: string;
+    /** The candidate's answer as plain text; null when they left it blank. */
+    answer: string | null;
+    /** 0-100. Null when this task has not been graded. */
+    score: number | null;
     weight?: number;
-    evidence: string;
+    /** The grader's summary of the answer. Null when this task has not been graded. */
+    evidence: string | null;
 }
 
 export interface SubmissionContact {
@@ -67,7 +73,7 @@ export interface IntegrityEventSummary {
 // Mirrors SubmissionsService.findByIdForEmployer (GET /submissions/:id).
 export interface SubmissionDetail extends SubmissionSummary {
     jobId: string;
-    /** Graded tasks only, in the simulation's order. */
+    /** Every task in the simulation's order, graded or not. */
     tasks: TaskResult[];
     integrityEvents: IntegrityEventSummary[];
     /** Only populated once the employer has unlocked this candidate. */

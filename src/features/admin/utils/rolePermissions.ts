@@ -26,6 +26,7 @@ export const ADMIN_ROUTE_PERMISSIONS: Record<string, AdminRole[]> = {
   "/admin/generation-reviews": ["SUPER_ADMIN", "MANAGER", "MODERATOR"],
   "/admin/ai-oversight": ["SUPER_ADMIN", "MANAGER", "MODERATOR"],
   "/admin/support-messages": ["SUPER_ADMIN", "MANAGER", "MODERATOR"],
+  "/admin/notifications": ["SUPER_ADMIN", "MANAGER", "MODERATOR"],
 };
 
 /**

@@ -14,7 +14,7 @@ interface BackendJob {
     updatedAt: string;
 }
 
-const POSTED_STATUSES: JobStatus[] = ["ACTIVE", "SHORTLIST_READY", "INACTIVE", "TERMINATED"];
+const POSTED_STATUSES: JobStatus[] = ["ACTIVE", "CLOSED"];
 
 const toJob = (job: BackendJob, submissionsCount: number): Job => ({
     id: job.id,

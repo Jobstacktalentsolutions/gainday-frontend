@@ -11,6 +11,7 @@ export const APPLICATION_STATUS_META: Record<ApplicationStatus, ApplicationStatu
     PENDING: { label: "Pending", badgeClass: "bg-warning-50 text-warning-500", canWithdraw: true },
     GRADING: { label: "Grading", badgeClass: "bg-warning-50 text-warning-500", canWithdraw: true },
     GRADED: { label: "Graded", badgeClass: "bg-primary-50 text-primary-500", canWithdraw: true },
+    GRADING_FAILED: { label: "Grading failed", badgeClass: "bg-error-50 text-error-600", canWithdraw: true },
     SELECTED: { label: "Selected", badgeClass: "bg-success-50 text-success-500", canWithdraw: false },
     NOT_SELECTED: { label: "Not Selected", badgeClass: "bg-neutral-50 text-neutral-950", canWithdraw: false },
     DISQUALIFIED: { label: "Disqualified", badgeClass: "bg-error-50 text-error-600", canWithdraw: false },

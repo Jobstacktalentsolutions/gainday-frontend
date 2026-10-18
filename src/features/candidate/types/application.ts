@@ -5,6 +5,7 @@ export type ApplicationStatus =
     | "PENDING"
     | "GRADING"
     | "GRADED"
+    | "GRADING_FAILED"
     | "DISQUALIFIED"
     | "WITHDRAWN"
     | "SELECTED"

@@ -84,7 +84,7 @@ export const AllSubmissionsModal = ({
               />
             </div>
             <div className="flex flex-wrap items-center gap-1.5 w-full sm:w-auto">
-              {["ALL", "PENDING", "GRADING", "GRADED", "DISQUALIFIED", "WITHDRAWN", "SELECTED", "NOT_SELECTED"].map((status) => (
+              {["ALL", "PENDING", "GRADING", "GRADED", "GRADING_FAILED", "DISQUALIFIED", "WITHDRAWN", "SELECTED", "NOT_SELECTED"].map((status) => (
                 <button
                   key={status}
                   type="button"

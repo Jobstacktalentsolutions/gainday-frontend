@@ -14,6 +14,7 @@ import {
   LogOut,
   Crown,
   LifeBuoy,
+  Bell,
 } from "lucide-react";
 import SidebarNavItem from "./SidebarNavItem";
 import brandLogo from "@/assets/gainday.svg";
@@ -21,6 +22,9 @@ import { useAuthStore } from "@/features/auth/store/authStore";
 import { apiClient } from "@/lib/api/client";
 import { cn } from "@/lib/utils";
 import { isRouteAllowedForRole } from "../utils/rolePermissions";
+import { useAdminNotificationStats } from "../hooks/useAdminNotifications";
+
+const NOTIFICATIONS_PATH = "/admin/notifications";
 
 interface NavItem {
   to: string;
@@ -55,6 +59,7 @@ const NAV_GROUPS: NavGroup[] = [
       { to: "/admin/generation-reviews", label: "Generation Reviews", icon: CheckSquare },
       { to: "/admin/ai-oversight", label: "AI Oversight", icon: Bot },
       { to: "/admin/support-messages", label: "Support Inquiries", icon: LifeBuoy },
+      { to: NOTIFICATIONS_PATH, label: "Notifications", icon: Bell },
     ],
   },
 ];
@@ -64,6 +69,7 @@ const AdminSidebar = () => {
   const location = useLocation();
   const user = useAuthStore((state) => state.user);
   const clearAuth = useAuthStore((state) => state.clearAuth);
+  const { data: notificationStats } = useAdminNotificationStats();
 
   const isSuperAdmin = Boolean(user?.isSuperAdmin || user?.adminRole === "SUPER_ADMIN");
   const adminRole = isSuperAdmin ? "SUPER_ADMIN" : (user?.adminRole || "MANAGER");
@@ -201,6 +207,7 @@ const AdminSidebar = () => {
                         to={item.to}
                         label={item.label}
                         icon={item.icon}
+                        badge={item.to === NOTIFICATIONS_PATH ? notificationStats?.unread : undefined}
                         nested
                       />
                     ))}

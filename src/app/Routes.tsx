@@ -35,8 +35,11 @@ const CandidateManagement = lazy(() => import("@/features/admin/pages/CandidateM
 const ContentModeration = lazy(() => import("@/features/admin/pages/ContentModeration"));
 const GenerationReviews = lazy(() => import("@/features/admin/pages/GenerationReviews"));
 const SupportMessages = lazy(() => import("@/features/admin/pages/SupportMessages"));
+const Notifications = lazy(() => import("@/features/admin/pages/Notifications"));
+const JobModerationDetailPage = lazy(() => import("@/features/admin/pages/JobModerationDetailPage"));
 const JobPreview = lazy(() => import("@/features/employer/pages/JobPreview"));
 const JobSubmissions = lazy(() => import("@/features/employer/pages/JobSubmissions"));
+const EmployerCandidates = lazy(() => import("@/features/employer/pages/EmployerCandidate"));
 const SubmissionDetail = lazy(() => import("@/features/employer/pages/SubmissionDetail"));
 const JobBoardPage = lazy(() => import("@/features/candidate/pages/JobBoardPage"));
 const JobDetailsPage = lazy(() => import("@/features/candidate/pages/candidateJobDetails"));
@@ -71,8 +74,10 @@ const AppRoutes = () => {
                     <Route path="employer-management" element={<EmployerManagement />} />
                     <Route path="candidate-management" element={<CandidateManagement />} />
                     <Route path="content-moderation" element={<ContentModeration />} />
+                    <Route path="content-moderation/jobs/:id" element={<JobModerationDetailPage />} />
                     <Route path="generation-reviews" element={<GenerationReviews />} />
                     <Route path="support-messages" element={<SupportMessages />} />
+                    <Route path="notifications" element={<Notifications />} />
                 </Route>
                 <Route path="/landing" element={<LandingPage />} />
                 <Route path="/auth/verify-email" element={<LegacyVerifyEmailRedirect />} />
@@ -91,6 +96,7 @@ const AppRoutes = () => {
                             <Route index element={<Navigate to="jobs" replace />} />
                             <Route path="dashboard" element={<Navigate to="/employer/jobs" replace />} />
                             <Route path="jobs" element={<EmployerJobs />} />
+                            <Route path="candidates" element={<EmployerCandidates />} />
                             <Route path="jobs/:jobId/submissions" element={<JobSubmissions />} />
                             <Route path="profile" element={<ProfilePage />} />
                             <Route path="jobs/new" element={<JobPostingWizardLayout />}>

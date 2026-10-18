@@ -1,4 +1,5 @@
-import { CheckCircle2, AlertTriangle, Clock, Calendar, Building2, Briefcase, Award, ShieldAlert, ShieldCheck } from "lucide-react";
+import { Link } from "react-router-dom";
+import { CheckCircle2, AlertTriangle, AlertOctagon, Clock, Calendar, Building2, Briefcase, Award, ShieldAlert, ShieldCheck } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Button } from "@/components/ui/button";
@@ -11,19 +12,27 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import type { CandidateSubmission } from "../types/candidateDetail";
+import type { SimulationTask } from "../types/job";
 
 interface SubmissionDetailModalProps {
   submission: CandidateSubmission | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** The simulation's tasks; together with `submission.answers` they let the modal show the
+   *  candidate's work. Omit when the caller does not have them. */
+  tasks?: SimulationTask[];
 }
 
 export const SubmissionDetailModal = ({
   submission,
   open,
   onOpenChange,
+  tasks,
 }: SubmissionDetailModalProps) => {
   if (!submission) return null;
+
+  const isGradingFailed = submission.status === "GRADING_FAILED";
+  const answerByTaskId = new Map((submission.answers ?? []).map((answer) => [answer.taskId, answer.responseBody]));
 
   const formatDuration = (seconds?: number | null) => {
     if (!seconds) return "N/A";
@@ -97,11 +106,35 @@ export const SubmissionDetailModal = ({
                 Submission ID: <span className="font-mono">{submission.id}</span>
               </DialogDescription>
             </div>
-            <div>{getScoreBadge(submission.overallScore)}</div>
+            <div>
+              {isGradingFailed ? (
+                <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-error-50 text-error-700 border border-error-200">
+                  <AlertOctagon className="size-3.5 text-error-600" /> Grading failed
+                </span>
+              ) : (
+                getScoreBadge(submission.overallScore)
+              )}
+            </div>
           </div>
         </DialogHeader>
 
         <div className="flex flex-col gap-5 pt-3">
+          {isGradingFailed && (
+            <div role="alert" className="flex items-start gap-3 rounded-xl border border-error-200 bg-error-50 p-4">
+              <AlertOctagon className="mt-0.5 size-4 shrink-0 text-error-600" />
+              <div className="flex flex-col gap-1 text-xs text-error-800">
+                <p className="text-sm font-semibold text-error-900">This submission could not be graded</p>
+                <p>
+                  Every retry was used up, so it has no score. The candidate's answers are below. The failure reason
+                  is attached to the matching critical notification.
+                </p>
+                <Link to="/admin/notifications" className="w-fit font-semibold underline">
+                  Open notifications
+                </Link>
+              </div>
+            </div>
+          )}
+
           {/* Job & Simulation Metadata */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 rounded-xl border border-neutral-100 bg-neutral-50/70 p-4 text-xs">
             <div>
@@ -187,6 +220,40 @@ export const SubmissionDetailModal = ({
               </p>
             )}
           </div>
+
+          {/* The candidate's own work, so it is readable even when there is no grade */}
+          {tasks && submission.answers && (
+            <div className="rounded-xl border border-neutral-200 bg-white p-4">
+              <p className="text-sm font-semibold text-neutral-900 mb-3">
+                Candidate's answers ({tasks.length} {tasks.length === 1 ? "task" : "tasks"})
+              </p>
+              <div className="flex flex-col gap-3">
+                {tasks.map((task, idx) => {
+                  const answer = answerByTaskId.get(task.id)?.trim();
+                  return (
+                    <div
+                      key={task.id}
+                      className="rounded-lg border border-neutral-100 bg-neutral-50/50 p-3.5 flex flex-col gap-2"
+                    >
+                      <span className="text-xs font-bold text-neutral-900">
+                        Task {idx + 1}: {task.title}
+                      </span>
+                      <div className="prose prose-sm max-w-none text-xs text-neutral-600 prose-p:my-0.5">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown>
+                      </div>
+                      {answer ? (
+                        <p className="whitespace-pre-wrap rounded border border-neutral-200 bg-white p-2.5 text-xs text-neutral-800">
+                          {answer}
+                        </p>
+                      ) : (
+                        <p className="text-xs text-neutral-500">No answer was submitted for this task.</p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Category Scores Breakdown */}
           {submission.categoryScores && (

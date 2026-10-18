@@ -42,7 +42,9 @@ export const buildApplicationTimeline = (application: Application): TimelineStep
             ? "Your submission has been graded."
             : finalCopy
               ? "Your submission was not graded."
-              : "Your submission is being graded.",
+              : status === "GRADING_FAILED"
+                ? "We couldn't grade your submission. Please contact support."
+                : "Your submission is being graded.",
         date: null,
         state: isGraded ? "complete" : finalCopy ? "upcoming" : "current",
     };

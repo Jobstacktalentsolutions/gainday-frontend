@@ -5,10 +5,9 @@ const TABS: { value: JobStatusFilter; label: string }[] = [
   { value: "all", label: "All" },
   { value: "DRAFT", label: "Draft" },
   { value: "GENERATING", label: "Generating" },
+  { value: "GENERATION_FAILED", label: "Generation failed" },
   { value: "ACTIVE", label: "Active" },
-  { value: "SHORTLIST_READY", label: "Shortlist ready" },
-  { value: "INACTIVE", label: "Inactive" },
-  { value: "TERMINATED", label: "Terminated" },
+  { value: "CLOSED", label: "Closed" },
 ];
 
 interface JobStatusTabsProps {
