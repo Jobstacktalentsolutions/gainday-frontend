@@ -21,7 +21,7 @@ export default function SubmissionResultPage() {
             <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-neutral-50 px-4 text-center text-neutral-700">
                 <p className="text-xl font-semibold text-neutral-900">Submission Result Not Found</p>
                 <p className="text-sm text-neutral-500 max-w-md">
-                  We couldn't retrieve your submission details. Please verify the link or check your profile for completed applications.
+                    We couldn't retrieve your submission details. Please verify the link or check your profile for completed applications.
                 </p>
                 <ActionButton variant="primary" onClick={() => navigate("/job-board")}>
                     Return to Job Board
@@ -58,7 +58,7 @@ export default function SubmissionResultPage() {
                     {/* Top Ambient Glow */}
                     <div
                         aria-hidden="true"
-                        className="pointer-events-none absolute -top-32 left-1/2 h-72 w-[520px] -translate-x-1/2 rounded-full bg-gradient-to-b from-purple-200/40 via-indigo-100/20 to-transparent blur-3xl"
+                        className="pointer-events-none absolute -top-32 left-1/2 h-72 w-130 -translate-x-1/2 rounded-full bg-linear-to-b from-purple-200/40 via-indigo-100/20 to-transparent blur-3xl"
                     />
 
                     {/* Header Section */}
@@ -119,14 +119,14 @@ export default function SubmissionResultPage() {
                         </div>
 
                         {capabilityHistory.length > 0 && (
-                        <button
-                            type="button"
-                            onClick={() => setShowHistoryModal(true)}
-                            className="flex cursor-pointer items-center gap-2 rounded-xl border border-neutral-300/80 bg-white px-4 py-2.5 text-sm font-medium text-neutral-800 shadow-2xs transition-colors hover:bg-neutral-50 hover:text-neutral-950"
-                        >
-                            <span>View Score History</span>
-                            <ArrowRight className="size-4 text-neutral-500" />
-                        </button>
+                            <button
+                                type="button"
+                                onClick={() => setShowHistoryModal(true)}
+                                className="flex cursor-pointer items-center gap-2 rounded-xl border border-neutral-300/80 bg-white px-4 py-2.5 text-sm font-medium text-neutral-800 shadow-2xs transition-colors hover:bg-neutral-50 hover:text-neutral-950"
+                            >
+                                <span>View Score History</span>
+                                <ArrowRight className="size-4 text-neutral-500" />
+                            </button>
                         )}
                     </div>
 

@@ -1,5 +1,5 @@
 import sparkle from "@/assets/sparkle.svg";
-import arrowTr from "@/assets/arrow-tr.svg";
+import { StepContinueButton } from "@/components/ui/StepNavigationButtons";
 import { Button } from "@/components/ui/button";
 import { StatsRow } from "./StatsRow";
 import { fadeUp, heroStagger } from "@/lib/motion/variants";
@@ -41,25 +41,17 @@ const HeroSection = () => {
                     <motion.p
                         variants={fadeUp}
                         className="text-center text-base text-neutral-700 leading-6 lg:text-left lg:max-w-134.75">
-                        Candidates apply by doing a piece of the actual job. Employers get a ranked list built on evidence — and every challenge a candidate completes
+                        Candidates apply by doing a piece of the actual job. Employers get a ranked list built on evidence, and every challenge a candidate completes
                         stacks into a Capability Passport they keep forever.
                     </motion.p>
 
                     <motion.div
                         variants={fadeUp}
                         className="flex flex-col items-center justify-center gap-4 py-4 lg:flex-row">
-                        <Button className="text-base h-11 flex gap-2 items-center justify-center pl-4 pr-1 py-2 bg-primary-500 hover:bg-primary-600">
-
+                        <StepContinueButton size="lg" className="w-auto">
                             Try a candidate challenge
-                            <span className="w-9 h-9 bg-secondary-500 flex items-center justify-center rounded-[8px]">
-                                <img
-                                    className=""
-                                    src={arrowTr}
-                                    alt="arrow pointing North East"
-                                />
-                            </span>
-                        </Button>
-                        <Button variant="outline" className="text-base rounded-[8px] px-10 py-2 leading-6 h-11 hover:bg-neutral-100">
+                        </StepContinueButton>
+                        <Button variant="outline" className="text-base cursor-pointer rounded-[8px] px-10 py-2 leading-6 h-13 hover:bg-neutral-100">
                             See the employer view
                         </Button>
 
