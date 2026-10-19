@@ -62,6 +62,7 @@ const MyApplications = lazy(() => import("@/features/candidate/pages/MyApplicati
 const ApplicationDetailPage = lazy(() => import("@/features/candidate/pages/ApplicationDetailPage"));
 const ApplicationSubmissionPage = lazy(() => import("@/features/candidate/pages/ApplicationSubmissionPage"));
 const CapabilityPassportPage = lazy(() => import("@/features/candidate/pages/CapabilityPassportPage"));
+const SupportPage = lazy(() => import("@/pages/SupportPage"));
 
 
 const AppRoutes = () => {
@@ -153,6 +154,7 @@ const AppRoutes = () => {
                     <Route path="oauth/callback" element={<CandidateOAuthCallback />} />
                 </Route>
 
+                <Route path="/support" element={<SupportPage />} />
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </Suspense>
