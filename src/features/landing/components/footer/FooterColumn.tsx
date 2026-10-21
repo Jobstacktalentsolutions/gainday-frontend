@@ -18,7 +18,7 @@ export function FooterColumn({ heading, links }: FooterColumnProps) {
             <div className="flex flex-col items-start gap-3 text-base whitespace-nowrap text-neutral-700 lg:text-xs">
                 {links.map((link) =>
                     link.to ? (
-                        <Link key={link.label} to={link.to} className="hover:text-primary-500">
+                        <Link key={link.label} to={link.to} className="hover:text-primary-500 lg:text-[14px]">
                             {link.label}
                         </Link>
                     ) : (
