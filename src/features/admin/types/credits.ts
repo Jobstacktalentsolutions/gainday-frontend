@@ -30,6 +30,12 @@ export interface CreditLedgerEntry {
   employerName: string | null;
   submissionId: string | null;
   createdAt: string;
+  /** Pence. Null until a purchase exists to price other rows from. */
+  fiatPence: number | null;
+  /** Null exactly when no exchange rate is configured on the backend. */
+  fiatUsd: number | null;
+  /** True for rows valued at the average price per credit rather than the price paid. */
+  fiatIsEstimate: boolean;
 }
 
 export interface SignupBonusUpdatePayload {

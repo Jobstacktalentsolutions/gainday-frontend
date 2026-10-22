@@ -5,6 +5,7 @@ import { useCreditLedger } from "../../hooks/useCredits";
 import { TableLoadMore } from "../TableLoadMore";
 import { TableSkeleton } from "../skeletons";
 import type { CreditLedgerEntry, CreditLedgerType } from "../../types/credits";
+import { formatSignedFiat } from "../../utils/money";
 
 type FilterId = "ALL" | CreditLedgerType;
 
@@ -76,6 +77,7 @@ const CreditLedgerTable = () => {
                   <TableHead>Employer</TableHead>
                   <TableHead>Type</TableHead>
                   <TableHead className="text-right">Credits</TableHead>
+                  <TableHead className="text-right">Value</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -100,6 +102,13 @@ const CreditLedgerTable = () => {
                       )}
                     >
                       {formatAmount(entry.amount)}
+                    </TableCell>
+                    <TableCell
+                      className="text-right tabular-nums text-neutral-700"
+                      title={entry.fiatIsEstimate && entry.fiatPence !== null ? "Estimated at the average price per credit" : undefined}
+                    >
+                      {entry.fiatIsEstimate && entry.fiatPence !== null && <span className="text-neutral-400">≈ </span>}
+                      {formatSignedFiat(entry.fiatPence, entry.fiatUsd)}
                     </TableCell>
                   </TableRow>
                 ))}

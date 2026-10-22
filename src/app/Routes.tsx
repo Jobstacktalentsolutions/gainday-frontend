@@ -54,6 +54,7 @@ const CandidateOAuthCallback = lazy(() => import("@/features/candidate/pages/Can
 const PreSimulation = lazy(() => import("@/features/candidate/pages/PreSimulation"));
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
+const EmailPreferencesPage = lazy(() => import("@/features/email-preferences/pages/EmailPreferencesPage"));
 const EnvironmentCheckPage = lazy(() => import("@/features/candidate/pages/EnvironmentCheckPage"));
 const TaskRunner = lazy(() => import("@/features/candidate/pages/TaskRunner"));
 const SubmissionResultPage = lazy(() => import("@/features/candidate/pages/SubmissionResultPage"));
@@ -87,6 +88,7 @@ const AppRoutes = () => {
                 </Route>
                 <Route path="/landing" element={<LandingPage />} />
                 <Route path="/auth/verify-email" element={<LegacyVerifyEmailRedirect />} />
+                <Route path="/email-preferences" element={<EmailPreferencesPage />} />
                 <Route path="/employer">
                     {/* Public auth routes — reachable while signed out */}
                     <Route path="signup" element={<CreateAccount />} />
