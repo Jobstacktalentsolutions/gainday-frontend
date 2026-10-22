@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Bot, ShieldAlert, FileText, UserPlus, ArrowUpRight, CheckCircle2 } from "lucide-react";
+import { UserCheck, ShieldAlert, FileText, UserPlus, ArrowUpRight, CheckCircle2 } from "lucide-react";
 import type { DashboardStats } from "../hooks/useDashboardStats";
 
 interface DashboardActionCardsProps {
@@ -11,34 +11,28 @@ export const DashboardActionCards = ({ stats }: DashboardActionCardsProps) => {
 
   return (
     <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
-      {/* CTA 1: Generation Reviews */}
+      {/* CTA 1: Candidate Directory */}
       <div
-        onClick={() => navigate("/admin/generation-reviews")}
-        className="group relative flex flex-col justify-between rounded-xl border border-neutral-200 bg-white p-4 shadow-xs hover:border-primary-300 hover:shadow-md transition-all cursor-pointer overflow-hidden"
+        onClick={() => navigate("/admin/candidate-management")}
+        className="group relative flex flex-col justify-between rounded-xl border border-neutral-200 bg-white p-4 shadow-xs hover:border-indigo-300 hover:shadow-md transition-all cursor-pointer overflow-hidden"
       >
         <div className="flex items-start justify-between">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50 text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-colors">
-            <Bot className="h-5 w-5" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+            <UserCheck className="h-5 w-5" />
           </div>
-          {stats.pendingReviewsCount > 0 ? (
-            <span className="inline-flex items-center gap-1 rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-bold text-purple-700 animate-pulse">
-              {stats.pendingReviewsCount} Pending
-            </span>
-          ) : (
-            <span className="inline-flex items-center gap-1 rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-600">
-              <CheckCircle2 className="w-3 h-3 text-emerald-500" /> Up to date
-            </span>
-          )}
+          <span className="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-semibold text-indigo-700">
+            {stats.candidatesCount} Registered
+          </span>
         </div>
         <div className="mt-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-neutral-900 group-hover:text-primary-600 transition-colors">
-              AI Generation Review
+            <h3 className="text-sm font-semibold text-neutral-900 group-hover:text-indigo-600 transition-colors">
+              Candidate Directory
             </h3>
-            <ArrowUpRight className="h-4 w-4 text-neutral-400 group-hover:text-primary-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+            <ArrowUpRight className="h-4 w-4 text-neutral-400 group-hover:text-indigo-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
           </div>
           <p className="text-xs text-neutral-500 mt-0.5">
-            Audit and approve LLM-generated task questions
+            Audit candidate accounts and simulation attempts
           </p>
         </div>
       </div>

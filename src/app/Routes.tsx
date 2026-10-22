@@ -33,7 +33,7 @@ const ReviewPublish = lazy(() => import("@/features/employer/pages/ReviewPublish
 const EmployerManagement = lazy(() => import("@/features/admin/pages/EmployerManagement"))
 const CandidateManagement = lazy(() => import("@/features/admin/pages/CandidateManagement"))
 const ContentModeration = lazy(() => import("@/features/admin/pages/ContentModeration"));
-const GenerationReviews = lazy(() => import("@/features/admin/pages/GenerationReviews"));
+
 const SupportMessages = lazy(() => import("@/features/admin/pages/SupportMessages"));
 const Notifications = lazy(() => import("@/features/admin/pages/Notifications"));
 const JobModerationDetailPage = lazy(() => import("@/features/admin/pages/JobModerationDetailPage"));
@@ -72,13 +72,14 @@ const AppRoutes = () => {
                 <Route path="/" element={<Navigate to="/landing" />} />
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin" element={<AdminLayout />}>
-                    <Route index element={<Navigate to="dashboard" replace />} />
-                    <Route path="dashboard" element={<AdminDashboard />} />
+                    <Route index element={<Navigate to="overview" replace />} />
+                    <Route path="overview" element={<AdminDashboard />} />
+                    <Route path="dashboard" element={<Navigate to="overview" replace />} />
                     <Route path="employer-management" element={<EmployerManagement />} />
                     <Route path="candidate-management" element={<CandidateManagement />} />
                     <Route path="content-moderation" element={<ContentModeration />} />
                     <Route path="content-moderation/jobs/:id" element={<JobModerationDetailPage />} />
-                    <Route path="generation-reviews" element={<GenerationReviews />} />
+                    <Route path="generation-reviews" element={<Navigate to="/admin/content-moderation" replace />} />
                     <Route path="support-messages" element={<SupportMessages />} />
                     <Route path="notifications" element={<Notifications />} />
                 </Route>

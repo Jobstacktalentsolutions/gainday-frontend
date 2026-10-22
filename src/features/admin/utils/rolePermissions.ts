@@ -18,6 +18,7 @@ export interface NavGroupConfig {
  * Route-to-allowed-roles mapping for admin console
  */
 export const ADMIN_ROUTE_PERMISSIONS: Record<string, AdminRole[]> = {
+  "/admin/overview": ["SUPER_ADMIN", "MANAGER", "MODERATOR"],
   "/admin/dashboard": ["SUPER_ADMIN", "MANAGER", "MODERATOR"],
   "/admin/employer-management": ["SUPER_ADMIN", "MANAGER"],
   "/admin/candidate-management": ["SUPER_ADMIN", "MANAGER"],

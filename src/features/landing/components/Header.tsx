@@ -7,6 +7,7 @@ import { actionButtonVariants } from "@/components/ui/ActionButton";
 import { cn } from "@/lib/utils";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { UserAvatarMenu } from "@/components/ui/UserAvatarMenu";
+import { ViewDashboardButton } from "@/components/ui/ViewDashboardButton";
 import AddItemButton from "@/components/ui/AddItemButton";
 import { StepContinueButton } from "@/components/ui/StepNavigationButtons";
 import AuthChoiceModal from "./AuthChoiceModal";
@@ -231,7 +232,10 @@ const Header = () => {
                 {/* Desktop auth buttons */}
                 <div className="hidden items-center gap-3 lg:flex">
                     {isAuthenticated ? (
-                        <UserAvatarMenu />
+                        <>
+                            <ViewDashboardButton />
+                            <UserAvatarMenu />
+                        </>
                     ) : (
                         <>
                             <button

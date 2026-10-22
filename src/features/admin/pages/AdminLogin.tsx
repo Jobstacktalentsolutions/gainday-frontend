@@ -63,7 +63,7 @@ const AdminLogin = () => {
     if (redirect && redirect.startsWith("/admin") && redirect !== "/admin" && redirect !== "/admin/login") {
       return redirect;
     }
-    return "/admin/dashboard";
+    return "/admin/overview";
   }, [redirect]);
 
   useEffect(() => {

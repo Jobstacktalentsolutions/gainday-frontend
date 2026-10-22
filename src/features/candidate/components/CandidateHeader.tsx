@@ -4,6 +4,7 @@ import { LogOut, Menu, User, X } from "lucide-react";
 import brandLogo from "@/assets/gainday icon.svg";
 import { cn } from "@/lib/utils";
 import { UserAvatarMenu } from "@/components/ui/UserAvatarMenu";
+import { ViewDashboardButton } from "@/components/ui/ViewDashboardButton";
 import { useLogout } from "@/features/auth/hooks/useLogout";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { CANDIDATE_NAV_LINKS } from "../utils/candidateNavLinks";
@@ -41,7 +42,8 @@ const CandidateHeader = () => {
 
                 <div className="flex items-center gap-2">
                     <NotificationBell />
-                    <div className="hidden lg:block">
+                    <div className="hidden items-center gap-3 lg:flex">
+                        <ViewDashboardButton />
                         <UserAvatarMenu />
                     </div>
 

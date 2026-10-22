@@ -8,7 +8,6 @@ import {
   Shield,
   Layers,
   ShieldAlert,
-  CheckSquare,
   Bot,
   ChevronDown,
   LogOut,
@@ -56,7 +55,6 @@ const NAV_GROUPS: NavGroup[] = [
     icon: Layers,
     items: [
       { to: "/admin/content-moderation", label: "Content Moderation", icon: ShieldAlert },
-      { to: "/admin/generation-reviews", label: "Generation Reviews", icon: CheckSquare },
       { to: "/admin/ai-oversight", label: "AI Oversight", icon: Bot },
       { to: "/admin/support-messages", label: "Support Inquiries", icon: LifeBuoy },
       { to: NOTIFICATIONS_PATH, label: "System Alerts", icon: Bell },
@@ -158,10 +156,10 @@ const AdminSidebar = () => {
 
         {/* Navigation Sections */}
         <div className="flex flex-col gap-1.5">
-          {/* Direct Dashboard Link */}
+          {/* Direct Overview Link */}
           <SidebarNavItem
-            to="/admin/dashboard"
-            label="Dashboard"
+            to="/admin/overview"
+            label="Overview"
             icon={LayoutDashboard}
           />
 

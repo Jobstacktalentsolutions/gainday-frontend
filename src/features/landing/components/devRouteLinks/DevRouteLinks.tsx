@@ -11,7 +11,7 @@ const routeGroups = [
     label: "Admin",
     routes: [
       { path: "/admin/login", label: "Admin Login" },
-      { path: "/admin/dashboard", label: "Admin Dashboard" },
+      { path: "/admin/overview", label: "Admin Overview" },
       { path: "/admin/user-management", label: "User Management" },
       { path: "/admin/content-moderation", label: "Content Moderation" },
       { path: "/admin/ai-oversight", label: "AI Oversight (dev)" },

@@ -50,7 +50,7 @@ const AdminDashboard = () => {
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-neutral-900 tracking-tight">
-            Control Center Dashboard
+            Control Center Overview
           </h1>
           <p className="text-xs text-neutral-500 mt-0.5">
             Real-time platform telemetry, user acquisition metrics, and operational moderation queues
@@ -59,20 +59,11 @@ const AdminDashboard = () => {
 
         <div className="flex items-center gap-2">
           <AdminButton
-            variant="outline"
             size="sm"
             onClick={() => navigate("/admin/content-moderation")}
-            className="text-xs bg-white cursor-pointer"
+            className="text-xs bg-primary-600 hover:bg-primary-700 text-white cursor-pointer"
           >
             Moderate Live Posts
-          </AdminButton>
-          <AdminButton
-            size="sm"
-            onClick={() => navigate("/admin/generation-reviews")}
-            className="text-xs bg-primary-600 hover:bg-primary-700 text-white cursor-pointer flex items-center gap-1.5"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            Review Question Bank
           </AdminButton>
         </div>
       </div>

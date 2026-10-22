@@ -25,7 +25,7 @@ const AdminLayout = () => {
     );
 
     if (!isPathAllowed) {
-        return <Navigate to="/admin/dashboard" replace />;
+        return <Navigate to="/admin/overview" replace />;
     }
 
     return (
