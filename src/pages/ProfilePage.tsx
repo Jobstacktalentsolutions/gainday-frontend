@@ -15,6 +15,7 @@ import {
   UserRound,
   FileText,
   AlertCircle,
+  Briefcase,
 } from "lucide-react";
 import { toast } from "sonner";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
@@ -88,6 +89,10 @@ const EditableProfileField = ({
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!onSave) return;
+    if (required && !draftValue) {
+      toast.error(`${label} is required.`);
+      return;
+    }
     if (input === "phone" && draftValue && !isValidPhoneNumber(draftValue)) {
       toast.error("Enter a valid phone number for the selected country.");
       return;
@@ -339,7 +344,7 @@ const ProfilePage = () => {
                 className="flex items-start gap-3 rounded-2xl border border-warning-200 bg-warning-50 p-4 text-sm text-warning-900"
               >
                 <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                <p>Your profile is incomplete. Add your pronouns to be able to apply for jobs.</p>
+                <p>Your profile is incomplete. Add your pronouns and job title to be able to apply for jobs.</p>
               </div>
             )}
 
@@ -400,6 +405,17 @@ const ProfilePage = () => {
                     icon={UserRound}
                     editable
                     onSave={(val) => handleUpdateProfile({ pronouns: val as Pronouns })}
+                    isSaving={updateProfileMutation.isPending}
+                  />
+
+                  <EditableProfileField
+                    label="Job Title"
+                    value={user?.title}
+                    required
+                    placeholder="The role you're looking for, e.g. Account Executive"
+                    icon={Briefcase}
+                    editable
+                    onSave={(val) => handleUpdateProfile({ title: val })}
                     isSaving={updateProfileMutation.isPending}
                   />
 

@@ -11,6 +11,7 @@ import TaskPromptEditor from "../components/TaskPromptEditor";
 import type { ParsedJobDetails } from "../hooks/useParseJobDescription";
 import { useSaveJobDetails } from "../hooks/useSaveJobDraft";
 import { useTriggerGeneration } from "../hooks/useTriggerGeneration";
+import type { GenerationNavState } from "../hooks/useGenerationProgress";
 import { useProfile } from "@/features/auth/hooks/useProfile";
 import { useJobDraftStore } from "../stores/useJobDraftStore";
 
@@ -159,10 +160,11 @@ const JobDetailsStep = () => {
             const saved = await saveDetailsMutation.mutateAsync({ ...values, id: jobId ?? undefined });
             setJobId(saved.id);
 
-            // Queues the real generation pipeline (async on the backend); SimulationBuilder
-            // polls job+simulation status and shows its own generating UI once we navigate there.
+            // Queues the real generation pipeline (async on the backend); SimulationBuilder streams
+            // its progress and shows the generating UI once we navigate there.
             await triggerGeneration.mutateAsync(saved.id);
-            navigate("/employer/jobs/new/simulation-builder");
+            const navState: GenerationNavState = { generationQueued: true };
+            navigate("/employer/jobs/new/simulation-builder", { state: navState });
         } catch {
             toast.error("Couldn't start generation — try again.");
         } finally {

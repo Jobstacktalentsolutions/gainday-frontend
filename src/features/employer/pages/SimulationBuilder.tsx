@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useLocation, useNavigate, useOutletContext } from "react-router-dom";
 import { RefreshCw } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { motion, AnimatePresence } from "motion/react";
@@ -12,6 +12,8 @@ import RegenerateGuidanceModal from "../components/RegenerateGuidanceModal";
 import { simulationBuilderSchema, type JobPostingFormValues } from "../schemas/jobPosting";
 import TaskGenerationModal from "../components/TaskGenerationModal";
 import { useJobSimulation } from "../hooks/useJobSimulation";
+import { useGenerationProgress, type GenerationNavState } from "../hooks/useGenerationProgress";
+import { useTriggerGeneration } from "../hooks/useTriggerGeneration";
 import { useRegenerateTask } from "../hooks/useRegenerateTask";
 import { useRegenerateAllTasks } from "../hooks/useRegenerateAllTasks";
 import { useUpdateSimulationTasks } from "../hooks/useUpdateSimulationTasks";
@@ -60,6 +62,11 @@ const SimulationBuilder = () => {
     });
 
     const { data: jobSimulation, isLoading: isLoadingSimulation } = useJobSimulation(jobId);
+    const { state: navState } = useLocation();
+    const generationQueued = (navState as GenerationNavState | null)?.generationQueued === true;
+    const isJobGenerating = generationQueued || jobSimulation?.status === "GENERATING";
+    const generation = useGenerationProgress(jobId, isJobGenerating);
+    const triggerGeneration = useTriggerGeneration();
     const { regenerate } = useRegenerateTask();
     const { regenerateAll } = useRegenerateAllTasks();
     const updateSimulationTasks = useUpdateSimulationTasks();
@@ -67,7 +74,19 @@ const SimulationBuilder = () => {
     // True while the INITIAL full-graph generation (queued via BullMQ from Job Details) is still
     // running, or while a manual "Regenerate all" SSE stream is in flight. The two are otherwise
     // unrelated: "Regenerate all" never touches job.status or the queue (see handleRegenerate).
-    const isWholeScenarioGenerating = jobSimulation?.status === "GENERATING" || isRegeneratingAll;
+    // Stays true until the progress stream reports done, so the modal survives the navigation.
+    const isInitialGenerating = isJobGenerating && generation.status !== "done";
+    const isWholeScenarioGenerating = isInitialGenerating || isRegeneratingAll;
+
+    const handleRetryGeneration = async () => {
+        if (!jobId) return;
+        try {
+            await triggerGeneration.mutateAsync(jobId);
+            generation.restart();
+        } catch {
+            toast.error("Couldn't restart generation — try again.");
+        }
+    };
 
     // Seed the field array from the real generated tasks the first time they arrive — never
     // again after that, so it doesn't clobber the employer's own edits on subsequent polls.
@@ -365,7 +384,14 @@ const SimulationBuilder = () => {
             {/* Full-scenario generation loading modal — covers both the initial generate-from-Job-Details
                 wait and an explicit "Regenerate" re-run. No cancel option: this is a real async
                 pipeline run on the backend with no cancel endpoint, so there's nothing to abort. */}
-            <TaskGenerationModal open={isWholeScenarioGenerating || isLoadingSimulation} />
+            <TaskGenerationModal
+                open={isWholeScenarioGenerating || isLoadingSimulation || generation.status === "error"}
+                progress={generation.progress}
+                secondsRemaining={generation.secondsRemaining}
+                failed={generation.status === "error"}
+                errorMessage={generation.error}
+                onRetry={handleRetryGeneration}
+            />
 
             {/* Optional-guidance prompt before regenerating a single task */}
             <RegenerateGuidanceModal

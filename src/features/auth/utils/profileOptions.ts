@@ -28,6 +28,8 @@ export const PRONOUN_OPTIONS = (Object.keys(PRONOUN_LABELS) as Pronouns[]).map((
 export interface CandidateProfileInfo {
     gender: Gender | null;
     pronouns: Pronouns | null;
+    /** The role the candidate is looking for. Drives job recommendations. */
+    title: string | null;
     /** Null for employers until the candidate is unlocked. */
     brief: string | null;
 }

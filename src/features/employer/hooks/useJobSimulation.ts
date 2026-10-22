@@ -20,14 +20,12 @@ const fetchJobWithSimulation = async (jobId: string): Promise<JobWithSimulation>
     return data;
 };
 
-// Polls while generation is in flight (job.status === "GENERATING") so SimulationBuilder knows
-// when the real generated tasks are ready, replacing the old fake setTimeout delay entirely.
+// Generation progress is streamed by useGenerationProgress, which invalidates this query once the
+// job finishes, so no polling is needed here.
 export const useJobSimulation = (jobId: string | null) => {
     return useQuery({
         queryKey: ["employer", "job-simulation", jobId],
         queryFn: () => fetchJobWithSimulation(jobId as string),
         enabled: Boolean(jobId),
-        refetchInterval: (query) =>
-            query.state.data?.status === "GENERATING" ? 2000 : false,
     });
 };

@@ -15,6 +15,7 @@ interface AuthUser {
   gender?: Gender | null;
   pronouns?: Pronouns | null;
   brief?: string | null;
+  title?: string | null;
   isProfileComplete?: boolean;
   mustChangePassword?: boolean;
   adminRole?: 'SUPER_ADMIN' | 'MANAGER' | 'MODERATOR';

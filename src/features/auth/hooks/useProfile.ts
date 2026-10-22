@@ -15,6 +15,7 @@ export interface Profile {
   gender?: Gender | null;
   pronouns?: Pronouns | null;
   brief?: string | null;
+  title?: string | null;
   isProfileComplete?: boolean;
 }
 
@@ -26,6 +27,7 @@ export interface UpdateProfilePayload {
   gender?: Gender | null;
   pronouns?: Pronouns;
   brief?: string;
+  title?: string;
 }
 
 const fetchProfile = async (): Promise<Profile> => {

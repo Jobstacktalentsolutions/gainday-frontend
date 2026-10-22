@@ -1,6 +1,8 @@
 import React from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import "../styles/TaskGenerationModal.css";
+import type { GenerationProgress } from "../types/generationProgress";
+import { describeStage, formatTimeRemaining } from "../utils/generationProgress";
 
 interface TaskGenerationModalProps {
   open: boolean;
@@ -8,6 +10,13 @@ interface TaskGenerationModalProps {
   title?: string;
   subtitle?: string;
   cancelLabel?: string;
+  /** Null while queued and not yet started, which shows the indeterminate ring. */
+  progress?: GenerationProgress | null;
+  secondsRemaining?: number | null;
+  failed?: boolean;
+  errorMessage?: string | null;
+  onRetry?: () => void;
+  retryLabel?: string;
 }
 
 export const TaskGenerationModal: React.FC<TaskGenerationModalProps> = ({
@@ -16,7 +25,21 @@ export const TaskGenerationModal: React.FC<TaskGenerationModalProps> = ({
   title = "Generating tasks",
   subtitle = "This may take a while, please hold on...",
   cancelLabel = "Cancel",
+  progress = null,
+  secondsRemaining = null,
+  failed = false,
+  errorMessage = null,
+  onRetry,
+  retryLabel = "Try again",
 }) => {
+  const ringSweep = progress ? `${Math.max(progress.percent, 4) * 3.6}deg` : undefined;
+  const headline = failed ? "Generation failed" : title;
+  const description = failed
+    ? (errorMessage ?? "Something went wrong while generating your tasks.")
+    : progress
+      ? describeStage(progress)
+      : subtitle;
+
   return (
     <Dialog.Root open={open} onOpenChange={(isOpen) => !isOpen && onCancel?.()}>
       <Dialog.Portal>
@@ -34,9 +57,19 @@ export const TaskGenerationModal: React.FC<TaskGenerationModalProps> = ({
             <div className="modal-halo-glow" />
 
             {/* Rotating Gradient Ring Badge */}
-            <div className="relative flex size-32 items-center justify-center rounded-full p-[4.5px] overflow-hidden shadow-[0_4px_24px_rgba(99,102,241,0.25)]">
-              {/* Rotating Gradient Ring */}
-              <div className="modal-ring-border" />
+            <div
+              role={progress ? "progressbar" : undefined}
+              aria-valuemin={progress ? 0 : undefined}
+              aria-valuemax={progress ? 100 : undefined}
+              aria-valuenow={progress?.percent}
+              aria-label="Task generation progress"
+              className="relative flex size-32 items-center justify-center rounded-full p-[4.5px] overflow-hidden shadow-[0_4px_24px_rgba(99,102,241,0.25)]"
+            >
+              {/* Rotating Gradient Ring, whose lit arc length tracks progress */}
+              <div
+                className="modal-ring-border"
+                style={ringSweep ? ({ "--ring-sweep": ringSweep } as React.CSSProperties) : undefined}
+              />
 
               {/* Clean White Center */}
               <div className="relative z-10 flex size-full items-center justify-center rounded-full bg-white">
@@ -82,23 +115,38 @@ export const TaskGenerationModal: React.FC<TaskGenerationModalProps> = ({
 
           {/* Title */}
           <Dialog.Title className="mt-8 text-[28px] font-semibold tracking-tight text-[#0B0F2A] leading-tight">
-            {title}
+            {headline}
           </Dialog.Title>
 
-          {/* Subtitle */}
+          {/* Status comment */}
           <Dialog.Description
             id="task-generation-description"
             className="mt-2 text-sm text-neutral-500 font-normal"
           >
-            {subtitle}
+            {description}
           </Dialog.Description>
 
-          {/* Cancel Button */}
+          {!failed && secondsRemaining !== null && (
+            <p className="mt-1 text-xs font-medium text-[#4338ca]">
+              {formatTimeRemaining(secondsRemaining)}
+            </p>
+          )}
+
+          {failed && onRetry && (
+            <button
+              type="button"
+              onClick={onRetry}
+              className="mt-8 w-full cursor-pointer rounded-2xl bg-[#4338ca] py-3 px-4 text-base font-medium text-white transition-all hover:bg-[#3730a3] active:scale-[0.99]"
+            >
+              {retryLabel}
+            </button>
+          )}
+
           {onCancel && (
             <button
               type="button"
               onClick={onCancel}
-              className="mt-8 w-full cursor-pointer rounded-2xl border-[1.5px] border-[#4338ca] bg-white py-3 px-4 text-base font-medium text-[#4338ca] transition-all hover:bg-[#eef2ff] active:scale-[0.99]"
+              className={`${failed && onRetry ? "mt-3" : "mt-8"} w-full cursor-pointer rounded-2xl border-[1.5px] border-[#4338ca] bg-white py-3 px-4 text-base font-medium text-[#4338ca] transition-all hover:bg-[#eef2ff] active:scale-[0.99]`}
             >
               {cancelLabel}
             </button>

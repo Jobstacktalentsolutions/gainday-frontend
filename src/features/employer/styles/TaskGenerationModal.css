@@ -44,6 +44,14 @@
   }
 }
 
+/* Length of the lit arc, in degrees. Registered so it can transition smoothly as progress advances. */
+@property --ring-sweep {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 360deg;
+}
+
+/* The arc spins around the star; its length is the progress. Indeterminate = full ring. */
 .modal-ring-border {
   position: absolute;
   inset: -50%;
@@ -51,10 +59,12 @@
   background: conic-gradient(
     from 0deg,
     #3b82f6 0deg,
-    #4338ca 120deg,
-    #93c5fd 240deg,
-    #3b82f6 360deg
+    #4338ca calc(var(--ring-sweep) * 0.33),
+    #93c5fd calc(var(--ring-sweep) * 0.66),
+    #3b82f6 var(--ring-sweep),
+    transparent var(--ring-sweep)
   );
   animation: ring-spin 3s linear infinite;
+  transition: --ring-sweep 0.6s ease-out;
   will-change: transform;
 }
