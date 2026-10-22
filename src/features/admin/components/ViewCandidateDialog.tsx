@@ -1,5 +1,6 @@
 import { Phone, FileCheck, Calendar, ShieldCheck, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { formatPhoneForDisplay } from "@/lib/phone";
 import {
   Dialog,
   DialogContent,
@@ -90,7 +91,7 @@ export const ViewCandidateDialog = ({
                 <Phone className="size-3 text-neutral-400" /> Phone
               </span>
               <p className="font-medium text-neutral-900 mt-0.5">
-                {candidate.candidateProfile?.phoneNumber || "Not provided"}
+                {candidate.candidateProfile?.phoneNumber ? formatPhoneForDisplay(candidate.candidateProfile.phoneNumber) : "Not provided"}
               </p>
             </div>
 

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Pencil, Building2, User, Phone, Briefcase, FileText, CheckCircle2, XCircle, AlertTriangle } from "lucide-react";
+import { formatPhoneForDisplay } from "@/lib/phone";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -150,7 +151,7 @@ const EditEmployerDialog = ({
                     <Phone className="size-3 text-neutral-400" /> Phone
                   </span>
                   <p className="font-medium text-neutral-900 mt-0.5">
-                    {user.employerProfile.phoneNumber || "Not provided"}
+                    {user.employerProfile.phoneNumber ? formatPhoneForDisplay(user.employerProfile.phoneNumber) : "Not provided"}
                   </p>
                 </div>
               </div>

@@ -17,6 +17,9 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
+import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import { formatPhoneForDisplay } from "@/lib/phone";
 import CandidateHeader from "@/features/candidate/components/CandidateHeader";
 import { PublicNavbar } from "@/features/candidate/components/PublicNavbar";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
@@ -38,7 +41,7 @@ interface EditableFieldProps {
   label: string;
   value: string | undefined | null;
   /** How the field is edited. Defaults to a single-line text input. */
-  input?: "text" | "textarea" | "select";
+  input?: "text" | "textarea" | "select" | "phone";
   /** Required for `select`. */
   options?: FieldOption[];
   /** Marks the field as mandatory and flags it while it is empty. */
@@ -85,6 +88,10 @@ const EditableProfileField = ({
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!onSave) return;
+    if (input === "phone" && draftValue && !isValidPhoneNumber(draftValue)) {
+      toast.error("Enter a valid phone number for the selected country.");
+      return;
+    }
     try {
       await onSave(draftValue.trim());
       setIsEditing(false);
@@ -93,7 +100,12 @@ const EditableProfileField = ({
     }
   };
 
-  const displayValue = input === "select" ? options?.find((option) => option.value === value)?.label : value;
+  const displayValue =
+    input === "select"
+      ? options?.find((option) => option.value === value)?.label
+      : input === "phone" && value
+        ? formatPhoneForDisplay(value)
+        : value;
   const isMissingRequired = required && !value;
 
   return (
@@ -160,6 +172,16 @@ const EditableProfileField = ({
                   </option>
                 ))}
               </select>
+            ) : input === "phone" ? (
+              <PhoneInput
+                international
+                value={draftValue || undefined}
+                onChange={(next) => setDraftValue(next ?? "")}
+                placeholder={placeholder}
+                disabled={isSaving}
+                className="flex min-w-0 flex-1 items-center gap-2"
+                numberInputProps={{ autoFocus: true, className: EDIT_CONTROL_CLASS }}
+              />
             ) : input === "textarea" ? (
               <textarea
                 value={draftValue}
@@ -358,6 +380,7 @@ const ProfilePage = () => {
               <EditableProfileField
                 label="Phone Number"
                 value={user?.phoneNumber}
+                input="phone"
                 placeholder="Enter your phone number"
                 icon={Phone}
                 editable

@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { AdminButton } from "@/components/ui/AdminButton";
+import { formatPhoneForDisplay } from "@/lib/phone";
 import StatusBadge from "../components/StatusBadge";
 import SuspendUserDialog from "../components/SuspendUserDialog";
 import { SubmissionDetailModal } from "../components/SubmissionDetailModal";
@@ -157,7 +158,7 @@ const CandidateDetailPage = () => {
                   <span className="flex items-center gap-1">
                     <span className="text-neutral-300">·</span>
                     <Phone className="size-3.5 text-neutral-400" />
-                    {profile.phoneNumber}
+                    {formatPhoneForDisplay(profile.phoneNumber)}
                   </span>
                 )}
 
@@ -329,7 +330,7 @@ const CandidateDetailPage = () => {
               <div className="rounded-lg bg-neutral-50/70 border border-neutral-100 p-3">
                 <span className="text-neutral-500 font-medium">Phone Number</span>
                 <p className="text-neutral-900 font-semibold mt-0.5">
-                  {profile.phoneNumber || "Not provided by candidate"}
+                  {profile.phoneNumber ? formatPhoneForDisplay(profile.phoneNumber) : "Not provided by candidate"}
                 </p>
               </div>
 

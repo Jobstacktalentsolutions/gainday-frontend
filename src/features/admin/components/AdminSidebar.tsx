@@ -14,6 +14,7 @@ import {
   Crown,
   LifeBuoy,
   Bell,
+  Coins,
 } from "lucide-react";
 import SidebarNavItem from "./SidebarNavItem";
 import brandLogo from "@/assets/gainday.svg";
@@ -46,6 +47,7 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { to: "/admin/employer-management", label: "Employer Management", icon: Building2 },
       { to: "/admin/candidate-management", label: "Candidate Management", icon: UserCheck },
+      { to: "/admin/credits", label: "Credits", icon: Coins },
       { to: "/admin/admin-management", label: "Admin Management", icon: Shield },
     ],
   },

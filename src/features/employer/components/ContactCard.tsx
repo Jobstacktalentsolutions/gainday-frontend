@@ -1,6 +1,7 @@
 import { Check, Lock, LockOpen, Mail, Phone } from "lucide-react";
 import Skeleton from "@/components/ui/skeleton";
 import { ActionButton } from "@/components/ui/ActionButton";
+import { formatPhoneForDisplay } from "@/lib/phone";
 import type { SubmissionContact } from "../types/submission";
 
 interface ContactCardProps {
@@ -47,7 +48,7 @@ const ContactCard = ({ isUnlocked, contact, onUnlock, isSelected = false }: Cont
                             className="flex items-center gap-2 text-neutral-800 hover:text-primary-600 hover:underline"
                         >
                             <Phone className="size-4 shrink-0 text-neutral-500" />
-                            <span className="truncate">{contact.phone}</span>
+                            <span className="truncate">{formatPhoneForDisplay(contact.phone)}</span>
                         </a>
                     )}
                 </div>

@@ -6,6 +6,7 @@ import CapabilityPassportSkeleton from "@/features/capability-passport/component
 import CandidateProfileCard from "@/features/capability-passport/components/CandidateProfileCard";
 import type { CapabilityPassportSummary } from "@/features/capability-passport/types/passport";
 import type { CandidateProfileInfo } from "@/features/auth/utils/profileOptions";
+import { formatPhoneForDisplay } from "@/lib/phone";
 import type { SubmissionContact } from "../types/submission";
 
 interface CapabilityPassportModalProps {
@@ -104,7 +105,7 @@ const CapabilityPassportModal = ({
                                             href={`tel:${contact.phone}`}
                                             className="block truncate text-sm font-semibold text-neutral-900 hover:text-primary-600 hover:underline"
                                         >
-                                            {contact.phone}
+                                            {formatPhoneForDisplay(contact.phone)}
                                         </a>
                                     ) : (
                                         <p className="text-sm font-medium text-neutral-400">Not provided</p>
