@@ -2,7 +2,10 @@ import React from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import "../styles/TaskGenerationModal.css";
 import type { GenerationProgress } from "../types/generationProgress";
-import { describeStage, formatTimeRemaining } from "../utils/generationProgress";
+import {
+  describeStage,
+  formatTimeRemaining,
+} from "../utils/generationProgress";
 
 interface TaskGenerationModalProps {
   open: boolean;
@@ -32,7 +35,9 @@ export const TaskGenerationModal: React.FC<TaskGenerationModalProps> = ({
   onRetry,
   retryLabel = "Try again",
 }) => {
-  const ringSweep = progress ? `${Math.max(progress.percent, 4) * 3.6}deg` : undefined;
+  const ringSweep = progress
+    ? `${Math.max(progress.percent, 4) * 3.6}deg`
+    : undefined;
   const headline = failed ? "Generation failed" : title;
   const description = failed
     ? (errorMessage ?? "Something went wrong while generating your tasks.")
@@ -68,7 +73,11 @@ export const TaskGenerationModal: React.FC<TaskGenerationModalProps> = ({
               {/* Rotating Gradient Ring, whose lit arc length tracks progress */}
               <div
                 className="modal-ring-border"
-                style={ringSweep ? ({ "--ring-sweep": ringSweep } as React.CSSProperties) : undefined}
+                style={
+                  ringSweep
+                    ? ({ "--ring-sweep": ringSweep } as React.CSSProperties)
+                    : undefined
+                }
               />
 
               {/* Clean White Center */}
@@ -81,7 +90,13 @@ export const TaskGenerationModal: React.FC<TaskGenerationModalProps> = ({
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <defs>
-                    <linearGradient id="taskSparkleGrad" x1="20%" y1="0%" x2="75%" y2="100%">
+                    <linearGradient
+                      id="taskSparkleGrad"
+                      x1="20%"
+                      y1="0%"
+                      x2="75%"
+                      y2="100%"
+                    >
                       <stop offset="0%" stopColor="#78350f" />
                       <stop offset="35%" stopColor="#581c87" />
                       <stop offset="70%" stopColor="#312e81" />
@@ -158,4 +173,3 @@ export const TaskGenerationModal: React.FC<TaskGenerationModalProps> = ({
 };
 
 export default TaskGenerationModal;
-
