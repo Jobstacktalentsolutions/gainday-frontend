@@ -65,6 +65,7 @@ const ApplicationDetailPage = lazy(() => import("@/features/candidate/pages/Appl
 const ApplicationSubmissionPage = lazy(() => import("@/features/candidate/pages/ApplicationSubmissionPage"));
 const CapabilityPassportPage = lazy(() => import("@/features/candidate/pages/CapabilityPassportPage"));
 const SupportPage = lazy(() => import("@/pages/SupportPage"));
+const LegalPage = lazy(() => import("@/features/legal/pages/LegalPage"));
 
 
 const AppRoutes = () => {
@@ -138,6 +139,8 @@ const AppRoutes = () => {
                     <Route path="/candidate/profile" element={<ProfilePage />} />
                 </Route>
 
+
+
                 {/* Dev-only route — quick access without a real jobId */}
                 {import.meta.env.DEV && (
                     <>
@@ -160,6 +163,13 @@ const AppRoutes = () => {
                 </Route>
 
                 <Route path="/support" element={<SupportPage />} />
+
+                {/* legal pages*/}
+                <Route path="/terms" element={<Navigate to="/terms/candidate" replace />} />
+                <Route path="/terms/:audience" element={<LegalPage kind="terms" />} />
+                <Route path="/privacy" element={<Navigate to="/privacy/candidate" replace />} />
+                <Route path="/privacy/:audience" element={<LegalPage kind="privacy" />} />
+
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </Suspense>
