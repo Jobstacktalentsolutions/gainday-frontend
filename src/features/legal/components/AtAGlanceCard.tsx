@@ -1,4 +1,4 @@
-import { Check, ShieldCheck } from "lucide-react";
+import { Check } from "lucide-react";
 import { WHAT_GAINDAY_IS } from "../content/shared";
 
 export const AtAGlanceCard = () => (
@@ -7,9 +7,9 @@ export const AtAGlanceCard = () => (
         className="rounded-2xl border border-primary-100 bg-primary-50/60 p-6 sm:p-8"
     >
         <div className="flex items-center gap-3">
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white text-primary-600 shadow-xs">
+            {/* <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white text-primary-600 shadow-xs">
                 <ShieldCheck className="size-5" aria-hidden="true" />
-            </span>
+            </span> */}
             <h2
                 id="at-a-glance-title"
                 className="text-xl font-bold tracking-tight text-neutral-900 lg:text-2xl"
