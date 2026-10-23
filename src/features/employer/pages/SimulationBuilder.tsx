@@ -245,7 +245,7 @@ const SimulationBuilder = () => {
             try {
                 await updateSimulationTasks.mutateAsync({
                     simulationId,
-                    tasks: watch("tasks"),
+                    tasks: watch("tasks") as SimulationTask[],
                 });
             } catch {
                 toast.error("Couldn't save your changes — try again.");
