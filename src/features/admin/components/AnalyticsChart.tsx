@@ -25,6 +25,39 @@ const TIMEFRAME_OPTIONS: { value: Timeframe; label: string }[] = [
   { value: "all", label: "All Time" },
 ];
 
+interface ChartTooltipProps {
+  active?: boolean;
+  payload?: { value?: number }[];
+  label?: string | number;
+}
+
+const CustomTooltip = ({ active, payload, label }: ChartTooltipProps) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="rounded-xl border border-neutral-800 bg-neutral-900/95 p-3.5 shadow-xl backdrop-blur-md text-white text-xs">
+        <p className="font-semibold text-neutral-300 mb-2">{label}</p>
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between gap-4">
+            <span className="flex items-center gap-1.5 text-blue-400">
+              <span className="w-2 h-2 rounded-full bg-blue-500" />
+              Applications:
+            </span>
+            <span className="font-bold text-white">{payload[0]?.value ?? 0}</span>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <span className="flex items-center gap-1.5 text-purple-400">
+              <span className="w-2 h-2 rounded-full bg-purple-500" />
+              Submissions:
+            </span>
+            <span className="font-bold text-white">{payload[1]?.value ?? 0}</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
 export const AnalyticsChart = ({
   data,
   timeframe,
@@ -34,33 +67,6 @@ export const AnalyticsChart = ({
   const totalApps = data.reduce((acc, curr) => acc + curr.applications, 0);
   const totalSubs = data.reduce((acc, curr) => acc + curr.submissions, 0);
 
-  // Custom Chart Tooltip
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="rounded-xl border border-neutral-800 bg-neutral-900/95 p-3.5 shadow-xl backdrop-blur-md text-white text-xs">
-          <p className="font-semibold text-neutral-300 mb-2">{label}</p>
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between gap-4">
-              <span className="flex items-center gap-1.5 text-blue-400">
-                <span className="w-2 h-2 rounded-full bg-blue-500" />
-                Applications:
-              </span>
-              <span className="font-bold text-white">{payload[0]?.value ?? 0}</span>
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <span className="flex items-center gap-1.5 text-purple-400">
-                <span className="w-2 h-2 rounded-full bg-purple-500" />
-                Submissions:
-              </span>
-              <span className="font-bold text-white">{payload[1]?.value ?? 0}</span>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <div className="flex w-full flex-col rounded-xl border border-neutral-200 bg-white p-5 shadow-xs">
