@@ -36,13 +36,7 @@ const CreateAccount = () => {
         }
     }, [isAuthenticated, target, navigate]);
 
-    if (isAuthenticated) {
-        return <Navigate to={target} replace />;
-    }
-
-    if (accessToken && isLoadingProfile) {
-        return <AppLoader />;
-    }
+    
 
     const {
         register,
@@ -69,6 +63,14 @@ const CreateAccount = () => {
             navigate("/employer/verify-email", { state: { justSent: true } })
         },
     })
+
+    if (isAuthenticated) {
+        return <Navigate to={target} replace />;
+    }
+
+    if (accessToken && isLoadingProfile) {
+        return <AppLoader />;
+    }
 
     const onSubmit = (values: CreateAccountFormValues) => {
         signupMutation.mutate({ ...values, agreedToTerms: agreed })
