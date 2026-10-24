@@ -30,7 +30,7 @@ const renderAt = (path: string) =>
             <Where />
             <Routes>
                 <Route element={<CandidateRoute />}>
-                    <Route path="/job-board" element={<p>PROTECTED</p>} />
+                    <Route path="/candidate/applications" element={<p>PROTECTED</p>} />
                 </Route>
                 <Route path="*" element={<p>ELSEWHERE</p>} />
             </Routes>
@@ -41,34 +41,34 @@ beforeEach(() => signIn({}))
 
 describe("CandidateRoute", () => {
     it("sends signed-out visitors to sign-in, remembering where they were going", () => {
-        renderAt("/job-board?q=analyst")
+        renderAt("/candidate/applications?tab=active")
         expect(screen.getByTestId("where")).toHaveTextContent(
-            "/candidate/signin?redirect=%2Fjob-board%3Fq%3Danalyst",
+            "/candidate/signin?redirect=%2Fcandidate%2Fapplications%3Ftab%3Dactive",
         )
     })
 
     it("lets a signed-in candidate through", () => {
         signIn({ role: "JOB_SEEKER" })
-        renderAt("/job-board")
+        renderAt("/candidate/applications")
         expect(screen.getByText("PROTECTED")).toBeInTheDocument()
     })
 
     it("sends employers to their own area", () => {
         signIn({ role: "EMPLOYER" })
-        renderAt("/job-board")
+        renderAt("/candidate/applications")
         expect(screen.getByTestId("where")).toHaveTextContent("/employer/jobs")
     })
 
     it("sends any other role to the landing page", () => {
         signIn({ role: "ADMIN" })
-        renderAt("/job-board")
+        renderAt("/candidate/applications")
         expect(screen.getByTestId("where")).toHaveTextContent("/landing")
     })
 
     it("shows the loader (not sign-in) while a stored token's profile is loading", () => {
         signIn({ token: "token", loading: true })
-        renderAt("/job-board")
+        renderAt("/candidate/applications")
         expect(screen.getByText("LOADING")).toBeInTheDocument()
-        expect(screen.getByTestId("where")).toHaveTextContent("/job-board")
+        expect(screen.getByTestId("where")).toHaveTextContent("/candidate/applications")
     })
 })

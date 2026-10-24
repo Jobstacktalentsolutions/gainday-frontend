@@ -123,10 +123,12 @@ const AppRoutes = () => {
                     </Route>
                 </Route>
 
-                {/* Every candidate page requires a signed-in candidate */}
+                {/* Public job-board pages — browsable without signing in */}
+                <Route path="/job-board" element={<JobBoardPage />} />
+                <Route path="/job-board/:jobId" element={<JobDetailsPage />} />
+
+                {/* Candidate-only pages — require a signed-in JOB_SEEKER */}
                 <Route element={<CandidateRoute />}>
-                    <Route path="/job-board" element={<JobBoardPage />} />
-                    <Route path="/job-board/:jobId" element={<JobDetailsPage />} />
                     <Route path="/job-board/:jobId/pre-simulation" element={<PreSimulation />} />
                     <Route path="/job-board/:jobId/environment-check" element={<EnvironmentCheckPage />} />
                     <Route path="/job-board/:jobId/simulation" element={<TaskRunner />} />
