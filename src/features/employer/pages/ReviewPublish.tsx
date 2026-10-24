@@ -81,7 +81,7 @@ const ReviewPublish = () => {
                     jobTitle={values.title}
                     jobUrl={publishResult.jobUrl}
                     onViewJob={() => navigate(`/employer/jobs/${publishResult.jobId}/preview`)}
-                    onViewCandidates={() => navigate("/employer/jobs")}
+                    onCandidatePreview={() => navigate(`/job-board/${publishResult.jobId}`)}
                 />
             </div>
         );
