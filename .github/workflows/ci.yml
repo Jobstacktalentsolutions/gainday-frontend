@@ -1,0 +1,30 @@
+name: CI                                  # the name shown in the Actions tab
+
+on:
+  pull_request:                           # run on every pull request
+  push:
+    branches: [main]                      # and on every push to main
+
+concurrency:                              # if you push again, cancel the older run
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read                          # least privilege: CI can only read the code
+
+jobs:
+  verify:                                 # this job name is what branch protection will ask for
+    runs-on: ubuntu-latest
+    timeout-minutes: 15                   # kills a hung run instead of burning minutes
+    steps:
+      - uses: actions/checkout@v4         # download the code
+
+      - uses: actions/setup-node@v4       # install Node
+        with:
+          node-version-file: .nvmrc       # use the version from .nvmrc
+          cache: npm                      # reuse downloaded packages between runs
+
+      - run: npm ci                       # exact install from the lockfile
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build                # runs tsc -b, then vite build
