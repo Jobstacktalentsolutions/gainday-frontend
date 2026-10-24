@@ -159,7 +159,7 @@ export const AnalyticsChart = ({
       </div>
 
       {/* Chart Canvas */}
-      <div className="h-[280px] w-full pt-2">
+      <div className="h-70  w-full pt-2">
         {isLoading ? (
           <div className="flex h-full w-full items-center justify-center text-sm text-neutral-400">
             Updating chart data...
