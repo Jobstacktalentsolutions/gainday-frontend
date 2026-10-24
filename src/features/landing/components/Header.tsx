@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import brandLogo from "@/assets/gainday icon.svg";
-import { Menu, X, ChevronDown, BookOpen, UserRound } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { actionButtonVariants } from "@/components/ui/ActionButton";
 import { cn } from "@/lib/utils";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
@@ -169,21 +169,6 @@ const Header = () => {
                                 <AddItemButton onClick={() => navigate(postJobTarget)}>
                                     Post a Job
                                 </AddItemButton>
-
-                                {/* Divider + footer link */}
-                                <div className="mt-6 pt-5 border-t border-neutral-200">
-                                    <a
-                                        href="#assessment-process"
-                                        onClick={(e) => scrollToSection(e, "#assessment-process")}
-                                        className="inline-flex items-start gap-2.5 text-base text-neutral-500 transition-colors duration-200 hover:text-primary-500 cursor-pointer group"
-                                    >
-                                        <BookOpen
-                                            size={18}
-                                            className="shrink-0 relative top-1 text-neutral-400 group-hover:text-primary-500 transition-colors duration-200"
-                                        />
-                                        Learn more about the candidate assessment process
-                                    </a>
-                                </div>
                             </div>
                         }
                     />
@@ -209,21 +194,6 @@ const Header = () => {
                                 <StepContinueButton size="sm" onClick={() => navigate("/job-board")}>
                                     Go to Job Board
                                 </StepContinueButton>
-
-                                {/* Divider + footer link */}
-                                <div className="mt-6 pt-5 border-t border-neutral-200">
-                                    <a
-                                        href="/candidate/signup"
-                                        onClick={(e) => { e.preventDefault(); navigate("/candidate/signup"); }}
-                                        className="inline-flex items-start gap-2.5 text-base text-neutral-500 transition-colors duration-200 hover:text-primary-500 cursor-pointer group"
-                                    >
-                                        <UserRound
-                                            size={18}
-                                            className="shrink-0 relative top-1 text-neutral-400 group-hover:text-primary-500 transition-colors duration-200"
-                                        />
-                                        Create a free account to apply for jobs
-                                    </a>
-                                </div>
                             </div>
                         }
                     />
@@ -319,19 +289,6 @@ const Header = () => {
                                     Post Job
                                 </AddItemButton>
                             </div>
-
-                            {/* Mobile Learn more */}
-                            <a
-                                href="#assessment-process"
-                                onClick={(e) => {
-                                    scrollToSection(e, "#assessment-process");
-                                    setMenuOpen(false);
-                                }}
-                                className="flex items-center gap-2 py-3 text-sm text-neutral-500 border-b border-neutral-200/50 cursor-pointer hover:text-primary-500 transition-colors duration-200"
-                            >
-                                <BookOpen size={15} className="shrink-0" />
-                                Learn more about the candidate assessment process
-                            </a>
 
                             <Link
                                 to="/job-board"
