@@ -8,6 +8,7 @@ import {
 } from "../hooks/useAiOversight";
 import GeneratedSimulationsPanel from "../components/GeneratedSimulationsPanel";
 import FailedScoringPanel from "../components/FailedScoringPanel";
+import GenerationReviewsPanel from "../components/GenerationReviewsPanel";
 import ViewSimulationDialog from "../components/ViewSimulationDialog";
 import OverrideSimulationDialog from "../components/OverrideSimulationDialog";
 import type { GeneratedSimulation } from "../types/aiOversight";
@@ -103,6 +104,9 @@ const AiOversight = () => {
                     }
                 />
             )}
+
+            {/* Pipeline slots the generator could not validate automatically */}
+            <GenerationReviewsPanel />
 
             {/* Dialogs */}
             <ViewSimulationDialog

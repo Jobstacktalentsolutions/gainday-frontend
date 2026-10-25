@@ -33,6 +33,7 @@ const ReviewPublish = lazy(() => import("@/features/employer/pages/ReviewPublish
 const EmployerManagement = lazy(() => import("@/features/admin/pages/EmployerManagement"))
 const CandidateManagement = lazy(() => import("@/features/admin/pages/CandidateManagement"))
 const ContentModeration = lazy(() => import("@/features/admin/pages/ContentModeration"));
+const AiOversight = lazy(() => import("@/features/admin/pages/AiOversight"));
 
 const SupportMessages = lazy(() => import("@/features/admin/pages/SupportMessages"));
 const Notifications = lazy(() => import("@/features/admin/pages/Notifications"));
@@ -81,7 +82,8 @@ const AppRoutes = () => {
                     <Route path="candidate-management" element={<CandidateManagement />} />
                     <Route path="content-moderation" element={<ContentModeration />} />
                     <Route path="content-moderation/jobs/:id" element={<JobModerationDetailPage />} />
-                    <Route path="generation-reviews" element={<Navigate to="/admin/content-moderation" replace />} />
+                    <Route path="ai-oversight" element={<AiOversight />} />
+                    <Route path="generation-reviews" element={<Navigate to="/admin/ai-oversight" replace />} />
                     <Route path="support-messages" element={<SupportMessages />} />
                     <Route path="notifications" element={<Notifications />} />
                     <Route path="credits" element={<CreditManagement />} />
