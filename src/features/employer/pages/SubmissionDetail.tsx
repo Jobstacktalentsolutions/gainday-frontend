@@ -10,7 +10,7 @@ import CapabilityHistoryCard, { CapabilityHistoryCardSkeleton } from "../compone
 import IntegrityCard, { IntegrityCardSkeleton } from "../components/IntegrityCard";
 import CapabilityPassportModal from "../components/CapabilityPassportModal";
 import CandidateProfileCard from "@/features/capability-passport/components/CandidateProfileCard";
-import UnlockModal from "../components/UnlockModal";
+import CreditPurchaseModal from "../components/CreditPurchaseModal";
 import { useEmployerSubmission } from "../hooks/useEmployerSubmission";
 import { useSubmissionPassport } from "../hooks/useSubmissionPassport";
 import { useUnlockCandidates } from "../hooks/useUnlockCandidates";
@@ -162,11 +162,10 @@ const SubmissionDetail = () => {
                     {submission.overallScore === null && (
                         <p
                             role="status"
-                            className={`rounded-xl px-4 py-3 text-sm ${
-                                submission.status === "GRADING_FAILED"
+                            className={`rounded-xl px-4 py-3 text-sm ${submission.status === "GRADING_FAILED"
                                     ? "bg-error-50 text-error-600"
                                     : "bg-neutral-100 text-neutral-700"
-                            }`}
+                                }`}
                         >
                             {UNGRADED_NOTICE[submission.status] ?? "This submission has no grade."}
                         </p>
@@ -209,9 +208,10 @@ const SubmissionDetail = () => {
             />
 
             {submissionId && (
-                <UnlockModal
+                <CreditPurchaseModal
                     open={unlockModal.open}
                     onOpenChange={(open) => setUnlockModal((prev) => ({ ...prev, open }))}
+                    mode="unlock"
                     submissionIds={[submissionId]}
                     recommendedPackId={unlockModal.recommendedPackId}
                     onUnlocked={() => refetch()}
