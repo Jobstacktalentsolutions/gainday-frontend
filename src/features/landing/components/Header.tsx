@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import brandLogo from "@/assets/gainday icon.svg";
 import { Menu, X, ChevronDown } from "lucide-react";
@@ -101,6 +101,7 @@ const Header = () => {
     const browseCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const { user, isAuthenticated } = useCurrentUser();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const logoTarget = isAuthenticated
         ? user?.role === "EMPLOYER"
@@ -196,6 +197,15 @@ const Header = () => {
                                 </StepContinueButton>
                             </div>
                         }
+                    />
+                    <NavItem
+                        label="Pricing"
+                        href="/pricing"
+                        isOpen={location.pathname === "/pricing"}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            navigate("/pricing");
+                        }}
                     />
                 </nav>
 
@@ -314,6 +324,14 @@ const Header = () => {
                                     View Jobs
                                 </StepContinueButton>
                             </div>
+
+                            <Link
+                                to="/pricing"
+                                onClick={() => setMenuOpen(false)}
+                                className="py-3 font-sans text-base text-neutral-700 border-b border-neutral-200/50 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
+                            >
+                                Pricing
+                            </Link>
 
                             <div className="flex flex-col gap-3 pt-4">
                                 <button
