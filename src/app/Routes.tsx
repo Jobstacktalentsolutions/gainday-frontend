@@ -66,6 +66,8 @@ const ApplicationSubmissionPage = lazy(() => import("@/features/candidate/pages/
 const CapabilityPassportPage = lazy(() => import("@/features/candidate/pages/CapabilityPassportPage"));
 const SupportPage = lazy(() => import("@/pages/SupportPage"));
 const LegalPage = lazy(() => import("@/features/legal/pages/LegalPage"));
+const PricingPage = lazy(() => import("@/features/pricing/pages/PricingPage"));
+
 
 
 const AppRoutes = () => {
@@ -88,6 +90,7 @@ const AppRoutes = () => {
                     <Route path="credits" element={<CreditManagement />} />
                 </Route>
                 <Route path="/landing" element={<LandingPage />} />
+                <Route path="/pricing" element={<PricingPage />} />
                 <Route path="/auth/verify-email" element={<LegacyVerifyEmailRedirect />} />
                 <Route path="/email-preferences" element={<EmailPreferencesPage />} />
                 <Route path="/employer">
