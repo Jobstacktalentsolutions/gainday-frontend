@@ -10,7 +10,8 @@ export type ObjectiveComponentType =
     | "PRIORITY_RANKING"
     | "RECONCILIATION"
     | "JOURNAL_ENTRY"
-    | "NUMERIC_TABLE";
+    | "NUMERIC_TABLE"
+    | "KEYED_CLASSIFICATION";
 
 // Each shape below is the backend's real objectiveComponent shape (component-schemas.ts) MINUS
 // its answer-key field — see gainday-backend/src/modules/simulations/candidate-task.util.ts,
@@ -70,7 +71,15 @@ export interface NumericTableCandidateComponent {
     columnLabels: string[];
 }
 
+// Triage actions per item. Only the items and buckets reach the candidate (the mapping is the key).
+export interface KeyedClassificationCandidateComponent {
+    componentType: "KEYED_CLASSIFICATION";
+    items: string[];
+    buckets: string[];
+}
+
 export type CandidateObjectiveComponent =
+    | KeyedClassificationCandidateComponent
     | SingleBestActionCandidateComponent
     | MultiSelectUnderConstraintCandidateComponent
     | NumericInputCandidateComponent

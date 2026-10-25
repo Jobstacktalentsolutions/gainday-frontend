@@ -4,9 +4,7 @@ import {
     AlertTriangle,
     ShieldAlert,
     CheckCircle2,
-    Layers,
     Bot,
-    RotateCw,
     Info,
 } from "lucide-react";
 import {

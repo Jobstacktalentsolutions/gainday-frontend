@@ -23,7 +23,6 @@ const ForgotPassword = lazy(() => import("@/features/auth/pages/ForgotPassword")
 const ResetPassword = lazy(() => import("@/features/auth/pages/ResetPassword"));
 const VerifyEmail = lazy(() => import("@/features/auth/pages/VerifyEmail"));
 const LegacyVerifyEmailRedirect = lazy(() => import("@/features/auth/pages/LegacyVerifyEmailRedirect"));
-const OAuthCallback = lazy(() => import("@/features/auth/pages/OAuthCallback"));
 const EmployerJobs = lazy(() => import("@/features/employer/pages/EmployerJobs"))
 const EmployerLayout = lazy(() => import("@/features/employer/layouts/EmployerLayout"));
 const JobPostingWizardLayout = lazy(() => import("@/features/employer/layouts/JobPostingWizardLayout"));
@@ -51,7 +50,6 @@ const CandidateSignIn = lazy(() => import("@/features/candidate/pages/CandidateS
 const CandidateForgotPassword = lazy(() => import("@/features/candidate/pages/CandidateForgotPassword"));
 const CandidateResetPassword = lazy(() => import("@/features/candidate/pages/CandidateResetPassword"));
 const CandidateVerifyEmail = lazy(() => import("@/features/candidate/pages/CandidateVerifyEmail"));
-const CandidateOAuthCallback = lazy(() => import("@/features/candidate/pages/CandidateOAuthCallback"));
 const PreSimulation = lazy(() => import("@/features/candidate/pages/PreSimulation"));
 const ProfilePage = lazy(() => import("@/pages/ProfilePage"));
 const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
@@ -102,7 +100,6 @@ const AppRoutes = () => {
                     <Route path="forgot-password" element={<ForgotPassword />} />
                     <Route path="reset-password" element={<ResetPassword />} />
                     <Route path="verify-email" element={<VerifyEmail />} />
-                    <Route path="oauth/callback" element={<OAuthCallback />} />
 
                     {/* All pages that require a signed-in employer */}
                     <Route element={<EmployerRoute />}>
@@ -166,7 +163,6 @@ const AppRoutes = () => {
                     <Route path="forgot-password" element={<CandidateForgotPassword />} />
                     <Route path="reset-password" element={<CandidateResetPassword />} />
                     <Route path="verify-email" element={<CandidateVerifyEmail />} />
-                    <Route path="oauth/callback" element={<CandidateOAuthCallback />} />
                 </Route>
 
                 <Route path="/support" element={<SupportPage />} />

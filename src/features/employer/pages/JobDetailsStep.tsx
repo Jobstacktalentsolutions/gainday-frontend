@@ -20,10 +20,18 @@ import { FormTextarea } from "@/components/form/FormTextarea";
 import { JobFormInput } from "@/components/form/JobFormInput";
 import { StepSecondaryButton, StepContinueButton } from "@/components/ui/StepNavigationButtons";
 
+// The roles the engine has modules for. A role is a top-level domain; a sub-role is written after it
+// (e.g. "Finance > Private Equity") when the posting or the employer names one.
 const ROLES = [
-    { value: "FINANCE", label: "Finance" },
-    { value: "SALES", label: "Sales" },
+    { value: "Finance", label: "Finance" },
+    { value: "Sales", label: "Sales" },
+    { value: "Customer Service", label: "Customer Service" },
 ];
+
+// Jobs saved before the form used category labels store these values. They show under their label.
+const LEGACY_ROLE_LABELS: Record<string, string> = { FINANCE: "Finance", SALES: "Sales" };
+const normaliseRole = (value: string | undefined | null): string =>
+    value ? (LEGACY_ROLE_LABELS[value] ?? value) : "";
 // Sentinel for the "Add Yours" option — never itself saved as the role value; picking it just
 // switches the field into free-text mode. The AI generation pipeline accepts any role text (a
 // purpose-built role module if one's registered for it, otherwise a generic fallback — see
@@ -75,15 +83,13 @@ const JobDetailsStep = () => {
         formValues.deadline
     );
 
-    // Free-text mode for the Role field ("Add Yours") — on whenever the current role value isn't
-    // one of the built-in presets, so a draft/parsed role of e.g. "Customer Support" reopens in
-    // free-text mode rather than silently falling back to the dropdown's placeholder.
-    const isPresetRole = useMemo(
-        () => ROLES.some((r) => r.value === formValues.role),
-        [formValues.role],
-    );
+    // The role as the select shows it. A role that is not a preset (an inferred "Finance > Private
+    // Equity", or one saved earlier) appears as its own option, so the employer can keep it or pick another.
+    const roleValue = normaliseRole(formValues.role);
+    const isPresetRole = useMemo(() => ROLES.some((r) => r.value === roleValue), [roleValue]);
     const [customRoleActive, setCustomRoleActive] = useState(false);
-    const isCustomRole = customRoleActive || (!isPresetRole && Boolean(formValues.role));
+    // Free-text mode only when the employer picks "Add yours..." (see the select below).
+    const isCustomRole = customRoleActive;
 
     const isStepValid = useMemo(() => {
         return jobDetailsSchema.safeParse(formValues).success;
@@ -274,7 +280,7 @@ const JobDetailsStep = () => {
                         label="Role"
                         placeholder="Select a role"
                         error={errors.role?.message}
-                        value={formValues.role ?? ""}
+                        value={roleValue}
                         onChange={(e) => {
                             const { value } = e.target;
                             if (value === CUSTOM_ROLE_VALUE) {
@@ -285,6 +291,7 @@ const JobDetailsStep = () => {
                             }
                         }}
                     >
+                        {roleValue !== "" && !isPresetRole ? <option value={roleValue}>{roleValue}</option> : null}
                         {ROLES.map((r) => (
                             <option key={r.value} value={r.value}>{r.label}</option>
                         ))}

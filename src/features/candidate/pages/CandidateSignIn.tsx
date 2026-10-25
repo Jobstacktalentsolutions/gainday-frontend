@@ -3,14 +3,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useSearchParams, Link, Navigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { apiClient, getBaseURL } from "@/lib/api/client";
+import { apiClient } from "@/lib/api/client";
 import { useAuthStore } from "@/features/auth/store/authStore";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import AppLoader from "@/components/ui/AppLoader";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { FormInput } from "@/components/form/FormInput";
 import { AuthDivider } from "@/features/auth/component/AuthDivider";
-import SocialAuthButton from "@/features/auth/component/SocialAuthButton";
+import { GoogleSignIn } from "@/features/auth/component/GoogleSignIn";
 import AuthSwitchLink from "@/features/auth/component/AuthSwitchLink";
 import AuthCard from "@/features/auth/component/AuthCard";
 import PasswordInput from "@/features/auth/component/passwordInput";
@@ -143,12 +143,7 @@ const CandidateSignIn = () => {
                 </ActionButton>
 
                 <AuthDivider />
-                <SocialAuthButton
-                    label="Sign in with Google"
-                    onClick={() => {
-                        window.location.href = `${getBaseURL()}/auth/google?role=JOB_SEEKER`
-                    }}
-                />
+                <GoogleSignIn redirect={redirect} />
                 <AuthSwitchLink
                     prompt="New to Gainday?"
                     linkText="Create an account"

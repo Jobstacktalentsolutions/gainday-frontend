@@ -1,5 +1,4 @@
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import Markdown from "@/components/ui/Markdown";
 import TaskTypeBadge from "./TaskTypeBadge";
 import { InterfaceRendererView } from "@/features/simulation-tasks/interfaceRenderers/registry";
 import type { SimulationTask } from "@/features/simulation-tasks/types";
@@ -22,16 +21,14 @@ const TaskSummaryCard = ({ index, task }: TaskSummaryCardProps) => {
             <p className="text-base font-medium text-neutral-950">{task.title}</p>
 
             {Boolean(task.scenarioDescription?.trim()) && (
-                <div className="prose prose-sm max-w-none rounded-xl bg-neutral-50/50 p-4 text-neutral-700 prose-p:my-2 prose-ul:my-2">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                        {task.scenarioDescription}
-                    </ReactMarkdown>
+                <div className="rounded-xl bg-neutral-50/50 p-4">
+                    <Markdown>{task.scenarioDescription}</Markdown>
                 </div>
             )}
 
             {Boolean(task.questionPrompt?.trim()) && (
-                <div className="prose prose-sm max-w-none rounded-xl bg-neutral-50/50 p-4 text-neutral-900 prose-p:my-2 prose-ul:my-2">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown>
+                <div className="rounded-xl bg-neutral-50/50 p-4">
+                    <Markdown>{task.questionPrompt}</Markdown>
                 </div>
             )}
 

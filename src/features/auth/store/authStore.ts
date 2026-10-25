@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Gender, Pronouns } from '../utils/profileOptions';
 
-interface AuthUser {
+export interface AuthUser {
   id: string;
   email: string;
   role: string;

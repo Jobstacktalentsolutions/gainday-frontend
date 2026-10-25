@@ -20,6 +20,7 @@ import {
 } from "./describeAnswers";
 import type {
     CandidateObjectiveComponent,
+    ClassificationCandidateComponent,
     JournalEntryCandidateComponent,
     JournalEntryResponse,
     NumericTableCandidateComponent,
@@ -111,6 +112,14 @@ export const OBJECTIVE_ANSWER_RENDERERS: Record<
             onChange={castOnChange<JournalEntryResponse>(onChange)}
         />
     ),
+    KEYED_CLASSIFICATION: ({ component, response, onChange, readOnly }) => (
+        <ClassificationAnswer
+            readOnly={readOnly}
+            component={cast<ClassificationCandidateComponent>(component)}
+            response={cast<Record<string, string> | null>(response)}
+            onChange={castOnChange<Record<string, string>>(onChange)}
+        />
+    ),
     NUMERIC_TABLE: ({ component, response, onChange }) => (
         <NumericTableAnswer
             component={cast<NumericTableCandidateComponent>(component)}
@@ -135,5 +144,6 @@ export const OBJECTIVE_ANSWER_DESCRIBERS: Record<
     PRIORITY_RANKING: (c, r) => describePriorityRanking(cast(c), cast(r)),
     RECONCILIATION: (c, r) => describeReconciliation(cast<ReconciliationCandidateComponent>(c), cast<ReconciliationResponse | null>(r)),
     JOURNAL_ENTRY: (c, r) => describeJournalEntry(cast<JournalEntryCandidateComponent>(c), cast<JournalEntryResponse | null>(r)),
+    KEYED_CLASSIFICATION: (c, r) => describeClassification(cast<ClassificationCandidateComponent>(c), cast<Record<string, string> | null>(r)),
     NUMERIC_TABLE: (c, r) => describeNumericTable(cast<NumericTableCandidateComponent>(c), cast<NumericTableResponse | null>(r)),
 };

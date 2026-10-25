@@ -39,7 +39,6 @@ const routeGroups = [
       { path: "/candidate/forgot-password", label: "Candidate Forgot Password" },
       { path: "/candidate/reset-password", label: "Candidate Reset Password" },
       { path: "/candidate/verify-email", label: "Candidate Verify Email" },
-      { path: "/candidate/oauth/callback", label: "Candidate OAuth Callback" },
     ],
   },
 ];

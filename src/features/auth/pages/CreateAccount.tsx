@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useSearchParams, Navigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { apiClient, getBaseURL } from "@/lib/api/client";
+import { apiClient } from "@/lib/api/client";
 import { useAuthStore } from "../store/authStore";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import AppLoader from "@/components/ui/AppLoader";
@@ -11,8 +11,8 @@ import { FormInput } from "@/components/form/FormInput";
 import AuthCard from "../component/AuthCard";
 import PasswordInput from "../component/passwordInput";
 import { AuthCheckboxRow } from "../component/AuthCheckBox";
-import { AuthDivider } from "../component/AuthDivider";
-import SocialAuthButton from "../component/SocialAuthButton";
+
+
 import AuthSwitchLink from "../component/AuthSwitchLink";
 import { createAccountSchema, type CreateAccountFormValues } from "../schemas/createAccountSchema";
 import { ActionButton } from "@/components/ui/ActionButton";
@@ -155,13 +155,6 @@ const CreateAccount = () => {
                     }
 
                 </ActionButton>
-                <AuthDivider />
-                <SocialAuthButton
-                    label="Sign up with Google"
-                    onClick={() => {
-                        window.location.href = `${getBaseURL()}/auth/google?role=EMPLOYER`
-                    }}
-                />
                 <AuthSwitchLink
                     prompt="Already have an account?"
                     linkText="Sign in"

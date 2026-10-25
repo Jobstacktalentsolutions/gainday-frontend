@@ -31,6 +31,8 @@ export interface JobBoardListing {
     employer: JobBoardEmployer;
     createdAt: string;
     updatedAt: string;
+    // Set on job board pages: whether the signed-in candidate has already applied.
+    isApplied?: boolean;
 }
 
 export interface FilterOption {

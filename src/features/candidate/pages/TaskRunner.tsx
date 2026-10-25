@@ -22,6 +22,7 @@ import { useFullscreenGuard } from "../hooks/useFullscreenGuard";
 import { useIdleDetection } from "../hooks/useIdleDetection";
 import { useSimulationIntegrityStore } from "../hooks/useSimulationIntegrityStore";
 import { TaskResponseInput } from "../components/TaskResponseInput";
+import StagedChatTask from "../staged-chat/StagedChatTask";
 import { TimeWarningBanner } from "../components/TimeWarningBanner";
 import { ConnectionBanner } from "../components/ConnectionBanner";
 import { SimulationCompleteModal } from "../components/SimulationCompleteModal";
@@ -360,13 +361,23 @@ export default function TaskRunner() {
                     </div>
 
                     <div className="flex w-full flex-col gap-6">
-                        <TaskResponseInput
-                            task={task}
-                            value={answer.textResponse}
-                            onChange={(value) => updateAnswer({ textResponse: value })}
-                            objectiveResponse={answer.objectiveResponse}
-                            onObjectiveChange={(response) => updateAnswer({ objectiveResponse: response })}
-                        />
+                        {task.interfaceType === "STAGED_CHAT" ? (
+                            runStore.submissionId ? (
+                                <StagedChatTask submissionId={runStore.submissionId} taskId={task.id} />
+                            ) : (
+                                <p role="alert" className="text-sm text-error-600">
+                                    This conversation can't start yet. Refresh the page to try again.
+                                </p>
+                            )
+                        ) : (
+                            <TaskResponseInput
+                                task={task}
+                                value={answer.textResponse}
+                                onChange={(value) => updateAnswer({ textResponse: value })}
+                                objectiveResponse={answer.objectiveResponse}
+                                onObjectiveChange={(response) => updateAnswer({ objectiveResponse: response })}
+                            />
+                        )}
                     </div>
 
                     {submitError && (

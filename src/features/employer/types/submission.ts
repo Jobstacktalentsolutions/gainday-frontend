@@ -70,6 +70,10 @@ export interface TaskResult {
     weight?: number;
     /** The grader's summary of the answer. Null when this task has not been graded. */
     evidence: string | null;
+    /** Rubric checklist marks, in the task's order. Null when the task has no checklist or is not graded. */
+    checklist: { item: string; met: boolean; evidence: string }[] | null;
+    /** True when the response did what the task's gate forbids (judgment is capped). Null when the task has no gate or is not graded. */
+    gateTriggered: boolean | null;
 }
 
 export interface SubmissionContact {

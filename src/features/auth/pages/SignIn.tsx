@@ -3,14 +3,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useSearchParams, Link, Navigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { apiClient, getBaseURL } from "@/lib/api/client";
+import { apiClient } from "@/lib/api/client";
 import { useAuthStore } from "../store/authStore";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import AppLoader from "@/components/ui/AppLoader";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { FormInput } from "@/components/form/FormInput";
 import { AuthDivider } from "../component/AuthDivider";
-import SocialAuthButton from "../component/SocialAuthButton";
+import { GoogleSignIn } from "../component/GoogleSignIn";
 import AuthSwitchLink from "../component/AuthSwitchLink";
 import { signInSchema, type signInFormValues } from "../schemas/signInSchema";
 import AuthCard from "../component/AuthCard";
@@ -177,12 +177,7 @@ const SignIn = () => {
                 </ActionButton>
 
                 <AuthDivider />
-                <SocialAuthButton
-                    label="Sign in with Google"
-                    onClick={() => {
-                        window.location.href = `${getBaseURL()}/auth/google?role=EMPLOYER`
-                    }}
-                />
+                <GoogleSignIn redirect={redirect} />
                 <AuthSwitchLink
                     prompt="New to Gainday?"
                     linkText="Create an account"

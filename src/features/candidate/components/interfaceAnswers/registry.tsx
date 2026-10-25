@@ -1,7 +1,9 @@
 import TextAreaAnswer from "./TextAreaAnswer";
+import RichTextComposerAnswer from "./RichTextComposerAnswer";
 import TableViewResponsePanelAnswer from "./TableViewResponsePanelAnswer";
 import CsvDataPanelAnswer from "./CsvDataPanelAnswer";
 import TableViewWithChartAnswer from "./TableViewWithChartAnswer";
+import CaseFileTextAreaAnswer from "./CaseFileTextAreaAnswer";
 import type { InterfaceAnswerProps } from "./types";
 import {
     InterfaceType,
@@ -10,6 +12,7 @@ import {
     type TableViewResponsePanelPayload,
     type CsvDataPanelPayload,
     type TableViewWithChartPayload,
+    type CaseFileTextAreaPayload,
 } from "@/features/simulation-tasks/types";
 
 const cast = <T,>(value: Record<string, unknown>) => value as unknown as T;
@@ -31,7 +34,7 @@ export const INTERFACE_ANSWER_RENDERERS: Record<
         />
     ),
     [InterfaceType.RICH_TEXT_COMPOSER]: ({ payload, value, onChange, objectiveSlot, readOnly }) => (
-        <TextAreaAnswer
+        <RichTextComposerAnswer
             payload={cast<RichTextComposerPayload>(payload)}
             value={value}
             onChange={onChange}
@@ -67,6 +70,20 @@ export const INTERFACE_ANSWER_RENDERERS: Record<
             objectiveSlot={objectiveSlot}
             readOnly={readOnly}
             classification={classification}
+        />
+    ),
+    // A staged chat is answered through StagedChatTask (see TaskRunner). This entry serves review pages,
+    // which do not show the transcript yet.
+    [InterfaceType.STAGED_CHAT]: () => (
+        <p className="text-sm text-neutral-500">This task is a conversation. Its transcript is not shown here.</p>
+    ),
+    [InterfaceType.CASE_FILE_TEXT_AREA]: ({ payload, value, onChange, objectiveSlot, readOnly }) => (
+        <CaseFileTextAreaAnswer
+            payload={cast<CaseFileTextAreaPayload>(payload)}
+            value={value}
+            onChange={onChange}
+            objectiveSlot={objectiveSlot}
+            readOnly={readOnly}
         />
     ),
 };

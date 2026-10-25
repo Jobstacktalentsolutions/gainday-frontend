@@ -4,6 +4,7 @@ import { JobFormInput } from "@/components/form/JobFormInput";
 import { FormSelect } from "@/components/form/FormSelect";
 import { FormTextarea } from "@/components/form/FormTextarea";
 import TagInput from "@/components/ui/tagInput";
+import TaskPromptEditor from "./TaskPromptEditor";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
 import { EMPLOYMENT_TYPES } from "../constants/jobPostingOptions";
 
@@ -124,10 +125,30 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
       {/* What this hire needs to solve */}
       <FormTextarea
         label="What this hire needs to solve"
-        rows={4}
-        error={errors.description?.message}
-        {...register("description")}
+        optional
+        rows={3}
+        placeholder="e.g. We need someone to own our enterprise onboarding process..."
+        error={errors.businessProblem?.message}
+        {...register("businessProblem")}
       />
+
+      {/* Job description */}
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-medium text-neutral-700">Job description</label>
+        <Controller
+          control={control}
+          name="description"
+          render={({ field }) => (
+            <TaskPromptEditor
+              value={field.value}
+              onChange={field.onChange}
+              error={errors.description?.message}
+              placeholder="Write or paste the full job description here..."
+              contentClassName="max-h-64 overflow-y-auto"
+            />
+          )}
+        />
+      </div>
     </div>
   );
 };

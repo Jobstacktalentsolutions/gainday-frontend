@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { toJobBoardListing, type BackendJob } from "../utils/jobAdapter";
 import {
     DEFAULT_JOB_BOARD_FILTERS,
@@ -8,59 +10,96 @@ import {
     type FilterOption,
     type JobBoardFilters,
     type JobBoardListing,
-} from "../types/jobBoard"
+} from "../types/jobBoard";
 
-// GET /jobs already only returns ACTIVE jobs server-side (JobsService.findAllActive).
-const fetchJobBoard = async (): Promise<JobBoardListing[]> => {
-    const { data } = await apiClient.get<BackendJob[]>("/jobs");
-    return data.map(toJobBoardListing);
-};
+const PAGE_SIZE = 12;
 
-function useJobBoardData(): { jobs: JobBoardListing[]; isLoading: boolean } {
-    const query = useQuery({ queryKey: ["candidate", "job-board"], queryFn: fetchJobBoard });
-    return { jobs: query.data ?? [], isLoading: query.isLoading };
+interface BoardPageResponse {
+    items: (BackendJob & { isApplied: boolean })[];
+    total: number;
+    nextOffset: number | null;
 }
 
-function getUniqueOptions(
-    jobs: JobBoardListing[],
-    key: "roleCategory" | "location" | "employmentType",
-): FilterOption[] {
-    const unique = Array.from(new Set(jobs.map((job) => job[key])));
-    return unique.sort().map((value) => ({ value, label: value }));
+interface BoardOptionsResponse {
+    totalActive: number;
+    roleCategory: string[];
+    location: string[];
+    employmentType: string[];
+}
+
+// The filters the server understands. Empty filters are left out of the request.
+interface BoardQueryParams {
+    search?: string;
+    roleCategory?: string;
+    location?: string;
+    employmentType?: string;
+    salaryMin?: number;
+    salaryMax?: number;
+}
+
+const toOptions = (values: string[]): FilterOption[] => values.map((value) => ({ value, label: value }));
+
+function toQueryParams(filters: JobBoardFilters, search: string): BoardQueryParams {
+    const bucket = SALARY_BUCKETS.find((item) => item.value === filters.salaryBucket);
+    return {
+        search: search.trim() || undefined,
+        roleCategory: filters.roleCategory ?? undefined,
+        location: filters.location ?? undefined,
+        employmentType: filters.employmentType ?? undefined,
+        salaryMin: bucket?.min,
+        // Infinity cannot be sent as a query value, so the open-ended bucket has no upper bound.
+        salaryMax: bucket && Number.isFinite(bucket.max) ? bucket.max : undefined,
+    };
+}
+
+async function fetchBoardPage(params: BoardQueryParams, offset: number): Promise<BoardPageResponse> {
+    const { data } = await apiClient.get<BoardPageResponse>("/jobs/board", {
+        params: { ...params, offset, limit: PAGE_SIZE },
+    });
+    return data;
+}
+
+async function fetchBoardOptions(): Promise<BoardOptionsResponse> {
+    const { data } = await apiClient.get<BoardOptionsResponse>("/jobs/board/options");
+    return data;
 }
 
 export function useJobBoardFilters() {
-    const { jobs, isLoading } = useJobBoardData();
+    const { user } = useCurrentUser();
     const [filters, setFilters] = useState<JobBoardFilters>(DEFAULT_JOB_BOARD_FILTERS);
+    const debouncedSearch = useDebouncedValue(filters.search, 300);
+    const params = toQueryParams(filters, debouncedSearch);
+
+    // The board ranks differently for a candidate, so each viewer gets their own cached pages.
+    const feed = useInfiniteQuery({
+        queryKey: ["candidate", "job-board", user?.id ?? "guest", params],
+        queryFn: ({ pageParam }) => fetchBoardPage(params, pageParam),
+        initialPageParam: 0,
+        getNextPageParam: (lastPage) => lastPage.nextOffset ?? undefined,
+    });
+
+    const optionsQuery = useQuery({
+        queryKey: ["candidate", "job-board", "options"],
+        queryFn: fetchBoardOptions,
+    });
+
+    const jobs: JobBoardListing[] = useMemo(
+        () =>
+            (feed.data?.pages ?? []).flatMap((page) =>
+                page.items.map((item) => ({ ...toJobBoardListing(item), isApplied: item.isApplied })),
+            ),
+        [feed.data],
+    );
 
     const filterOptions = useMemo(
         () => ({
-            roleCategory: getUniqueOptions(jobs, "roleCategory"),
-            location: getUniqueOptions(jobs, "location"),
-            employmentType: getUniqueOptions(jobs, "employmentType"),
+            roleCategory: toOptions(optionsQuery.data?.roleCategory ?? []),
+            location: toOptions(optionsQuery.data?.location ?? []),
+            employmentType: toOptions(optionsQuery.data?.employmentType ?? []),
             salaryBucket: SALARY_BUCKETS.map(({ value, label }) => ({ value, label })),
         }),
-        [jobs],
+        [optionsQuery.data],
     );
-
-    const filteredJobs = useMemo(() => {
-        const searchTerm = filters.search.trim().toLowerCase();
-        const salaryBucket = SALARY_BUCKETS.find((bucket) => bucket.value === filters.salaryBucket);
-
-        return jobs.filter((job) => {
-            const matchesSearch = searchTerm.length === 0 || job.title.toLowerCase().includes(searchTerm);
-            const matchesRole = !filters.roleCategory || job.roleCategory === filters.roleCategory;
-            const matchesLocation = !filters.location || job.location === filters.location;
-            const matchesEmploymentType =
-                !filters.employmentType || job.employmentType === filters.employmentType;
-            const matchesSalary =
-                !salaryBucket ||
-                ((job.salaryRange.min ?? 0) < salaryBucket.max &&
-                    (job.salaryRange.max ?? Infinity) > salaryBucket.min);
-
-            return matchesSearch && matchesRole && matchesLocation && matchesEmploymentType && matchesSalary;
-        });
-    }, [jobs, filters]);
 
     const hasActiveFilters =
         filters.search.trim().length > 0 ||
@@ -78,13 +117,17 @@ export function useJobBoardFilters() {
     }
 
     return {
-        isLoading,
-        totalJobs: jobs.length,
-        filteredJobs,
+        isLoading: feed.isLoading,
+        // Live jobs across the whole board, so the empty state can tell "no jobs" from "no matches".
+        totalJobs: optionsQuery.data?.totalActive ?? 0,
+        filteredJobs: jobs,
         filters,
         filterOptions,
         hasActiveFilters,
         updateFilter,
         clearFilters,
+        hasNextPage: feed.hasNextPage,
+        isFetchingNextPage: feed.isFetchingNextPage,
+        fetchNextPage: feed.fetchNextPage,
     };
 }

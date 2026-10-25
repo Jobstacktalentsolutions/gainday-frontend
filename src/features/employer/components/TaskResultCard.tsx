@@ -30,6 +30,29 @@ const TaskResultCard = ({ task }: { task: TaskResult }) => {
 
             <SubmittedAnswer task={task} answer={task.answer} />
 
+            {task.gateTriggered === true && (
+                <div role="alert" className="flex flex-col gap-1 border border-error-200 bg-error-50 p-3 text-base">
+                    <p className="font-medium text-error-700">Gate triggered: judgment capped at 20</p>
+                    <p className="text-error-700">The response did what this task's gate forbids. Review the answer before deciding.</p>
+                </div>
+            )}
+
+            {task.checklist !== null && task.checklist.length > 0 && (
+                <div className="flex flex-col gap-2 text-base">
+                    <p className="text-neutral-500">Checklist</p>
+                    <ul className="flex flex-col gap-1.5">
+                        {task.checklist.map((mark) => (
+                            <li key={mark.item} className="flex flex-col gap-0.5">
+                                <span className={mark.met ? "text-success-700" : "text-error-700"}>
+                                    {mark.met ? "Met" : "Not met"}: <span className="text-neutral-800">{mark.item}</span>
+                                </span>
+                                {mark.evidence && <span className="text-sm text-neutral-500">“{mark.evidence}”</span>}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+
             {evidence !== null && (
                 <div className="flex flex-col gap-1 bg-neutral-50 p-3 text-base">
                     <p className="text-neutral-500">Reviewer Notes</p>

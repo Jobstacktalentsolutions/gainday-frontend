@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, ChevronDown, Clock, MapPin, Play } from "lucide-react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import Markdown from "@/components/ui/Markdown";
 import TaskTypeBadge from "../components/TaskTypeBadge";
 import StatusBadge from "../components/StatusBadge";
 import CloseJobDialog from "../components/CloseJobDialog";
@@ -130,19 +129,15 @@ const TaskAccordionSection = ({ tasks }: { tasks: SimulationTask[] }) => {
 
                                     {/* Scenario — rendered markdown */}
                                     {Boolean(task.scenarioDescription?.trim()) && (
-                                        <div className="prose prose-sm max-w-none rounded-xl bg-neutral-50 p-4 text-sm leading-relaxed text-neutral-700">
-                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                                {task.scenarioDescription}
-                                            </ReactMarkdown>
+                                        <div className="rounded-xl bg-neutral-50 p-4">
+                                            <Markdown>{task.scenarioDescription}</Markdown>
                                         </div>
                                     )}
 
                                     {/* Task prompt — rendered markdown */}
                                     {Boolean(task.questionPrompt?.trim()) && (
-                                        <div className="prose prose-sm max-w-none rounded-xl bg-neutral-50 p-4 text-neutral-900 prose-headings:font-semibold prose-headings:text-neutral-950 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-neutral-950">
-                                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                                {task.questionPrompt}
-                                            </ReactMarkdown>
+                                        <div className="rounded-xl bg-neutral-50 p-4">
+                                            <Markdown>{task.questionPrompt}</Markdown>
                                         </div>
                                     )}
                                 </div>
@@ -165,9 +160,7 @@ const JobPreviewDetailsCard = ({ job, showTasks }: { job: JobPreviewDetails, sho
         <div className="flex w-full flex-col gap-6 rounded-3xl bg-white p-8">
             {hasDescription && (
                 <Section title="DESCRIPTION">
-                    <div className="prose prose-sm max-w-none text-base text-neutral-950 prose-headings:font-semibold prose-headings:text-neutral-950 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-neutral-950">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{job.description}</ReactMarkdown>
-                    </div>
+                    <Markdown>{job.description}</Markdown>
                 </Section>
             )}
 

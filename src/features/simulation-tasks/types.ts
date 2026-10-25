@@ -8,6 +8,8 @@ export const InterfaceType = {
   TABLE_VIEW_RESPONSE_PANEL: "TABLE_VIEW_RESPONSE_PANEL",
   CSV_DATA_PANEL: "CSV_DATA_PANEL",
   TABLE_VIEW_WITH_CHART: "TABLE_VIEW_WITH_CHART",
+  CASE_FILE_TEXT_AREA: "CASE_FILE_TEXT_AREA",
+  STAGED_CHAT: "STAGED_CHAT",
 } as const;
 export type InterfaceType = (typeof InterfaceType)[keyof typeof InterfaceType];
 
@@ -35,11 +37,15 @@ export interface CsvDataPanelPayload {
 }
 
 /** A chart drawn from the same numbers as the table beside it (backend TableViewWithChartPayload). */
-export interface ChartPayload {
-  type: "bar" | "line";
-  categories: string[];
-  series: { name: string; values: number[] }[];
-}
+// Mirrors the backend chartSchema (gainday-backend/src/modules/generation/roles/interface-type.ts).
+export type ChartPayload =
+  | { type: "bar" | "line"; categories: string[]; series: { name: string; values: number[] }[] }
+  | {
+        type: "combo";
+        categories: string[];
+        series: { name: string; values: number[]; kind: "bar" | "line"; axis: "primary" | "secondary" }[];
+    }
+  | { type: "waterfall"; categories: string[]; values: number[]; totals: boolean[] };
 
 export interface TableViewWithChartPayload {
   interfaceType: typeof InterfaceType.TABLE_VIEW_WITH_CHART;
@@ -48,12 +54,33 @@ export interface TableViewWithChartPayload {
   placeholder: string | null;
 }
 
+/** Read-only reference tabs for a case, shown alongside the written answer (customer service). */
+export interface CaseFileTextAreaPayload {
+  interfaceType: typeof InterfaceType.CASE_FILE_TEXT_AREA;
+  caseFile: { tabs: { label: string; content: string }[] };
+  /** The length the task asks for. Null keeps the default field limits. */
+  wordLimit: { min: number; max: number } | null;
+  placeholder: string | null;
+}
+
+/** The candidate-visible part of a staged chat. The script is server-only and never present here. */
+export interface StagedChatPayload {
+  interfaceType: typeof InterfaceType.STAGED_CHAT;
+  displayName: string;
+  caseFile: { tabs: { label: string; content: string }[] };
+  wordLimit: { min: number; max: number };
+  turnCount: number;
+  placeholder: string | null;
+}
+
 export type InterfacePayload =
   | RichTextComposerPayload
   | TextAreaPayload
   | TableViewResponsePanelPayload
   | CsvDataPanelPayload
-  | TableViewWithChartPayload;
+  | TableViewWithChartPayload
+  | CaseFileTextAreaPayload
+  | StagedChatPayload;
 
 export type ObjectiveComponentType =
   | "NUMERIC_INPUT"
@@ -64,7 +91,8 @@ export type ObjectiveComponentType =
   | "PRIORITY_RANKING"
   | "RECONCILIATION"
   | "JOURNAL_ENTRY"
-  | "NUMERIC_TABLE";
+  | "NUMERIC_TABLE"
+  | "KEYED_CLASSIFICATION";
 
 export type OpenEndedComponentType =
   | "WRITTEN_JUSTIFICATION"
@@ -135,7 +163,15 @@ export interface NumericTableComponent {
   correctValues: number[][];
 }
 
+/** Customer service triage: each item's correct bucket is derived from the triage rules. */
+export interface KeyedClassificationComponent {
+  items: string[];
+  buckets: string[];
+  correctMapping: { item: string; bucket: string }[];
+}
+
 export type ObjectiveComponent =
+  | KeyedClassificationComponent
   | NumericInputComponent
   | ClassificationComponent
   | ProceduralSequencingComponent

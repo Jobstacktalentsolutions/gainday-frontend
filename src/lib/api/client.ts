@@ -28,7 +28,8 @@ apiClient.interceptors.response.use(
             const isAuthRequest =
                 requestUrl.includes("/auth/login") ||
                 requestUrl.includes("/auth/signup") ||
-                requestUrl.includes("/auth/register")
+                requestUrl.includes("/auth/register") ||
+                requestUrl.includes("/auth/google")
 
             if (!isAuthRequest) {
                 useAuthStore.getState().clearAuth()

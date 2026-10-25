@@ -14,9 +14,19 @@ interface TaskResponseInputProps {
     onObjectiveChange: (response: unknown) => void;
 }
 
-const MIN_WORDS = 25;
-const MAX_WORDS = 150;
 const MAX_CHARS = 1000;
+
+const DEFAULT_WORD_LIMIT = { min: 25, max: 150 };
+
+// A task may state the length it asks for in its payload (customer service case files do). Without
+// one, the default limits apply.
+function wordLimitOf(payload: Record<string, unknown>): { min: number; max: number } {
+    const limit = payload.wordLimit;
+    if (typeof limit === "object" && limit !== null && "min" in limit && "max" in limit) {
+        return { min: Number(limit.min), max: Number(limit.max) };
+    }
+    return DEFAULT_WORD_LIMIT;
+}
 
 function countWords(text: string) {
     const trimmed = text.trim();
@@ -39,6 +49,7 @@ export function TaskResponseInput({
 }: TaskResponseInputProps) {
     const Renderer = INTERFACE_ANSWER_RENDERERS[task.interfaceType];
     const wordCount = countWords(value);
+    const wordLimit = wordLimitOf(task.interfacePayload);
 
     const objectiveSlot = (
         <TaskObjectiveOptions task={task} response={objectiveResponse} onChange={onObjectiveChange} />
@@ -61,7 +72,7 @@ export function TaskResponseInput({
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown>
                 </div>
 
-                <span className="shrink-0 text-neutral-600">Minimum {MIN_WORDS} words</span>
+                <span className="shrink-0 text-neutral-600">Minimum {wordLimit.min} words</span>
             </div>
 
             {Renderer ? (
@@ -82,7 +93,7 @@ export function TaskResponseInput({
             )}
 
             <div className="flex w-full items-center justify-between text-[16px] text-neutral-950">
-                <span>{wordCount} / {MAX_WORDS} words</span>
+                <span>{wordCount} / {wordLimit.max} words</span>
                 <span>{value.length} / {MAX_CHARS} characters</span>
             </div>
         </div>

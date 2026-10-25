@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import CandidateHeader from "../components/CandidateHeader";
 import { SearchField } from "../components/SearchField";
@@ -6,12 +7,10 @@ import { JobCard } from "../components/JobCard";
 import { EmptyJobBoardState } from "../components/EmptyJobBoardState";
 import { NoResultsState } from "../components/NoFilterResult";
 import { useJobBoardFilters } from "../hooks/useJobBoardFilters";
-import { useAppliedJobIds } from "../hooks/useAppliedJobIds";
 import type { JobBoardListing } from "../types/jobBoard";
 
 export function JobBoardPage() {
     const navigate = useNavigate();
-    const { appliedSet } = useAppliedJobIds();
     const {
         isLoading,
         totalJobs,
@@ -21,7 +20,25 @@ export function JobBoardPage() {
         hasActiveFilters,
         updateFilter,
         clearFilters,
+        hasNextPage,
+        isFetchingNextPage,
+        fetchNextPage,
     } = useJobBoardFilters();
+
+    // Loads the next page when the sentinel below the grid scrolls into view.
+    const sentinelRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        const sentinel = sentinelRef.current;
+        if (!sentinel || !hasNextPage) return;
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0]?.isIntersecting && !isFetchingNextPage) fetchNextPage();
+            },
+            { rootMargin: "400px" },
+        );
+        observer.observe(sentinel);
+        return () => observer.disconnect();
+    }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
     function handleApply(job: JobBoardListing) {
         navigate(`/job-board/${job.id}`);
@@ -93,10 +110,16 @@ export function JobBoardPage() {
                             <JobCard
                                 key={job.id}
                                 job={job}
-                                isApplied={appliedSet.has(job.id)}
+                                isApplied={job.isApplied === true}
                                 onApply={handleApply}
                             />
                         ))}
+                    </div>
+                )}
+
+                {!isLoading && filteredJobs.length > 0 && (
+                    <div ref={sentinelRef} className="flex h-10 items-center justify-center text-[14px] text-neutral-500">
+                        {isFetchingNextPage ? "Loading more roles…" : null}
                     </div>
                 )}
             </main>

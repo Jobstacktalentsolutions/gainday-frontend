@@ -1,5 +1,6 @@
 import { Pencil } from "lucide-react";
 import { useFormContext } from "react-hook-form";
+import Markdown from "@/components/ui/Markdown";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
 
 interface SummaryRowProps {
@@ -60,7 +61,6 @@ const JobDetailsSummary = ({ onEdit }: JobDetailsSummaryProps) => {
         </button>
       </div>
 
-
       {/* Grid: Category | Employment type, Location | Salary, Deadline */}
       <div className="grid grid-cols-2 gap-x-6 gap-y-5">
         <SummaryRow label="Category" value={values.skillCategory} />
@@ -94,9 +94,13 @@ const JobDetailsSummary = ({ onEdit }: JobDetailsSummaryProps) => {
 
       {/* Description */}
       {Boolean(values.description?.trim()) && (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1.5">
           <p className="text-sm text-neutral-400">Description</p>
-          <p className="text-base text-neutral-700 wrap-break-word">{values.description}</p>
+          <div className="rounded-xl border border-neutral-200/80 bg-neutral-50/50 p-4">
+            <Markdown scrollable className="max-h-64">
+              {values.description}
+            </Markdown>
+          </div>
         </div>
       )}
     </div>

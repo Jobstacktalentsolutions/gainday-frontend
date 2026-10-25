@@ -2,7 +2,7 @@ import NumericInputEditor from "./objective/NumericInputEditor";
 import ClassificationEditor from "./objective/ClassificationEditor";
 import ProceduralSequencingEditor from "./objective/ProceduralSequencingEditor";
 import PriorityRankingEditor from "./objective/PriorityRankingEditor";
-import { JournalEntryKeyView, NumericTableKeyView, ReconciliationKeyView } from "./objective/DerivedKeyViews";
+import { JournalEntryKeyView, KeyedClassificationKeyView, NumericTableKeyView, ReconciliationKeyView } from "./objective/DerivedKeyViews";
 import SingleBestActionEditor from "./objective/SingleBestActionEditor";
 import MultiSelectUnderConstraintEditor from "./objective/MultiSelectUnderConstraintEditor";
 import WrittenJustificationEditor from "./openEnded/WrittenJustificationEditor";
@@ -14,6 +14,7 @@ import type {
     DraftedCommunicationComponent,
     InterpretationAnalysisComponent,
     JournalEntryComponent,
+    KeyedClassificationComponent,
     MultiSelectUnderConstraintComponent,
     NumericInputComponent,
     NumericTableComponent,
@@ -83,6 +84,7 @@ export const OBJECTIVE_COMPONENT_EDITORS: Record<
     // Read-only: the answer key is derived from the task's figures (see DerivedKeyViews).
     RECONCILIATION: ({ value }) => <ReconciliationKeyView value={cast<ReconciliationComponent>(value)} />,
     JOURNAL_ENTRY: ({ value }) => <JournalEntryKeyView value={cast<JournalEntryComponent>(value)} />,
+    KEYED_CLASSIFICATION: ({ value }) => <KeyedClassificationKeyView value={cast<KeyedClassificationComponent>(value)} />,
     NUMERIC_TABLE: ({ value }) => <NumericTableKeyView value={cast<NumericTableComponent>(value)} />,
 };
 

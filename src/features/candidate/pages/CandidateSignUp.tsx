@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useSearchParams, Navigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { type AxiosError } from "axios";
-import { apiClient, getBaseURL } from "@/lib/api/client";
+import { apiClient } from "@/lib/api/client";
 import { useAuthStore } from "@/features/auth/store/authStore";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import AppLoader from "@/components/ui/AppLoader";
@@ -12,8 +12,8 @@ import { FormInput } from "@/components/form/FormInput";
 import AuthCard from "@/features/auth/component/AuthCard";
 import PasswordInput from "@/features/auth/component/passwordInput";
 import { AuthCheckboxRow } from "@/features/auth/component/AuthCheckBox";
-import { AuthDivider } from "@/features/auth/component/AuthDivider";
-import SocialAuthButton from "@/features/auth/component/SocialAuthButton";
+
+
 import AuthSwitchLink from "@/features/auth/component/AuthSwitchLink";
 import { ActionButton } from "@/components/ui/ActionButton";
 import spinner from "@/assets/Spinner.svg";
@@ -159,13 +159,6 @@ const CandidateSignUp = () => {
                     }
 
                 </ActionButton>
-                <AuthDivider />
-                <SocialAuthButton
-                    label="Sign up with Google"
-                    onClick={() => {
-                        window.location.href = `${getBaseURL()}/auth/google?role=JOB_SEEKER`
-                    }}
-                />
                 <AuthSwitchLink
                     prompt="Already have an account?"
                     linkText="Sign in"

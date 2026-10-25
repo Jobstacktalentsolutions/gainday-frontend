@@ -3,6 +3,7 @@ import TextAreaView from "./TextAreaView";
 import TableViewResponsePanelView from "./TableViewResponsePanelView";
 import CsvDataPanelView from "./CsvDataPanelView";
 import TableViewWithChartView from "./TableViewWithChartView";
+import CaseFileTextAreaView from "./CaseFileTextAreaView";
 import {
     InterfaceType,
     type InterfacePayload,
@@ -11,6 +12,7 @@ import {
     type TableViewResponsePanelPayload,
     type CsvDataPanelPayload,
     type TableViewWithChartPayload,
+    type CaseFileTextAreaPayload,
 } from "../types";
 
 interface InterfaceRendererProps {
@@ -59,6 +61,14 @@ const INTERFACE_RENDERERS: Record<
             mode={mode}
             onChange={onChange as unknown as (p: TableViewWithChartPayload) => void}
         />
+    ),
+    // Employers see a staged chat as the candidate does at the start: its case file. The script is
+    // server-only and is never shown here.
+    [InterfaceType.STAGED_CHAT]: ({ payload, mode }) => (
+        <CaseFileTextAreaView payload={payload as unknown as CaseFileTextAreaPayload} mode={mode} />
+    ),
+    [InterfaceType.CASE_FILE_TEXT_AREA]: ({ payload, mode }) => (
+        <CaseFileTextAreaView payload={payload as unknown as CaseFileTextAreaPayload} mode={mode} />
     ),
 };
 

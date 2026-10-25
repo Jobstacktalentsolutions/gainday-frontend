@@ -1,5 +1,6 @@
 import type {
     JournalEntryComponent,
+    KeyedClassificationComponent,
     NumericTableComponent,
     ReconciliationComponent,
 } from "../../types";
@@ -78,5 +79,19 @@ export const NumericTableKeyView = ({ value }: { value: NumericTableComponent })
                 ))}
             </tbody>
         </table>
+    </div>
+);
+
+export const KeyedClassificationKeyView = ({ value }: { value: KeyedClassificationComponent }) => (
+    <div className="flex flex-col gap-2 text-sm">
+        <KeyNotice />
+        <ul className="flex flex-col gap-1">
+            {value.correctMapping.map(({ item, bucket }) => (
+                <li key={item} className="flex justify-between gap-4">
+                    <span>{item}</span>
+                    <span className="font-medium">{bucket}</span>
+                </li>
+            ))}
+        </ul>
     </div>
 );
