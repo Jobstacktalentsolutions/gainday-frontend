@@ -1,8 +1,8 @@
 import React, { useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link,  useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import brandLogo from "@/assets/gainday icon.svg";
-import { Menu, X, ChevronDown, BookOpen, UserRound } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { actionButtonVariants } from "@/components/ui/ActionButton";
 import { cn } from "@/lib/utils";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
@@ -96,11 +96,14 @@ const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [employerDropOpen, setEmployerDropOpen] = useState(false);
     const [browseJobsDropOpen, setBrowseJobsDropOpen] = useState(false);
+    const [pricingDropOpen, setPricingDropOpen] = useState(false);
     const [authMode, setAuthMode] = useState<"login" | "signup" | null>(null);
     const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const browseCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const pricingCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const { user, isAuthenticated } = useCurrentUser();
     const navigate = useNavigate();
+    // const location = useLocation();
 
     const logoTarget = isAuthenticated
         ? user?.role === "EMPLOYER"
@@ -129,6 +132,15 @@ const Header = () => {
 
     const closeBrowseJobsDrop = () => {
         browseCloseTimer.current = setTimeout(() => setBrowseJobsDropOpen(false), 120);
+    };
+
+    const openPricingDrop = () => {
+        if (pricingCloseTimer.current) clearTimeout(pricingCloseTimer.current);
+        setPricingDropOpen(true);
+    };
+
+    const closePricingDrop = () => {
+        pricingCloseTimer.current = setTimeout(() => setPricingDropOpen(false), 120);
     };
 
     return (
@@ -169,21 +181,6 @@ const Header = () => {
                                 <AddItemButton onClick={() => navigate(postJobTarget)}>
                                     Post a Job
                                 </AddItemButton>
-
-                                {/* Divider + footer link */}
-                                <div className="mt-6 pt-5 border-t border-neutral-200">
-                                    <a
-                                        href="#assessment-process"
-                                        onClick={(e) => scrollToSection(e, "#assessment-process")}
-                                        className="inline-flex items-start gap-2.5 text-base text-neutral-500 transition-colors duration-200 hover:text-primary-500 cursor-pointer group"
-                                    >
-                                        <BookOpen
-                                            size={18}
-                                            className="shrink-0 relative top-1 text-neutral-400 group-hover:text-primary-500 transition-colors duration-200"
-                                        />
-                                        Learn more about the candidate assessment process
-                                    </a>
-                                </div>
                             </div>
                         }
                     />
@@ -209,21 +206,28 @@ const Header = () => {
                                 <StepContinueButton size="sm" onClick={() => navigate("/job-board")}>
                                     Go to Job Board
                                 </StepContinueButton>
-
-                                {/* Divider + footer link */}
-                                <div className="mt-6 pt-5 border-t border-neutral-200">
-                                    <a
-                                        href="/candidate/signup"
-                                        onClick={(e) => { e.preventDefault(); navigate("/candidate/signup"); }}
-                                        className="inline-flex items-start gap-2.5 text-base text-neutral-500 transition-colors duration-200 hover:text-primary-500 cursor-pointer group"
-                                    >
-                                        <UserRound
-                                            size={18}
-                                            className="shrink-0 relative top-1 text-neutral-400 group-hover:text-primary-500 transition-colors duration-200"
-                                        />
-                                        Create a free account to apply for jobs
-                                    </a>
-                                </div>
+                            </div>
+                        }
+                    />
+                    <NavItem
+                        label="Pricing"
+                        href="/pricing"
+                        isOpen={pricingDropOpen}
+                        hasDropdown
+                        onMouseEnter={openPricingDrop}
+                        onMouseLeave={closePricingDrop}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            navigate("/pricing");
+                        }}
+                        dropdownContent={
+                            <div className="p-7">
+                                <p className="text-xl text-neutral-950 leading-snug mb-6">
+                                    Pay only when you unlock a candidate. No subscriptions, no hidden fees.
+                                </p>
+                                <StepContinueButton size="sm" onClick={() => navigate("/pricing")}>
+                                    View Pricing
+                                </StepContinueButton>
                             </div>
                         }
                     />
@@ -320,19 +324,6 @@ const Header = () => {
                                 </AddItemButton>
                             </div>
 
-                            {/* Mobile Learn more */}
-                            <a
-                                href="#assessment-process"
-                                onClick={(e) => {
-                                    scrollToSection(e, "#assessment-process");
-                                    setMenuOpen(false);
-                                }}
-                                className="flex items-center gap-2 py-3 text-sm text-neutral-500 border-b border-neutral-200/50 cursor-pointer hover:text-primary-500 transition-colors duration-200"
-                            >
-                                <BookOpen size={15} className="shrink-0" />
-                                Learn more about the candidate assessment process
-                            </a>
-
                             <Link
                                 to="/job-board"
                                 onClick={() => setMenuOpen(false)}
@@ -355,6 +346,31 @@ const Header = () => {
                                     }}
                                 >
                                     View Jobs
+                                </StepContinueButton>
+                            </div>
+
+                            <Link
+                                to="/pricing"
+                                onClick={() => setMenuOpen(false)}
+                                className="py-3 font-sans text-base text-neutral-700 border-b border-neutral-200/50 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
+                            >
+                                Pricing
+                            </Link>
+
+                            {/* Mobile Pricing CTA */}
+                            <div className="flex items-center gap-3 py-3 border-b border-neutral-200/50">
+                                <p className="text-sm text-neutral-500 flex-1">
+                                    Pay only when you unlock a candidate.
+                                </p>
+                                <StepContinueButton
+                                    size="sm"
+                                    className="shrink-0"
+                                    onClick={() => {
+                                        navigate("/pricing");
+                                        setMenuOpen(false);
+                                    }}
+                                >
+                                    View Pricing
                                 </StepContinueButton>
                             </div>
 

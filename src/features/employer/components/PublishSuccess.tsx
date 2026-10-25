@@ -6,10 +6,10 @@ interface PublishSuccessProps {
   jobTitle: string;
   jobUrl: string;
   onViewJob: () => void;
-  onViewCandidates: () => void;
+  onCandidatePreview: () => void;
 }
 
-const PublishSuccess = ({ jobTitle, jobUrl, onViewJob, onViewCandidates }: PublishSuccessProps) => {
+const PublishSuccess = ({ jobTitle, jobUrl, onViewJob, onCandidatePreview }: PublishSuccessProps) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -63,10 +63,10 @@ const PublishSuccess = ({ jobTitle, jobUrl, onViewJob, onViewCandidates }: Publi
         </button>
         <button
           type="button"
-          onClick={onViewCandidates}
+          onClick={onCandidatePreview}
           className="flex h-13 flex-1 items-center justify-center rounded-xl bg-linear-to-r from-primary-500 to-primary-700 text-base font-medium text-white shadow-sm transition-all hover:shadow-md"
         >
-          View candidates
+          Candidate preview
         </button>
       </div>
     </motion.div>

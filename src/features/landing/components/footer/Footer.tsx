@@ -7,8 +7,8 @@ import brandLogo from "@/assets/gainday icon.svg";
 
 
 const companyLinks: FooterLinkItem[] = [
-    { label: "Privacy" },
-    { label: "Terms" },
+    { label: "Privacy", to: "/privacy" },
+    { label: "Terms", to: "/terms" },
     { label: "Contact" }
 ]
 const contactLinks: FooterLinkItem[] = [

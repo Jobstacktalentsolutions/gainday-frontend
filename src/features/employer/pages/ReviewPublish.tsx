@@ -14,6 +14,7 @@ import { useJobSimulation } from "../hooks/useJobSimulation";
 import { useJobDraftStore } from "../stores/useJobDraftStore";
 import { DEFAULT_SIMULATION_TIME_LIMIT_MINUTES } from "../constants/jobPostingOptions";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
+import type { SimulationTask } from "@/features/simulation-tasks/types";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -80,7 +81,7 @@ const ReviewPublish = () => {
                     jobTitle={values.title}
                     jobUrl={publishResult.jobUrl}
                     onViewJob={() => navigate(`/employer/jobs/${publishResult.jobId}/preview`)}
-                    onViewCandidates={() => navigate("/employer/jobs")}
+                    onCandidatePreview={() => navigate(`/job-board/${publishResult.jobId}`)}
                 />
             </div>
         );
@@ -147,7 +148,7 @@ const ReviewPublish = () => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.35, delay: index * 0.06, ease: EASE }}
                         >
-                            <TaskSummaryCard index={index} task={task} />
+                            <TaskSummaryCard index={index} task={task as SimulationTask}  />
                         </motion.div>
                     ))}
                 </div>

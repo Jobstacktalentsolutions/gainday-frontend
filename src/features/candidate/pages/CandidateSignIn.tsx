@@ -35,13 +35,7 @@ const CandidateSignIn = () => {
         }
     }, [isAuthenticated, target, navigate]);
 
-    if (isAuthenticated) {
-        return <Navigate to={target} replace />;
-    }
 
-    if (accessToken && isLoadingProfile) {
-        return <AppLoader />;
-    }
 
     const {
         register,
@@ -66,6 +60,14 @@ const CandidateSignIn = () => {
             }
         }
     })
+
+    if (isAuthenticated) {
+        return <Navigate to={target} replace />;
+    }
+
+    if (accessToken && isLoadingProfile) {
+        return <AppLoader />;
+    }
 
     const signUpHref = redirect ? `/candidate/signup?redirect=${encodeURIComponent(redirect)}` : "/candidate/signup";
     const forgotPasswordHref = email

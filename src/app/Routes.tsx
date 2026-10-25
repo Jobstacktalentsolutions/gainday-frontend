@@ -66,6 +66,9 @@ const ApplicationDetailPage = lazy(() => import("@/features/candidate/pages/Appl
 const ApplicationSubmissionPage = lazy(() => import("@/features/candidate/pages/ApplicationSubmissionPage"));
 const CapabilityPassportPage = lazy(() => import("@/features/candidate/pages/CapabilityPassportPage"));
 const SupportPage = lazy(() => import("@/pages/SupportPage"));
+const LegalPage = lazy(() => import("@/features/legal/pages/LegalPage"));
+const PricingPage = lazy(() => import("@/features/pricing/pages/PricingPage"));
+
 
 
 const AppRoutes = () => {
@@ -89,6 +92,7 @@ const AppRoutes = () => {
                     <Route path="credits" element={<CreditManagement />} />
                 </Route>
                 <Route path="/landing" element={<LandingPage />} />
+                <Route path="/pricing" element={<PricingPage />} />
                 <Route path="/auth/verify-email" element={<LegacyVerifyEmailRedirect />} />
                 <Route path="/email-preferences" element={<EmailPreferencesPage />} />
                 <Route path="/employer">
@@ -124,10 +128,12 @@ const AppRoutes = () => {
                     </Route>
                 </Route>
 
-                {/* Every candidate page requires a signed-in candidate */}
+                {/* Public job-board pages — browsable without signing in */}
+                <Route path="/job-board" element={<JobBoardPage />} />
+                <Route path="/job-board/:jobId" element={<JobDetailsPage />} />
+
+                {/* Candidate-only pages — require a signed-in JOB_SEEKER */}
                 <Route element={<CandidateRoute />}>
-                    <Route path="/job-board" element={<JobBoardPage />} />
-                    <Route path="/job-board/:jobId" element={<JobDetailsPage />} />
                     <Route path="/job-board/:jobId/pre-simulation" element={<PreSimulation />} />
                     <Route path="/job-board/:jobId/environment-check" element={<EnvironmentCheckPage />} />
                     <Route path="/job-board/:jobId/simulation" element={<TaskRunner />} />
@@ -139,6 +145,8 @@ const AppRoutes = () => {
                     <Route path="/candidate/passport" element={<CapabilityPassportPage />} />
                     <Route path="/candidate/profile" element={<ProfilePage />} />
                 </Route>
+
+
 
                 {/* Dev-only route — quick access without a real jobId */}
                 {import.meta.env.DEV && (
@@ -162,6 +170,13 @@ const AppRoutes = () => {
                 </Route>
 
                 <Route path="/support" element={<SupportPage />} />
+
+                {/* legal pages*/}
+                <Route path="/terms" element={<Navigate to="/terms/candidate" replace />} />
+                <Route path="/terms/:audience" element={<LegalPage kind="terms" />} />
+                <Route path="/privacy" element={<Navigate to="/privacy/candidate" replace />} />
+                <Route path="/privacy/:audience" element={<LegalPage kind="privacy" />} />
+
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </Suspense>

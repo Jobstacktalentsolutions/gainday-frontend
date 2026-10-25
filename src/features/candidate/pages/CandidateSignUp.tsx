@@ -37,13 +37,7 @@ const CandidateSignUp = () => {
         }
     }, [isAuthenticated, target, navigate]);
 
-    if (isAuthenticated) {
-        return <Navigate to={target} replace />;
-    }
 
-    if (accessToken && isLoadingProfile) {
-        return <AppLoader />;
-    }
 
     const {
         register,
@@ -72,6 +66,14 @@ const CandidateSignUp = () => {
             )
         },
     })
+
+    if (isAuthenticated) {
+        return <Navigate to={target} replace />;
+    }
+
+    if (accessToken && isLoadingProfile) {
+        return <AppLoader />;
+    }
 
     const onSubmit = (values: CandidateSignUpValues) => {
         signUpMutation.mutate({ ...values, agreedToTerms: agreed })
