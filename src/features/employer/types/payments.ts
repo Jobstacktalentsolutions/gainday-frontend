@@ -15,6 +15,9 @@ export interface CreditBalance {
     /** ISO 8601, or null if the employer has never bought a pack (a signup bonus alone doesn't
      *  count). */
     lastRechargedAt: string | null;
+      /** Backend contract, not shipped yet: true while this employer's launch-offer pack is
+     *  unclaimed. Absent/false = no offer, so the UI behaves exactly as before. */
+    freePackAvailable?: boolean;
 }
 
 export interface UnlockResult {
