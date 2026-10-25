@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 
-const ITEM_TEXT = "TESTED AND TRUSTED";
+const ITEM_TEXT = "CAPABILITY FIRST HIRING";
 const REPEAT_COUNT = 8;
 
 const MarqueeContent = () => {

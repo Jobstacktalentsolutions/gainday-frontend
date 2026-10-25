@@ -96,9 +96,11 @@ const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [employerDropOpen, setEmployerDropOpen] = useState(false);
     const [browseJobsDropOpen, setBrowseJobsDropOpen] = useState(false);
+    const [pricingDropOpen, setPricingDropOpen] = useState(false);
     const [authMode, setAuthMode] = useState<"login" | "signup" | null>(null);
     const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const browseCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const pricingCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const { user, isAuthenticated } = useCurrentUser();
     const navigate = useNavigate();
     const location = useLocation();
@@ -130,6 +132,15 @@ const Header = () => {
 
     const closeBrowseJobsDrop = () => {
         browseCloseTimer.current = setTimeout(() => setBrowseJobsDropOpen(false), 120);
+    };
+
+    const openPricingDrop = () => {
+        if (pricingCloseTimer.current) clearTimeout(pricingCloseTimer.current);
+        setPricingDropOpen(true);
+    };
+
+    const closePricingDrop = () => {
+        pricingCloseTimer.current = setTimeout(() => setPricingDropOpen(false), 120);
     };
 
     return (
@@ -201,11 +212,24 @@ const Header = () => {
                     <NavItem
                         label="Pricing"
                         href="/pricing"
-                        isOpen={location.pathname === "/pricing"}
+                        isOpen={pricingDropOpen}
+                        hasDropdown
+                        onMouseEnter={openPricingDrop}
+                        onMouseLeave={closePricingDrop}
                         onClick={(e) => {
                             e.preventDefault();
                             navigate("/pricing");
                         }}
+                        dropdownContent={
+                            <div className="p-7">
+                                <p className="text-xl text-neutral-950 leading-snug mb-6">
+                                    Pay only when you unlock a candidate. No subscriptions, no hidden fees.
+                                </p>
+                                <StepContinueButton size="sm" onClick={() => navigate("/pricing")}>
+                                    View Pricing
+                                </StepContinueButton>
+                            </div>
+                        }
                     />
                 </nav>
 
@@ -332,6 +356,23 @@ const Header = () => {
                             >
                                 Pricing
                             </Link>
+
+                            {/* Mobile Pricing CTA */}
+                            <div className="flex items-center gap-3 py-3 border-b border-neutral-200/50">
+                                <p className="text-sm text-neutral-500 flex-1">
+                                    Pay only when you unlock a candidate.
+                                </p>
+                                <StepContinueButton
+                                    size="sm"
+                                    className="shrink-0"
+                                    onClick={() => {
+                                        navigate("/pricing");
+                                        setMenuOpen(false);
+                                    }}
+                                >
+                                    View Pricing
+                                </StepContinueButton>
+                            </div>
 
                             <div className="flex flex-col gap-3 pt-4">
                                 <button
