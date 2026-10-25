@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link,  useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import brandLogo from "@/assets/gainday icon.svg";
 import { Menu, X, ChevronDown } from "lucide-react";
@@ -103,7 +103,7 @@ const Header = () => {
     const pricingCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const { user, isAuthenticated } = useCurrentUser();
     const navigate = useNavigate();
-    const location = useLocation();
+    // const location = useLocation();
 
     const logoTarget = isAuthenticated
         ? user?.role === "EMPLOYER"
