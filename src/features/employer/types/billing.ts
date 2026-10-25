@@ -1,27 +1,27 @@
 import type { CreditPurchaseStatus } from "./payments";
 
+// Mirrors the backend's GET /payments/purchases and GET /payments/unlocks (see
+// gainday-backend/src/modules/payments/payment-history.mapper.ts).
+
 export interface PurchaseRecord {
     id: string;
     packName: string;
     creditsAdded: number;
-    /** Pence actually charged. 0 for the launch-offer pack. */
+    /** Pence charged, which is the pack's list price. */
     pricePence: number;
-    /** Pence at list price, so a £0 row can render as "£49 → £0". */
-    listPricePence: number;
     createdAt: string;
     status: CreditPurchaseStatus;
-    /** Stripe-hosted receipt. Only present for SUCCEEDED, paid purchases. */
-    receiptUrl?: string | null;
 }
 
+/** One candidate unlocked, costing one credit. Null fields mean the submission, job or candidate
+ *  has since been deleted. */
 export interface UnlockRecord {
     id: string;
-    submissionId: string;
-    jobId: string;
-    candidateName: string;
-    jobTitle: string;
+    submissionId: string | null;
+    jobId: string | null;
+    jobTitle: string | null;
+    candidateName: string | null;
     unlockedAt: string;
-    creditsUsed: number;
 }
 
 export interface FreePackClaimResult {

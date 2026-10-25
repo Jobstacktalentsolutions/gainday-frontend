@@ -14,6 +14,20 @@ const PAGE_SIZE = 10;
 
 const submissionPath = (row: UnlockRecord) => `/employer/jobs/${row.jobId}/submissions/${row.submissionId}`;
 
+const jobLabel = (row: UnlockRecord) => (row.jobTitle ? row.jobTitle : "Job unavailable");
+
+// The candidate's name links to the submission while it still exists. Once it's deleted, the name
+// is plain text, so the history row stays and nothing links to a missing page.
+const CandidateName = ({ row, className }: { row: UnlockRecord; className: string }) => {
+    const name = row.candidateName ? row.candidateName : "Candidate unavailable";
+    if (!row.jobId || !row.submissionId) return <span className={className}>{name}</span>;
+    return (
+        <Link to={submissionPath(row)} className={className}>
+            {name}
+        </Link>
+    );
+};
+
 const UnlocksSection = () => {
     const { data, isLoading, isError, refetch } = useUnlockHistory();
     const [query, setQuery] = useState("");
@@ -22,7 +36,11 @@ const UnlocksSection = () => {
     const [visible, setVisible] = useState(PAGE_SIZE);
 
     const roleOptions = useMemo(
-        () => Array.from(new Set((data ?? []).map((row) => row.jobTitle))).map((title) => ({ value: title, label: title })),
+        () =>
+            Array.from(new Set((data ?? []).flatMap((row) => (row.jobTitle ? [row.jobTitle] : [])))).map((title) => ({
+                value: title,
+                label: title,
+            })),
         [data],
     );
 
@@ -32,7 +50,7 @@ const UnlocksSection = () => {
             (row) =>
                 (!role || row.jobTitle === role) &&
                 isWithinDatePreset(row.unlockedAt, date) &&
-                (!needle || `${row.candidateName} ${row.jobTitle}`.toLowerCase().includes(needle)),
+                (!needle || [row.candidateName, row.jobTitle].join(" ").toLowerCase().includes(needle)),
         );
     }, [data, query, role, date]);
 
@@ -89,20 +107,16 @@ const UnlocksSection = () => {
                         <th scope="col" className="pb-3 font-normal">Candidate</th>
                         <th scope="col" className="pb-3 text-center font-normal">Job</th>
                         <th scope="col" className="pb-3 text-center font-normal">Date</th>
-                        <th scope="col" className="pb-3 text-center font-normal">Credit used</th>
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-neutral-200/70 text-base text-neutral-950">
                     {rows.slice(0, visible).map((row) => (
                         <tr key={row.id}>
                             <td className="py-3">
-                                <Link to={submissionPath(row)} className="underline-offset-2 hover:text-primary-500 hover:underline">
-                                    {row.candidateName}
-                                </Link>
+                                <CandidateName row={row} className="underline-offset-2 hover:text-primary-500 hover:underline" />
                             </td>
-                            <td className="py-3 text-center">{row.jobTitle}</td>
+                            <td className="py-3 text-center">{jobLabel(row)}</td>
                             <td className="py-3 text-center">{formatShortDate(row.unlockedAt)}</td>
-                            <td className="py-3 text-center">{row.creditsUsed}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -112,12 +126,9 @@ const UnlocksSection = () => {
             <ul className="flex flex-col divide-y divide-neutral-200/70 md:hidden">
                 {rows.slice(0, visible).map((row) => (
                     <li key={row.id} className="flex flex-col gap-1 py-4 first:pt-0 last:pb-0">
-                        <Link to={submissionPath(row)} className="text-base text-neutral-950 hover:text-primary-500">
-                            {row.candidateName}
-                        </Link>
+                        <CandidateName row={row} className="text-base text-neutral-950 hover:text-primary-500" />
                         <span className="text-sm text-neutral-500">
-                            {row.jobTitle} · {formatShortDate(row.unlockedAt)} · {row.creditsUsed} credit
-                            {row.creditsUsed === 1 ? "" : "s"}
+                            {jobLabel(row)} · {formatShortDate(row.unlockedAt)}
                         </span>
                     </li>
                 ))}

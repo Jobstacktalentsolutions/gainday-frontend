@@ -5,34 +5,11 @@ import { FilterDropdown } from "@/features/candidate/components/Filterdropdown";
 import { formatShortDate } from "@/lib/formatDate";
 import { formatPrice } from "@/lib/formatPrice";
 import { usePurchaseHistory } from "../../hooks/usePurchaseHistory";
-import type { PurchaseRecord } from "../../types/billing";
 import { DATE_PRESET_OPTIONS, isWithinDatePreset } from "../../utils/dateRange";
 import HistoryShell, { ClearFiltersButton } from "./HistoryShell";
 import PurchaseStatusPill from "./PurchaseStatusPill";
 
 const PAGE_SIZE = 10;
-
-const PriceCell = ({ record }: { record: PurchaseRecord }) =>
-    record.pricePence === 0 && record.listPricePence > 0 ? (
-        <span className="whitespace-nowrap">
-            <span className="text-neutral-500 line-through">{formatPrice(record.listPricePence)}</span>{" "}
-            <span>{formatPrice(0)}</span>
-        </span>
-    ) : (
-        <span>{formatPrice(record.pricePence)}</span>
-    );
-
-const ReceiptLink = ({ url }: { url?: string | null }) =>
-    url ? (
-        <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline underline-offset-2 hover:text-primary-500"
-        >
-            Receipt
-        </a>
-    ) : null;
 
 const PurchasesSection = () => {
     const { data, isLoading, isError, refetch } = usePurchaseHistory();
@@ -102,7 +79,6 @@ const PurchasesSection = () => {
                         <th scope="col" className="pb-3 text-center font-normal">Price</th>
                         <th scope="col" className="pb-3 text-center font-normal">Date</th>
                         <th scope="col" className="pb-3 text-center font-normal">Status</th>
-                        <th scope="col" className="pb-3 text-right font-normal"><span className="sr-only">Receipt</span></th>
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-neutral-200/70 text-base text-neutral-950">
@@ -110,10 +86,9 @@ const PurchasesSection = () => {
                         <tr key={row.id}>
                             <td className="py-3">{row.packName}</td>
                             <td className="py-3 text-center">+{row.creditsAdded}</td>
-                            <td className="py-3 text-center"><PriceCell record={row} /></td>
+                            <td className="py-3 text-center">{formatPrice(row.pricePence)}</td>
                             <td className="py-3 text-center">{formatShortDate(row.createdAt)}</td>
                             <td className="py-3 text-center"><PurchaseStatusPill record={row} /></td>
-                            <td className="py-3 text-right"><ReceiptLink url={row.receiptUrl} /></td>
                         </tr>
                     ))}
                 </tbody>
@@ -129,11 +104,10 @@ const PurchasesSection = () => {
                         </div>
                         <div className="flex items-center justify-between gap-3 text-sm text-neutral-500">
                             <span>
-                                <PriceCell record={row} />
+                                {formatPrice(row.pricePence)}
                                 {" · "}
                                 {formatShortDate(row.createdAt)}
                             </span>
-                            <ReceiptLink url={row.receiptUrl} />
                         </div>
                     </li>
                 ))}
