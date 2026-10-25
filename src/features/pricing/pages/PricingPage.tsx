@@ -5,8 +5,10 @@ import Header from "@/features/landing/components/Header";
 import { HighlightBox } from "@/features/landing/components/HighlightBox";
 import SectionTag from "@/features/landing/components/SectionTag";
 import { Footer } from "@/features/landing/components/footer/Footer";
+import AppLoader from "@/components/ui/AppLoader";
+import { useCreditPacks } from "@/features/employer/hooks/useCreditPacks";
 import PackCard from "../components/PackCard";
-import { FREE_FEATURES, PAID_LOCKED, PRICING_CHIPS, PRICING_PACKS, type PricingPack } from "../content/pricing";
+import { FREE_FEATURES, PAID_LOCKED, PRICING_CHIPS, type PricingPack } from "../content/pricing";
 
 const headingClass =
     "text-[36px] leading-11 tracking-[-0.36px] md:text-[56px] md:leading-16 md:tracking-[-0.56px]";
@@ -14,15 +16,30 @@ const headingClass =
 const PricingPage = () => {
     const navigate = useNavigate();
     const { user, isAuthenticated } = useCurrentUser();
+    const packsQuery = useCreditPacks();
 
     // Signed-out visitors and employers can buy; signed-in candidates/admins just read.
     const canBuy = !isAuthenticated || user?.role === "EMPLOYER";
 
+    // Live catalogue from the backend, so the pack ids match what the purchase endpoint accepts.
+    const packs: PricingPack[] = packsQuery.data
+        ? packsQuery.data.map((pack) => ({
+              id: pack.id,
+              name: pack.name,
+              credits: pack.credits,
+              pricePence: pack.pricePence,
+              popular: pack.label !== null,
+          }))
+        : [];
+
+    // The billing page opens its pack picker from ?buy=. A signed-out visitor goes through signup
+    // with the same path as the redirect, so they land on the payment step once they're in.
     const handleSelect = (pack: PricingPack) => {
+        const buyPath = `/employer/billing?buy=${pack.id}`;
         if (isAuthenticated && user?.role === "EMPLOYER") {
-            navigate(`/employer/billing?buy=${pack.id}`);
+            navigate(buyPath);
         } else {
-            navigate("/employer/signup");
+            navigate(`/employer/signup?redirect=${encodeURIComponent(buyPath)}`);
         }
     };
 
@@ -44,8 +61,15 @@ const PricingPage = () => {
                 {/* Packs */}
                 <section className="bg-neutral-950 px-6 py-16 lg:p-30">
                     <div className="mx-auto flex w-full max-w-300 flex-col gap-20">
+                        {packsQuery.isPending && <AppLoader />}
+                        {packsQuery.isError && (
+                            <p role="alert" className="text-base text-white">
+                                Pricing is unavailable right now. Please try again shortly.
+                            </p>
+                        )}
+
                         <div className="flex flex-col gap-8 lg:flex-row lg:items-stretch lg:gap-6">
-                            {PRICING_PACKS.map((pack) => (
+                            {packs.map((pack) => (
                                 <PackCard
                                     key={pack.id}
                                     pack={pack}

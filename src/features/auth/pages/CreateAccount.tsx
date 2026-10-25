@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useSearchParams, Navigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
+import { toSafeRedirect, withRedirect } from "@/lib/safeRedirect";
 import { useAuthStore } from "../store/authStore";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import AppLoader from "@/components/ui/AppLoader";
@@ -26,7 +27,7 @@ const CreateAccount = () => {
     const [agreed, setAgreed] = useState(false);
     const { user, accessToken, isAuthenticated, isLoadingProfile } = useCurrentUser();
 
-    const safeRedirect = redirect && redirect.startsWith("/") ? redirect : null;
+    const safeRedirect = toSafeRedirect(redirect);
     const defaultRoute = user?.role === "JOB_SEEKER" ? "/job-board" : "/employer/jobs";
     const target = safeRedirect ?? defaultRoute;
 
@@ -57,10 +58,10 @@ const CreateAccount = () => {
 
     const signupMutation = useMutation({
         mutationFn: (values: CreateAccountFormValues) =>
-            apiClient.post("/auth/signup", values),
+            apiClient.post("/auth/signup", { ...values, redirectPath: safeRedirect }),
         onSuccess: (res) => {
             useAuthStore.getState().setAuth(res.data.access_token, res.data.user)
-            navigate("/employer/verify-email", { state: { justSent: true } })
+            navigate(withRedirect("/employer/verify-email", safeRedirect), { state: { justSent: true } })
         },
     })
 
@@ -158,7 +159,7 @@ const CreateAccount = () => {
                 <AuthSwitchLink
                     prompt="Already have an account?"
                     linkText="Sign in"
-                    to="/employer/signin"
+                    to={withRedirect("/employer/signin", safeRedirect)}
                 />
 
             </form>

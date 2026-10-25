@@ -1,3 +1,4 @@
+import { toSafeRedirect, withRedirect } from "@/lib/safeRedirect";
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -142,7 +143,7 @@ const VerifyEmailFlow = ({ role }: { role: Role }) => {
   const storedEmail = useAuthStore((state) => state.user?.email);
 
   const token = searchParams.get("token");
-  const redirect = searchParams.get("redirect");
+  const redirect = toSafeRedirect(searchParams.get("redirect"));
   const justSent = (location.state as { justSent?: boolean } | null)?.justSent === true;
 
   // Legacy params from the backend redirect flow used by older emails.
@@ -181,7 +182,7 @@ const VerifyEmailFlow = ({ role }: { role: Role }) => {
 
   const startOver = () => {
     useAuthStore.getState().clearAuth();
-    navigate(`${config.basePath}/signup`);
+    navigate(withRedirect(`${config.basePath}/signup`, redirect));
   };
 
   if (isVerified) {
@@ -194,7 +195,7 @@ const VerifyEmailFlow = ({ role }: { role: Role }) => {
               {config.homeLabel}
             </ActionButton>
           ) : (
-            <ActionButton size="lg" onClick={() => navigate(`${config.basePath}/signin`)}>
+            <ActionButton size="lg" onClick={() => navigate(withRedirect(`${config.basePath}/signin`, redirect))}>
               Sign in to continue
             </ActionButton>
           )}
@@ -226,7 +227,7 @@ const VerifyEmailFlow = ({ role }: { role: Role }) => {
         <AuthSwitchLink
           prompt="Already verified?"
           linkText="Sign in"
-          to={`${config.basePath}/signin`}
+          to={withRedirect(`${config.basePath}/signin`, redirect)}
         />
       </AuthCard>
     );
@@ -261,7 +262,7 @@ const VerifyEmailFlow = ({ role }: { role: Role }) => {
         <AuthSwitchLink
           prompt="Already verified?"
           linkText="Sign in"
-          to={`${config.basePath}/signin`}
+          to={withRedirect(`${config.basePath}/signin`, redirect)}
         />
       )}
     </AuthCard>
