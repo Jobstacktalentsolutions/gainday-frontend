@@ -59,14 +59,18 @@ export function JobBoardPage() {
                 </div>
 
                 <div className="flex w-full flex-wrap items-center gap-4 sm:gap-6">
-                    <SearchField value={filters.search} onChange={(value) => updateFilter("search", value)} />
+                    <SearchField
+                        value={filters.search}
+                        onChange={(value) => updateFilter("search", value)}
+                        placeholder="Search by job title, role, or keyword"
+                    />
 
                     <div className="flex flex-wrap items-center gap-3">
                         <FilterDropdown
-                            allLabel="All Roles"
-                            options={filterOptions.roleCategory}
-                            selectedValue={filters.roleCategory}
-                            onSelect={(value) => updateFilter("roleCategory", value)}
+                            allLabel="Application Status"
+                            options={filterOptions.appliedStatus}
+                            selectedValue={filters.appliedStatus}
+                            onSelect={(value) => updateFilter("appliedStatus", value)}
                         />
                         <FilterDropdown
                             allLabel="All Locations"

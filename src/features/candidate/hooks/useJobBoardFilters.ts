@@ -5,6 +5,7 @@ import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { toJobBoardListing, type BackendJob } from "../utils/jobAdapter";
 import {
+    APPLIED_OPTIONS,
     DEFAULT_JOB_BOARD_FILTERS,
     SALARY_BUCKETS,
     type FilterOption,
@@ -30,7 +31,7 @@ interface BoardOptionsResponse {
 // The filters the server understands. Empty filters are left out of the request.
 interface BoardQueryParams {
     search?: string;
-    roleCategory?: string;
+    appliedStatus?: string;
     location?: string;
     employmentType?: string;
     salaryMin?: number;
@@ -43,7 +44,7 @@ function toQueryParams(filters: JobBoardFilters, search: string): BoardQueryPara
     const bucket = SALARY_BUCKETS.find((item) => item.value === filters.salaryBucket);
     return {
         search: search.trim() || undefined,
-        roleCategory: filters.roleCategory ?? undefined,
+        appliedStatus: filters.appliedStatus ?? undefined,
         location: filters.location ?? undefined,
         employmentType: filters.employmentType ?? undefined,
         salaryMin: bucket?.min,
@@ -83,17 +84,23 @@ export function useJobBoardFilters() {
         queryFn: fetchBoardOptions,
     });
 
-    const jobs: JobBoardListing[] = useMemo(
-        () =>
-            (feed.data?.pages ?? []).flatMap((page) =>
-                page.items.map((item) => ({ ...toJobBoardListing(item), isApplied: item.isApplied })),
-            ),
-        [feed.data],
-    );
+    const jobs: JobBoardListing[] = useMemo(() => {
+        const rawJobs = (feed.data?.pages ?? []).flatMap((page) =>
+            page.items.map((item) => ({ ...toJobBoardListing(item), isApplied: item.isApplied })),
+        );
+        if (!filters.appliedStatus) return rawJobs;
+        if (filters.appliedStatus === "applied") {
+            return rawJobs.filter((job) => job.isApplied === true);
+        }
+        if (filters.appliedStatus === "not-applied") {
+            return rawJobs.filter((job) => job.isApplied !== true);
+        }
+        return rawJobs;
+    }, [feed.data, filters.appliedStatus]);
 
     const filterOptions = useMemo(
         () => ({
-            roleCategory: toOptions(optionsQuery.data?.roleCategory ?? []),
+            appliedStatus: APPLIED_OPTIONS,
             location: toOptions(optionsQuery.data?.location ?? []),
             employmentType: toOptions(optionsQuery.data?.employmentType ?? []),
             salaryBucket: SALARY_BUCKETS.map(({ value, label }) => ({ value, label })),
@@ -103,7 +110,7 @@ export function useJobBoardFilters() {
 
     const hasActiveFilters =
         filters.search.trim().length > 0 ||
-        filters.roleCategory !== null ||
+        filters.appliedStatus !== null ||
         filters.location !== null ||
         filters.employmentType !== null ||
         filters.salaryBucket !== null;

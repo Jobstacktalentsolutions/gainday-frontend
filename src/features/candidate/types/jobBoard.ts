@@ -52,9 +52,14 @@ export const SALARY_BUCKETS: SalaryBucket[] = [
     { value: "100k-plus", label: "100,000+", min: 100_000, max: Infinity },
 ];
 
+export const APPLIED_OPTIONS: FilterOption[] = [
+    { value: "applied", label: "Applied" },
+    { value: "not-applied", label: "Not Applied" },
+];
+
 export interface JobBoardFilters {
     search: string;
-    roleCategory: string | null;
+    appliedStatus: string | null;
     location: string | null;
     employmentType: string | null;
     salaryBucket: string | null;
@@ -62,9 +67,8 @@ export interface JobBoardFilters {
 
 export const DEFAULT_JOB_BOARD_FILTERS: JobBoardFilters = {
     search: "",
-    roleCategory: null,
+    appliedStatus: null,
     location: null,
     employmentType: null,
     salaryBucket: null,
 };
-
