@@ -9,7 +9,8 @@ export type QuestionBankTaskContent = Omit<SimulationTask, "id" | "category">;
 export interface FailedGenerationAttempt {
     attemptNumber: number;
     candidateId: string;
-    taskDraft: QuestionBankTaskContent;
+    /** Null when the attempt's figures could not form a valid task (see criticFailureReasons). */
+    taskDraft: QuestionBankTaskContent | null;
     anchors: unknown[] | null;
     criticFailureReasons: string[];
 }

@@ -1,6 +1,7 @@
 import TextAreaAnswer from "./TextAreaAnswer";
 import TableViewResponsePanelAnswer from "./TableViewResponsePanelAnswer";
 import CsvDataPanelAnswer from "./CsvDataPanelAnswer";
+import TableViewWithChartAnswer from "./TableViewWithChartAnswer";
 import type { InterfaceAnswerProps } from "./types";
 import {
     InterfaceType,
@@ -8,6 +9,7 @@ import {
     type TextAreaPayload,
     type TableViewResponsePanelPayload,
     type CsvDataPanelPayload,
+    type TableViewWithChartPayload,
 } from "@/features/simulation-tasks/types";
 
 const cast = <T,>(value: Record<string, unknown>) => value as unknown as T;
@@ -55,6 +57,16 @@ export const INTERFACE_ANSWER_RENDERERS: Record<
             objectiveSlot={objectiveSlot}
             classification={classification}
             readOnly={readOnly}
+        />
+    ),
+    [InterfaceType.TABLE_VIEW_WITH_CHART]: ({ payload, value, onChange, objectiveSlot, classification, readOnly }) => (
+        <TableViewWithChartAnswer
+            payload={cast<TableViewWithChartPayload>(payload)}
+            value={value}
+            onChange={onChange}
+            objectiveSlot={objectiveSlot}
+            readOnly={readOnly}
+            classification={classification}
         />
     ),
 };

@@ -4,6 +4,9 @@ import NumericInputAnswer from "./NumericInputAnswer";
 import ClassificationAnswer from "./ClassificationAnswer";
 import ProceduralSequencingAnswer from "./ProceduralSequencingAnswer";
 import PriorityRankingAnswer from "./PriorityRankingAnswer";
+import ReconciliationAnswer from "./ReconciliationAnswer";
+import JournalEntryAnswer from "./JournalEntryAnswer";
+import NumericTableAnswer from "./NumericTableAnswer";
 import {
     describeSingleBestAction,
     describeMultiSelectUnderConstraint,
@@ -11,8 +14,20 @@ import {
     describeClassification,
     describeProceduralSequencing,
     describePriorityRanking,
+    describeReconciliation,
+    describeJournalEntry,
+    describeNumericTable,
 } from "./describeAnswers";
-import type { CandidateObjectiveComponent, ObjectiveComponentType } from "../../types/simulation";
+import type {
+    CandidateObjectiveComponent,
+    JournalEntryCandidateComponent,
+    JournalEntryResponse,
+    NumericTableCandidateComponent,
+    NumericTableResponse,
+    ObjectiveComponentType,
+    ReconciliationCandidateComponent,
+    ReconciliationResponse,
+} from "../../types/simulation";
 
 export interface ObjectiveAnswerProps {
     component: CandidateObjectiveComponent;
@@ -82,6 +97,27 @@ export const OBJECTIVE_ANSWER_RENDERERS: Record<
             onChange={castOnChange<number[]>(onChange)}
         />
     ),
+    RECONCILIATION: ({ component, response, onChange }) => (
+        <ReconciliationAnswer
+            component={cast<ReconciliationCandidateComponent>(component)}
+            response={cast<ReconciliationResponse | null>(response)}
+            onChange={castOnChange<ReconciliationResponse>(onChange)}
+        />
+    ),
+    JOURNAL_ENTRY: ({ component, response, onChange }) => (
+        <JournalEntryAnswer
+            component={cast<JournalEntryCandidateComponent>(component)}
+            response={cast<JournalEntryResponse | null>(response)}
+            onChange={castOnChange<JournalEntryResponse>(onChange)}
+        />
+    ),
+    NUMERIC_TABLE: ({ component, response, onChange }) => (
+        <NumericTableAnswer
+            component={cast<NumericTableCandidateComponent>(component)}
+            response={cast<NumericTableResponse | null>(response)}
+            onChange={castOnChange<NumericTableResponse>(onChange)}
+        />
+    ),
 };
 
 // Renders the candidate's response as plain text for CandidateAnswer.responseBody (the one
@@ -97,4 +133,7 @@ export const OBJECTIVE_ANSWER_DESCRIBERS: Record<
     CLASSIFICATION: (c, r) => describeClassification(cast(c), cast(r)),
     PROCEDURAL_SEQUENCING: (c, r) => describeProceduralSequencing(cast(c), cast(r)),
     PRIORITY_RANKING: (c, r) => describePriorityRanking(cast(c), cast(r)),
+    RECONCILIATION: (c, r) => describeReconciliation(cast<ReconciliationCandidateComponent>(c), cast<ReconciliationResponse | null>(r)),
+    JOURNAL_ENTRY: (c, r) => describeJournalEntry(cast<JournalEntryCandidateComponent>(c), cast<JournalEntryResponse | null>(r)),
+    NUMERIC_TABLE: (c, r) => describeNumericTable(cast<NumericTableCandidateComponent>(c), cast<NumericTableResponse | null>(r)),
 };

@@ -28,7 +28,7 @@ const GenerationReviewDetail = ({ review, onClose }: GenerationReviewDetailProps
     const reject = useRejectGenerationReview();
 
     const latestAttempt = review.attempts[review.attempts.length - 1];
-    const [content, setContent] = useState<QuestionBankTaskContent>(
+    const [content, setContent] = useState<QuestionBankTaskContent | null>(
         review.resolvedTaskContent ?? latestAttempt?.taskDraft,
     );
 

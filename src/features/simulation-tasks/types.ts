@@ -7,6 +7,7 @@ export const InterfaceType = {
   TEXT_AREA: "TEXT_AREA",
   TABLE_VIEW_RESPONSE_PANEL: "TABLE_VIEW_RESPONSE_PANEL",
   CSV_DATA_PANEL: "CSV_DATA_PANEL",
+  TABLE_VIEW_WITH_CHART: "TABLE_VIEW_WITH_CHART",
 } as const;
 export type InterfaceType = (typeof InterfaceType)[keyof typeof InterfaceType];
 
@@ -33,11 +34,26 @@ export interface CsvDataPanelPayload {
   placeholder: string | null;
 }
 
+/** A chart drawn from the same numbers as the table beside it (backend TableViewWithChartPayload). */
+export interface ChartPayload {
+  type: "bar" | "line";
+  categories: string[];
+  series: { name: string; values: number[] }[];
+}
+
+export interface TableViewWithChartPayload {
+  interfaceType: typeof InterfaceType.TABLE_VIEW_WITH_CHART;
+  table: { columns: string[]; rows: string[][] };
+  chart: ChartPayload;
+  placeholder: string | null;
+}
+
 export type InterfacePayload =
   | RichTextComposerPayload
   | TextAreaPayload
   | TableViewResponsePanelPayload
-  | CsvDataPanelPayload;
+  | CsvDataPanelPayload
+  | TableViewWithChartPayload;
 
 export type ObjectiveComponentType =
   | "NUMERIC_INPUT"
@@ -45,7 +61,10 @@ export type ObjectiveComponentType =
   | "PROCEDURAL_SEQUENCING"
   | "SINGLE_BEST_ACTION"
   | "MULTI_SELECT_UNDER_CONSTRAINT"
-  | "PRIORITY_RANKING";
+  | "PRIORITY_RANKING"
+  | "RECONCILIATION"
+  | "JOURNAL_ENTRY"
+  | "NUMERIC_TABLE";
 
 export type OpenEndedComponentType =
   | "WRITTEN_JUSTIFICATION"
@@ -89,13 +108,43 @@ export interface PriorityRankingComponent {
   items: PriorityRankingItem[];
 }
 
+/** Finance objective components (backend roles/component-schemas.ts). Their answer keys are
+ *  derived in code from the task's figures, so the employer cannot edit them. */
+export interface ReconciliationComponent {
+  items: string[];
+  sideOptions: { value: string; label: string }[];
+  correctSides: string[];
+  adjustedBalance: number;
+  tolerance: number;
+  unit: string | null;
+}
+
+export interface JournalEntryComponent {
+  accounts: string[];
+  entries: {
+    reference: string;
+    lines: { account: string; side: "DEBIT" | "CREDIT"; amount: number }[];
+  }[];
+  tolerance: number;
+  unit: string | null;
+}
+
+export interface NumericTableComponent {
+  rowLabels: string[];
+  columns: { label: string; tolerance: number }[];
+  correctValues: number[][];
+}
+
 export type ObjectiveComponent =
   | NumericInputComponent
   | ClassificationComponent
   | ProceduralSequencingComponent
   | SingleBestActionComponent
   | MultiSelectUnderConstraintComponent
-  | PriorityRankingComponent;
+  | PriorityRankingComponent
+  | ReconciliationComponent
+  | JournalEntryComponent
+  | NumericTableComponent;
 
 export interface WrittenJustificationComponent {
   decisionAlreadyMade: string;

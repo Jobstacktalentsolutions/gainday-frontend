@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { toast } from "sonner"
 import { apiClient } from "@/lib/api/client"
 
 export interface EmailPreferences {
@@ -20,26 +19,13 @@ export function useEmailPreferences(token: string) {
   })
 }
 
-/** Saves a single toggle as soon as it changes. The switch flips at once and is rolled back if the
- *  save fails. */
-export function useUpdateEmailPreference(token: string) {
+/** Saves all the toggles in one request, when the reader presses Save. */
+export function useSaveEmailPreferences(token: string) {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (change: Partial<EmailPreferences>) =>
-      (await apiClient.patch<EmailPreferences>(`/email-preferences/${token}`, change)).data,
-    onMutate: async (change) => {
-      await queryClient.cancelQueries({ queryKey: preferencesKey(token) })
-      const previous = queryClient.getQueryData<EmailPreferences>(preferencesKey(token))
-      queryClient.setQueryData<EmailPreferences>(preferencesKey(token), (current) =>
-        current ? { ...current, ...change } : current
-      )
-      return { previous }
-    },
-    onError: (_error, _change, context) => {
-      queryClient.setQueryData(preferencesKey(token), context?.previous)
-      toast.error("Couldn't save your preference. Please try again.")
-    },
+    mutationFn: async (preferences: EmailPreferences) =>
+      (await apiClient.patch<EmailPreferences>(`/email-preferences/${token}`, preferences)).data,
     onSuccess: (saved) => {
       queryClient.setQueryData(preferencesKey(token), saved)
     },

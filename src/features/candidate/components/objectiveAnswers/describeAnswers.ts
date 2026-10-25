@@ -6,10 +6,16 @@
 // its matching Component.
 import type {
     ClassificationCandidateComponent,
+    JournalEntryCandidateComponent,
+    JournalEntryResponse,
     MultiSelectUnderConstraintCandidateComponent,
     NumericInputCandidateComponent,
+    NumericTableCandidateComponent,
+    NumericTableResponse,
     PriorityRankingCandidateComponent,
     ProceduralSequencingCandidateComponent,
+    ReconciliationCandidateComponent,
+    ReconciliationResponse,
     SingleBestActionCandidateComponent,
 } from "../../types/simulation";
 
@@ -69,6 +75,49 @@ export function describePriorityRanking(
         .map((itemIndex, position) => {
             const { label, description } = component.items[itemIndex];
             return `${position + 1}. ${label} — ${description}`;
+        })
+        .join("\n");
+}
+
+export function describeReconciliation(
+    component: ReconciliationCandidateComponent,
+    response: ReconciliationResponse | null,
+): string {
+    if (!response) return "";
+    const sideLabel = (value: string | null) =>
+        component.sideOptions.find((option) => option.value === value)?.label ?? "Not answered";
+    const lines = component.items.map((item, index) => `${item} → ${sideLabel(response.sides[index] ?? null)}`);
+    if (response.adjustedBalance !== null) {
+        lines.push(`Adjusted cash balance: ${response.adjustedBalance}${component.unit ? ` ${component.unit}` : ""}`);
+    }
+    return lines.join("\n");
+}
+
+export function describeJournalEntry(
+    component: JournalEntryCandidateComponent,
+    response: JournalEntryResponse | null,
+): string {
+    if (!response || response.lines.length === 0) return "";
+    return component.references
+        .map((reference) => {
+            const lines = response.lines
+                .filter((line) => line.reference === reference)
+                .map((line) => `${line.side ?? "?"} ${line.account ?? "?"} ${line.amount ?? "?"}`);
+            return lines.length > 0 ? `${reference}: ${lines.join("; ")}` : "";
+        })
+        .filter((text) => text !== "")
+        .join("\n");
+}
+
+export function describeNumericTable(
+    component: NumericTableCandidateComponent,
+    response: NumericTableResponse | null,
+): string {
+    if (!response) return "";
+    return component.rowLabels
+        .map((rowLabel, row) => {
+            const cells = component.columnLabels.map((label, column) => `${label} ${response.values[row][column] ?? "not answered"}`);
+            return `${rowLabel}: ${cells.join("; ")}`;
         })
         .join("\n");
 }

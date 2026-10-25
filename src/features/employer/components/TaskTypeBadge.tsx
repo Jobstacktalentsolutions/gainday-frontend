@@ -16,7 +16,11 @@ const formatTaskType = (taskType: string) =>
 // ones (rich text / plain text response) — a proxy for the underlying component-type split
 // since `taskType` itself is a free-form string from the backend's role modules.
 const OBJECTIVE_STYLE = "bg-success-50 text-neutral-950";
-const STRUCTURED_INTERFACES: InterfaceType[] = [InterfaceType.TABLE_VIEW_RESPONSE_PANEL, InterfaceType.CSV_DATA_PANEL];
+const STRUCTURED_INTERFACES: InterfaceType[] = [
+  InterfaceType.TABLE_VIEW_RESPONSE_PANEL,
+  InterfaceType.CSV_DATA_PANEL,
+  InterfaceType.TABLE_VIEW_WITH_CHART,
+];
 const OPEN_ENDED_STYLE = "bg-primary-50 text-neutral-950";
 
 const TaskTypeBadge = ({ taskType, interfaceType }: TaskTypeBadgeProps) => {
