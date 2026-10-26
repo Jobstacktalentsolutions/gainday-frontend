@@ -67,12 +67,14 @@ export function TaskResponseInput({
 
     return (
         <div className="flex w-full flex-col gap-1.5">
-            <div className="flex w-full items-center justify-between text-[16px]">
+            <div className="flex w-full flex-col gap-1">
                 <div className="prose prose-sm max-w-none text-neutral-950 prose-p:my-0">
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown>
                 </div>
 
-                <span className="shrink-0 text-neutral-600">Minimum {wordLimit.min} words</span>
+                {wordLimit.min > 0 && (
+                    <span className="self-end text-xs text-neutral-500">Minimum {wordLimit.min} words</span>
+                )}
             </div>
 
             {Renderer ? (

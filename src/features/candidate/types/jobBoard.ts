@@ -57,8 +57,15 @@ export const APPLIED_OPTIONS: FilterOption[] = [
     { value: "not-applied", label: "Not Applied" },
 ];
 
+// Null keeps the board's recommended order.
+export const SORT_OPTIONS: FilterOption[] = [
+    { value: "latest", label: "Latest first" },
+    { value: "oldest", label: "Oldest first" },
+];
+
 export interface JobBoardFilters {
     search: string;
+    sort: string | null;
     appliedStatus: string | null;
     location: string | null;
     employmentType: string | null;
@@ -67,6 +74,7 @@ export interface JobBoardFilters {
 
 export const DEFAULT_JOB_BOARD_FILTERS: JobBoardFilters = {
     search: "",
+    sort: null,
     appliedStatus: null,
     location: null,
     employmentType: null,

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import JobCard from "./JobCard";
@@ -52,15 +53,15 @@ const LiveRolesSection = () => {
 
                 </motion.div>
 
-                <motion.a
-                    variants={fadeUp}
-                    href="#all-roles"
-                    className="flex h-7.5 items-center justify-center curosr-pointer whitespace-nowrap gap-2 text-base text-primary-500 underline underline-offset-2 lg:h-13"
-                >
-
-                    All Roles
-                    <ArrowRight className="text-primary-500" />
-                </motion.a>
+                <motion.div variants={fadeUp}>
+                    <Link
+                        to="/job-board"
+                        className="flex h-7.5 items-center justify-center curosr-pointer whitespace-nowrap gap-2 text-base text-primary-500 underline underline-offset-2 lg:h-13"
+                    >
+                        All Roles
+                        <ArrowRight className="text-primary-500" />
+                    </Link>
+                </motion.div>
             </div>
 
             <div className="flex w-full flex-col items-start gap-6 lg:flex-row">

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import CandidateHeader from "../components/CandidateHeader";
+import { JobBoardHeader } from "../components/JobBoardHeader";
 import { SearchField } from "../components/SearchField";
 import { FilterDropdown } from "../components/Filterdropdown";
 import { JobCard } from "../components/JobCard";
@@ -14,6 +14,7 @@ export function JobBoardPage() {
     const {
         isLoading,
         totalJobs,
+        isCandidate,
         filteredJobs,
         filters,
         filterOptions,
@@ -46,7 +47,7 @@ export function JobBoardPage() {
 
     return (
         <div className="min-h-screen w-full bg-neutral-50">
-            <CandidateHeader />
+            <JobBoardHeader />
 
             <main className="mx-auto flex w-full max-w-300 flex-col gap-10 px-5 pb-20 pt-33.75 sm:pt-43.75 lg:px-0">
                 <div className="flex flex-col">
@@ -67,11 +68,20 @@ export function JobBoardPage() {
 
                     <div className="flex flex-wrap items-center gap-3">
                         <FilterDropdown
-                            allLabel="Application Status"
-                            options={filterOptions.appliedStatus}
-                            selectedValue={filters.appliedStatus}
-                            onSelect={(value) => updateFilter("appliedStatus", value)}
+                            prefix="Sort: "
+                            allLabel="Recommended"
+                            options={filterOptions.sort}
+                            selectedValue={filters.sort}
+                            onSelect={(value) => updateFilter("sort", value)}
                         />
+                        {isCandidate && (
+                            <FilterDropdown
+                                allLabel="Application Status"
+                                options={filterOptions.appliedStatus}
+                                selectedValue={filters.appliedStatus}
+                                onSelect={(value) => updateFilter("appliedStatus", value)}
+                            />
+                        )}
                         <FilterDropdown
                             allLabel="All Locations"
                             options={filterOptions.location}

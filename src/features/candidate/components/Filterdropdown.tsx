@@ -14,6 +14,8 @@ interface FilterDropdownProps {
   options: FilterOption[];
   selectedValue: string | null;
   onSelect: (value: string | null) => void;
+  /** Shown before the label on the trigger, e.g. "Sort: " */
+  prefix?: string;
   className?: string;
 }
 
@@ -23,10 +25,11 @@ export function FilterDropdown({
   options,
   selectedValue,
   onSelect,
+  prefix = "",
   className,
 }: FilterDropdownProps) {
   const selectedOption = options.find((option) => option.value === selectedValue);
-  const triggerLabel = selectedOption?.label ?? allLabel;
+  const triggerLabel = `${prefix}${selectedOption?.label ?? allLabel}`;
 
   return (
     <DropdownMenu>

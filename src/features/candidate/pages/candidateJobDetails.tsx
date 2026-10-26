@@ -4,7 +4,7 @@ import { Clock, MapPin, Wallet, Share2, Sparkles, Check } from "lucide-react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import CandidateHeader from "../components/CandidateHeader";
+import { JobBoardHeader } from "../components/JobBoardHeader";
 import { ApplyDialog } from "../components/ApplyDialog";
 import { CompleteProfileDialog } from "../components/CompleteProfileDialog";
 import { ActionButton } from "@/components/ui/ActionButton";
@@ -30,7 +30,7 @@ export default function JobDetailsPage() {
     if (isLoading) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-neutral-50 text-neutral-700">
-                <CandidateHeader />
+                <JobBoardHeader />
                 Loading...
             </div>
         )
@@ -78,7 +78,7 @@ export default function JobDetailsPage() {
 
     return (
         <div className="min-h-screen w-full bg-neutral-50">
-            <CandidateHeader />
+            <JobBoardHeader />
 
             <main className="mx-auto w-full max-w-300 px-5 pb-20 pt-33.75 sm:pt-43.75 lg:px-0">
                 <div className="relative flex flex-col gap-10 overflow-hidden rounded-[32px] bg-white p-8">

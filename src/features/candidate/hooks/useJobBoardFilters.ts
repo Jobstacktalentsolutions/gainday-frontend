@@ -8,6 +8,7 @@ import {
     APPLIED_OPTIONS,
     DEFAULT_JOB_BOARD_FILTERS,
     SALARY_BUCKETS,
+    SORT_OPTIONS,
     type FilterOption,
     type JobBoardFilters,
     type JobBoardListing,
@@ -31,6 +32,7 @@ interface BoardOptionsResponse {
 // The filters the server understands. Empty filters are left out of the request.
 interface BoardQueryParams {
     search?: string;
+    sort?: string;
     appliedStatus?: string;
     location?: string;
     employmentType?: string;
@@ -44,6 +46,7 @@ function toQueryParams(filters: JobBoardFilters, search: string): BoardQueryPara
     const bucket = SALARY_BUCKETS.find((item) => item.value === filters.salaryBucket);
     return {
         search: search.trim() || undefined,
+        sort: filters.sort ?? undefined,
         appliedStatus: filters.appliedStatus ?? undefined,
         location: filters.location ?? undefined,
         employmentType: filters.employmentType ?? undefined,
@@ -66,7 +69,8 @@ async function fetchBoardOptions(): Promise<BoardOptionsResponse> {
 }
 
 export function useJobBoardFilters() {
-    const { user } = useCurrentUser();
+    const { user, isAuthenticated } = useCurrentUser();
+    const isCandidate = isAuthenticated && user?.role === "JOB_SEEKER";
     const [filters, setFilters] = useState<JobBoardFilters>(DEFAULT_JOB_BOARD_FILTERS);
     const debouncedSearch = useDebouncedValue(filters.search, 300);
     const params = toQueryParams(filters, debouncedSearch);
@@ -100,6 +104,7 @@ export function useJobBoardFilters() {
 
     const filterOptions = useMemo(
         () => ({
+            sort: SORT_OPTIONS,
             appliedStatus: APPLIED_OPTIONS,
             location: toOptions(optionsQuery.data?.location ?? []),
             employmentType: toOptions(optionsQuery.data?.employmentType ?? []),
@@ -110,6 +115,7 @@ export function useJobBoardFilters() {
 
     const hasActiveFilters =
         filters.search.trim().length > 0 ||
+        filters.sort !== null ||
         filters.appliedStatus !== null ||
         filters.location !== null ||
         filters.employmentType !== null ||
@@ -127,6 +133,7 @@ export function useJobBoardFilters() {
         isLoading: feed.isLoading,
         // Live jobs across the whole board, so the empty state can tell "no jobs" from "no matches".
         totalJobs: optionsQuery.data?.totalActive ?? 0,
+        isCandidate,
         filteredJobs: jobs,
         filters,
         filterOptions,

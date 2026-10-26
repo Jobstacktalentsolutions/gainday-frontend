@@ -13,7 +13,7 @@ import {
     YAxis,
 } from "recharts";
 import type { ChartPayload } from "../types";
-import { waterfallSteps } from "./chartData";
+import { waterfallSteps, type WaterfallStep } from "./chartData";
 
 // Colours cycle by series position, so the same series keeps its colour across the chart.
 const SERIES_COLORS = ["#2563eb", "#7c3aed", "#059669", "#d97706"];
@@ -107,18 +107,27 @@ function comboChart(chart: Extract<ChartPayload, { type: "combo" }>) {
     );
 }
 
+const amountFormat = new Intl.NumberFormat("en-GB");
+const compactAmountFormat = new Intl.NumberFormat("en-GB", { notation: "compact" });
+
 // A bridge from a budget to an actual: floating bars for the drivers, solid bars for the two totals.
 function waterfallChart(chart: Extract<ChartPayload, { type: "waterfall" }>) {
     const steps = waterfallSteps(chart.categories, chart.values, chart.totals);
-    const rows = steps.map((step) => ({ category: step.category, base: step.base, height: step.height }));
     return (
-        <BarChart data={rows}>
+        <BarChart data={steps}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e5e5e5" />
             <XAxis dataKey="category" tick={{ fontSize: 12 }} />
-            <YAxis tick={{ fontSize: 12 }} />
-            <Tooltip />
+            <YAxis tick={{ fontSize: 12 }} tickFormatter={(value: number) => compactAmountFormat.format(value)} />
+            {/* Shows the signed amount each step states, not the bar's drawn height. */}
+            <Tooltip
+                cursor={false}
+                formatter={(_value, _name, item) => [
+                    amountFormat.format((item.payload as WaterfallStep).value),
+                    "Amount",
+                ]}
+            />
             {/* The base is invisible: it only lifts each driver to where it starts. */}
-            <Bar dataKey="base" stackId="bridge" fill="transparent" isAnimationActive={false} />
+            <Bar dataKey="base" stackId="bridge" fill="transparent" isAnimationActive={false} tooltipType="none" />
             <Bar dataKey="height" stackId="bridge" isAnimationActive={false}>
                 {steps.map((step) => (
                     <Cell key={step.category} fill={WATERFALL_COLORS[step.kind]} />
