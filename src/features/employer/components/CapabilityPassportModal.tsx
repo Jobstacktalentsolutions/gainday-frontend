@@ -23,7 +23,8 @@ interface CapabilityPassportModalProps {
     isUnlocked: boolean;
     isSelected?: boolean;
     contact?: SubmissionContact | null;
-    onUnlockContact: () => void;
+    /** Omit where the contact is already unlocked by definition (the Unlocks page). */
+    onUnlockContact?: () => void;
 }
 
 // The full passport is visible before unlock — the lock only gates the candidate's contact details
@@ -131,7 +132,7 @@ const CapabilityPassportModal = ({
 
                 {!isLoading && !isError && passport && <CapabilityPassportView passport={passport} variant="employer" />}
 
-                {!isUnlocked && (
+                {!isUnlocked && onUnlockContact && (
                     <ActionButton size="lg" className="rounded-xl" onClick={onUnlockContact}>
                         Unlock Contact
                     </ActionButton>

@@ -40,7 +40,7 @@ const CreditManagement = lazy(() => import("@/features/admin/pages/CreditManagem
 const JobModerationDetailPage = lazy(() => import("@/features/admin/pages/JobModerationDetailPage"));
 const JobPreview = lazy(() => import("@/features/employer/pages/JobPreview"));
 const JobSubmissions = lazy(() => import("@/features/employer/pages/JobSubmissions"));
-const EmployerCandidates = lazy(() => import("@/features/employer/pages/EmployerCandidate"));
+const EmployerUnlocks = lazy(() => import("@/features/employer/pages/EmployerUnlocks"));
 const SubmissionDetail = lazy(() => import("@/features/employer/pages/SubmissionDetail"));
 const BillingPage = lazy(() => import("@/features/employer/pages/BillingPage"));
 const JobBoardPage = lazy(() => import("@/features/candidate/pages/JobBoardPage"));
@@ -107,7 +107,7 @@ const AppRoutes = () => {
                             <Route index element={<Navigate to="jobs" replace />} />
                             <Route path="dashboard" element={<Navigate to="/employer/jobs" replace />} />
                             <Route path="jobs" element={<EmployerJobs />} />
-                            <Route path="candidates" element={<EmployerCandidates />} />
+                            <Route path="unlocks" element={<EmployerUnlocks />} />
                             <Route path="jobs/:jobId/submissions" element={<JobSubmissions />} />
                             <Route path="profile" element={<ProfilePage />} />
                             <Route path="billing" element={<BillingPage />} />

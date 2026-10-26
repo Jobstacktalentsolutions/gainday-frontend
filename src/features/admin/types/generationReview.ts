@@ -29,3 +29,12 @@ export interface GenerationReviewItem {
     updatedAt: string;
     job: { id: string; title: string | null } | null;
 }
+
+/** One job's review items, as the admin queue groups them. */
+export interface GenerationReviewJobGroup {
+    jobId: string;
+    job: { id: string; title: string | null; employer: { companyName: string | null } };
+    /** Slots still waiting on an admin. Zero means the job's tasks are fully resolved. */
+    pendingCount: number;
+    items: GenerationReviewItem[];
+}

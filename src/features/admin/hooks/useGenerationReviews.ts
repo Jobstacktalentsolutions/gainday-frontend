@@ -2,6 +2,7 @@ import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-q
 import { apiClient } from "@/lib/api/client";
 import type {
   GenerationReviewItem,
+  GenerationReviewJobGroup,
   GenerationReviewStatus,
   QuestionBankTaskContent,
 } from "../types/generationReview";
@@ -28,10 +29,35 @@ const fetchGenerationReviews = async (
   return data;
 };
 
+// Individual review items, one row per slot.
 export const useGenerationReviews = (status?: GenerationReviewStatus, limit = 10) => {
   return useInfiniteQuery({
     queryKey: ["admin", "generation-reviews", status ?? "all", limit],
     queryFn: ({ pageParam = 1 }) => fetchGenerationReviews({ status, limit, page: pageParam }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) =>
+      lastPage.pagination.hasNextPage ? lastPage.pagination.page + 1 : undefined,
+  });
+};
+
+const fetchGenerationReviewJobs = async (
+  status: GenerationReviewStatus | undefined,
+  page: number,
+  limit: number
+): Promise<PaginatedResponse<GenerationReviewJobGroup>> => {
+  const { data } = await apiClient.get<PaginatedResponse<GenerationReviewJobGroup>>(
+    "/admin/generation-reviews/by-job",
+    { params: { status, page, limit } }
+  );
+  return data;
+};
+
+// Review items grouped by job. The key starts with "generation-reviews" so the approve and reject
+// mutations below refresh it.
+export const useGenerationReviewJobs = (status?: GenerationReviewStatus, limit = 10) => {
+  return useInfiniteQuery({
+    queryKey: ["admin", "generation-reviews", "by-job", status ?? "all", limit],
+    queryFn: ({ pageParam }) => fetchGenerationReviewJobs(status, pageParam, limit),
     initialPageParam: 1,
     getNextPageParam: (lastPage) =>
       lastPage.pagination.hasNextPage ? lastPage.pagination.page + 1 : undefined,

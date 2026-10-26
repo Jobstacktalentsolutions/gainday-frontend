@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import CreditBalanceHero from "../components/billing/CreditBalanceHero";
 import PurchasesSection from "../components/billing/PurchasesSection";
-import UnlocksSection from "../components/billing/UnlocksSection";
 import CreditPurchaseModal from "../components/CreditPurchaseModal";
 import { useCreditBalance } from "../hooks/useCreditBalance";
 
@@ -32,7 +31,6 @@ const BillingPage = () => {
 
                 <CreditBalanceHero balance={data?.balance} isLoading={isLoading} onBuy={() => setBuyOpen(true)} />
                 <PurchasesSection />
-                <UnlocksSection />
             </div>
 
             <CreditPurchaseModal

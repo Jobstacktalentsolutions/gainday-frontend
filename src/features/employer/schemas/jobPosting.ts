@@ -46,6 +46,18 @@ export const jobDetailsSchema = jobDetailsBaseSchema.refine(
 
 export type JobDetailsFormValues = z.infer<typeof jobDetailsBaseSchema>;
 
+// The details fields that must be filled before the job can go further. Kept beside the schema so
+// the list and its rules stay together. After a parse, these are validated so a missed one shows its
+// error straight away.
+export const JOB_DETAILS_REQUIRED_FIELDS = [
+    "title",
+    "role",
+    "skillLevel",
+    "location",
+    "employmentType",
+    "description",
+] as const;
+
 
 
 

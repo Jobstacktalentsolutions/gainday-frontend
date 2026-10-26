@@ -4,7 +4,7 @@ import { useFormContext, Controller } from "react-hook-form";
 import { Sparkles, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import TagInput from "@/components/ui/tagInput";
-import { jobDetailsSchema, type JobPostingFormValues } from "../schemas/jobPosting";
+import { JOB_DETAILS_REQUIRED_FIELDS, jobDetailsSchema, type JobPostingFormValues } from "../schemas/jobPosting";
 import TaskGenerationModal from "../components/TaskGenerationModal";
 import JobDescriptionPasteInput from "../components/JobDescriptionPasteInput";
 import TaskPromptEditor from "../components/TaskPromptEditor";
@@ -136,6 +136,9 @@ const JobDetailsStep = () => {
             setValue("description", parsed.formattedDescription, { shouldValidate: true });
             setIsDescriptionAiGenerated(true);
         }
+
+        // Fields the parser did not return were never validated, so validate the required ones now.
+        void trigger([...JOB_DETAILS_REQUIRED_FIELDS]);
     };
 
     const handleContinue = async () => {

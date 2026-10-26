@@ -1,12 +1,13 @@
 import { useMemo, useState } from "react";
-import { Search, ShieldAlert, AlertTriangle, ChevronDown, ChevronUp, Layers } from "lucide-react";
-import { useGenerationReviews } from "../hooks/useGenerationReviews";
+import { Search, ShieldAlert, AlertTriangle, CheckCircle2, ChevronDown, ChevronUp, Layers } from "lucide-react";
+import { useGenerationReviewJobs } from "../hooks/useGenerationReviews";
 import GenerationReviewDetail from "./GenerationReviewDetail";
 import { TableLoadMore } from "./TableLoadMore";
 import { TableSkeleton } from "./skeletons";
 import { cn } from "@/lib/utils";
 import type {
   GenerationReviewItem,
+  GenerationReviewJobGroup,
   GenerationReviewStatus,
 } from "../types/generationReview";
 
@@ -36,11 +37,17 @@ const STATUS_BADGE: Record<
   },
 };
 
+const matchesSearch = (group: GenerationReviewJobGroup, term: string) =>
+  (group.job.title ?? "").toLowerCase().includes(term) ||
+  group.jobId.toLowerCase().includes(term) ||
+  group.items.some((item) => item.category.toLowerCase().includes(term));
+
 const GenerationReviewsPanel = () => {
   const [statusFilter, setStatusFilter] = useState<
     GenerationReviewStatus | undefined
   >("PENDING");
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [expandedJobId, setExpandedJobId] = useState<string | null>(null);
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
   const {
@@ -50,32 +57,33 @@ const GenerationReviewsPanel = () => {
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = useGenerationReviews(statusFilter, 10);
+  } = useGenerationReviewJobs(statusFilter, 10);
 
-  const reviews = useMemo(
+  const groups = useMemo(
     () => data?.pages.flatMap((page) => page.items) ?? [],
     [data],
   );
   const totalCount = data?.pages[0]?.pagination.total ?? 0;
 
-  const filteredReviews = useMemo(() => {
-    if (!searchTerm.trim()) return reviews;
+  const filteredGroups = useMemo(() => {
     const term = searchTerm.toLowerCase().trim();
-    return reviews.filter(
-      (r) =>
-        (r.job?.title && r.job.title.toLowerCase().includes(term)) ||
-        r.category.toLowerCase().includes(term) ||
-        r.jobId.toLowerCase().includes(term)
-    );
-  }, [reviews, searchTerm]);
+    if (!term) return groups;
+    return groups.filter((group) => matchesSearch(group, term));
+  }, [groups, searchTerm]);
 
   const selectFilter = (value: GenerationReviewStatus | undefined) => {
     setStatusFilter(value);
-    setSelectedId(null);
+    setExpandedJobId(null);
+    setSelectedItemId(null);
   };
 
-  const toggleReview = (review: GenerationReviewItem) => {
-    setSelectedId((current) => (current === review.id ? null : review.id));
+  const toggleJob = (jobId: string) => {
+    setExpandedJobId((current) => (current === jobId ? null : jobId));
+    setSelectedItemId(null);
+  };
+
+  const toggleItem = (item: GenerationReviewItem) => {
+    setSelectedItemId((current) => (current === item.id ? null : item.id));
   };
 
   return (
@@ -89,12 +97,12 @@ const GenerationReviewsPanel = () => {
             </h2>
             {!isLoading && !isError && (
               <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-xs font-semibold text-neutral-600">
-                {totalCount} total
+                {totalCount} {totalCount === 1 ? "job" : "jobs"}
               </span>
             )}
           </div>
           <p className="mt-0.5 text-xs text-neutral-500">
-            Task slots where automated critic validation could not reach quality thresholds. Inspect failed attempts, adjust prompts, and approve with edits.
+            Task slots where automated critic validation could not reach quality thresholds, grouped by job. A job's employer is emailed once every slot for it is resolved.
           </p>
         </div>
       </div>
@@ -144,7 +152,7 @@ const GenerationReviewsPanel = () => {
         </div>
       )}
 
-      {!isLoading && !isError && filteredReviews.length === 0 && (
+      {!isLoading && !isError && filteredGroups.length === 0 && (
         <div className="flex flex-col items-center justify-center px-5 py-12 text-center">
           <div className="flex size-10 items-center justify-center rounded-full bg-neutral-100 text-neutral-400 mb-3">
             <ShieldAlert className="size-5" />
@@ -171,78 +179,104 @@ const GenerationReviewsPanel = () => {
 
       {!isLoading &&
         !isError &&
-        filteredReviews.map((review) => {
-          const badge = STATUS_BADGE[review.status];
-          const isOpen = selectedId === review.id;
+        filteredGroups.map((group) => {
+          const isOpen = expandedJobId === group.jobId;
+          const isResolved = group.pendingCount === 0;
           return (
-            <div
-              key={review.id}
-              className="border-b border-neutral-100 last:border-b-0"
-            >
+            <div key={group.jobId} className="border-b border-neutral-100 last:border-b-0">
               <button
                 type="button"
                 aria-expanded={isOpen}
-                onClick={() => toggleReview(review)}
+                onClick={() => toggleJob(group.jobId)}
                 className="flex w-full items-center justify-between gap-4 p-5 text-left transition-colors hover:bg-neutral-50/80 cursor-pointer"
               >
                 <div className="flex min-w-0 flex-col gap-1">
                   <div className="flex items-center gap-2">
                     <p className="truncate text-sm font-semibold text-neutral-900">
-                      {review.job?.title ?? "Untitled job"}
+                      {group.job.title ?? "Untitled job"}
                     </p>
-                    <span className="font-mono text-xs text-neutral-400">
-                      ({review.jobId})
-                    </span>
+                    <span className="font-mono text-xs text-neutral-400">({group.jobId})</span>
                   </div>
                   <div className="flex flex-wrap items-center gap-2 text-xs text-neutral-500">
+                    <span>{group.job.employer.companyName ?? "Unknown company"}</span>
+                    <span>·</span>
                     <span className="inline-flex items-center gap-1 rounded bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-700">
                       <Layers className="size-3 text-neutral-500" />
-                      Slot {review.slotIndex + 1}
-                    </span>
-                    <span>·</span>
-                    <span className="font-medium text-neutral-600">{review.category}</span>
-                    <span>·</span>
-                    <span className="inline-flex items-center gap-1 text-amber-700">
-                      <AlertTriangle className="size-3" />
-                      {review.attempts.length} critic attempt(s)
+                      {group.items.length} {group.items.length === 1 ? "slot" : "slots"}
                     </span>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <span
-                    className={cn(
-                      "shrink-0 rounded-full border px-2.5 py-0.5 text-xs font-medium",
-                      badge.className,
-                    )}
-                  >
-                    {badge.label}
-                  </span>
+                  {isResolved ? (
+                    <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-success-200 bg-success-50 px-2.5 py-0.5 text-xs font-medium text-success-700">
+                      <CheckCircle2 className="size-3" />
+                      All resolved
+                    </span>
+                  ) : (
+                    <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-warning-200 bg-warning-50 px-2.5 py-0.5 text-xs font-medium text-warning-700">
+                      <AlertTriangle className="size-3" />
+                      {group.pendingCount} pending
+                    </span>
+                  )}
                   <div className="flex size-7 items-center justify-center rounded-md border border-neutral-200 bg-white text-neutral-400">
-                    {isOpen ? (
-                      <ChevronUp className="size-4" />
-                    ) : (
-                      <ChevronDown className="size-4" />
-                    )}
+                    {isOpen ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
                   </div>
                 </div>
               </button>
-              {isOpen && (
-                <div className="border-t border-neutral-100 bg-neutral-50/50 p-5">
-                  <GenerationReviewDetail
-                    review={review}
-                    onClose={() => setSelectedId(null)}
-                  />
-                </div>
-              )}
+
+              {isOpen &&
+                group.items.map((item) => {
+                  const badge = STATUS_BADGE[item.status];
+                  const isItemOpen = selectedItemId === item.id;
+                  return (
+                    <div key={item.id} className="border-t border-neutral-100 bg-neutral-50/40">
+                      <button
+                        type="button"
+                        aria-expanded={isItemOpen}
+                        onClick={() => toggleItem(item)}
+                        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-neutral-50 cursor-pointer"
+                      >
+                        <div className="flex flex-wrap items-center gap-2 text-xs text-neutral-500">
+                          <span className="inline-flex items-center gap-1 rounded bg-white px-2 py-0.5 text-[11px] font-medium text-neutral-700 border border-neutral-200">
+                            Slot {item.slotIndex + 1}
+                          </span>
+                          <span className="font-medium text-neutral-600">{item.category}</span>
+                          <span>·</span>
+                          <span>{item.attempts.length} critic attempt(s)</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span
+                            className={cn(
+                              "shrink-0 rounded-full border px-2.5 py-0.5 text-xs font-medium",
+                              badge.className,
+                            )}
+                          >
+                            {badge.label}
+                          </span>
+                          {isItemOpen ? (
+                            <ChevronUp className="size-4 text-neutral-400" />
+                          ) : (
+                            <ChevronDown className="size-4 text-neutral-400" />
+                          )}
+                        </div>
+                      </button>
+                      {isItemOpen && (
+                        <div className="border-t border-neutral-100 bg-neutral-50/50 p-5">
+                          <GenerationReviewDetail review={item} onClose={() => setSelectedItemId(null)} />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
             </div>
           );
         })}
 
-      {!isLoading && !isError && reviews.length > 0 && (
+      {!isLoading && !isError && groups.length > 0 && (
         <div className="p-4 border-t border-neutral-100 bg-neutral-50/30">
           <TableLoadMore
-            currentCount={reviews.length}
+            currentCount={groups.length}
             totalCount={totalCount}
             hasNextPage={hasNextPage}
             isLoading={isFetchingNextPage}
