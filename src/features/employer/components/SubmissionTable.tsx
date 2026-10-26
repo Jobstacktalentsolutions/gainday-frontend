@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Skeleton from "@/components/ui/skeleton";
+import { Checkbox } from "@/components/ui/checkbox";
 import IntegrityLabel from "./IntegrityLabel";
 import CategoryBreakdownBars from "./CategoryBreakdownBars";
 import { CATEGORY_ORDER } from "../utils/submissionCategories";
@@ -39,40 +40,58 @@ const TableShell = ({ children }: { children: React.ReactNode }) => (
 interface SubmissionsTableProps {
     jobId: string;
     submissions: SubmissionSummary[];
+    selectedIds: string[];
+    onToggleSelect: (submissionId: string) => void;
 }
 
-const SubmissionsTable = ({ jobId, submissions }: SubmissionsTableProps) => {
+const SubmissionsTable = ({ jobId, submissions, selectedIds, onToggleSelect }: SubmissionsTableProps) => {
     return (
         <TableShell>
             <div className="flex flex-col divide-y divide-neutral-200">
                 {submissions.map((submission) => {
                     const isSelected = submission.isSelected || submission.status === "SELECTED";
+                    const label = getCandidateLabel(submission);
                     return (
-                        <Link
+                        <div
                             key={submission.id}
-                            to={`/employer/jobs/${jobId}/submissions/${submission.id}`}
-                            aria-label={`View ${getCandidateLabel(submission)}'s submission`}
                             className={cn(
                                 ROW_GRID,
-                                "-mx-3 px-3 py-3 text-base text-neutral-950 transition-colors focus-visible:outline-2 focus-visible:outline-primary-500",
+                                "-mx-3 px-3 py-3 text-base text-neutral-950 transition-colors",
                                 isSelected
                                     ? "rounded-xl border border-success-200 bg-success-50/70 hover:bg-success-100/70"
-                                    : "hover:bg-neutral-50 focus-visible:bg-neutral-50",
+                                    : "hover:bg-neutral-50",
                             )}
                         >
-                            <div className="flex flex-col gap-1">
-                                <div className="flex flex-wrap items-center gap-2">
-                                    <p className="font-medium text-neutral-900">{getCandidateLabel(submission)}</p>
-                                    {isSelected && (
-                                        <span className="inline-flex items-center gap-1 rounded-full border border-success-200 bg-success-100 px-2 py-0.5 text-xs font-semibold text-success-800">
-                                            <Check className="size-3 text-success-700" aria-hidden="true" />
-                                            Selected
-                                        </span>
+                            <div className="flex items-start gap-3">
+                                {/* Only locked candidates can be unlocked, so only they get a checkbox. */}
+                                {!submission.isUnlocked && (
+                                    <Checkbox
+                                        className="mt-1"
+                                        checked={selectedIds.includes(submission.id)}
+                                        onCheckedChange={() => onToggleSelect(submission.id)}
+                                        aria-label={`Select ${label} to unlock`}
+                                    />
+                                )}
+                                <div className="flex min-w-0 flex-col gap-1">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                        <Link
+                                            to={`/employer/jobs/${jobId}/submissions/${submission.id}`}
+                                            aria-label={`View ${label}'s submission`}
+                                            className="font-medium text-neutral-900 underline-offset-2 hover:text-primary-500 hover:underline focus-visible:outline-2 focus-visible:outline-primary-500"
+                                        >
+                                            {label}
+                                        </Link>
+                                        {isSelected && (
+                                            <span className="inline-flex items-center gap-1 rounded-full border border-success-200 bg-success-100 px-2 py-0.5 text-xs font-semibold text-success-800">
+                                                <Check className="size-3 text-success-700" aria-hidden="true" />
+                                                Selected
+                                            </span>
+                                        )}
+                                    </div>
+                                    {submission.candidateName !== null && (
+                                        <p className="text-neutral-500">{submission.displayId}</p>
                                     )}
                                 </div>
-                                {submission.candidateName !== null && (
-                                    <p className="text-neutral-500">{submission.displayId}</p>
-                                )}
                             </div>
                             <p>{formatOverallScore(submission)}</p>
                             {submission.categoryScores !== null ? (
@@ -80,14 +99,14 @@ const SubmissionsTable = ({ jobId, submissions }: SubmissionsTableProps) => {
                             ) : (
                                 <div className="flex h-14.25 w-41 items-center justify-center text-neutral-400">&mdash;</div>
                             )}
-                            <p>{submission.capabilityScore === null ? "\u2014" : submission.capabilityScore}</p>
-                            <p>{submission.timeTakenSeconds === null ? "\u2014" : formatDuration(submission.timeTakenSeconds)}</p>
+                            <p>{submission.capabilityScore === null ? "—" : submission.capabilityScore}</p>
+                            <p>{submission.timeTakenSeconds === null ? "—" : formatDuration(submission.timeTakenSeconds)}</p>
                             <p className="whitespace-nowrap">{formatSubmittedDate(submission.submittedAt)}</p>
                             <IntegrityLabel
                                 status={submission.integrityStatus}
                                 issueCount={submission.integrityIssueCount}
                             />
-                        </Link>
+                        </div>
                     );
                 })}
             </div>
