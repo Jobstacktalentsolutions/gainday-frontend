@@ -1,34 +1,36 @@
+
 import { useEffect, useRef, useState } from "react";
-import { useInView, animate } from "motion/react";
+import { animate, useInView, useReducedMotion } from "motion/react";
 
-const useCountUp = (rawValue: string, duration = 1.5) => {
-
+// Counts from `from` (default 0) to the number inside `rawValue`, e.g. "318+", "£0", "95%".
+// Pass a `from` larger than the target to count down.
+const useCountUp = (rawValue: string, duration = 1.5, from = 0) => {
     const ref = useRef<HTMLParagraphElement>(null);
     const isInView = useInView(ref, { once: true, amount: 0.6 });
-    const [display, setDisplay] = useState(() => rawValue.replace(/\d+/, "0"));
+    const reduceMotion = useReducedMotion();
+    const [display, setDisplay] = useState(() => rawValue.replace(/\d+/, String(from)));
 
     const match = rawValue.match(/(\D*)(\d+)(\D*)/);
 
     useEffect(() => {
-        if (!isInView || !match) {
-            if (!match) setDisplay(rawValue);
+        if (!match || reduceMotion) {
+            setDisplay(rawValue);
             return;
         }
-        const [, prefix, numStr, suffix] = match
-        const target = parseInt(numStr, 10);
+        if (!isInView) return;
 
-        const controls = animate(0, target, {
+        const [, prefix, numStr, suffix] = match;
+        const controls = animate(from, parseInt(numStr, 10), {
             duration,
             ease: "easeOut",
-            onUpdate: (value) => {
-                setDisplay(`${prefix}${Math.round(value)}${suffix}`)
-            },
-        })
+            onUpdate: (value) => setDisplay(`${prefix}${Math.round(value)}${suffix}`),
+        });
 
-        return () => controls.stop()
-    }, [isInView])
+        return () => controls.stop();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isInView, reduceMotion]);
 
-    return { ref, display }
-}
+    return { ref, display };
+};
 
 export default useCountUp;
