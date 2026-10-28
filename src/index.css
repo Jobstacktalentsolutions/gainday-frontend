@@ -367,3 +367,56 @@ input:-webkit-autofill:active {
   caret-color: var(--color-neutral-700);
   transition: background-color 9999s ease-in-out 0s;
 }
+
+/* ── Landing type scale (Figma Heading/1 and Heading/2, responsive) ── */
+@utility heading-1 {
+  font-size: 40px;
+  line-height: 48px;
+  letter-spacing: -0.4px;
+
+  @media (width >= 64rem) {
+    font-size: 56px;
+    line-height: 64px;
+    letter-spacing: -0.56px;
+  }
+}
+
+@utility heading-2 {
+  font-size: 32px;
+  line-height: 38px;
+  letter-spacing: -0.32px;
+
+  @media (width >= 64rem) {
+    font-size: 48px;
+    line-height: 58px;
+    letter-spacing: -0.48px;
+  }
+}
+
+@utility stat-number {
+  font-size: 32px;
+  line-height: 40px;
+  letter-spacing: -0.32px;
+
+  @media (width >= 64rem) {
+    font-size: 48px;
+    line-height: 58px;
+    letter-spacing: -0.48px;
+  }
+}
+
+/* ── Ambient motion for background artifacts ── */
+@theme {
+  --animate-orb-drift: orb-drift 16s ease-in-out infinite alternate;
+  --animate-float-soft: float-soft 7s ease-in-out infinite;
+
+  @keyframes orb-drift {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to { transform: translate3d(24px, -18px, 0) scale(1.08); }
+  }
+
+  @keyframes float-soft {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+}
