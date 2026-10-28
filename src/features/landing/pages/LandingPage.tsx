@@ -1,6 +1,6 @@
+import { MotionConfig } from "motion/react";
 import BuildSection from "../components/BuildSection/BuildSection";
 import DevRouteLinks from "../components/devRouteLinks/DevRouteLinks";
-import FAQSection from "../components/FAQSection/FAQSection";
 import { Footer } from "../components/footer/Footer";
 import Header from "../components/Header";
 import HeroSection from "../components/HeroSection";
@@ -15,41 +15,26 @@ const LandingPage = () => {
     useScrollToHash();
 
     return (
-        <div className="bg-neutral-50">
-            <Header />
-            <main className="pt-24.25">
-                <HeroSection />
-                <div className="pt-15 pb-25 lg:pt-0">
-                    <MarqueeStrip />
-                </div>
-                <div>
+        // reducedMotion="user" makes every motion component on the page honour the OS setting
+        <MotionConfig reducedMotion="user">
+            <div className="bg-neutral-50">
+                <Header />
+                <main className="pt-24.25">
+                    <HeroSection />
+                    <div className="pb-25 pt-15 lg:pt-0">
+                        <MarqueeStrip />
+                    </div>
                     <ProblemSection />
-                </div>
-                <div>
                     <HowItWorksSection />
-                </div>
-                <div>
                     <SolutionSection />
-                </div>
-                <div>
                     <LiveRolesSection />
-                </div>
-                <div>
-                    <FAQSection />
-                </div>
-                <div>
                     <BuildSection />
-                </div>
-                <div>
                     <Footer />
                     <DevRouteLinks />
-                </div>
-
-
-            </main>
-
-        </div>
+                </main>
+            </div>
+        </MotionConfig>
     );
-}
+};
 
 export default LandingPage;
