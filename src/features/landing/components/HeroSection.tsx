@@ -1,88 +1,68 @@
-import sparkle from "@/assets/sparkle.svg";
-import { StepContinueButton } from "@/components/ui/StepNavigationButtons";
-import { Button } from "@/components/ui/button";
-import { StatsRow } from "./StatsRow";
-import { fadeUp, heroStagger } from "@/lib/motion/variants";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
-import { useTryChallengePath } from "../utils/useTryChallengePath";
-import { scrollToSectionById } from "../utils/scrollToSection";
-import GradientCard from "./GradientCard";
+import sparkle from "@/assets/sparkle.svg";
+import { Button } from "@/components/ui/button";
+import { fadeUp, heroStagger } from "@/lib/motion/variants";
+import { HeroDemo } from "./HeroDemo";
+import { HighlightBox } from "./HighlightBox";
+import { StatsRow } from "./StatsRow";
+import CTAButton from "./solutionSection/CTAButton";
 
 const HeroSection = () => {
-
     const navigate = useNavigate();
-    const tryChallengePath = useTryChallengePath();
 
     return (
         <motion.section
             variants={heroStagger}
             initial="hidden"
             animate="visible"
-            className="px-6 pt-20 pb-10 gap-20 flex flex-col lg:flex-row lg:px-29 lg:pt-23  lg:pb-30 lg:justify-between">
-            <div className="lg:flex-1">
-                <div className="flex items-center justify-center gap-4 flex-col lg:items-start ">
-                    <motion.div
-                        variants={fadeUp}
-                        className="max-w-65  flex items-center justify-center text-[10px] lg:text-[14px] text-primary-500 gap-x-2.5 px-1.5 py-2 border rounded-[6px] border-primary-500 lg:flex-1 lg:max-w-max lg:py-2.5 lg:px-3">
-                        <img
-                            src={sparkle}
-                            alt="sparkle icon"
-                            className="w-4.25 h-2.75"
-                        />
-                        THE PERFECT AI-ASSISTED TOOL FOR HIRING
-                    </motion.div>
+            className="relative isolate flex flex-col gap-20 overflow-hidden px-6 pb-10 pt-20 lg:flex-row lg:items-center lg:justify-between lg:gap-12 lg:px-29 lg:pb-30 lg:pt-23"
+        >
+            <div className="flex flex-col items-center gap-4 lg:flex-1 lg:items-start lg:gap-6">
+                <motion.div
+                    variants={fadeUp}
+                    className="flex max-w-max items-center gap-x-2.5 rounded-[6px] border border-primary-500 px-3 py-2.5 text-[10px] uppercase text-primary-500 lg:text-[14px]"
+                >
+                    <img src={sparkle} alt="" className="h-2.75 w-4.25" />
+                    THE PERFECT AI-ASSISTED TOOL FOR HIRING
+                </motion.div>
 
-                    <motion.h2
-                        variants={fadeUp}
-                        className="text-[40px] text-black leading-12 tracking-tight text-center lg:text-left lg:text-[52px] lg:leading-14 lg:tracking-[-0.56px]">
-                        Stop Screening <br className="hidden lg:block" /> Applications. {" "} <br className="hidden lg:block" />Start Screening{" "}
-                        <span className="relative inline-flex items-center justify-center border-2 border-primary-500 px-4 py-1 text-primary-500 align-baseline">
-                            <span className="absolute -top-1 -left-1 w-1.5 h-1.5  bg-primary-500 " />
-                            <span className="absolute -top-1 -right-1 w-1.5 h-1.5 bg-primary-500" />
-                            <span className="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-primary-500" />
-                            <span className="absolute -bottom-1 -right-1 w-1.5 h-1.5 bg-primary-500 " />
-                            Ability
-                        </span>
-                    </motion.h2>
-                    <motion.p
-                        variants={fadeUp}
-                        className="text-center text-base text-neutral-700 leading-6 lg:text-left lg:max-w-134.75">
-                        Candidates apply by doing a piece of the actual job. Employers get a ranked list built on evidence, and every challenge a candidate completes
-                        stacks into a Capability Passport they keep forever.
-                    </motion.p>
+                <motion.h1 variants={fadeUp} className="heading-1 text-center text-black lg:text-left">
+                    Skip the CV pile. <br className="hidden lg:block" />
+                    Find the people <br className="hidden lg:block" />
+                    who can <HighlightBox className="heading-2 align-baseline">do the Job</HighlightBox>
+                </motion.h1>
 
-                    <motion.div
-                        variants={fadeUp}
-                        className="flex flex-col items-center justify-center gap-4 py-4 lg:flex-row">
-                        <StepContinueButton size="lg" className="w-auto" onClick={() => navigate(tryChallengePath)}>
-                            Try a candidate challenge
-                        </StepContinueButton>
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => scrollToSectionById("for-employers")}
-                            className="text-base cursor-pointer rounded-[8px] px-10 py-2 leading-6 h-13 hover:bg-neutral-100">
-                            See the employer view
-                        </Button>
+                <motion.p
+                    variants={fadeUp}
+                    className="text-center text-base leading-6 text-neutral-700 lg:max-w-134.75 lg:text-left"
+                >
+                    AI-powered work simulations help you see how candidates perform in real, role-specific
+                    tasks, so you can save time, reduce hiring costs and make better decisions with confidence.
+                </motion.p>
 
-                    </motion.div>
-                    <motion.div
-                        variants={fadeUp}
-                        className="px-2">
-                        <StatsRow />
-                    </motion.div>
-                </div>
+                <motion.div variants={fadeUp} className="flex flex-col items-center gap-4 py-2 lg:flex-row lg:gap-5">
+                    <CTAButton size="lg" label="I’m an employer" onClick={() => navigate("/employer/signup")} />
+                    <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => navigate("/job-board")}
+                        className="h-13 cursor-pointer rounded-xl border-neutral-400 px-10 text-base text-neutral-700 transition-colors duration-300 hover:bg-neutral-100"
+                    >
+                        I’m a candidate
+                    </Button>
+                </motion.div>
+
+                <motion.div variants={fadeUp} className="pt-2 lg:pt-6">
+                    <StatsRow />
+                </motion.div>
             </div>
-            <motion.div
-                variants={fadeUp}
-                className="lg:flex-1 lg:w-122.75 lg:h-139.5">
-                <GradientCard />
+
+            <motion.div variants={fadeUp} className="lg:w-122.75 lg:flex-none">
+                <HeroDemo />
             </motion.div>
-
-
         </motion.section>
     );
-}
+};
 
 export default HeroSection;
