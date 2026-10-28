@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 
-const ITEM_TEXT = "CAPABILITY FIRST HIRING";
+const ITEM_TEXT = "CAPABILITY-FIRST HIRING";
 const REPEAT_COUNT = 8;
 
 const MarqueeContent = () => {
@@ -8,6 +8,7 @@ const MarqueeContent = () => {
         <div
             className="flex shrink-0 items-center gap-12"
             aria-hidden="true"
+            aria-label="Capability-first hiring"
         >
             {Array.from({ length: REPEAT_COUNT }).map((_, i) => (
                 <div key={i} className="flex shrink-0 items-center gap-12">
