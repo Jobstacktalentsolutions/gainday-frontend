@@ -1,36 +1,31 @@
+import { motion } from "motion/react";
+import { fadeUp, staggerContainer } from "@/lib/motion/variants";
+import { GlowOrb } from "./GlowOrb";
 import ProblemCardContainer from "./ProblemCardContainer";
 import SectionTag from "./SectionTag";
-import { motion } from "motion/react";
-import { staggerContainer } from "@/lib/motion/variants";
-import { fadeUp } from "@/lib/motion/variants";
 
-const ProblemSection = () => {
-    return (
-        <motion.section
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-            className="px-6 flex flex-col gap-15">
-            <motion.div
-                variants={fadeUp}
-                className="flex flex-col items-center justify-center">
-                <SectionTag label="THE PROBLEM" />
-                <h2 className="tracking-[-0.32px] text-[32px] leading-9.5 text-center mt-3  lg:my-4 lg:text-[48px]">
-                    Hiring Used to Mean Guessing
-                </h2>
-                <p className="text-neutral-700 text-[16px] text-center mt-1">
-                    Hiring still begins with assumptions,
-                    and AI has made those assumptions cheaper to fake.
-                </p>
-            </motion.div>
+const ProblemSection = () => (
+    <motion.section
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        className="relative isolate flex flex-col gap-15 overflow-hidden px-6 pb-25 lg:gap-20 lg:px-30"
+    >
+        {/* Ambient artifacts behind the whole section */}
+        <GlowOrb tone="blue" className="-left-32 top-1/3 size-112 opacity-60" />
+        <GlowOrb tone="amber" className="-right-32 top-1/2 size-112 opacity-60" />
 
-            <div className="pb-25">
-                <ProblemCardContainer />
-            </div>
+        <motion.div variants={fadeUp} className="flex flex-col items-center justify-center gap-4 text-center">
+            <SectionTag label="THE PROBLEM" />
+            <h2 className="heading-2 text-black">Hiring Used to Mean Guessing</h2>
+            <p className="max-w-155 text-base leading-6 text-neutral-700">
+                Hiring still begins with assumptions, and AI has made those assumptions cheaper to fake.
+            </p>
+        </motion.div>
 
-        </motion.section>
-    );
-}
+        <ProblemCardContainer />
+    </motion.section>
+);
 
 export default ProblemSection;
