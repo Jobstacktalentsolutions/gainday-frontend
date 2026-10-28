@@ -3,38 +3,32 @@ import useCountUp from "@/lib/motion/useCountUp";
 interface Stat {
     value: string;
     label: string;
+    /** Count down from this number instead of up from 0. */
+    from?: number;
 }
-
 
 const stats: Stat[] = [
     { value: "318+", label: "Applications in 48hrs" },
-    { value: "#1", label: "Predictive Validity" },
+    { value: "£0", label: "to post a role", from: 15 },
     { value: "95%", label: "Faster Hiring" },
-]
+];
 
-
-const StatItem = ({ value, label }: Stat) => {
-
-    const { ref, display } = useCountUp(value);
+const StatItem = ({ value, label, from }: Stat) => {
+    const { ref, display } = useCountUp(value, 1.5, from);
 
     return (
-        <div className="flex-1 flex flex-col items-center justify-center gap-0.5">
-            <p
-                ref={ref}
-                className="text-[28px] leading-14.5 tracking-[-0.48px] text-black"
-            >
+        <div className="flex w-30 flex-col items-center justify-center gap-0.5 lg:w-38">
+            <p ref={ref} className="stat-number tabular-nums text-black">
                 {display}
             </p>
-            <p className="text-base text-center leading-6 text-neutral-700">{label}</p>
-
+            <p className="text-center text-base leading-6 text-neutral-700">{label}</p>
         </div>
     );
-
-}
+};
 
 export function StatsRow() {
     return (
-        <div className="flex justify-center items-center gap-[34.5px]">
+        <div className="flex items-start justify-center gap-2 lg:gap-5">
             {stats.map((stat) => (
                 <StatItem key={stat.label} {...stat} />
             ))}
