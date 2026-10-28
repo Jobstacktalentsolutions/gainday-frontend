@@ -1,66 +1,72 @@
+import { ArrowRight } from "lucide-react";
 import { motion } from "motion/react";
-import HowItWorksColumn from "./HowItWorksColumn";
-import { HighlightBox } from "./HighlightBox";
 import { fadeUp, staggerContainer } from "@/lib/motion/variants";
-
+import { HighlightBox } from "./HighlightBox";
+import { HowItWorksCard, type StepTone } from "./HowItWorksCard";
+import { SectionSheen } from "./SectionSheen";
 
 const candidateSteps = [
-    { number: "01", text: "Clicks apply — no CV upload as step one." },
-    { number: "02", text: "Completes a challenge generated from the job description." },
-    { number: "03", text: "Task is scored against role-relevant competencies." },
-    { number: "04", text: "Results stack into their Capability Passport." },
-    { number: "05", text: "The passport travels to the next application." },
-]
+    "Clicks apply, no CV upload as step one.",
+    "Complete a challenge generated from the job description.",
+    "Task is scored against role-relevant competencies. Results stack into your Capability Passport.",
+];
 
 const employerSteps = [
-    { number: "01", text: "Posts a role and reviews the generated challenge." },
-    { number: "02", text: "Receives a leaderboard ranked on objective task performance." },
-    { number: "03", text: "Reads actual task outputs, not adjectives." },
-    { number: "04", text: "Reviews anonymised Capability Passports for consistency." },
-    { number: "05", text: "Unlocks only the candidates worth contacting." },
-]
+    "Posts a role and reviews the generated challenge.",
+    "Receives a leaderboard ranked on objective task performance.",
+    "Reviews anonymised Capability Passports for consistency. Unlocks only the candidates worth contacting.",
+];
 
-const HowItWorksSection = () => {
-    return (
-        <motion.section
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.20 }}
-            className="scroll-mt-28 flex w-full flex-col items-center gap-15 bg-neutral-950 px-6 py-20 lg:gap-20 lg:px-30 lg:py-30"        >
-            <motion.div
-                variants={fadeUp}
-                className="flex flex-col items-center gap-3"
-            >
-                <div className="flex items-center gap-2.5 rounded-md border border-neutral-100 px-2.5 py-1.5 lg:px-3 lg:py-2.5">
-                    <span className="size-1.5 rounded-full bg-secondary-500" />
-                    <p className="text-[10px] text-neutral-100 lg:text-sm">HOW IT WORKS</p>
+const StepRow = ({ heading, steps, tone }: { heading: string; steps: string[]; tone: StepTone }) => (
+    <motion.div variants={fadeUp} className="flex w-full flex-col gap-5">
+        <h3 className="text-[18px] leading-[1.2] text-neutral-50">{heading}</h3>
+        <ol className="flex flex-col gap-4 lg:flex-row lg:items-stretch lg:gap-0">
+            {steps.map((text, i) => (
+                <div key={text} className="contents">
+                    <HowItWorksCard number={String(i + 1).padStart(2, "0")} text={text} tone={tone} />
+                    {i < steps.length - 1 && (
+                        <li aria-hidden="true" className="hidden items-center px-3 text-neutral-400 lg:flex">
+                            <ArrowRight className="size-6" />
+                        </li>
+                    )}
                 </div>
-                <div className="flex flex-col items-center gap-2 lg:gap-2">
-                    <p className="text-center text-[32px] leading-9.5 tracking-[-0.32px] text-neutral-50 lg:text-[48px] lg:leading-14.5 lg:tracking-[-0.48px]">
-                        The CV process is broken.
-                    </p>
-                    <HighlightBox
-                        color="secondary"
-                        className="text-[30px] text-center leading-9.5 tracking-[-0.32px] lg:text-[48px] lg:leading-14.5 lg:tracking-[-0.48px] whitespace-nowrap"
-                    >
-                        Hero&rsquo;s what replaces it
-                    </HighlightBox>
+            ))}
+        </ol>
+    </motion.div>
+);
 
-                </div>
-                <p className="max-w-77.25 text-center text-base text-neutral-300  lg:max-w-125.5  ">
-                    Gainday helps candidates demonstrate capability and helps employers
-                    identify it faster.
-                </p>
+const HowItWorksSection = () => (
+    <motion.section
+        id="assessment-process"
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        className="relative isolate flex w-full scroll-mt-28 flex-col items-center gap-15 overflow-hidden bg-neutral-950 px-6 py-20 lg:gap-20 lg:px-30 lg:py-30"
+    >
+        <SectionSheen />
 
-            </motion.div>
-
-            <div className="flex w-full flex-col items-start gap-15 lg:w-auto lg:flex-row lg:gap-45">
-                <HowItWorksColumn heading="Candidate" steps={candidateSteps} color="secondary" />
-                <HowItWorksColumn heading="Employer" steps={employerSteps} color="info" />
+        <motion.div variants={fadeUp} className="flex flex-col items-center gap-3">
+            <div className="flex items-center gap-2.5 rounded-md border border-neutral-100 px-2.5 py-1.5 lg:px-3 lg:py-2.5">
+                <span className="size-1.5 rounded-full bg-secondary-500" />
+                <p className="text-[10px] text-neutral-100 lg:text-sm">HOW IT WORKS</p>
             </div>
-        </motion.section>
-    )
-}
+            <div className="flex flex-col items-center gap-2">
+                <p className="heading-2 text-center text-neutral-50">From job description</p>
+                <HighlightBox color="secondary" className="heading-2 whitespace-normal text-center">
+                    to demonstrated capability
+                </HighlightBox>
+            </div>
+            <p className="max-w-125.5 text-center text-base text-neutral-300">
+                Gainday helps candidates demonstrate capability and helps employers identify it faster.
+            </p>
+        </motion.div>
+
+        <div className="flex w-full max-w-300 flex-col gap-10 lg:gap-12">
+            <StepRow heading="Candidate" steps={candidateSteps} tone="amber" />
+            <StepRow heading="Employer" steps={employerSteps} tone="blue" />
+        </div>
+    </motion.section>
+);
 
 export default HowItWorksSection;
