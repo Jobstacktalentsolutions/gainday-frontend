@@ -33,7 +33,7 @@ const SolutionSection = () => {
                 <motion.div variants={fadeUp} className="flex flex-col gap-6 lg:flex-none">
                     <LandingPhoto
                         variant="simulation"
-                        src="/images/landing/candidate.webp"
+                        src="/images/landing/candidate.png"
                         alt="A candidate smiling at their laptop after finishing a work simulation"
                     />
                     <div className="lg:hidden">
@@ -58,7 +58,7 @@ const SolutionSection = () => {
                 <motion.div variants={fadeUp} className="flex flex-col gap-6 lg:flex-none">
                     <LandingPhoto
                         variant="framed"
-                        src="/images/landing/employer.webp"
+                        src="/images/landing/employer.png"
                         alt="An employer reviewing candidate results on a tablet"
                     />
                     <div className="lg:hidden">

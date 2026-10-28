@@ -32,7 +32,7 @@ export const LandingPhoto = ({ src, alt, variant }: LandingPhotoProps) => (
             <div className={`relative aspect-[395/492] overflow-hidden rounded-3xl shadow-[0_32px_64px_-28px_rgba(27,23,255,0.5)] ${FRAME}`}>
                 <img src={src} alt={alt} width={790} height={984} loading="lazy" className="size-full object-cover" />
                 {/* Scrim keeps the white logo and chip readable on any photo */}
-                <div aria-hidden="true" className="absolute inset-0 bg-linear-to-b from-black/25 via-transparent to-black/35" />
+                <div aria-hidden="true" className="absolute inset-0 bg-linear-to-b from-black/35 via-transparent to-black/45" />
                 {/* Thin inner outline */}
                 <div aria-hidden="true" className="pointer-events-none absolute inset-[6%] rounded-2xl border border-white/55" />
 
