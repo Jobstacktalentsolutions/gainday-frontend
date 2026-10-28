@@ -277,62 +277,7 @@
   background: rgba(0, 0, 0, 0.3);
 }
 
-/* ── Animated blue-light border for active FAQ items ── */
-@keyframes faq-border-spin {
-  from {
-    --faq-angle: 0deg;
-  }
 
-  to {
-    --faq-angle: 360deg;
-  }
-}
-
-@property --faq-angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-
-.faq-glow-border {
-  position: relative;
-  isolation: isolate;
-}
-
-.faq-glow-border::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1.5px;
-  background: conic-gradient(from var(--faq-angle),
-      /* ── First light segment ── */
-      transparent 0%,
-      var(--color-primary-400) 6%,
-      var(--color-primary-500) 10%,
-      var(--color-primary-400) 14%,
-      transparent 18%,
-      /* ── Gap ── */
-      transparent 40%,
-      /* ── Second light segment (opposite side) ── */
-      var(--color-primary-400) 46%,
-      var(--color-primary-500) 50%,
-      var(--color-primary-400) 54%,
-      transparent 58%,
-      /* ── Gap ── */
-      transparent 100%);
-  -webkit-mask-image:
-    linear-gradient(#fff 0 0),
-    linear-gradient(#fff 0 0);
-  -webkit-mask-clip: content-box, border-box;
-  -webkit-mask-composite: destination-out;
-  mask-image:
-    linear-gradient(#fff 0 0),
-    linear-gradient(#fff 0 0);
-  animation: faq-border-spin 3s linear infinite;
-  pointer-events: none;
-  z-index: 1;
-}
 
 /* ── Synchronized 360° Spiral + Scale Animation for Button Icons ── */
 @keyframes arrow-spiral {
