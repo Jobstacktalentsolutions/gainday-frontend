@@ -12,7 +12,7 @@ export const mockAdminJobs: AdminJob[] = [
   {
     id: "job_2",
     title: "Finance Associate",
-    company: "Stanbic IBTC",
+    company: "Apex Financial",
     applicantCount: 12,
     status: "live",
     createdAt: "2026-10-02T10:00:00.000Z",
@@ -20,7 +20,7 @@ export const mockAdminJobs: AdminJob[] = [
   {
     id: "job_3",
     title: "Sales Analyst",
-    company: "Interswitch",
+    company: "Nexus Technologies",
     applicantCount: 0,
     status: "closed",
     createdAt: "2026-10-03T10:00:00.000Z",

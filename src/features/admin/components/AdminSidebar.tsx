@@ -15,6 +15,7 @@ import {
   LifeBuoy,
   Bell,
   Coins,
+  Star,
 } from "lucide-react";
 import SidebarNavItem from "./SidebarNavItem";
 import brandLogo from "@/assets/gainday.svg";
@@ -59,6 +60,7 @@ const NAV_GROUPS: NavGroup[] = [
       { to: "/admin/content-moderation", label: "Content Moderation", icon: ShieldAlert },
       { to: "/admin/ai-oversight", label: "AI Oversight", icon: Bot },
       { to: "/admin/support-messages", label: "Support Inquiries", icon: LifeBuoy },
+      { to: "/admin/reviews", label: "Experience Reviews", icon: Star },
       { to: NOTIFICATIONS_PATH, label: "System Alerts", icon: Bell },
     ],
   },

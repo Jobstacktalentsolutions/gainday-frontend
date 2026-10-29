@@ -3,8 +3,8 @@ import { getFirstName } from "./getFirstName"
 
 describe("getFirstName", () => {
     it("returns the first word of a full name", () => {
-        expect(getFirstName("Amara Okafor")).toBe("Amara")
-        expect(getFirstName("  Amara   Okafor ")).toBe("Amara")
+        expect(getFirstName("Jane Doe")).toBe("Jane")
+        expect(getFirstName("  Jane   Doe ")).toBe("Jane")
     })
 
     it("returns null when there's no usable name", () => {

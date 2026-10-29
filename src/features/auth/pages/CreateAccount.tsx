@@ -89,7 +89,7 @@ const CreateAccount = () => {
             >
                 <FormInput
                     label="Full name"
-                    placeholder="Amara Chukwu"
+                    placeholder="Jane Doe"
                     required
                     {...register("fullName")}
                     error={errors.fullName?.message}
@@ -98,7 +98,7 @@ const CreateAccount = () => {
                 <FormInput
                     label="Work Email"
                     type="email"
-                    placeholder="amara@yourcompany.com"
+                    placeholder="jane@yourcompany.com"
                     required
                     autoComplete="email"
                     {...register("email")}
@@ -106,7 +106,7 @@ const CreateAccount = () => {
                 />
                 <FormInput
                     label="Company's Name"
-                    placeholder="e.g Amara Capital"
+                    placeholder="e.g Acme Capital"
                     required
                     {...register("companyName")}
                     error={errors.companyName?.message}

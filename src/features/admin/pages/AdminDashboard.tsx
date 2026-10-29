@@ -15,6 +15,7 @@ import { useDashboardStats, type Timeframe } from "../hooks/useDashboardStats";
 import { useAdminNotificationStats } from "../hooks/useAdminNotifications";
 import { AnalyticsChart } from "../components/AnalyticsChart";
 import RevenueSection from "../components/RevenueSection";
+import VisitorActivitySection from "../components/VisitorActivitySection";
 import { DashboardActionCards } from "../components/DashboardActionCards";
 import { DashboardSystemAlerts } from "../components/DashboardSystemAlerts";
 import StatusBadge from "../components/StatusBadge";
@@ -158,6 +159,9 @@ const AdminDashboard = () => {
         </div>
       </div>
 
+      {/* 2b. Visitors, right under the KPI cards since it is the main activity view */}
+      <VisitorActivitySection timeframe={timeframe} />
+
       {/* 3. Time-Series Analytics Chart */}
       <AnalyticsChart
         data={analytics}
@@ -168,6 +172,7 @@ const AdminDashboard = () => {
 
       {/* 3b. Revenue from credit packs, follows the same timeframe */}
       <RevenueSection timeframe={timeframe} />
+
 
       {/* 4. Bottom Activity & Moderation Section */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">

@@ -1,6 +1,7 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import AppLoader from "@/components/ui/AppLoader";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
+import ExperienceReviewPrompt from "@/features/reviews/components/ExperienceReviewPrompt";
 
 // Layout route that keeps every candidate page behind sign-in. Signed-out visitors are sent to
 // candidate sign-in with a ?redirect back to where they were going (the sign-in page already
@@ -22,7 +23,12 @@ const CandidateRoute = () => {
         return <Navigate to={user?.role === "EMPLOYER" ? "/employer/jobs" : "/landing"} replace />;
     }
 
-    return <Outlet />;
+    return (
+        <>
+            <Outlet />
+            <ExperienceReviewPrompt />
+        </>
+    );
 };
 
 export default CandidateRoute;
