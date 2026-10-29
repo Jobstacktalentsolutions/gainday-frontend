@@ -41,7 +41,7 @@ const BuildSection = () => {
 
                 <div className="h-55 w-full overflow-hidden rounded-xl bg-white/10 ring-1 ring-white/20 lg:h-86.5 lg:max-w-124.75">
                     <img
-                        src="/images/landing/cta.png"
+                        src="/images/landing/cta.jpg"
                         alt="A smiling professional working on a laptop"
                         width={500}
                         height={346}
