@@ -16,8 +16,8 @@ const SolutionSection = () => {
             viewport={{ once: true, amount: 0.15 }}
             className="flex flex-col gap-16 px-6 py-16 lg:gap-30 lg:py-25"
         >
-            <div id="for-candidates" className="scroll-mt-28 flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-44.5 lg:px-30">
-                <motion.div variants={fadeUp} className="flex flex-col items-start gap-4 lg:flex-1">
+            <div id="for-candidates" className="scroll-mt-28 flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-15 lg:px-55">
+                <motion.div variants={fadeUp} className="flex flex-col items-start gap-4 lg:flex-1 lg:max-w-136">
                     <SectionTag label="FOR CANDIDATES" />
                     <h2 className="heading-2 text-black">Show what you can do. Not just what you&rsquo;ve written.</h2>
                     <p className="text-base leading-6 text-neutral-700">
@@ -42,8 +42,8 @@ const SolutionSection = () => {
                 </motion.div>
             </div>
 
-            <div id="for-employers" className="scroll-mt-28 flex flex-col gap-10 lg:flex-row-reverse lg:items-center lg:justify-between lg:gap-44.5 lg:px-30">
-                <motion.div variants={fadeUp} className="flex flex-col items-start gap-4 lg:flex-1">
+            <div id="for-employers" className="scroll-mt-28 flex flex-col gap-10 lg:flex-row-reverse lg:items-center lg:justify-between lg:gap-15 lg:px-55">
+                <motion.div variants={fadeUp} className="flex flex-col items-start gap-4 lg:flex-1 lg:max-w-136">
                     <SectionTag label="FOR EMPLOYERS" />
                     <h2 className="heading-2 text-black">See the talent, not the paperwork.</h2>
                     <p className="text-base leading-6 text-neutral-700">
