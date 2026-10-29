@@ -41,7 +41,7 @@ export const HowItWorksCard = ({ number, text, tone }: HowItWorksCardProps) => {
                 <span
                     aria-hidden="true"
                     className={cn(
-                        "pointer-events-none absolute -bottom-20 -right-20 size-64 rounded-full opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100",
+                        "pointer-events-none absolute -bottom-20 -right-20 size-50 rounded-full blur-2xl opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100",
                         t.glow,
                     )}
                 />
