@@ -1,15 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 import { jobPostingSchema, type JobPostingFormInput } from "../schemas/jobPosting";
 import { useJobDraftStore } from "../stores/useJobDraftStore";
 import { JOB_POSTING_DEFAULT_VALUES } from "../mocks/jobPostingDefaults";
 import JobPostingStepIndicator from "../components/JobPostingStepIndicator";
 import { useSaveJobDraft } from "../hooks/useSaveJobDraft";
 
-
+// Spinner shown in the content area while a lazy step chunk is loading
+const StepContentFallback = () => (
+    <div className="flex flex-1 items-center justify-center py-20">
+        <Loader2 className="size-8 animate-spin text-primary-400" aria-label="Loading" />
+    </div>
+);
 
 const JobPostingWizardLayout = () => {
     const navigate = useNavigate();
@@ -89,14 +95,16 @@ const JobPostingWizardLayout = () => {
 
                     {/* Main content area */}
                     <div className="flex min-w-0 flex-1 flex-col lg:px-10 lg:py-10">
-                        <Outlet context={{
-                            onSaveAndExit: handleSaveAndExit,
-                            onDiscardDraft: handleDiscardDraft,
-                            isSavingExit,
-                            jobId,
-                            setJobId,
-                            setIsDone,
-                        }} />
+                        <Suspense fallback={<StepContentFallback />}>
+                            <Outlet context={{
+                                onSaveAndExit: handleSaveAndExit,
+                                onDiscardDraft: handleDiscardDraft,
+                                isSavingExit,
+                                jobId,
+                                setJobId,
+                                setIsDone,
+                            }} />
+                        </Suspense>
                     </div>
                 </div>
             </div>
