@@ -1,12 +1,19 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Cookie } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const STORAGE_KEY = "gainday-cookie-notice-acknowledged";
+const STORAGE_KEY = "gainday-cookie-notice-shown";
 
-// Without storage the notice shows on each visit, which is the safe default.
-function isAcknowledged(): boolean {
+// Public pages only. Admin, dashboards and profile pages are behind sign-in and never show the notice.
+const PUBLIC_PATHS = ["/landing", "/pricing", "/job-board", "/support", "/terms", "/privacy"];
+
+function isPublicPath(pathname: string): boolean {
+  return PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+}
+
+// Without storage the notice can show on each visit, which is the safe default.
+function wasShown(): boolean {
   try {
     return localStorage.getItem(STORAGE_KEY) === "true";
   } catch {
@@ -14,7 +21,7 @@ function isAcknowledged(): boolean {
   }
 }
 
-function rememberAcknowledged(): void {
+function rememberShown(): void {
   try {
     localStorage.setItem(STORAGE_KEY, "true");
   } catch {
@@ -22,16 +29,17 @@ function rememberAcknowledged(): void {
   }
 }
 
-/** One-time notice about the visitor cookie. Dismissing it is remembered on this browser. */
+/** Shown once per browser, the first time a public page is opened. */
 export function CookieNotice() {
-  const [visible, setVisible] = useState(() => !isAcknowledged());
+  const { pathname } = useLocation();
+  const [dismissed, setDismissed] = useState(false);
+  const shown = !dismissed && !wasShown() && isPublicPath(pathname);
 
-  if (!visible) return null;
+  useEffect(() => {
+    if (shown) rememberShown();
+  }, [shown]);
 
-  const dismiss = () => {
-    rememberAcknowledged();
-    setVisible(false);
-  };
+  if (!shown) return null;
 
   return (
     <div
@@ -51,11 +59,11 @@ export function CookieNotice() {
         </p>
       </div>
       {/* Both choices look the same on purpose: refusing must be as easy as accepting. They only close the notice for now. */}
-      <div className="flex justify-end gap-2">
-        <Button variant="outline" size="xs" onClick={dismiss}>
+      <div className="flex justify-start gap-2">
+        <Button variant="outline" size="xs" onClick={() => setDismissed(true)}>
           Reject
         </Button>
-        <Button variant="outline" size="xs" onClick={dismiss}>
+        <Button variant="outline" size="xs" onClick={() => setDismissed(true)}>
           Accept
         </Button>
       </div>

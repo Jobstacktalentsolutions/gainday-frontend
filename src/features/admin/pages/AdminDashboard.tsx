@@ -159,6 +159,9 @@ const AdminDashboard = () => {
         </div>
       </div>
 
+      {/* 2b. Visitors, right under the KPI cards since it is the main activity view */}
+      <VisitorActivitySection timeframe={timeframe} />
+
       {/* 3. Time-Series Analytics Chart */}
       <AnalyticsChart
         data={analytics}
@@ -170,8 +173,6 @@ const AdminDashboard = () => {
       {/* 3b. Revenue from credit packs, follows the same timeframe */}
       <RevenueSection timeframe={timeframe} />
 
-      {/* 3c. Visitors (anonymous and signed in), follows the same timeframe */}
-      <VisitorActivitySection timeframe={timeframe} />
 
       {/* 4. Bottom Activity & Moderation Section */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">

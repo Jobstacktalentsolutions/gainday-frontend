@@ -2,20 +2,27 @@ import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
 import type { Timeframe } from "./useDashboardStats";
 
+/** Distinct visitors in each audience, with the total across all of them. */
+export interface AudienceCounts {
+  total: number;
+  anonymous: number;
+  jobSeeker: number;
+  employer: number;
+}
+
 export interface VisitorSeriesPoint {
   label: string;
-  visitors: number;
-  signedInUsers: number;
-  /** Monthly active visitors over the 30 days ending on the point. Null on monthly charts. */
-  mau: number | null;
+  /** Active visitors on the day. Null on monthly charts, which only carry monthly numbers. */
+  dau: AudienceCounts | null;
+  /** Active visitors over the 30 days ending on the point, or over the month on monthly charts. */
+  mau: AudienceCounts;
 }
 
 export interface VisitorActivity {
   timeframe: Timeframe;
   kpis: {
-    dau: number;
-    signedInDau: number;
-    mau: number;
+    dau: AudienceCounts;
+    mau: AudienceCounts;
     stickiness: number;
     newVisitors: number;
     totalVisitors: number;
