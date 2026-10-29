@@ -1,92 +1,33 @@
-import React, { useState, useRef } from "react";
-import { Link,  useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import brandLogo from "@/assets/gainday icon.svg";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { actionButtonVariants } from "@/components/ui/ActionButton";
 import { cn } from "@/lib/utils";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { UserAvatarMenu } from "@/components/ui/UserAvatarMenu";
 import { ViewDashboardButton } from "@/components/ui/ViewDashboardButton";
-import AddItemButton from "@/components/ui/AddItemButton";
-import { StepContinueButton } from "@/components/ui/StepNavigationButtons";
 import AuthChoiceModal from "./AuthChoiceModal";
 
-const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    const id = href.replace("#", "");
-    const element = document.getElementById(id);
-    element?.scrollIntoView({ behavior: "smooth" });
-};
 
 // ---------------------------------------------------------------------------
-// NavItem — simple nav label; chevron state + dropdown are owned by Header
+// NavItem — simple nav label (no dropdown)
 // ---------------------------------------------------------------------------
 interface NavItemProps {
     label: string;
     href?: string;
-    isOpen?: boolean;
-    hasDropdown?: boolean;
-    onMouseEnter?: () => void;
-    onMouseLeave?: () => void;
     onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
-interface NavItemDropdownProps extends NavItemProps {
-    dropdownContent?: React.ReactNode;
-}
-
-const NavItem = ({
-    label,
-    href = "#",
-    isOpen = false,
-    hasDropdown = false,
-    onMouseEnter,
-    onMouseLeave,
-    onClick,
-    dropdownContent,
-}: NavItemDropdownProps) => (
-    <div
-        className="relative"
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
+const NavItem = ({ label, href = "#", onClick }: NavItemProps) => (
+    <a
+        href={href}
+        onClick={onClick}
+        className="flex items-center gap-1 p-2.5 font-sans text-base text-neutral-700 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
     >
-        <a
-            href={href}
-            onClick={onClick}
-            className={cn(
-                "flex items-center gap-1 p-2.5 font-sans text-base text-neutral-700 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700",
-                isOpen && "text-primary-500"
-            )}
-        >
-            {label}
-            {hasDropdown && (
-                <ChevronDown
-                    size={15}
-                    className={cn(
-                        "mt-0.5 shrink-0 transition-transform duration-200",
-                        isOpen && "rotate-180"
-                    )}
-                />
-            )}
-        </a>
-
-        {/* Fixed-width dropdown panel anchored below this nav item */}
-        <AnimatePresence>
-            {isOpen && dropdownContent && (
-                <motion.div
-                    key="employer-dropdown"
-                    initial={{ opacity: 0, y: -8, scale: 0.98 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -8, scale: 0.98 }}
-                    transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="absolute left-0 top-[calc(100%+32px)] rounded-2xl border w-80 border-neutral-200/80 bg-white shadow-xl shadow-neutral-900/10 overflow-hidden z-50"
-                >
-                    {dropdownContent}
-                </motion.div>
-            )}
-        </AnimatePresence>
-    </div>
+        {label}
+    </a>
 );
 
 // ---------------------------------------------------------------------------
@@ -94,16 +35,9 @@ const NavItem = ({
 // ---------------------------------------------------------------------------
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
-    const [employerDropOpen, setEmployerDropOpen] = useState(false);
-    const [browseJobsDropOpen, setBrowseJobsDropOpen] = useState(false);
-    const [pricingDropOpen, setPricingDropOpen] = useState(false);
     const [authMode, setAuthMode] = useState<"login" | "signup" | null>(null);
-    const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const browseCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const pricingCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const { user, isAuthenticated } = useCurrentUser();
     const navigate = useNavigate();
-    // const location = useLocation();
 
     const logoTarget = isAuthenticated
         ? user?.role === "EMPLOYER"
@@ -111,37 +45,11 @@ const Header = () => {
             : "/job-board"
         : "/";
 
-    const postJobTarget =
+
+    const employerTarget =
         isAuthenticated && user?.role === "EMPLOYER"
-            ? "/employer/jobs/new"
+            ? "/employer/jobs"
             : "/employer/signup";
-
-    const openEmployerDrop = () => {
-        if (closeTimer.current) clearTimeout(closeTimer.current);
-        setEmployerDropOpen(true);
-    };
-
-    const closeEmployerDrop = () => {
-        closeTimer.current = setTimeout(() => setEmployerDropOpen(false), 120);
-    };
-
-    const openBrowseJobsDrop = () => {
-        if (browseCloseTimer.current) clearTimeout(browseCloseTimer.current);
-        setBrowseJobsDropOpen(true);
-    };
-
-    const closeBrowseJobsDrop = () => {
-        browseCloseTimer.current = setTimeout(() => setBrowseJobsDropOpen(false), 120);
-    };
-
-    const openPricingDrop = () => {
-        if (pricingCloseTimer.current) clearTimeout(pricingCloseTimer.current);
-        setPricingDropOpen(true);
-    };
-
-    const closePricingDrop = () => {
-        pricingCloseTimer.current = setTimeout(() => setPricingDropOpen(false), 120);
-    };
 
     return (
         <>
@@ -164,72 +72,27 @@ const Header = () => {
                 <nav className="hidden items-center gap-2 lg:flex">
                     <NavItem
                         label="For employers"
-                        href="#for-employers"
-                        isOpen={employerDropOpen}
-                        hasDropdown
-                        onMouseEnter={openEmployerDrop}
-                        onMouseLeave={closeEmployerDrop}
-                        onClick={(e) => scrollToSection(e, "#for-employers")}
-                        dropdownContent={
-                            <div className="p-7">
-                                {/* Promo text */}
-                                <p className="text-xl text-neutral-950 leading-snug mb-6">
-                                    Post a job and get recommended the most capable candidate.
-                                </p>
-
-                                {/* CTA */}
-                                <AddItemButton onClick={() => navigate(postJobTarget)}>
-                                    Post a Job
-                                </AddItemButton>
-                            </div>
-                        }
+                        href={employerTarget}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            navigate(employerTarget);
+                        }}
                     />
                     <NavItem
                         label="Browse jobs"
                         href="/job-board"
-                        isOpen={browseJobsDropOpen}
-                        hasDropdown
-                        onMouseEnter={openBrowseJobsDrop}
-                        onMouseLeave={closeBrowseJobsDrop}
                         onClick={(e) => {
                             e.preventDefault();
                             navigate("/job-board");
                         }}
-                        dropdownContent={
-                            <div className="p-7">
-                                {/* Promo text */}
-                                <p className="text-xl text-neutral-950 leading-snug mb-6">
-                                    Discover roles matched to your skills and start your next chapter.
-                                </p>
-
-                                {/* CTA */}
-                                <StepContinueButton size="sm" onClick={() => navigate("/job-board")}>
-                                    Go to Job Board
-                                </StepContinueButton>
-                            </div>
-                        }
                     />
                     <NavItem
                         label="Pricing"
                         href="/pricing"
-                        isOpen={pricingDropOpen}
-                        hasDropdown
-                        onMouseEnter={openPricingDrop}
-                        onMouseLeave={closePricingDrop}
                         onClick={(e) => {
                             e.preventDefault();
                             navigate("/pricing");
                         }}
-                        dropdownContent={
-                            <div className="p-7">
-                                <p className="text-xl text-neutral-950 leading-snug mb-6">
-                                    Pay only when you unlock a candidate. No subscriptions, no hidden fees.
-                                </p>
-                                <StepContinueButton size="sm" onClick={() => navigate("/pricing")}>
-                                    View Pricing
-                                </StepContinueButton>
-                            </div>
-                        }
                     />
                 </nav>
 
@@ -297,32 +160,13 @@ const Header = () => {
                         className="relative z-50 overflow-hidden lg:hidden border-t border-neutral-200 bg-white min-h-screen"
                     >
                         <div className="flex flex-col gap-1 px-6 py-4">
-                            <a
-                                href="#for-employers"
-                                onClick={(e) => {
-                                    scrollToSection(e, "#for-employers");
-                                    setMenuOpen(false);
-                                }}
+                            <Link
+                                to={employerTarget}
+                                onClick={() => setMenuOpen(false)}
                                 className="py-3 font-sans text-base text-neutral-700 border-b border-neutral-200/50 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
                             >
                                 For employers
-                            </a>
-
-                            {/* Mobile Post Job */}
-                            <div className="flex items-center gap-3 py-3 border-b border-neutral-200/50">
-                                <p className="text-sm text-neutral-500 flex-1">
-                                    Post a job and get recommended the most capable candidate.
-                                </p>
-                                <AddItemButton
-                                    onClick={() => {
-                                        navigate(postJobTarget);
-                                        setMenuOpen(false);
-                                    }}
-                                    className="shrink-0 text-sm"
-                                >
-                                    Post Job
-                                </AddItemButton>
-                            </div>
+                            </Link>
 
                             <Link
                                 to="/job-board"
@@ -332,23 +176,6 @@ const Header = () => {
                                 Browse jobs
                             </Link>
 
-                            {/* Mobile Browse Jobs CTA */}
-                            <div className="flex items-center gap-3 py-3 border-b border-neutral-200/50">
-                                <p className="text-sm text-neutral-500 flex-1">
-                                    Discover roles matched to your skills.
-                                </p>
-                                <StepContinueButton
-                                    size="sm"
-                                    className="shrink-0"
-                                    onClick={() => {
-                                        navigate("/job-board");
-                                        setMenuOpen(false);
-                                    }}
-                                >
-                                    View Jobs
-                                </StepContinueButton>
-                            </div>
-
                             <Link
                                 to="/pricing"
                                 onClick={() => setMenuOpen(false)}
@@ -356,23 +183,6 @@ const Header = () => {
                             >
                                 Pricing
                             </Link>
-
-                            {/* Mobile Pricing CTA */}
-                            <div className="flex items-center gap-3 py-3 border-b border-neutral-200/50">
-                                <p className="text-sm text-neutral-500 flex-1">
-                                    Pay only when you unlock a candidate.
-                                </p>
-                                <StepContinueButton
-                                    size="sm"
-                                    className="shrink-0"
-                                    onClick={() => {
-                                        navigate("/pricing");
-                                        setMenuOpen(false);
-                                    }}
-                                >
-                                    View Pricing
-                                </StepContinueButton>
-                            </div>
 
                             <div className="flex flex-col gap-3 pt-4">
                                 <button
