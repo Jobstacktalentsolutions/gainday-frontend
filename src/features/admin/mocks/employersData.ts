@@ -3,8 +3,8 @@ import type { AdminEmployer } from "../types/user";
 export const mockEmployers: AdminEmployer[] = [
   {
     id: "usr_1",
-    name: "Amaka Nwosu",
-    email: "amaka@finpath.co",
+    name: "Sarah Jenkins",
+    email: "sarah@finpath.co",
     role: "EMPLOYER",
     status: "active",
     employerProfile: {
@@ -15,8 +15,8 @@ export const mockEmployers: AdminEmployer[] = [
   },
   {
     id: "usr_4",
-    name: "Femi Solarin",
-    email: "femi@quantumcap.ng",
+    name: "Marcus Vance",
+    email: "marcus@quantumcap.com",
     role: "EMPLOYER",
     status: "flagged",
     employerProfile: {

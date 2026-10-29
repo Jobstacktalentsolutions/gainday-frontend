@@ -57,7 +57,7 @@ const ContactCard = ({ isUnlocked, contact, onUnlock, isSelected = false }: Cont
                     {/* Decorative stand-in only — real contact details are never sent while locked. */}
                     <div aria-hidden="true" className="flex select-none flex-col gap-1 text-base text-neutral-700 blur-sm">
                         <p>candidate.name@example.com</p>
-                        <p>+234 800 000 0000</p>
+                        <p>+1 555 000 0000</p>
                     </div>
                     <span className="sr-only">Contact details are locked.</span>
                     <ActionButton size="lg" onClick={onUnlock}>

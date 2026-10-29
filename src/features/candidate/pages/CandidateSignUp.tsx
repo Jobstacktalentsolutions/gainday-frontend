@@ -93,7 +93,7 @@ const CandidateSignUp = () => {
             >
                 <FormInput
                     label="Full name"
-                    placeholder="Amara Chukwu"
+                    placeholder="Jane Doe"
                     required
                     {...register("fullName")}
                     error={errors.fullName?.message}
@@ -102,7 +102,7 @@ const CandidateSignUp = () => {
                 <FormInput
                     label="Email"
                     type="email"
-                    placeholder="amara@yourcompany.com"
+                    placeholder="jane@example.com"
                     required
                     autoComplete="email"
                     {...register("email")}
