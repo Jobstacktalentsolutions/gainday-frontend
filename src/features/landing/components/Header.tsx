@@ -110,7 +110,7 @@ const Header = () => {
                                     onClick={() => setAuthMode("login")}
                                     className={cn(
                                         actionButtonVariants({ variant: "outline", size: "lg" }),
-                                        "w-auto cursor-pointer rounded-xl px-10"
+                                        "w-auto cursor-pointer rounded-xl px-10 bg-transparent border-primary-400  hover:border-primary-400 hover:bg-primary-500/5 hover:shadow-[0_0_10px_rgba(75,120,255,0.7)]"
                                     )}
                                 >
                                     Log in
@@ -190,7 +190,7 @@ const Header = () => {
                                         onClick={() => { setMenuOpen(false); setAuthMode("login"); }}
                                         className={cn(
                                             actionButtonVariants({ variant: "outline", size: "lg" }),
-                                            "cursor-pointer rounded-xl"
+                                            "cursor-pointer rounded-xl bg-transparent border-primary-400 shadow-[0_0_14px_rgba(75,120,255,0.45)] hover:border-primary-400 hover:bg-primary-500/5 hover:shadow-[0_0_20px_rgba(75,120,255,0.7)]"
                                         )}
                                     >
                                         Log in
