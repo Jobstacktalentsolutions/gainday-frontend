@@ -32,7 +32,7 @@ const SolutionSection = () => {
 
                 <motion.div variants={fadeUp} className="flex flex-col gap-6 lg:flex-none">
                     <LandingPhoto
-                        variant="simulation"
+                        chipLabel="Simulation completed"
                         src="/images/landing/candidate.jpg"
                         alt="A candidate smiling at their laptop after finishing a work simulation"
                     />
@@ -57,7 +57,7 @@ const SolutionSection = () => {
 
                 <motion.div variants={fadeUp} className="flex flex-col gap-6 lg:flex-none">
                     <LandingPhoto
-                        variant="framed"
+                        chipLabel="Submissions received"
                         src="/images/landing/employer.jpg"
                         alt="An employer reviewing candidate results on a tablet"
                     />
