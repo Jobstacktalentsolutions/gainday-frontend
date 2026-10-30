@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { fadeUp, heroStagger } from "@/lib/motion/variants";
 import { HeroDemo } from "./HeroDemo";
 import { HighlightBox } from "./HighlightBox";
-import { StatsRow } from "./StatsRow";
 import CTAButton from "./solutionSection/CTAButton";
 
 const HeroSection = () => {
@@ -51,9 +50,9 @@ const HeroSection = () => {
                     </Button>
                 </motion.div>
 
-                <motion.div variants={fadeUp} className="pt-2 lg:pt-6">
+                {/* <motion.div variants={fadeUp} className="pt-2 lg:pt-6">
                     <StatsRow />
-                </motion.div>
+                </motion.div> */}
             </div>
 
             <motion.div variants={fadeUp} className="w-full lg:w-160 lg:flex-none">

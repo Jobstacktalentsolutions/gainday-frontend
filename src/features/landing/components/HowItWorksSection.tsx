@@ -7,14 +7,14 @@ import { SectionSheen } from "./SectionSheen";
 
 const candidateSteps = [
     "Clicks apply, no CV upload as step one.",
-    "Complete a challenge generated from the job description.",
+    "Complete a role-relevant task generated from the job description.",
     "Task is scored against role-relevant competencies. Results stack into your Capability Passport.",
 ];
 
 const employerSteps = [
-    "Posts a role and reviews the generated challenge.",
-    "Receives a leaderboard ranked on objective task performance.",
-    "Reviews anonymised Capability Passports for consistency. Unlocks only the candidates worth contacting.",
+    "Posts a role and reviews the generated role-relevant task.",
+    "Receives a shortlist ranked on objective task performance.",
+    "Reviews anonymised shortlist and capability passports. Unlocks only the candidates worth contacting.",
 ];
 
 const StepRow = ({ heading, steps, tone }: { heading: string; steps: string[]; tone: StepTone }) => (
