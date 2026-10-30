@@ -3,11 +3,13 @@ import { useInView, useReducedMotion } from "motion/react";
 import { GlowOrb } from "./GlowOrb";
 import GradientCard from "./GradientCard";
 
+// Must match the encoded video. Width is 1200; set the height to what ffprobe printed.
+const VIDEO_WIDTH = 1200;
+const VIDEO_HEIGHT = 675;
 const POSTER = "/media/hero-demo-poster.webp";
 
-// The employer demo loop. Files live in /public/media (see the encoding notes). Plays only
-// while visible, shows just the poster for reduced-motion users, and falls back to the old
-// gradient card if the video can't load, so the hero never looks broken.
+// Plays only while visible, shows just the poster for reduced-motion users, and falls back
+// to the gradient card if the video can't load, so the hero never looks broken.
 export const HeroDemo = () => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const inView = useInView(videoRef, { amount: 0.3 });
@@ -29,20 +31,25 @@ export const HeroDemo = () => {
             {failed ? (
                 <GradientCard />
             ) : (
-                <div className="relative aspect-5/6 w-full animate-float-soft overflow-hidden rounded-2xl border border-white/60 bg-neutral-100 shadow-[0_32px_64px_-24px_rgba(27,23,255,0.45)] motion-reduce:animate-none">
+                <div
+                    className="relative w-full animate-float-soft overflow-hidden rounded-2xl border border-white/60 bg-neutral-100 shadow-[0_32px_64px_-24px_rgba(27,23,255,0.45)] motion-reduce:animate-none"
+                    style={{ aspectRatio: `${VIDEO_WIDTH} / ${VIDEO_HEIGHT}` }}
+                >
                     <video
                         ref={videoRef}
                         className="size-full object-cover"
+                        width={VIDEO_WIDTH}
+                        height={VIDEO_HEIGHT}
                         poster={POSTER}
                         muted
                         loop
                         playsInline
                         preload="metadata"
                         aria-label="Short demo: an employer opens a job, filters the submissions and picks a candidate"
-                        onError={() => setFailed(true)}
                     >
                         <source src="/media/hero-demo.webm" type="video/webm" />
-                        <source src="/media/hero-demo.mp4" type="video/mp4" />
+                        {/* Errors fire on <source>, not <video>. The last source failing means nothing can play. */}
+                        <source src="/media/hero-demo.mp4" type="video/mp4" onError={() => setFailed(true)} />
                     </video>
                 </div>
             )}
