@@ -58,7 +58,7 @@ const HeroSection = () => {
                 </motion.div>
             </div>
 
-            <motion.div variants={fadeUp} className="lg:w-122.75 lg:flex-none">
+            <motion.div variants={fadeUp} className="lg:w-142.5 lg:flex-none">
                 <HeroDemo />
             </motion.div>
         </motion.section>
