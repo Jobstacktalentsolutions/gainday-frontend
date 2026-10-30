@@ -26,7 +26,7 @@ export const GradientFrame = ({ designWidth, angle, padX, padY, className, child
 
     return (
         <div
-            className={cn("relative w-full overflow-hidden rounded-xl [container-type:inline-size]", className)}
+            className={cn("relative w-full overflow-hidden rounded-xl @container", className)}
             style={{ background: `linear-gradient(${angle}deg, #1B17FF 1.44%, #100E99 61.68%)` }}
         >
             <span
