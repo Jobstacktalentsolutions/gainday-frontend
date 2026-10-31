@@ -20,6 +20,7 @@ import { ActionButton } from "@/components/ui/ActionButton";
 import Header from "@/features/landing/components/Header";
 import { Footer } from "@/features/landing/components/footer/Footer";
 import spinner from "@/assets/Spinner.svg";
+import { LEGAL_COMPANY } from "@/features/legal/content/shared";
 
 const TOPIC_OPTIONS = [
   { value: "Account Suspension Appeal", label: "Account Suspension Appeal" },
@@ -148,10 +149,10 @@ const SupportPage = () => {
                     Send an email directly to our support desk:
                   </p>
                   <a
-                    href="mailto:support@gainday.com"
+                    href={`mailto:${LEGAL_COMPANY.email}`}
                     className="inline-block mt-2 font-semibold text-primary-600 hover:text-primary-700 text-base underline underline-offset-2 transition-colors"
                   >
-                    support@gainday.com
+                    {LEGAL_COMPANY.email}
                   </a>
                 </div>
               </div>
@@ -170,7 +171,7 @@ const SupportPage = () => {
                   <p className="text-sm text-neutral-600 mt-1">
                     Our team reviews all inquiries within{" "}
                     <span className="font-semibold text-neutral-900">
-                      24–48 hours
+                      24-48 hours
                     </span>
                     . Account access and suspension appeals receive priority attention.
                   </p>
@@ -304,7 +305,7 @@ const SupportPage = () => {
                         <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
                         <span>
                           {(supportMutation.error as any)?.response?.data?.message ||
-                            "Failed to submit support request. Please try again or email support@gainday.com directly."}
+                            `Failed to submit support request. Please try again or email ${LEGAL_COMPANY.email} directly.`}
                         </span>
                       </div>
                     )}
