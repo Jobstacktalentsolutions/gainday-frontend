@@ -1,29 +1,5 @@
 import type { ReactNode } from "react";
 
-const outline = "size-5 fill-none stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round]";
-
-const XIcon = () => (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5 fill-current">
-        <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
-    </svg>
-);
-
-const InstagramIcon = () => (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className={outline}>
-        <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-        <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-    </svg>
-);
-
-const LinkedInIcon = () => (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className={outline}>
-        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-        <rect width="4" height="12" x="2" y="9" />
-        <circle cx="4" cy="4" r="2" />
-    </svg>
-);
-
 interface SocialLink {
     label: string;
     href: string;
@@ -31,9 +7,21 @@ interface SocialLink {
 }
 
 export const SOCIAL_LINKS: SocialLink[] = [
-    { label: "X", href: "https://x.com/gaindayltd", icon: <XIcon /> },
-    { label: "Instagram", href: "https://www.instagram.com/gaindayltd/", icon: <InstagramIcon /> },
-    { label: "LinkedIn", href: "https://www.linkedin.com/company/gainday/", icon: <LinkedInIcon /> },
+    {
+        label: "X",
+        href: "https://x.com/gaindayltd",
+        icon: <img src="/social-icons/twitter.png" alt="" className="size-5 object-contain" />,
+    },
+    {
+        label: "Instagram",
+        href: "https://www.instagram.com/gaindayltd/",
+        icon: <img src="/social-icons/instagram.png" alt="" className="size-5 object-contain" />,
+    },
+    {
+        label: "LinkedIn",
+        href: "https://www.linkedin.com/company/gainday/",
+        icon: <img src="/social-icons/linkedin.png" alt="" className="size-5 object-contain" />,
+    },
 ];
 
 export const SocialIcons = () => (
@@ -45,7 +33,7 @@ export const SocialIcons = () => (
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Gainday on ${label} (opens in a new tab)`}
-                    className="block text-neutral-700 transition duration-300 hover:scale-110 hover:text-primary-500"
+                    className="block transition duration-300 hover:scale-110 hover:opacity-75"
                 >
                     {icon}
                 </a>
