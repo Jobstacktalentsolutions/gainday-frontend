@@ -10,7 +10,7 @@ const ProblemSection = () => (
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
-        className="relative isolate flex flex-col gap-15 overflow-hidden px-6 pb-25 lg:gap-20 lg:px-30"
+        className="relative isolate flex flex-col gap-15 overflow-hidden px-6 pb-25 lg:gap-20 lg:px-15"
     >
         {/* Ambient artifacts behind the whole section */}
         <GlowOrb tone="blue" className="-left-32 top-1/3 size-112 opacity-60" />
