@@ -6,7 +6,7 @@ interface SocialLink {
     icon: ReactNode;
 }
 
-export const SOCIAL_LINKS: SocialLink[] = [
+const SOCIAL_LINKS: SocialLink[] = [
     {
         label: "X",
         href: "https://x.com/gaindayltd",
