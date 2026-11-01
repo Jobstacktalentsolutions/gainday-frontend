@@ -38,7 +38,7 @@ const OPTIONS = {
         employer: {
             icon: Briefcase,
             label: "I'm an employer",
-            description: "Review submissions and manage your active roles.",
+            description: "Review applications and manage your active roles.",
             href: "/employer/signin",
         },
     },

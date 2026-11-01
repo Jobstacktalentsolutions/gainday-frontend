@@ -111,7 +111,7 @@ const SignIn = () => {
     return (
         <AuthCard
             title="Log in to Gainday"
-            subtitle="Review submissions and manage job posts."
+            subtitle="Review applications and manage job posts."
         >
             <form
                 onSubmit={handleSubmit((values) => signInMutation.mutate(values))}
