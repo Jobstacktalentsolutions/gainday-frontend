@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Clock, MapPin, Wallet, Share2, Sparkles, Check } from "lucide-react";
+import { Clock, MapPin, Wallet, Share2, Check } from "lucide-react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -14,6 +14,7 @@ import { useAppliedJobIds } from "../hooks/useAppliedJobIds";
 import { formatPostedDate, formatSalaryRange, hasSalary } from "../utils/formatters";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { getJobShareUrl, shareLink } from "@/lib/shareLink";
+import { cleanText } from "@/lib/cleanText";
 
 export default function JobDetailsPage() {
     const { jobId } = useParams<{ jobId: string }>();
@@ -26,6 +27,7 @@ export default function JobDetailsPage() {
 
     const isApplied = Boolean(job && appliedSet.has(job.id));
     const isClosed = job?.status === "CLOSED";
+    const businessProblem = cleanText(job?.businessProblem);
 
     if (isLoading) {
         return (
@@ -73,6 +75,10 @@ export default function JobDetailsPage() {
 
     function handleSignUp() {
         navigate(`/candidate/signup?redirect=${encodeURIComponent(`/job-board/${job!.id}/pre-simulation`)}`);
+    }
+
+    function handleSignIn() {
+        navigate(`/candidate/signin?redirect=${encodeURIComponent(`/job-board/${job!.id}/pre-simulation`)}`);
     }
 
 
@@ -202,14 +208,11 @@ export default function JobDetailsPage() {
 
                     <div className="h-px w-full bg-neutral-200" />
                     <section className="flex flex-col gap-4 rounded-xl bg-primary-50 p-4">
-                        <span className="flex w-fit items-center gap-1.5 rounded-md border border-primary-500 px-2 py-2 text-[10px] text-primary-500">
-                            <Sparkles className="size-3.5 text-secondary-500" />
-                            FULL TRANSPARENCY
-                        </span>
-                        {Boolean(job.businessProblem?.trim()) && (
+                        {businessProblem && (
                             <>
+                                <h2 className="text-[24px] leading-8 text-primary-950">About this role</h2>
                                 <p className="text-[16px] text-primary-950">What this hire needs to solve?</p>
-                                <p className="text-[16px] text-neutral-700">{job.businessProblem}</p>
+                                <p className="text-[16px] text-neutral-700">{businessProblem}</p>
                             </>
                         )}
                         <StepContinueButton
@@ -233,6 +236,7 @@ export default function JobDetailsPage() {
                 open={authPromptOpen}
                 onOpenChange={setAuthPromptOpen}
                 onSignUp={handleSignUp}
+                onSignIn={handleSignIn}
             />
             <CompleteProfileDialog
                 open={profilePromptOpen}
