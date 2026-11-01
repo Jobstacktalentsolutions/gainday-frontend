@@ -69,12 +69,6 @@ export const JobFormInput = forwardRef<HTMLInputElement, FormInputProps>(
                     </label>
                 )}
 
-                {/* ── Hint ── */}
-                {hint && (
-                    <p id={hintId} className="text-sm text-neutral-400">
-                        {hint}
-                    </p>
-                )}
 
                 {/* ── Input wrapper ── */}
                 <div
@@ -142,6 +136,13 @@ export const JobFormInput = forwardRef<HTMLInputElement, FormInputProps>(
                         )
                     )}
                 </div>
+
+                {/* ── Hint ── */}
+                {hint && !hasError && (
+                    <p id={hintId} className="text-sm text-neutral-400">
+                        {hint}
+                    </p>
+                )}
 
                 {/* ── Error message ── */}
                 {hasError && (

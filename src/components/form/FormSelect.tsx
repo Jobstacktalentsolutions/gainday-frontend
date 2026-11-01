@@ -48,7 +48,6 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
                         </label>
                     )
                 }
-                {hint && <p id={hintId} className="text-sm text-neutral-400">{hint}</p>}
 
                 <div
                     className={cn(
@@ -83,6 +82,11 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
                         {hasError ? <AlertCircle className="size-5" /> : <ChevronDown className="size-5" />}
                     </span>
                 </div>
+                {hint && !hasError && (
+                    <p id={hintId} className="text-sm text-neutral-400">
+                        {hint}
+                    </p>
+                )}
                 {hasError && (
                     <p id={errorId} role="alert" className="text-sm text-error-500">
                         {error}
