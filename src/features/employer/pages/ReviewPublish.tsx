@@ -42,6 +42,22 @@ const ReviewPublish = () => {
     const [isPublishing, setIsPublishing] = useState(false);
     const [publishResult, setPublishResult] = useState<{ jobUrl: string; jobId: string } | null>(null);
 
+    // collapsed tasks additions
+    const [openTaskIds, setOpenTaskIds] = useState<Set<string>>(() => new Set());
+    const allOpen = values.tasks.length > 0 && values.tasks.every((task) => openTaskIds.has(task.id));
+
+    const toggleTask = (id: string) =>
+        setOpenTaskIds((prev) => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id);
+            else next.add(id);
+            return next;
+        });
+
+    const toggleAllTasks = () =>
+        setOpenTaskIds(allOpen ? new Set() : new Set(values.tasks.map((task) => task.id)));
+
+
     const handleEditSimulation = () => {
 
         navigate("/employer/jobs/new/simulation-builder");
@@ -90,20 +106,6 @@ const ReviewPublish = () => {
         );
     }
 
-    // collapsed tasks additions
-    const [openTaskIds, setOpenTaskIds] = useState<Set<string>>(() => new Set());
-    const allOpen = values.tasks.length > 0 && values.tasks.every((task) => openTaskIds.has(task.id));
-
-    const toggleTask = (id: string) =>
-        setOpenTaskIds((prev) => {
-            const next = new Set(prev);
-            if (next.has(id)) next.delete(id);
-            else next.add(id);
-            return next;
-        });
-
-    const toggleAllTasks = () =>
-        setOpenTaskIds(allOpen ? new Set() : new Set(values.tasks.map((task) => task.id)));
 
     return (
         <div className="flex flex-col gap-12">
