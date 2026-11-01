@@ -2,18 +2,22 @@ import { Pencil } from "lucide-react";
 import { useFormContext } from "react-hook-form";
 import Markdown from "@/components/ui/Markdown";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
+import { cleanText } from "@/lib/cleanText";
 
 interface SummaryRowProps {
   label: string;
   value?: string;
+  /** Drop the whole row instead of showing a dash. */
+  hideWhenEmpty?: boolean;
 }
 
-const SummaryRow = ({ label, value }: SummaryRowProps) => (
-  <div className="flex flex-col gap-1">
-    <p className="text-sm text-neutral-400">{label}</p>
-    <p className="text-base text-neutral-950">{value || "—"}</p>
-  </div>
-);
+const SummaryRow = ({ label, value, hideWhenEmpty }: SummaryRowProps) =>
+  hideWhenEmpty && !value ? null : (
+    <div className="flex flex-col gap-1">
+      <p className="text-sm text-neutral-400">{label}</p>
+      <p className="text-base text-neutral-950">{value || "—"}</p>
+    </div>
+  );
 
 interface JobDetailsSummaryProps {
   onEdit: () => void;
@@ -43,6 +47,7 @@ const JobDetailsSummary = ({ onEdit }: JobDetailsSummaryProps) => {
       year: "numeric",
     })
     : undefined;
+  const businessProblem = cleanText(values.businessProblem);
 
   return (
     <div className="flex flex-col gap-6">
@@ -66,7 +71,7 @@ const JobDetailsSummary = ({ onEdit }: JobDetailsSummaryProps) => {
         <SummaryRow label="Category" value={values.skillCategory} />
         <SummaryRow label="Employment type" value={values.employmentType} />
         <SummaryRow label="Location" value={locationDisplay} />
-        <SummaryRow label="Salary" value={salaryRange} />
+        <SummaryRow label="Salary" value={salaryRange} hideWhenEmpty />
         <SummaryRow label="Deadline" value={deadlineDisplay} />
       </div>
 
@@ -85,10 +90,10 @@ const JobDetailsSummary = ({ onEdit }: JobDetailsSummaryProps) => {
       )}
 
       {/* What this hire needs to solve */}
-      {Boolean(values.businessProblem?.trim()) && (
+      {businessProblem && (
         <div className="flex flex-col gap-1">
           <p className="text-sm text-neutral-400">What this hire needs to solve</p>
-          <p className="text-base text-neutral-700 wrap-break-word">{values.businessProblem}</p>
+          <p className="text-base text-neutral-700 wrap-break-word">{businessProblem}</p>
         </div>
       )}
 
