@@ -11,7 +11,7 @@ import { ActionButton } from "@/components/ui/ActionButton";
 import { StepContinueButton } from "@/components/ui/StepNavigationButtons";
 import { useJobDetails } from "../hooks/useJobDetails";
 import { useAppliedJobIds } from "../hooks/useAppliedJobIds";
-import { formatPostedDate, formatSalaryRange } from "../utils/formatters";
+import { formatPostedDate, formatSalaryRange, hasSalary } from "../utils/formatters";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { getJobShareUrl, shareLink } from "@/lib/shareLink";
 
@@ -106,10 +106,12 @@ export default function JobDetailsPage() {
                             </div>
                             <p className="text-[16px] text-neutral-400">{job.employer.companyName}</p>
                             <div className="flex flex-wrap items-center gap-4">
-                                <span className="flex items-center gap-2 rounded-xl border border-neutral-200 px-4 py-3 text-[16px] text-primary-950">
-                                    <Wallet className="size-6" />
-                                    {formatSalaryRange(job.salaryRange)}
-                                </span>
+                                {hasSalary(job.salaryRange) && (
+                                    <span className="flex items-center gap-2 rounded-xl border border-neutral-200 px-4 py-3 text-[16px] text-primary-950">
+                                        <Wallet className="size-6" />
+                                        {formatSalaryRange(job.salaryRange)}
+                                    </span>
+                                )}
                                 <span className="flex items-center gap-2 rounded-xl border border-neutral-200 px-4 py-3 text-[16px] text-primary-950">
                                     <Clock className="size-6" />
                                     Posted {formatPostedDate(job.createdAt)}

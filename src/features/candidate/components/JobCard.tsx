@@ -1,6 +1,6 @@
 import { StepContinueButton } from "@/components/ui/StepNavigationButtons";
 import { Check } from "lucide-react";
-import { formatPostedDate, formatSalaryRange } from "../utils/formatters";
+import { formatPostedDate, formatSalaryRange, hasSalary } from "../utils/formatters";
 import type { JobBoardListing } from "../types/jobBoard";
 
 interface JobCardProps {
@@ -24,11 +24,10 @@ export function JobCard({ job, isApplied = false, onApply }: JobCardProps) {
                 }
             }}
             aria-label={`View job ${job.title}`}
-            className={`flex flex-1 flex-col justify-between gap-3 rounded-3xl bg-white p-6 transition-all duration-150 ${
-                isApplied
+            className={`flex flex-1 flex-col justify-between gap-3 rounded-3xl bg-white p-6 transition-all duration-150 ${isApplied
                     ? "cursor-default opacity-90"
                     : "cursor-pointer hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99]"
-            }`}
+                }`}
         >
             <div className="flex w-full flex-col items-start gap-2">
                 <span className="rounded-full bg-primary-50 px-2 py-1 text-[10px] text-primary-500">
@@ -41,7 +40,7 @@ export function JobCard({ job, isApplied = false, onApply }: JobCardProps) {
                     <span>{job.employmentType}</span>
                 </div>
                 <p className="text-[16px] text-neutral-400">{job.employer.companyName}</p>
-                <p className="text-[16px] text-black">{formatSalaryRange(job.salaryRange)}</p>
+                {hasSalary(job.salaryRange) && <p className="text-[16px] text-black">{formatSalaryRange(job.salaryRange)}</p>}
             </div>
             <div className="h-px w-full bg-neutral-200" />
             <div className="flex w-full items-center justify-between">
