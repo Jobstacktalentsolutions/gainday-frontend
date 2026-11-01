@@ -6,9 +6,10 @@ interface ApplyDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSignUp: () => void;
+  onSignIn: () => void;
 }
 
-export function ApplyDialog({ open, onOpenChange, onSignUp }: ApplyDialogProps) {
+export function ApplyDialog({ open, onOpenChange, onSignUp, onSignIn }: ApplyDialogProps) {
   const { isAuthenticated } = useCurrentUser();
 
   if (isAuthenticated) {
@@ -17,19 +18,29 @@ export function ApplyDialog({ open, onOpenChange, onSignUp }: ApplyDialogProps) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-141.5 gap-15 rounded-2xl p-12">
+      <DialogContent className="max-w-141.5 gap-10 rounded-2xl p-12">
         <DialogHeader className="items-center gap-2 text-center">
           <DialogTitle className="text-[32px] leading-9.5 tracking-[-0.32px] text-primary-950">
-            How would you like to apply?
+            Apply and start building your capability passport
           </DialogTitle>
-          <DialogDescription className="text-[16px] text-neutral-700">
-            Apply and start building your capability passport.
+          <DialogDescription className="sr-only">
+            Create an account or sign in to apply for this role.
           </DialogDescription>
         </DialogHeader>
-        <div className="flex w-full flex-col gap-4">
-          <ActionButton variant="primary" size="lg" onClick={onSignUp}>
+        <div className="flex w-full flex-col items-center gap-4">
+          <ActionButton variant="primary" size="lg" className="w-full" onClick={onSignUp}>
             Sign up to apply
           </ActionButton>
+          <p className="text-base text-neutral-700">
+            Already have an account?{" "}
+            <button
+              type="button"
+              onClick={onSignIn}
+              className="cursor-pointer font-medium text-primary-500 underline underline-offset-2 transition-colors hover:text-primary-700"
+            >
+              Sign in
+            </button>
+          </p>
         </div>
       </DialogContent>
     </Dialog>
