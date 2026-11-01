@@ -1,6 +1,5 @@
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
-import sparkle from "@/assets/sparkle.svg";
 import { Button } from "@/components/ui/button";
 import { fadeUp, heroStagger } from "@/lib/motion/variants";
 import { HeroDemo } from "./HeroDemo";
@@ -18,13 +17,6 @@ const HeroSection = () => {
             className="relative isolate flex flex-col gap-20 overflow-hidden px-6 pb-10 pt-20 lg:flex-row lg:items-center lg:justify-between lg:gap-0 lg:px-30 lg:pb-30 lg:pt-23"
         >
             <div className="flex flex-col items-center gap-4 lg:w-134.75 lg:flex-none lg:items-start lg:gap-6">
-                <motion.div
-                    variants={fadeUp}
-                    className="flex max-w-max items-center gap-x-2.5 rounded-[6px] border border-primary-500 px-3 py-2.5 text-[10px] uppercase text-primary-500 lg:text-[14px]"
-                >
-                    <img src={sparkle} alt="" className="h-2.75 w-4.25" />
-                    THE PERFECT AI-ASSISTED TOOL FOR HIRING
-                </motion.div>
 
                 <motion.h1 variants={fadeUp} className="heading-1 text-center text-black lg:text-left">
                     Skip the CV pile. <br className="hidden lg:block" />
