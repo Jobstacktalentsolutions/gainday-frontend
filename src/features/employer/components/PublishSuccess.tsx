@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 import { motion } from "motion/react";
+import { ShareJobPanel } from "./ShareJobPanel";
 
 interface PublishSuccessProps {
   jobTitle: string;
@@ -52,6 +53,8 @@ const PublishSuccess = ({ jobTitle, jobUrl, onViewJob, onCandidatePreview }: Pub
           {copied ? "Copied" : "Copy"}
         </button>
       </div>
+
+      <ShareJobPanel jobTitle={jobTitle} jobUrl={jobUrl} />
 
       <div className="flex w-full max-w-md gap-3">
         <button
