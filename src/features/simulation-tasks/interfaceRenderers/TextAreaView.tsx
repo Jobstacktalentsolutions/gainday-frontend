@@ -14,7 +14,6 @@ const TextAreaView = ({ payload, mode, onChange }: Props) => {
         return (
             <FormInput
                 label="Candidate answer-box placeholder"
-                optional
                 value={payload.placeholder ?? ""}
                 onChange={(e) =>
                     onChange?.({ ...payload, placeholder: e.target.value || null })

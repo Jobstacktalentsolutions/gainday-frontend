@@ -420,7 +420,7 @@ const ProfilePage = () => {
                   />
 
                   <EditableProfileField
-                    label="Gender (optional)"
+                    label="Gender"
                     value={user?.gender}
                     input="select"
                     options={GENDER_OPTIONS}
@@ -432,7 +432,7 @@ const ProfilePage = () => {
                   />
 
                   <EditableProfileField
-                    label="Brief (optional)"
+                    label="Brief"
                     value={user?.brief}
                     input="textarea"
                     placeholder="A short introduction employers will see once they unlock you"

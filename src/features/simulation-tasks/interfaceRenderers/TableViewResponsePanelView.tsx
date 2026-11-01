@@ -151,7 +151,6 @@ const TableViewResponsePanelView = ({ payload, mode, onChange }: Props) => {
             </div>
             <FormInput
                 label="Candidate answer-box placeholder"
-                optional
                 value={payload.placeholder ?? ""}
                 onChange={(e) =>
                     onChange?.({ ...payload, placeholder: e.target.value || null })

@@ -42,7 +42,6 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
       <div className="grid grid-cols-2 gap-4">
         <JobFormInput
           label="Skill category"
-          optional
           error={errors.skillCategory?.message}
           {...register("skillCategory")}
         />
@@ -50,6 +49,7 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
         <div className="flex flex-col gap-1.5">
           <FormSelect
             label="Employment type"
+            required
             placeholder="Select a type"
             error={errors.employmentType?.message}
             {...register("employmentType")}
@@ -76,14 +76,12 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
       <div className="grid grid-cols-2 gap-4">
         <JobFormInput
           label="Salary from (£)"
-          optional
           type="number"
           error={errors.salaryFrom?.message}
           {...register("salaryFrom")}
         />
         <JobFormInput
           label="Salary to (£)"
-          optional
           type="number"
           error={errors.salaryTo?.message}
           {...register("salaryTo")}
@@ -94,12 +92,12 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
       <div className="grid grid-cols-2 gap-4">
         <JobFormInput
           label="Location"
+          required
           error={errors.location?.message}
           {...register("location")}
         />
         <JobFormInput
           label="Deadline"
-          optional
           type="date"
           error={errors.deadline?.message}
           {...register("deadline")}
@@ -125,7 +123,6 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
       {/* What this hire needs to solve */}
       <FormTextarea
         label="What this hire needs to solve"
-        optional
         rows={3}
         placeholder="e.g. We need someone to own our enterprise onboarding process..."
         error={errors.businessProblem?.message}
