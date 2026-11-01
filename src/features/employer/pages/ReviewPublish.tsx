@@ -90,6 +90,21 @@ const ReviewPublish = () => {
         );
     }
 
+    // collapsed tasks additions
+    const [openTaskIds, setOpenTaskIds] = useState<Set<string>>(() => new Set());
+    const allOpen = values.tasks.length > 0 && values.tasks.every((task) => openTaskIds.has(task.id));
+
+    const toggleTask = (id: string) =>
+        setOpenTaskIds((prev) => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id);
+            else next.add(id);
+            return next;
+        });
+
+    const toggleAllTasks = () =>
+        setOpenTaskIds(allOpen ? new Set() : new Set(values.tasks.map((task) => task.id)));
+
     return (
         <div className="flex flex-col gap-12">
             <div className="flex flex-col lg:items-center gap-2 text-left lg:text-center">
@@ -132,16 +147,23 @@ const ReviewPublish = () => {
                 {/* Simulation tasks section */}
                 <div className="flex flex-col gap-5">
                     <div className="flex items-center justify-between">
-                        <p className="text-sm font-bold uppercase tracking-wide text-neutral-900">
-                            Simulation tasks
-                        </p>
-                        <button
-                            type="button"
-                            onClick={handleEditSimulation}
-                            className="flex h-8 items-center gap-1.5 rounded-md border border-neutral-200 px-3 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
-                        >
-                            Edit
-                        </button>
+                        <p className="text-sm font-bold uppercase tracking-wide text-neutral-900">Simulation tasks</p>
+                        <div className="flex items-center gap-2">
+                            <button
+                                type="button"
+                                onClick={toggleAllTasks}
+                                className="flex h-8 items-center rounded-md px-3 text-sm font-medium text-primary-500 transition-colors hover:bg-primary-50"
+                            >
+                                {allOpen ? "Collapse all" : "Expand all"}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleEditSimulation}
+                                className="flex h-8 items-center gap-1.5 rounded-md border border-neutral-200 px-3 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
+                            >
+                                Edit
+                            </button>
+                        </div>
                     </div>
 
                     {isUnderReview && (
@@ -160,7 +182,12 @@ const ReviewPublish = () => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.35, delay: index * 0.06, ease: EASE }}
                         >
-                            <TaskSummaryCard index={index} task={task as SimulationTask}  />
+                            <TaskSummaryCard
+                                index={index}
+                                task={task as SimulationTask}
+                                open={openTaskIds.has(task.id)}
+                                onToggle={() => toggleTask(task.id)}
+                            />
                         </motion.div>
                     ))}
                 </div>
