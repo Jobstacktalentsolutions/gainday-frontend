@@ -144,8 +144,7 @@ export default function PreSimulation() {
                         </div>
 
                         <p className="text-[16px] text-neutral-400">
-                            These checks exist so employers can trust every ranked result. Your camera and microphone are never
-                            recorded.
+                            These checks exist so employers can trust every ranked result.
                         </p>
 
                         <div className="flex w-full gap-3">

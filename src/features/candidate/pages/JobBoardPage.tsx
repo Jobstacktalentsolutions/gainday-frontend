@@ -54,9 +54,7 @@ export function JobBoardPage() {
                     <h1 className="text-[32px] leading-[1.2] text-black sm:text-[48px] sm:leading-14.5 sm:tracking-[-0.48px]">
                         Find your next role
                     </h1>
-                    <p className="text-[16px] text-neutral-700">
-                        Real work simulations, not keyword-matched rejections.
-                    </p>
+                    
                 </div>
 
                 <div className="flex w-full flex-wrap items-center gap-4 sm:gap-6">
