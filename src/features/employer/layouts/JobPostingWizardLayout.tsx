@@ -1,5 +1,5 @@
 import { useEffect, useState, Suspense } from "react";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, useNavigate, useLocation, Navigate } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -24,6 +24,8 @@ const JobPostingWizardLayout = () => {
     const saveDraftMutation = useSaveJobDraft();
     const [isSavingExit, setIsSavingExit] = useState(false);
 
+    
+
     const sanitizedTasks = (draft.tasks || JOB_POSTING_DEFAULT_VALUES.tasks || [])
         .filter((t) => t?.title?.trim() || t?.questionPrompt?.trim());
 
@@ -38,6 +40,9 @@ const JobPostingWizardLayout = () => {
     })
 
     const [isDone, setIsDone] = useState(false);
+
+    const isLaterStep = location.pathname.includes("simulation-builder") || location.pathname.includes("review");
+    const isShowingPublishSuccess = isDone && location.pathname.includes("review");
 
     // Derive current step from the URL or published state
     const currentStep = (() => {
@@ -75,6 +80,12 @@ const JobPostingWizardLayout = () => {
     const handleDiscardDraft = () => {
         clearDraft();
         form.reset(JOB_POSTING_DEFAULT_VALUES);
+    }
+
+    // Steps after "details" only make sense for a job in progress. Publishing clears the draft and
+    // job ID, so pressing Back into them would show an empty form. The success screen is exempt.
+    if (isLaterStep && !jobId && !isShowingPublishSuccess) {
+        return <Navigate to="/employer/jobs" replace />;
     }
 
     return (
