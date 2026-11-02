@@ -1,37 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
-import type { JobStatus } from "../types/job";
-import type { JobRole } from "../schemas/jobPosting";
 import type { JobPreviewDetails } from "../types/jobPreview";
-import type { SimulationTask } from "@/features/simulation-tasks/types";
 import { fetchJobSubmissionsCount } from "./useJobSubmissionsCount";
-
-interface BackendSalaryRange {
-    min: number | null;
-    max: number | null;
-    currency: string;
-}
-
-interface BackendJobWithSimulation {
-    id: string;
-    title: string | null;
-    description: string | null;
-    role: JobRole | null;
-    location: string | null;
-    employmentType: string | null;
-    isRemoteFriendly: boolean;
-    requiredSkills: string[];
-    salaryRange: BackendSalaryRange | null;
-    applicationDeadline: string | null;
-    businessProblem: string | null;
-    status: JobStatus;
-    updatedAt: string;
-    simulation: {
-        id: string;
-        tasks: SimulationTask[];
-        timeLimitMinutes: number;
-    } | null;
-}
+import type { BackendJobWithSimulation, BackendSalaryRange, JobStatus } from "../types/job";
 
 const POSTED_STATUSES: JobStatus[] = ["ACTIVE", "CLOSED"];
 

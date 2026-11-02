@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AlertTriangle, Lock } from "lucide-react";
+import { AlertTriangle, ChevronDown, Lock } from "lucide-react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useFormContext } from "react-hook-form";
 import { AnimatePresence, motion } from "motion/react";
@@ -15,7 +15,6 @@ import { useTaskReviewStatus } from "../hooks/useTaskReviewStatus";
 import { useJobDraftStore } from "../stores/useJobDraftStore";
 import { DEFAULT_SIMULATION_TIME_LIMIT_MINUTES } from "../constants/jobPostingOptions";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
-import type { SimulationTask } from "@/features/simulation-tasks/types";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -32,12 +31,14 @@ const ReviewPublish = () => {
     const clearDraft = useJobDraftStore((state) => state.clearDraft);
     const values = watch();
     const { data: jobSimulation } = useJobSimulation(jobId);
+    const tasks = jobSimulation?.simulation?.tasks ?? [];
     const timeLimitMinutes =
         jobSimulation?.simulation?.timeLimitMinutes ?? DEFAULT_SIMULATION_TIME_LIMIT_MINUTES;
     const { data: taskReviewStatus } = useTaskReviewStatus(jobId);
     const isUnderReview = taskReviewStatus !== undefined && taskReviewStatus.pendingCount > 0;
 
     const [editingJobDetails, setEditingJobDetails] = useState(false);
+    const [tasksExpanded, setTasksExpanded] = useState(false);
     const [agreed, setAgreed] = useState(false);
     const [isPublishing, setIsPublishing] = useState(false);
     const [publishResult, setPublishResult] = useState<{ jobUrl: string; jobId: string } | null>(null);
@@ -132,9 +133,18 @@ const ReviewPublish = () => {
                 {/* Simulation tasks section */}
                 <div className="flex flex-col gap-5">
                     <div className="flex items-center justify-between">
-                        <p className="text-sm font-bold uppercase tracking-wide text-neutral-900">
+                        <button
+                            type="button"
+                            onClick={() => setTasksExpanded((prev) => !prev)}
+                            aria-expanded={tasksExpanded}
+                            className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-neutral-900"
+                        >
                             Simulation tasks
-                        </p>
+                            <ChevronDown
+                                className={`size-4 transition-transform duration-300 ${tasksExpanded ? "rotate-180" : ""}`}
+                                aria-hidden="true"
+                            />
+                        </button>
                         <button
                             type="button"
                             onClick={handleEditSimulation}
@@ -153,22 +163,30 @@ const ReviewPublish = () => {
                         </div>
                     )}
 
-                    {values.tasks.map((task, index) => (
-                        <motion.div
-                            key={task.id}
-                            initial={{ opacity: 0, y: 16 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.35, delay: index * 0.06, ease: EASE }}
-                        >
-                            <TaskSummaryCard index={index} task={task as SimulationTask}  />
-                        </motion.div>
-                    ))}
+                    <AnimatePresence initial={false}>
+                        {tasksExpanded && (
+                            <motion.div
+                                key="tasks"
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.3, ease: EASE }}
+                                className="overflow-hidden"
+                            >
+                                <div className="flex flex-col gap-5">
+                                    {tasks.map((task, index) => (
+                                        <TaskSummaryCard key={task.id} index={index} task={task} />
+                                    ))}
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
 
                 {/* Stats */}
                 <div className="grid grid-cols-2 gap-4">
                     <div className="flex flex-col gap-1 rounded-2xl border border-neutral-200 p-5">
-                        <p className="text-3xl font-bold text-neutral-950">{values.tasks.length}</p>
+                        <p className="text-3xl font-bold text-neutral-950">{tasks.length}</p>
                         <p className="text-sm text-neutral-500">Tasks</p>
                     </div>
                     <div className="flex flex-col gap-1 rounded-2xl border border-neutral-200 p-5">

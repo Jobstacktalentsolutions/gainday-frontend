@@ -16,7 +16,8 @@ export const useJobDraftStore = create<JobDraftState>()(
         (set) => ({
             draft : {},
             jobId : null,
-            setDraft: (values) => set((state) => ({ draft : { ...state.draft, ...values}})),
+            // The form emits its full value set on every change, so the draft is replaced, not merged.
+            setDraft: (values) => set({ draft: values }),
             setJobId: (jobId) => set({ jobId }),
             clearDraft : () => set({ draft : {}, jobId : null }),
         }),
