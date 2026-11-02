@@ -18,7 +18,7 @@ const HEADERS = [
     "Candidate",
     "Overall",
     `Breakdown (${CATEGORY_ORDER.map((category) => category.short).join("/")})`,
-    "Application",
+    "Application Score",
     "Time",
     "Submitted",
     "Integrity",
