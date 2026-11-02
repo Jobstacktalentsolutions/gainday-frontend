@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Search, Eye, SlidersHorizontal, RotateCw, Layers } from "lucide-react";
+import { Search, RotateCw } from "lucide-react";
 import { AdminButton } from "@/components/ui/AdminButton";
 import { formatShortDate } from "@/lib/formatDate";
 import { cn } from "@/lib/utils";
@@ -65,7 +65,7 @@ const GeneratedSimulationsPanel = ({
     }, [simulations, statusFilter, searchTerm]);
 
     const filterTabs: { id: FilterStatus; label: string; count: number }[] = [
-        { id: "all", label: "All Simulations", count: counts.all },
+        { id: "all", label: "All", count: counts.all },
         { id: "live", label: "Live", count: counts.live },
         { id: "draft", label: "Draft", count: counts.draft },
         { id: "archived", label: "Archived", count: counts.archived },
@@ -73,56 +73,45 @@ const GeneratedSimulationsPanel = ({
 
     return (
         <section className="flex w-full flex-col overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-xs">
-            {/* Header & Context */}
-            <div className="flex flex-col gap-3 border-b border-neutral-100 p-5 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <div className="flex items-center gap-2">
-                        <h2 className="text-base font-semibold text-neutral-900">
-                            Generated Simulations Catalog
-                        </h2>
-                        <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-xs font-semibold text-neutral-600">
-                            {simulations.length} total
-                        </span>
-                    </div>
-                    <p className="mt-0.5 text-xs text-neutral-500">
-                        Multi-task simulations synthesized from employer job requirements. Override configurations or trigger re-generation.
-                    </p>
-                </div>
+            {/* Header */}
+            <div className="border-b border-neutral-100 px-4 py-3">
+                <h2 className="text-sm font-semibold text-neutral-900">Generated Simulations</h2>
+                <p className="mt-0.5 text-xs text-neutral-500">
+                    Simulations generated from employer job requirements.
+                </p>
             </div>
 
-            {/* Filter & Search Bar */}
-            <div className="flex flex-col gap-3 border-b border-neutral-100 bg-neutral-50/50 p-4 sm:flex-row sm:items-center sm:justify-between">
-                <div className="relative flex-1">
-                    <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-neutral-400" />
+            {/* Search & Filters */}
+            <div className="flex flex-col gap-2 border-b border-neutral-100 bg-neutral-50/50 px-4 py-2.5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="relative flex-1 sm:max-w-md">
+                    <Search className="absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-neutral-400" />
                     <input
                         type="text"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="Search simulation by job title or Job ID..."
-                        className="h-9.5 w-full rounded-lg border border-neutral-200 bg-white pl-9.5 pr-3 text-xs text-neutral-900 placeholder:text-neutral-400 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all"
+                        placeholder="Search by job title or ID"
+                        className="h-8 w-full rounded-lg border border-neutral-200 bg-white pl-8 pr-3 text-xs text-neutral-900 placeholder:text-neutral-400 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all"
                     />
                 </div>
 
-                <div className="flex flex-wrap items-center gap-1.5">
+                <div className="flex flex-wrap items-center gap-1">
                     {filterTabs.map((tab) => (
                         <button
                             key={tab.id}
                             type="button"
                             onClick={() => setStatusFilter(tab.id)}
                             className={cn(
-                                "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors cursor-pointer",
+                                "flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-medium transition-colors cursor-pointer",
                                 statusFilter === tab.id
-                                    ? "bg-primary-600 text-white shadow-xs"
+                                    ? "bg-primary-600 text-white"
                                     : "border border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-50"
                             )}
                         >
                             <span>{tab.label}</span>
                             <span
                                 className={cn(
-                                    "rounded-full px-1.5 py-0.2 text-[10px] font-bold",
-                                    statusFilter === tab.id
-                                        ? "bg-white/25 text-white"
-                                        : "bg-neutral-100 text-neutral-600"
+                                    "text-[10px] font-semibold tabular-nums",
+                                    statusFilter === tab.id ? "text-white/80" : "text-neutral-400"
                                 )}
                             >
                                 {tab.count}
@@ -132,41 +121,36 @@ const GeneratedSimulationsPanel = ({
                 </div>
             </div>
 
-            {/* Empty States */}
+            {/* Empty State */}
             {filteredSimulations.length === 0 && (
-                <div className="flex flex-col items-center justify-center px-5 py-12 text-center">
-                    <div className="flex size-10 items-center justify-center rounded-full bg-neutral-100 text-neutral-400 mb-3">
-                        <Layers className="size-5" />
-                    </div>
-                    <p className="text-sm font-semibold text-neutral-800">
-                        No simulations found
-                    </p>
-                    <p className="mt-1 text-xs text-neutral-500 max-w-sm">
+                <div className="flex flex-col items-center justify-center px-4 py-10 text-center">
+                    <p className="text-sm font-semibold text-neutral-800">No simulations found</p>
+                    <p className="mt-1 text-xs text-neutral-500">
                         {searchTerm
-                            ? `No simulations match "${searchTerm}". Try resetting your search or filter.`
-                            : "There are currently no simulations in this category."}
+                            ? `No simulations match "${searchTerm}".`
+                            : "There are no simulations in this category."}
                     </p>
                     {searchTerm && (
                         <button
                             type="button"
                             onClick={() => setSearchTerm("")}
-                            className="mt-3 text-xs font-semibold text-primary-600 hover:text-primary-700 cursor-pointer"
+                            className="mt-2 text-xs font-semibold text-primary-600 hover:text-primary-700 cursor-pointer"
                         >
-                            Clear search filter
+                            Clear search
                         </button>
                     )}
                 </div>
             )}
 
-            {/* List / Table Items */}
+            {/* Rows */}
             {filteredSimulations.length > 0 && (
                 <div className="divide-y divide-neutral-100">
-                    {/* Header Columns on md+ screens */}
-                    <div className="hidden grid-cols-12 items-center bg-neutral-50/70 px-5 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-neutral-500 md:grid">
-                        <span className="col-span-5">Job Role & ID</span>
-                        <span className="col-span-2">Task Structure</span>
+                    {/* Column headers on md+ screens */}
+                    <div className="hidden grid-cols-12 items-center bg-neutral-50/70 px-4 py-2 text-[10px] font-semibold uppercase tracking-wider text-neutral-500 md:grid">
+                        <span className="col-span-4">Job role</span>
+                        <span className="col-span-2">Tasks</span>
                         <span className="col-span-2">Status</span>
-                        <span className="col-span-1">Generated</span>
+                        <span className="col-span-2">Generated</span>
                         <span className="col-span-2 text-right">Actions</span>
                     </div>
 
@@ -174,63 +158,44 @@ const GeneratedSimulationsPanel = ({
                         <div
                             key={sim.id}
                             onClick={() => onView(sim)}
-                            className="flex flex-col gap-3 p-4 transition-colors hover:bg-neutral-50/80 cursor-pointer md:grid md:grid-cols-12 md:items-center md:px-5 md:py-3.5"
+                            className="flex flex-col gap-2 px-4 py-2.5 transition-colors hover:bg-neutral-50/80 cursor-pointer md:grid md:grid-cols-12 md:items-center"
                         >
                             {/* Role & ID */}
-                            <div className="min-w-0 md:col-span-5">
-                                <p className="truncate text-sm font-medium text-neutral-900">
+                            <div className="min-w-0 md:col-span-4">
+                                <p className="truncate text-[13px] font-medium text-neutral-900">
                                     {sim.jobTitle}
                                 </p>
-                                <div className="mt-0.5 flex items-center gap-1.5 text-xs text-neutral-500 font-mono">
-                                    <span>ID: {sim.jobId}</span>
-                                </div>
+                                <p className="truncate font-mono text-[11px] text-neutral-500">{sim.jobId}</p>
                             </div>
 
-                            {/* Task Structure */}
-                            <div className="flex items-center gap-2 md:col-span-2">
-                                <span className="inline-flex items-center gap-1.5 rounded-md border border-neutral-200 bg-white px-2 py-0.5 text-xs font-medium text-neutral-700">
-                                    <Layers className="size-3 text-neutral-400" />
-                                    {sim.taskCount} Tasks
-                                </span>
+                            {/* Task count */}
+                            <div className="text-xs text-neutral-700 md:col-span-2">
+                                {sim.taskCount} tasks
                             </div>
 
                             {/* Status */}
-                            <div className="flex items-center md:col-span-2">
+                            <div className="md:col-span-2">
                                 <span
                                     className={cn(
-                                        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium",
+                                        "inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-medium",
                                         STATUS_BADGE_STYLES[sim.status]
                                     )}
                                 >
-                                    <span
-                                        className={cn(
-                                            "size-1.5 rounded-full",
-                                            STATUS_DOT_STYLES[sim.status]
-                                        )}
-                                    />
+                                    <span className={cn("size-1.5 rounded-full", STATUS_DOT_STYLES[sim.status])} />
                                     {STATUS_LABELS[sim.status]}
                                 </span>
                             </div>
 
-                            {/* Generated Date */}
-                            <div className="text-xs text-neutral-500 md:col-span-1">
+                            {/* Generated date */}
+                            <div className="text-xs text-neutral-500 md:col-span-2">
                                 {formatShortDate(sim.generatedAt)}
                             </div>
 
                             {/* Actions */}
                             <div
-                                className="flex shrink-0 items-center justify-end gap-2 md:col-span-2"
+                                className="flex items-center justify-end gap-1.5 md:col-span-2"
                                 onClick={(e) => e.stopPropagation()}
                             >
-                                <button
-                                    type="button"
-                                    onClick={() => onView(sim)}
-                                    title="View simulation details"
-                                    className="flex size-8 items-center justify-center rounded-lg border border-neutral-200 bg-white text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 transition-colors cursor-pointer"
-                                >
-                                    <Eye className="size-3.5" />
-                                </button>
-
                                 <AdminButton
                                     id={`regenerate-sim-${sim.id}`}
                                     variant="outline"
@@ -240,18 +205,15 @@ const GeneratedSimulationsPanel = ({
                                         e.stopPropagation();
                                         onRegenerate(sim);
                                     }}
-                                    className="h-8 text-xs cursor-pointer"
+                                    className="h-7 px-2 text-[11px] cursor-pointer"
                                 >
                                     {regeneratingId === sim.id ? (
                                         <span className="flex items-center gap-1">
-                                            <RotateCw className="size-3 animate-spin text-primary-600" />
-                                            <span>Running…</span>
+                                            <RotateCw className="size-3 animate-spin" />
+                                            Running…
                                         </span>
                                     ) : (
-                                        <span className="flex items-center gap-1">
-                                            <RotateCw className="size-3" />
-                                            <span>Regenerate</span>
-                                        </span>
+                                        "Regenerate"
                                     )}
                                 </AdminButton>
 
@@ -263,12 +225,9 @@ const GeneratedSimulationsPanel = ({
                                         e.stopPropagation();
                                         onOverride(sim);
                                     }}
-                                    className="h-8 text-xs cursor-pointer"
+                                    className="h-7 px-2 text-[11px] cursor-pointer"
                                 >
-                                    <span className="flex items-center gap-1">
-                                        <SlidersHorizontal className="size-3" />
-                                        <span>Override</span>
-                                    </span>
+                                    Override
                                 </AdminButton>
                             </div>
                         </div>
