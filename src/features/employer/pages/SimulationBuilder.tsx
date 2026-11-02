@@ -266,7 +266,7 @@ const SimulationBuilder = () => {
         <div className="flex flex-col gap-12">
             {/* Header — centered */}
             <div className="flex flex-col lg:items-center gap-2 text-left lg:text-center">
-                <h1 className="text-3xl font-bold text-black lg:text-4xl">Challenge generation</h1>
+                <h1 className="text-3xl font-bold text-black lg:text-4xl">Work simulation generation</h1>
                 <p className="max-w-lg text-base text-neutral-500">
                     A realistic work simulation assessment built from the capabilities you approved.
                     Estimated completion time: {timeLimitMinutes} minutes.
@@ -276,7 +276,7 @@ const SimulationBuilder = () => {
             {/* Challenge content */}
             <div className="flex w-full flex-col gap-10 rounded-3xl border border-dashed shadow-sm bg-white/70 px-3 py-10 text-center">
                 <div className="flex flex-col gap-3 text-left">
-                    <p className="text-sm text-primary-500">CHALLENGE GENERATION</p>
+                    <p className="text-sm text-primary-500">WORK SIMULATION GENERATION</p>
                     <p className="text-base text-neutral-950">
                         A realistic work simulation assessment built from the capabilities you approved.
                         Estimated completion time: {timeLimitMinutes} minutes.

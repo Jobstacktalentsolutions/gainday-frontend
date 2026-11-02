@@ -47,7 +47,6 @@ const RegenerateGuidanceModal = ({
                         <FormTextarea
                             label="What should change"
                             hideLabel
-                            optional
                             rows={4}
                             placeholder="e.g. make the numbers larger, or change the recipient to legal..."
                             value={guidance}

@@ -32,7 +32,7 @@ const BuildSection = () => {
                     <h2 className="heading-2">Built for Proof, not Paper.</h2>
                     <p className="text-base leading-6 text-neutral-200">
                         Show employers what you can actually do not just what your CV says you&rsquo;ve done.
-                        Try the live challenge and get on the waitlist for what&rsquo;s next.
+                        Try the live work simulation and get on the waitlist for what&rsquo;s next.
                     </p>
                     <div className="hidden lg:block">
                         <StartNowButton label="Start Now" onClick={start} />
@@ -41,7 +41,7 @@ const BuildSection = () => {
 
                 <div className="h-55 w-full overflow-hidden rounded-xl bg-white/10 ring-1 ring-white/20 lg:h-86.5 lg:max-w-124.75">
                     <img
-                        src="/images/landing/cta.png"
+                        src="/images/landing/cta.jpg"
                         alt="A smiling professional working on a laptop"
                         width={500}
                         height={346}

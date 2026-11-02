@@ -7,7 +7,6 @@ export interface FormSelectProps extends SelectHTMLAttributes<HTMLSelectElement>
     error?: string;
     hint?: string;
     hideLabel?: boolean;
-    optional?: boolean;
     placeholder?: string;
     children: ReactNode;
 }
@@ -22,7 +21,6 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
             hint,
             hideLabel,
             required,
-            optional,
             placeholder,
             children,
             onFocus,
@@ -45,12 +43,11 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
                     !hideLabel && (
                         <label htmlFor={selectId} className="flex items-center gap-1 text-base font-medium text-neutral-800 select-none">
                             {label}
-                            {optional && <span className="text-xs font-normal text-neutral-400">(Optional)</span>}
+                            
                             {required && <span aria-hidden="true" className="text-error-500">*</span>}
                         </label>
                     )
                 }
-                {hint && <p id={hintId} className="text-sm text-neutral-400">{hint}</p>}
 
                 <div
                     className={cn(
@@ -85,6 +82,11 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
                         {hasError ? <AlertCircle className="size-5" /> : <ChevronDown className="size-5" />}
                     </span>
                 </div>
+                {hint && !hasError && (
+                    <p id={hintId} className="text-sm text-neutral-400">
+                        {hint}
+                    </p>
+                )}
                 {hasError && (
                     <p id={errorId} role="alert" className="text-sm text-error-500">
                         {error}

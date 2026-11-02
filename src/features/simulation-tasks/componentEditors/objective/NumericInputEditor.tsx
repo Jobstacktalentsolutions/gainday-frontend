@@ -26,7 +26,6 @@ const NumericInputEditor = ({ value, onChange }: Props) => (
         />
         <FormInput
             label="Unit"
-            optional
             value={value.unit ?? ""}
             onChange={(e) => onChange({ ...value, unit: e.target.value || null })}
         />

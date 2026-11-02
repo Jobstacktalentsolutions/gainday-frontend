@@ -43,6 +43,17 @@ const ReviewPublish = () => {
     const [isPublishing, setIsPublishing] = useState(false);
     const [publishResult, setPublishResult] = useState<{ jobUrl: string; jobId: string } | null>(null);
 
+    // Each task card opens its own detail panel
+    const [openTaskIds, setOpenTaskIds] = useState<Set<string>>(() => new Set());
+
+    const toggleTask = (id: string) =>
+        setOpenTaskIds((prev) => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id);
+            else next.add(id);
+            return next;
+        });
+
     const handleEditSimulation = () => {
 
         navigate("/employer/jobs/new/simulation-builder");
@@ -90,6 +101,7 @@ const ReviewPublish = () => {
             </div>
         );
     }
+
 
     return (
         <div className="flex flex-col gap-12">
@@ -175,7 +187,13 @@ const ReviewPublish = () => {
                             >
                                 <div className="flex flex-col gap-5">
                                     {tasks.map((task, index) => (
-                                        <TaskSummaryCard key={task.id} index={index} task={task} />
+                                        <TaskSummaryCard
+                                            key={task.id}
+                                            index={index}
+                                            task={task}
+                                            open={openTaskIds.has(task.id)}
+                                            onToggle={() => toggleTask(task.id)}
+                                        />
                                     ))}
                                 </div>
                             </motion.div>

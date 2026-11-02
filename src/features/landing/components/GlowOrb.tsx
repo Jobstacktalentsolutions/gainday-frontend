@@ -21,7 +21,7 @@ export const GlowOrb = ({ tone, className, drift = true }: GlowOrbProps) => (
     <span
         aria-hidden="true"
         className={cn(
-            "pointer-events-none absolute -z-10 rounded-full",
+            "pointer-events-none absolute -z-10 rounded-full opacity-80 blur-2xl",
             TONES[tone],
             drift && "animate-orb-drift motion-reduce:animate-none",
             className,

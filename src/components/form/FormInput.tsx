@@ -14,7 +14,6 @@ export interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
     error?: string;
     hint?: string;
     hideLabel?: boolean;
-    optional?: boolean;
     startIcon?: ReactNode;
     endIcon?: ReactNode;
 }
@@ -31,7 +30,6 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
             hint,
             hideLabel,
             required,
-            optional,
             startIcon,
             endIcon,
             onFocus,
@@ -67,11 +65,7 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
                         className="flex items-center gap-1 text-base font-medium text-neutral-800 select-none"
                     >
                         {label}
-                        {optional && (
-                            <span className="text-xs font-normal text-neutral-400">
-                                (Optional)
-                            </span>
-                        )}
+                        
                         {required && (
                             <span aria-hidden="true" className="text-error-500">
                                 *
@@ -80,12 +74,6 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
                     </label>
                 )}
 
-                {/* ── Hint ── */}
-                {hint && (
-                    <p id={hintId} className="text-sm text-neutral-400">
-                        {hint}
-                    </p>
-                )}
 
                 {/* ── Input wrapper ── */}
                 <div
@@ -168,6 +156,13 @@ export const FormInput = forwardRef<HTMLInputElement, FormInputProps>(
                         )
                     )}
                 </div>
+
+                {/* ── Hint ── */}
+                {hint && !hasError && (
+                    <p id={hintId} className="text-sm text-neutral-400">
+                        {hint}
+                    </p>
+                )}
 
                 {/* ── Error message ── */}
                 {hasError && (

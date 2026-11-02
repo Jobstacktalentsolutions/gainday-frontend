@@ -56,7 +56,6 @@ const CsvDataPanelView = ({ payload, mode, onChange }: Props) => {
             <div className="overflow-x-auto rounded-md border border-neutral-200">{table}</div>
             <FormInput
                 label="Candidate answer-box placeholder"
-                optional
                 value={payload.placeholder ?? ""}
                 onChange={(event) => onChange?.({ ...payload, placeholder: event.target.value || null })}
             />

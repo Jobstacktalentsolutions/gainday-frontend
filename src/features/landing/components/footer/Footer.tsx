@@ -5,6 +5,7 @@ import { useTryChallengePath } from "../../utils/useTryChallengePath";
 import { landingSectionPath } from "../../utils/scrollToSection";
 import brandLogo from "@/assets/gainday icon.svg";
 import { LEGAL_COMPANY } from "@/features/legal/content/shared"
+import { SocialIcons } from "./SocialIcons";
 
 
 const companyLinks: FooterLinkItem[] = [
@@ -16,25 +17,7 @@ const contactLinks: FooterLinkItem[] = [
     { label: LEGAL_COMPANY.email, href: `mailto:${LEGAL_COMPANY.email}` },
 ];
 
-// TODO: replace the "#" placeholders with the real profile URLs.
-const SocialIcons = () => (
-    <div className="flex items-center gap-3 pt-1">
-        {[
-            { label: "LinkedIn", icon: "/social-icons/linkedin.png" },
-            { label: "Facebook", icon: "/social-icons/facebook.png" },
-        ].map((social) => (
-            <a
-                key={social.label}
-                href="#"
-                aria-label={`Gainday on ${social.label}`}
-                onClick={(e) => e.preventDefault()}
-                className="transition-transform duration-300 hover:scale-110"
-            >
-                <img src={social.icon} alt="" className="size-5" />
-            </a>
-        ))}
-    </div>
-);
+
 
 export function Footer() {
 
@@ -42,7 +25,7 @@ export function Footer() {
 
     const productLinks: FooterLinkItem[] = [
         { label: "How it works", to: landingSectionPath("assessment-process") },
-        { label: "Try a challenge", to: tryChallengePath },
+        { label: "Try work simulation", to: tryChallengePath },
         { label: "For candidates", to: landingSectionPath("for-candidates") },
         { label: "For employers", to: landingSectionPath("for-employers") },
     ]

@@ -7,7 +7,7 @@ export const LEGAL_COMPANY = {
     companyNumber: "17235525",
     registered: "Coventry, UK",
     ico: "C2000651",
-    email: "hellogainday@gmail.com",
+    email: "contact@gainday.org",
     lastUpdated: "8 August 2026",
 } as const;
 

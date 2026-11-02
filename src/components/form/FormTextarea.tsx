@@ -8,7 +8,6 @@ export interface FormTextareaProps extends TextareaHTMLAttributes<HTMLTextAreaEl
     error?: string;
     hint?: string;
     hideLabel?: boolean;
-    optional?: boolean;
 }
 
 export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
@@ -20,7 +19,6 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
         hint,
         hideLabel,
         required,
-        optional,
         onFocus,
         onBlur,
         ...props
@@ -39,7 +37,7 @@ export const FormTextarea = forwardRef<HTMLTextAreaElement, FormTextareaProps>(
                 {!hideLabel && (
                     <label htmlFor={textareaId} className="flex items-center gap-1 text-base font-medium text-neutral-800 select-none">
                         {label}
-                        {optional && <span className="text-xs font-normal text-neutral-400">(Optional)</span>}
+                        
                         {required && <span aria-hidden="true" className="text-error-500">*</span>}
                     </label>
                 )}

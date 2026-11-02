@@ -252,6 +252,7 @@ const JobDetailsStep = () => {
                         id="job-title-input"
                         label="Job title"
                         hideLabel
+                        required
                         placeholder="e.g Customer Operations Business Manager"
                         error={errors.title?.message}
                         {...register("title")}
@@ -263,6 +264,7 @@ const JobDetailsStep = () => {
                     <div className="flex flex-col gap-1.5">
                         <JobFormInput
                             label="Role"
+                            required
                             placeholder="e.g. Customer Support"
                             error={errors.role?.message}
                             {...register("role")}
@@ -304,6 +306,7 @@ const JobDetailsStep = () => {
 
                 <FormSelect
                     label="Skill level"
+                    required
                     placeholder="Select a skill level"
                     error={errors.skillLevel?.message}
                     {...register("skillLevel")}
@@ -317,7 +320,6 @@ const JobDetailsStep = () => {
                 <div className="lg:col-span-2">
                     <JobFormInput
                         label="Skill category"
-                        optional
                         placeholder="e.g Credit Risk"
                         error={errors.skillCategory?.message}
                         {...register("skillCategory")}
@@ -327,12 +329,14 @@ const JobDetailsStep = () => {
                 {/* Company (read-only, from the employer's profile) + Location — side by side */}
                 <JobFormInput
                     label="Company"
+                    required
                     readOnly
                     value={formValues.company ?? profile?.companyName ?? ""}
                     {...register("company")}
                 />
                 <JobFormInput
                     label="Location"
+                    required
                     placeholder="London, UK"
                     error={errors.location?.message}
                     {...register("location")}
@@ -341,6 +345,7 @@ const JobDetailsStep = () => {
                 {/* Employment type + Deadline — side by side */}
                 <FormSelect
                     label="Employment type"
+                    required
                     placeholder="Select a type"
                     error={errors.employmentType?.message}
                     {...register("employmentType")}
@@ -352,7 +357,6 @@ const JobDetailsStep = () => {
 
                 <JobFormInput
                     label="Deadline"
-                    optional
                     type="date"
                     error={errors.deadline?.message}
                     {...register("deadline")}
@@ -370,7 +374,6 @@ const JobDetailsStep = () => {
                 <JobFormInput
                     label="Salary from (£)"
                     type="number"
-                    optional
                     startIcon={<span>£</span>}
                     error={errors.salaryFrom?.message}
                     {...register("salaryFrom")}
@@ -378,7 +381,6 @@ const JobDetailsStep = () => {
                 <JobFormInput
                     label="Salary to (£)"
                     type="number"
-                    optional
                     startIcon={<span>£</span>}
                     error={errors.salaryTo?.message}
                     {...register("salaryTo")}
@@ -388,7 +390,6 @@ const JobDetailsStep = () => {
                 <div className="lg:col-span-2">
                     <FormTextarea
                         label="What your company does"
-                        optional
                         placeholder="Enter a description..."
                         rows={3}
                         {...register("companyDescription")}
@@ -410,7 +411,7 @@ const JobDetailsStep = () => {
                     pasting-and-parsing an existing description above, or written by hand. */}
                 <div className="flex flex-col gap-1.5 lg:col-span-2">
                     <div className="flex items-center justify-between gap-2">
-                        <label className="text-base font-medium text-neutral-800">Job description</label>
+                        <label className="text-base font-medium text-neutral-800">Job description<span aria-hidden="true" className="text-error-500">*</span></label>
                         {isDescriptionAiGenerated && (
                             <span className="flex w-fit items-center gap-1 rounded-full bg-primary-100 px-2.5 py-1 text-xs font-medium text-primary-700">
                                 <Sparkles className="size-3" aria-hidden="true" />
@@ -442,7 +443,6 @@ const JobDetailsStep = () => {
                 <div className="lg:col-span-2">
                     <FormTextarea
                         label="What does this hire need to solve?"
-                        optional
                         placeholder="e.g Reduce onboarding drop-off by improving our KYC follow-up flow"
                         rows={3}
                         error={errors.businessProblem?.message}
