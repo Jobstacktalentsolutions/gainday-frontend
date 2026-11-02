@@ -35,7 +35,7 @@ export const SORT_CONFIG: SortConfig[] = [
     },
     {
         key: "capabilityScore",
-        label: "Capability Score",
+        label: "Application Score",
         options: [
             { direction: "desc", label: "Highest first" },
             { direction: "asc", label: "Lowest first" },
