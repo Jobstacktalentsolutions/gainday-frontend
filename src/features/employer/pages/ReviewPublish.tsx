@@ -81,8 +81,8 @@ const ReviewPublish = () => {
         setIsPublishing(true);
         try {
             const published = await publishJob.mutateAsync(jobId);
-            clearDraft();
             setIsDone?.(true);
+            clearDraft();
             const realJobUrl = `${window.location.origin}/job-board/${published.id}`;
             setPublishResult({ jobUrl: realJobUrl, jobId: published.id });
             toast.success("Job published!");
