@@ -24,13 +24,13 @@ export function SimulationCompleteModal({ timeLimitMinutes, submitStatus, onRetr
 
     useEffect(() => {
         if (document.fullscreenElement) {
-            document.exitFullscreen().catch(() => {});
+            document.exitFullscreen().catch(() => { });
         }
     }, []);
 
     const handleReturn = () => {
         if (document.fullscreenElement) {
-            document.exitFullscreen().catch(() => {});
+            document.exitFullscreen().catch(() => { });
         }
         navigate("/job-board");
     };
@@ -62,8 +62,8 @@ export function SimulationCompleteModal({ timeLimitMinutes, submitStatus, onRetr
 
                 {showReview && (
                     <div className="flex w-full flex-col items-center gap-4 border-t border-neutral-200 pt-8 text-center">
-                        <p className="text-[16px] text-neutral-950">
-                            Please rate your experience using Gainday and tell us why you gave the score.
+                        <p className="text-[20px]  text-neutral-950">
+                            Please rate your experience using Gainday .
                         </p>
                         <ExperienceReviewForm
                             onSubmitted={() => setReviewHandled(true)}
