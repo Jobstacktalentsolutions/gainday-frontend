@@ -7,6 +7,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { useSubmitExperienceReview } from "../hooks/useExperienceReview";
 
+// Mirrors the backend limit in create-experience-review.dto.ts.
+const COMMENT_MAX = 1000;
+
 const STAR_VALUES = [1, 2, 3, 4, 5];
 // Ratings at or below this ask the reviewer why.
 const LOW_RATING_MAX = 2;
@@ -82,14 +85,27 @@ const ExperienceReviewModal = ({ onDismiss }: ExperienceReviewModalProps) => {
               <Textarea
                 id="experience-review-comment"
                 value={comment}
-                maxLength={1000}
                 onChange={(event) => setComment(event.target.value)}
                 placeholder="Tell us what didn't work for you"
+                aria-describedby="experience-review-comment-limit"
               />
+              <p
+                id="experience-review-comment-limit"
+                className={cn(
+                  "text-right text-sm tabular-nums",
+                  comment.length > COMMENT_MAX ? "text-error-500" : "text-neutral-400",
+                )}
+              >
+                {comment.length.toLocaleString("en-GB")} / {COMMENT_MAX.toLocaleString("en-GB")} characters
+              </p>
             </div>
           )}
 
-          <ActionButton type="submit" className="w-full" disabled={rating === null || isPending}>
+          <ActionButton
+            type="submit"
+            className="w-full"
+            disabled={rating === null || isPending || comment.length > COMMENT_MAX}
+          >
             {isPending ? "Submitting..." : "Submit"}
           </ActionButton>
         </form>

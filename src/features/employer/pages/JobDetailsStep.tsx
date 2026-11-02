@@ -4,7 +4,14 @@ import { useFormContext, Controller } from "react-hook-form";
 import { Sparkles, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import TagInput from "@/components/ui/tagInput";
-import { JOB_DETAILS_REQUIRED_FIELDS, jobDetailsSchema, type JobPostingFormValues } from "../schemas/jobPosting";
+import { cn } from "@/lib/utils";
+import {
+    BUSINESS_PROBLEM_MAX,
+    JOB_DESCRIPTION_MAX,
+    JOB_DETAILS_REQUIRED_FIELDS,
+    jobDetailsSchema,
+    type JobPostingFormValues,
+} from "../schemas/jobPosting";
 import TaskGenerationModal from "../components/TaskGenerationModal";
 import JobDescriptionPasteInput from "../components/JobDescriptionPasteInput";
 import TaskPromptEditor from "../components/TaskPromptEditor";
@@ -437,6 +444,9 @@ const JobDetailsStep = () => {
                             />
                         )}
                     />
+                    <p className={cn("text-right text-sm tabular-nums", formValues.description.length > JOB_DESCRIPTION_MAX ? "text-error-500" : "text-neutral-400")}>
+                        {formValues.description.length.toLocaleString("en-GB")} / {JOB_DESCRIPTION_MAX.toLocaleString("en-GB")} characters
+                    </p>
                 </div>
 
                 {/* What does this hire need to solve field — full width */}
@@ -445,6 +455,7 @@ const JobDetailsStep = () => {
                         label="What does this hire need to solve?"
                         placeholder="e.g Reduce onboarding drop-off by improving our KYC follow-up flow"
                         rows={3}
+                        hint={`Up to ${BUSINESS_PROBLEM_MAX} characters.`}
                         error={errors.businessProblem?.message}
                         {...register("businessProblem")}
                     />

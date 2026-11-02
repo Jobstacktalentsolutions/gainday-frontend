@@ -10,8 +10,10 @@ vi.mock("@/features/reviews/components/ExperienceReviewPrompt", () => ({ default
 
 type CurrentUser = ReturnType<typeof useCurrentUser>
 
-const signIn = (state: { role?: string; token?: string | null; loading?: boolean }) => {
-    const user = state.role ? { id: "1", email: "a@b.c", role: state.role } : null
+const signIn = (state: { role?: string; verified?: boolean; token?: string | null; loading?: boolean }) => {
+    const user = state.role
+        ? { id: "1", email: "a@b.c", role: state.role, isEmailVerified: state.verified ?? true }
+        : null
     vi.mocked(useCurrentUser).mockReturnValue({
         user,
         accessToken: state.token ?? (user ? "token" : null),
@@ -52,6 +54,14 @@ describe("CandidateRoute", () => {
         signIn({ role: "JOB_SEEKER" })
         renderAt("/candidate/applications")
         expect(screen.getByText("PROTECTED")).toBeInTheDocument()
+    })
+
+    it("sends unverified candidates to the verification screen, remembering where they were going", () => {
+        signIn({ role: "JOB_SEEKER", verified: false })
+        renderAt("/candidate/applications?tab=active")
+        expect(screen.getByTestId("where")).toHaveTextContent(
+            "/candidate/verify-email?redirect=%2Fcandidate%2Fapplications%3Ftab%3Dactive",
+        )
     })
 
     it("sends employers to their own area", () => {

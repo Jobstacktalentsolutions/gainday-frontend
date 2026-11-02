@@ -6,8 +6,16 @@ import type { BackendJobWithSimulation, BackendSalaryRange, JobStatus } from "..
 
 const POSTED_STATUSES: JobStatus[] = ["ACTIVE", "CLOSED"];
 
+// Only a positive amount counts as entered: null and 0 both mean "not provided".
+const toSalaryAmount = (amount: number | null): number | null => (amount !== null && amount > 0 ? amount : null);
+
 const formatSalary = (range: BackendSalaryRange | null): string => {
-    if (!range || (range.min == null && range.max == null)) return "Not disclosed";
+    if (!range) return "Not disclosed";
+    const min = toSalaryAmount(range.min);
+    const max = toSalaryAmount(range.max);
+    const single = min ?? max;
+    if (single === null) return "Not disclosed";
+
     const currency = range.currency === "USD" || !range.currency ? "GBP" : range.currency;
     const format = (amount: number) =>
         new Intl.NumberFormat("en-GB", {
@@ -16,8 +24,8 @@ const formatSalary = (range: BackendSalaryRange | null): string => {
             maximumFractionDigits: 0,
         }).format(amount);
 
-    if (range.min != null && range.max != null) return `${format(range.min)} to ${format(range.max)}`;
-    return format(range.min ?? range.max ?? 0);
+    if (min !== null && max !== null) return `${format(min)} to ${format(max)}`;
+    return format(single);
 };
 
 const formatDeadline = (deadline: string | null): string => {

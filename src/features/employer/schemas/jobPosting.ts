@@ -7,6 +7,12 @@ import { InterfaceType } from "@/features/simulation-tasks/types";
 // RoleRegistry.resolve), so this is never validated against a fixed list.
 export type JobRole = string;
 
+// Mirrors the backend limits (job-description.constants.ts and create-job.dto.ts). Shared with the
+// form hints so the limit shown to the employer is the limit enforced.
+export const JOB_DESCRIPTION_MIN = 40;
+export const JOB_DESCRIPTION_MAX = 5000;
+export const BUSINESS_PROBLEM_MAX = 500;
+
 export const jobDetailsBaseSchema = z.object({
     title: z.string().min(3, "Job title is required"),
     role: z.string().min(1, "Select or enter a role"),
@@ -30,12 +36,15 @@ export const jobDetailsBaseSchema = z.object({
     skills: z.array(z.string()).default([]),
     description: z
         .string()
-        .min(40, "Give at least 40 characters so Gainday has enough to work with")
-        .max(5000, "keep it under 5000 characters"),
+        .min(JOB_DESCRIPTION_MIN, `Give at least ${JOB_DESCRIPTION_MIN} characters so Gainday has enough to work with`)
+        .max(JOB_DESCRIPTION_MAX, `Keep the job description under ${JOB_DESCRIPTION_MAX.toLocaleString("en-GB")} characters`),
     // Optional — the specific business problem this hire should help solve; feeds the AI
     // pipeline's "Problem" extraction separately from `description` (see extraction.node.ts on
     // the backend, which never invents a problem if this is left blank).
-    businessProblem: z.string().max(500, "keep it under 500 characters").optional(),
+    businessProblem: z
+        .string()
+        .max(BUSINESS_PROBLEM_MAX, `Keep it under ${BUSINESS_PROBLEM_MAX} characters`)
+        .optional(),
 })
 
 //Job details schema refine

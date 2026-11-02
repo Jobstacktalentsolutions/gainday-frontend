@@ -23,6 +23,11 @@ const CandidateRoute = () => {
         return <Navigate to={user?.role === "EMPLOYER" ? "/employer/jobs" : "/landing"} replace />;
     }
 
+    if (!user.isEmailVerified) {
+        const redirect = encodeURIComponent(`${location.pathname}${location.search}`);
+        return <Navigate to={`/candidate/verify-email?redirect=${redirect}`} replace />;
+    }
+
     return (
         <>
             <Outlet />

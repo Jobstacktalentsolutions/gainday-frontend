@@ -11,6 +11,15 @@ interface SavedJob {
     status: string;
 }
 
+// An empty salary input means "not provided": send null, never 0 (Number("") is 0).
+// undefined is left out of the request so the backend keeps the saved value.
+const toSalaryBound = (value: unknown): number | null | undefined => {
+    if (value === undefined) return undefined;
+    if (value === null || value === "") return null;
+    const amount = Number(value);
+    return Number.isFinite(amount) && amount > 0 ? amount : null;
+};
+
 const buildBody = (values: Partial<JobPostingFormInput>) => ({
     title: values.title,
     role: values.role,
@@ -20,8 +29,8 @@ const buildBody = (values: Partial<JobPostingFormInput>) => ({
     employmentType: values.employmentType,
     applicationDeadline: values.deadline || undefined,
     isRemoteFriendly: values.isRemoteFriendly,
-    salaryFrom: values.salaryFrom === undefined ? undefined : Number(values.salaryFrom),
-    salaryTo: values.salaryTo === undefined ? undefined : Number(values.salaryTo),
+    salaryFrom: toSalaryBound(values.salaryFrom),
+    salaryTo: toSalaryBound(values.salaryTo),
     companyDescription: values.companyDescription,
     skills: values.skills,
     description: values.description,

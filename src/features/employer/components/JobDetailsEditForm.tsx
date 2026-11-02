@@ -5,7 +5,8 @@ import { FormSelect } from "@/components/form/FormSelect";
 import { FormTextarea } from "@/components/form/FormTextarea";
 import TagInput from "@/components/ui/tagInput";
 import TaskPromptEditor from "./TaskPromptEditor";
-import type { JobPostingFormValues } from "../schemas/jobPosting";
+import { cn } from "@/lib/utils";
+import { BUSINESS_PROBLEM_MAX, JOB_DESCRIPTION_MAX, type JobPostingFormValues } from "../schemas/jobPosting";
 import { EMPLOYMENT_TYPES } from "../constants/jobPostingOptions";
 
 interface JobDetailsEditFormProps {
@@ -20,6 +21,7 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
     formState: { errors },
   } = useFormContext<JobPostingFormValues>();
   const title = watch("title");
+  const description = watch("description");
 
   return (
     <div className="flex flex-col gap-6">
@@ -124,6 +126,7 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
       <FormTextarea
         label="What this hire needs to solve"
         rows={3}
+        hint={`Up to ${BUSINESS_PROBLEM_MAX} characters.`}
         placeholder="e.g. We need someone to own our enterprise onboarding process..."
         error={errors.businessProblem?.message}
         {...register("businessProblem")}
@@ -145,6 +148,9 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
             />
           )}
         />
+        <p className={cn("text-right text-sm tabular-nums", description.length > JOB_DESCRIPTION_MAX ? "text-error-500" : "text-neutral-400")}>
+          {description.length.toLocaleString("en-GB")} / {JOB_DESCRIPTION_MAX.toLocaleString("en-GB")} characters
+        </p>
       </div>
     </div>
   );
