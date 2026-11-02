@@ -4,7 +4,7 @@ import type { JobPostingFormValues } from "../schemas/jobPosting";
 export interface JobPreviewDetails extends Job {
     description: string;
     category: string;
-    salary: string;
+    salary: string | null; // null when the employer entered no salary
     deadline: string; // display string, e.g. "30 Aug 2026"
     isRemoteFriendly: boolean;
     requiredSkills: string[];

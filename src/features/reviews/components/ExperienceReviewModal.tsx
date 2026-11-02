@@ -15,10 +15,13 @@ const STAR_VALUES = [1, 2, 3, 4, 5];
 const LOW_RATING_MAX = 2;
 
 interface ExperienceReviewModalProps {
-  onDismiss: () => void;
+  /** The completed assessment being rated. */
+  submissionId: string;
+  /** Called after the rating is saved, or when the X is pressed. */
+  onClose: () => void;
 }
 
-const ExperienceReviewModal = ({ onDismiss }: ExperienceReviewModalProps) => {
+const ExperienceReviewModal = ({ submissionId, onClose }: ExperienceReviewModalProps) => {
   const [rating, setRating] = useState<number | null>(null);
   const [comment, setComment] = useState("");
   const { mutate, isPending } = useSubmitExperienceReview();
@@ -31,9 +34,16 @@ const ExperienceReviewModal = ({ onDismiss }: ExperienceReviewModalProps) => {
 
     const trimmedComment = comment.trim();
     mutate(
-      { rating, comment: isLowRating && trimmedComment ? trimmedComment : undefined },
       {
-        onSuccess: () => toast.success("Thanks for sharing your experience"),
+        submissionId,
+        rating,
+        comment: isLowRating && trimmedComment ? trimmedComment : undefined,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Thanks for sharing your experience");
+          onClose();
+        },
         onError: () => toast.error("Couldn't submit your rating. Please try again."),
       },
     );
@@ -44,7 +54,7 @@ const ExperienceReviewModal = ({ onDismiss }: ExperienceReviewModalProps) => {
     <Dialog
       open
       onOpenChange={(open, details) => {
-        if (!open && details.reason === "close-press") onDismiss();
+        if (!open && details.reason === "close-press") onClose();
       }}
     >
       <DialogContent className="sm:max-w-md">

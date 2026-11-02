@@ -356,7 +356,7 @@ const JobModerationDetailPage = () => {
             <div className="flex flex-col rounded-2xl border border-purple-200 bg-purple-50/50 p-5 shadow-xs">
               <h2 className="text-sm font-bold text-purple-900 mb-2 flex items-center gap-1.5">
                 <BrainCircuit className="size-4 text-purple-600" />
-                Target Business Challenge
+                Target Business Problem
               </h2>
               <p className="text-xs text-purple-800 leading-relaxed whitespace-pre-wrap">
                 {job.businessProblem}

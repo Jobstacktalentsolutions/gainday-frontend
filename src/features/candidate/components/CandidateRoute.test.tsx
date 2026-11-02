@@ -6,7 +6,6 @@ import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser"
 
 vi.mock("@/features/auth/hooks/useCurrentUser", () => ({ useCurrentUser: vi.fn() }))
 vi.mock("@/components/ui/AppLoader", () => ({ default: () => <p>LOADING</p> }))
-vi.mock("@/features/reviews/components/ExperienceReviewPrompt", () => ({ default: () => null }))
 
 type CurrentUser = ReturnType<typeof useCurrentUser>
 

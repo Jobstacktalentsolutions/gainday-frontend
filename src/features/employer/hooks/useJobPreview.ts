@@ -9,12 +9,12 @@ const POSTED_STATUSES: JobStatus[] = ["ACTIVE", "CLOSED"];
 // Only a positive amount counts as entered: null and 0 both mean "not provided".
 const toSalaryAmount = (amount: number | null): number | null => (amount !== null && amount > 0 ? amount : null);
 
-const formatSalary = (range: BackendSalaryRange | null): string => {
-    if (!range) return "Not disclosed";
+const formatSalary = (range: BackendSalaryRange | null): string | null => {
+    if (!range) return null;
     const min = toSalaryAmount(range.min);
     const max = toSalaryAmount(range.max);
     const single = min ?? max;
-    if (single === null) return "Not disclosed";
+    if (single === null) return null;
 
     const currency = range.currency === "USD" || !range.currency ? "GBP" : range.currency;
     const format = (amount: number) =>

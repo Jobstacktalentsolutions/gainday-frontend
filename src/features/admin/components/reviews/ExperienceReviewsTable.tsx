@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { Link } from "react-router-dom";
 import { Star } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
@@ -52,6 +53,7 @@ const ExperienceReviewsTable = () => {
                 <TableRow>
                   <TableHead>Date</TableHead>
                   <TableHead>Reviewer</TableHead>
+                  <TableHead>Assessment</TableHead>
                   <TableHead>Rating</TableHead>
                   <TableHead>Comment</TableHead>
                 </TableRow>
@@ -61,10 +63,31 @@ const ExperienceReviewsTable = () => {
                   <TableRow key={review.id}>
                     <TableCell className="whitespace-nowrap text-neutral-600">{formatDate(review.createdAt)}</TableCell>
                     <TableCell>
-                      <p className="font-medium text-neutral-900">{review.reviewerName ?? "Unnamed"}</p>
+                      {review.role === "JOB_SEEKER" ? (
+                        <Link
+                          to={`/admin/candidate-management/${review.reviewerUserId}`}
+                          className="font-medium text-neutral-900 hover:text-primary-500 hover:underline"
+                        >
+                          {review.reviewerName ?? "Unnamed"}
+                        </Link>
+                      ) : (
+                        <p className="font-medium text-neutral-900">{review.reviewerName ?? "Unnamed"}</p>
+                      )}
                       <p className="text-xs text-neutral-500">
                         {ROLE_LABELS[review.role]} · {review.email}
                       </p>
+                    </TableCell>
+                    <TableCell>
+                      {review.jobId && review.jobTitle ? (
+                        <Link
+                          to={`/admin/content-moderation/jobs/${review.jobId}`}
+                          className="text-neutral-900 hover:text-primary-500 hover:underline"
+                        >
+                          {review.jobTitle}
+                        </Link>
+                      ) : (
+                        <span className="text-neutral-400">—</span>
+                      )}
                     </TableCell>
                     <TableCell>
                       <RatingStars rating={review.rating} />

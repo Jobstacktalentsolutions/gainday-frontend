@@ -2,9 +2,12 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ActionButton } from "@/components/ui/ActionButton";
 import spinner from "@/assets/Spinner.svg";
+import ExperienceReviewModal from "@/features/reviews/components/ExperienceReviewModal";
 
 interface SimulationCompleteModalProps {
     timeLimitMinutes: number;
+    /** The submission just completed. Once it has submitted, the candidate is asked to rate it. */
+    submissionId: string | null;
     /** "pending" while the final PUT /submissions/:id/submit is in flight, "error" if it
      *  failed (answers are still safe locally — see useSimulationRunStore's persist), "done"
      *  once it succeeded. */
@@ -12,7 +15,7 @@ interface SimulationCompleteModalProps {
     onRetry?: () => void;
 }
 
-export function SimulationCompleteModal({ timeLimitMinutes, submitStatus, onRetry }: SimulationCompleteModalProps) {
+export function SimulationCompleteModal({ timeLimitMinutes, submissionId, submitStatus, onRetry }: SimulationCompleteModalProps) {
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -28,7 +31,10 @@ export function SimulationCompleteModal({ timeLimitMinutes, submitStatus, onRetr
         navigate("/job-board");
     };
 
+    const showReview = submitStatus === "done" && submissionId !== null;
+
     return (
+        <>
         <div className="fixed inset-0 z-30 flex items-center justify-center bg-[rgba(178,201,255,0.1)] backdrop-blur-[15px]">
             <div className="flex w-141.5 max-w-[90vw] flex-col items-center gap-15 rounded-2xl bg-white p-12 shadow-[0px_1px_20px_rgba(123,123,123,0.05),0px_4px_10px_rgba(123,123,123,0.05)]">
                 <div className="flex flex-col items-center gap-2 text-center">
@@ -67,5 +73,7 @@ export function SimulationCompleteModal({ timeLimitMinutes, submitStatus, onRetr
                 )}
             </div>
         </div>
+        {showReview && <ExperienceReviewModal submissionId={submissionId} onClose={handleReturn} />}
+        </>
     );
 }

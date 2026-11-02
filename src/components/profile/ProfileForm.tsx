@@ -87,6 +87,11 @@ const ProfileForm = () => {
       if (dirtyFields.brief) payload.brief = (values.brief ?? "").trim();
     }
 
+    if (Object.keys(payload).length === 0) {
+      toast("No changes to save");
+      return;
+    }
+
     try {
       const updated = await updateProfile.mutateAsync(payload);
       reset(values);
@@ -204,7 +209,7 @@ const ProfileForm = () => {
             Discard changes
           </button>
         )}
-        <ActionButton type="submit" size="lg" className="w-full sm:w-auto sm:px-8" disabled={!isDirty || updateProfile.isPending}>
+        <ActionButton type="submit" size="lg" className="w-full sm:w-auto sm:px-8" disabled={updateProfile.isPending}>
           {updateProfile.isPending ? (
             <>
               <Loader2 className="size-4 animate-spin" aria-hidden="true" />
