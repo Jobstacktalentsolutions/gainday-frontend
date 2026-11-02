@@ -217,7 +217,14 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder, contentClassNam
                         Delete table
                     </ToolbarButton>
                 </div>
-                <div className={cn("min-h-45 px-4 py-3 scrollbar-modern", contentClassName)}>
+                <div
+                    className={cn("min-h-45 cursor-text px-4 py-3 scrollbar-modern", contentClassName)}
+                    // The editable area is only as tall as the text, so clicks on the empty part of the box
+                    // never reached it. Send those clicks to the editor.
+                    onClick={(event) => {
+                        if (event.target === event.currentTarget) editor?.commands.focus("end");
+                    }}
+                >
                     {/* Scoped prose styles — keeps heading/list/link rules self-contained
                         and avoids relying on Tailwind scanning dynamic class arrays. */}
                     <style>{`

@@ -1,5 +1,6 @@
 
 import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 import { useMediaQuery } from "@/hooks/useMediaQuery";
@@ -58,11 +59,9 @@ const AuthCard = ({
                     <>
                         <div className="flex flex-col items-center gap-4 text-center pt-6">
                             <div className="mb-5 lg:hidden">
-                                <img
-                                    src={brandLogo}
-                                    alt="Brand logo"
-                                    className=""
-                                />
+                                <Link to="/" aria-label="Gainday home">
+                                    <img src={brandLogo} alt="Gainday" />
+                                </Link>
                             </div>
                             <div className="lg:max-w-103 space-y-2">
                                 <h2 className="text-2xl leading-8 tracking-[-0.32px] text-primary-950 lg:text-[32px]">
