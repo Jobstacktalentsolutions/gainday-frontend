@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useFormContext, Controller } from "react-hook-form";
-import { Sparkles, RotateCcw } from "lucide-react";
+import { Sparkles, RotateCcw, Upload } from "lucide-react";
 import { toast } from "sonner";
 import TagInput from "@/components/ui/tagInput";
 import { cn } from "@/lib/utils";
@@ -13,7 +13,7 @@ import {
     type JobPostingFormValues,
 } from "../schemas/jobPosting";
 import TaskGenerationModal from "../components/TaskGenerationModal";
-import JobDescriptionPasteInput from "../components/JobDescriptionPasteInput";
+import ImportJobDescriptionModal from "../components/ImportJobDescriptionModal";
 import TaskPromptEditor from "../components/TaskPromptEditor";
 import type { ParsedJobDetails } from "../hooks/useParseJobDescription";
 import { useSaveJobDetails } from "../hooks/useSaveJobDraft";
@@ -60,6 +60,7 @@ const JobDetailsStep = () => {
     // True only while the current description value is exactly what the parser
     // produced. Cleared the instant the person edits the field by hand.
     const [isDescriptionAiGenerated, setIsDescriptionAiGenerated] = useState(false);
+    const [isImportOpen, setIsImportOpen] = useState(false);
     const saveDetailsMutation = useSaveJobDetails();
     const triggerGeneration = useTriggerGeneration();
     const { data: profile } = useProfile();
@@ -229,8 +230,12 @@ const JobDetailsStep = () => {
                 </p>
             </div>
 
-            {/* Paste-and-parse entry point — first thing on the page */}
-            <JobDescriptionPasteInput onParsed={handleParsed} hasExistingContent={hasExistingContent} />
+            <ImportJobDescriptionModal
+                open={isImportOpen}
+                onOpenChange={setIsImportOpen}
+                onParsed={handleParsed}
+                hasExistingContent={hasExistingContent}
+            />
 
             {/* Form fields — two-column grid on desktop */}
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -414,17 +419,27 @@ const JobDetailsStep = () => {
                     />
                 </div>
 
-                {/* Job description — the full, candidate-facing writeup. Populated (as markdown) by
-                    pasting-and-parsing an existing description above, or written by hand. */}
+                {/* Job description — the full, candidate-facing writeup. Filled by importing an
+                    existing description, or written by hand. */}
                 <div className="flex flex-col gap-1.5 lg:col-span-2">
                     <div className="flex items-center justify-between gap-2">
                         <label className="text-base font-medium text-neutral-800">Job description<span aria-hidden="true" className="text-error-500">*</span></label>
-                        {isDescriptionAiGenerated && (
-                            <span className="flex w-fit items-center gap-1 rounded-full bg-primary-100 px-2.5 py-1 text-xs font-medium text-primary-700">
-                                <Sparkles className="size-3" aria-hidden="true" />
-                                AI-generated — review before continuing
-                            </span>
-                        )}
+                        <div className="flex items-center gap-3">
+                            {isDescriptionAiGenerated && (
+                                <span className="flex w-fit items-center gap-1 rounded-full bg-primary-100 px-2.5 py-1 text-xs font-medium text-primary-700">
+                                    <Sparkles className="size-3" aria-hidden="true" />
+                                    AI-generated — review before continuing
+                                </span>
+                            )}
+                            <button
+                                type="button"
+                                onClick={() => setIsImportOpen(true)}
+                                className="flex cursor-pointer items-center gap-1.5 text-xs font-medium text-primary-600 hover:text-primary-500 transition-colors"
+                            >
+                                <Upload className="size-3.5" aria-hidden="true" />
+                                <span>Import existing</span>
+                            </button>
+                        </div>
                     </div>
                     <Controller
                         control={control}
@@ -439,7 +454,7 @@ const JobDetailsStep = () => {
                                     setIsDescriptionAiGenerated(false);
                                 }}
                                 error={errors.description?.message}
-                                placeholder="Write or paste the full job description here..."
+                                placeholder="Write the job description candidates will see, or import an existing one..."
                                 contentClassName="max-h-64 overflow-y-auto lg:max-h-96"
                             />
                         )}
