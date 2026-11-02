@@ -67,9 +67,11 @@ export const useSimulationRunStore = create<SimulationRunState>()(
 
             startRun: (jobId, simulationId, timeLimitMinutes) => {
                 const state = get();
+                // A completed simulation for this job must never be reset/restarted.
+                if (state.isComplete && state.jobId === jobId) return;
+
                 // idempotent — a remount/refresh for the same active session must not
-                // reset the timer or wipe progress. But a completed run must always
-                // restart — otherwise persisted isComplete:true blocks the new session.
+                // reset the timer or wipe progress.
                 // Also restart if the stored endTimestamp is already in the past: that
                 // means the previous session expired and was never properly cleaned up
                 // (e.g. the tab was closed before markComplete ran), so treat it as a

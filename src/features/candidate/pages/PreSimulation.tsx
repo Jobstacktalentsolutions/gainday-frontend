@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useAppliedJobIds } from "../hooks/useAppliedJobIds";
 import { Maximize, MonitorCheck, Clock, ChevronLeft } from "lucide-react";
 import CandidateHeader from "../components/CandidateHeader";
 import { CompleteProfileDialog } from "../components/CompleteProfileDialog";
@@ -40,6 +41,11 @@ export default function PreSimulation() {
     const { user } = useCurrentUser();
 
     const { data: simulation, isLoading: isSimulationLoading } = useJobSimulation(job);
+    const { appliedSet } = useAppliedJobIds();
+
+    if (job && appliedSet.has(job.id)) {
+        return <Navigate to="/job-board" replace />;
+    }
 
     if (isJobLoading || (job && isSimulationLoading)) {
         return (

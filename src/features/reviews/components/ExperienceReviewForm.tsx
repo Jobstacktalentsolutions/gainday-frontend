@@ -12,11 +12,9 @@ const COMMENT_MAX = 1000;
 interface ExperienceReviewFormProps {
     /** Called once the rating has been saved. */
     onSubmitted?: () => void;
-    /** Shows a "Skip" link when provided. */
-    onSkip?: () => void;
 }
 
-const ExperienceReviewForm = ({ onSubmitted, onSkip }: ExperienceReviewFormProps) => {
+const ExperienceReviewForm = ({ onSubmitted }: ExperienceReviewFormProps) => {
     const [rating, setRating] = useState<number | null>(null);
     const [comment, setComment] = useState("");
     const { mutate, isPending } = useSubmitExperienceReview();
@@ -75,14 +73,15 @@ const ExperienceReviewForm = ({ onSubmitted, onSkip }: ExperienceReviewFormProps
             )}
 
             <div className="flex flex-col items-center gap-2">
-                <ActionButton type="submit" className="w-full" disabled={rating === null || isPending}>
+                <ActionButton
+                    type="submit"
+                    variant="ghost"
+                    size="lg"
+                    className="w-full"
+                    disabled={rating === null || isPending}
+                >
                     {isPending ? "Submitting..." : "Submit"}
                 </ActionButton>
-                {onSkip && (
-                    <button type="button" onClick={onSkip} className="cursor-pointer text-sm text-neutral-500 hover:text-neutral-700">
-                        Skip
-                    </button>
-                )}
             </div>
         </form>
     );

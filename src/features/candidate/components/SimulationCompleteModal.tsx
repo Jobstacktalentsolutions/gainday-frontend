@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ActionButton } from "@/components/ui/ActionButton";
 import ExperienceReviewForm from "@/features/reviews/components/ExperienceReviewForm";
 import { useMyExperienceReview } from "@/features/reviews/hooks/useExperienceReview";
+import { useSimulationRunStore } from "@/features/candidate/store/useSimulationRunStore";
 import spinner from "@/assets/Spinner.svg";
 
 interface SimulationCompleteModalProps {
@@ -32,6 +33,7 @@ export function SimulationCompleteModal({ timeLimitMinutes, submitStatus, onRetr
         if (document.fullscreenElement) {
             document.exitFullscreen().catch(() => { });
         }
+        useSimulationRunStore.getState().resetRun();
         navigate("/job-board");
     };
 
@@ -62,12 +64,12 @@ export function SimulationCompleteModal({ timeLimitMinutes, submitStatus, onRetr
 
                 {showReview && (
                     <div className="flex w-full flex-col items-center gap-4 border-t border-neutral-200 pt-8 text-center">
-                        <p className="text-[20px]  text-neutral-950">
-                            Please rate your experience using Gainday .
+                        <p className="text-[20px] text-neutral-950">
+                            Please rate your experience using Gainday.
                         </p>
+                        {/* Skip is omitted — "Return to job board" below covers that action */}
                         <ExperienceReviewForm
                             onSubmitted={() => setReviewHandled(true)}
-                            onSkip={() => setReviewHandled(true)}
                         />
                     </div>
                 )}

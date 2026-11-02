@@ -11,6 +11,7 @@ import { useProtectedRoute } from "@/features/auth/hooks/useProtectedRoute";
 import { OBJECTIVE_ANSWER_DESCRIBERS } from "../components/objectiveAnswers/registry";
 import type { CandidateSimulationTask } from "../types/simulation";
 import { useJobDetails } from "../hooks/useJobDetails";
+import { useAppliedJobIds } from "../hooks/useAppliedJobIds";
 import { useJobSimulation } from "../hooks/useJobSimulation";
 import { useStartSubmission, useSubmitSimulation } from "../hooks/useSubmission";
 import { useSimulationRunStore, type TaskAnswer } from "../store/useSimulationRunStore";
@@ -88,6 +89,20 @@ export default function TaskRunner() {
     const simulation = simulationQuery.data;
 
     const runStore = useSimulationRunStore();
+    const { appliedSet } = useAppliedJobIds();
+
+    // Once a run is marked complete the candidate must not be able to restart it by refreshing
+    // the page or revisiting the URL. Redirect immediately to the job board so the simulation
+    // never re-initialises with a blank slate. getState() reads the persisted Zustand store
+    // directly, so this fires correctly even after a full page reload.
+    useEffect(() => {
+        const { isComplete, jobId: storedJobId } = useSimulationRunStore.getState();
+        if ((isComplete && storedJobId === jobId) || appliedSet.has(jobId ?? "")) {
+            navigate("/job-board", { replace: true });
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     // Which task was on screen when a proctoring event fires — read via ref (not the `task`
     // variable computed further down, after the early-return loading/error checks) since the
     // guards below are wired up unconditionally near the top of the component, before that
@@ -152,7 +167,7 @@ export default function TaskRunner() {
     // Creates the Submission row for this run once job + simulation are known. Skipped
     // once the store already has a submissionId (a resumed/persisted run).
     useEffect(() => {
-        if (!job || !simulation || runStore.submissionId || hasRequestedSubmissionRef.current) return;
+        if (!job || !simulation || runStore.isComplete || appliedSet.has(job.id) || runStore.submissionId || hasRequestedSubmissionRef.current) return;
         hasRequestedSubmissionRef.current = true;
         startSubmission.mutate(
             { jobId: job.id, simulationId: simulation.id },
