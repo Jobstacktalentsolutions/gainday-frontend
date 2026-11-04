@@ -23,6 +23,18 @@ apiClient.interceptors.request.use((config) => {
 apiClient.interceptors.response.use(
     (response) => response,
     (error) => {
+        // The backend blocks unverified employers and job seekers from every app route. Send them to
+        // the verification screen, which can resend the link and then return them to where they were.
+        if (error.response?.status === 403 && error.response?.data?.code === "EMAIL_NOT_VERIFIED") {
+            const verifyPath =
+                useAuthStore.getState().user?.role === "JOB_SEEKER"
+                    ? "/candidate/verify-email"
+                    : "/employer/verify-email"
+            if (!window.location.pathname.startsWith(verifyPath)) {
+                window.location.href = verifyPath
+            }
+        }
+
         if (error.response?.status === 401) {
             const requestUrl = error.config?.url || ""
             const isAuthRequest =

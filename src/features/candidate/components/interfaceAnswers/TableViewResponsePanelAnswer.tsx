@@ -14,8 +14,6 @@ interface Props {
     readOnly?: boolean;
 }
 
-const MAX_CHARS = 1000;
-
 // The table is the material the candidate reasons from (a ledger to reconcile, a lead list to
 // prioritise), so it comes first. A classification is answered on the table itself — one bucket
 // picker per row, matched to its item by the row's first cell — rather than in a separate list
@@ -105,7 +103,7 @@ const TableViewResponsePanelAnswer = ({
             ) : (
                 <textarea
                     value={value}
-                    onChange={(event) => onChange(event.target.value.slice(0, MAX_CHARS))}
+                    onChange={(event) => onChange(event.target.value)}
                     placeholder={payload.placeholder ?? "Type your response here..."}
                     className="h-38.25 w-full resize-none rounded-lg border border-neutral-200 px-3.5 py-2.5 text-[16px] text-neutral-700 shadow-[0px_1px_1px_rgba(10,13,18,0.05)] outline-none placeholder:text-neutral-400 focus:border-primary-500"
                 />

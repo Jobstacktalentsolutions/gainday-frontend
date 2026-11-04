@@ -1,6 +1,6 @@
 import type { KeyboardEvent } from "react";
 import { cn } from "@/lib/utils";
-import { countWords, limitState } from "./replyLimits";
+import { capResponse, countWords, limitState, limitTextClass } from "../utils/responseLimits";
 import { isSendShortcut } from "./chatHelpers";
 
 interface Props {
@@ -13,13 +13,13 @@ interface Props {
     placeholder: string | null;
 }
 
-// The reply box: multi-line, with a live word counter. It warns softly at 90% of the limit and blocks
-// sending over the limit.
+// The reply box: multi-line, with a live word counter. Text stops at the word limit, the counter warns
+// from 90% of it and turns red once it is reached.
 const ReplyBox = ({ value, onChange, onSend, maxWords, disabled, placeholder }: Props) => {
     const words = countWords(value);
     const state = limitState(words, maxWords);
     const empty = value.trim() === "";
-    const canSend = !disabled && !empty && state !== "over";
+    const canSend = !disabled && !empty;
 
     const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
         if (isSendShortcut(event)) {
@@ -36,7 +36,7 @@ const ReplyBox = ({ value, onChange, onSend, maxWords, disabled, placeholder }: 
                 value={value}
                 disabled={disabled}
                 placeholder={placeholder ?? "Write your reply…"}
-                onChange={(event) => onChange(event.target.value)}
+                onChange={(event) => onChange(capResponse(event.target.value, maxWords))}
                 onKeyDown={handleKeyDown}
                 className="w-full resize-y rounded-xl border border-neutral-200 px-4 py-3 text-[15px] text-neutral-900 outline-none placeholder:text-neutral-400 focus:border-primary-500 disabled:bg-neutral-50"
             />
@@ -45,9 +45,9 @@ const ReplyBox = ({ value, onChange, onSend, maxWords, disabled, placeholder }: 
                     aria-live="polite"
                     className={cn(
                         "text-sm",
-                        state === "over" && "font-medium text-error-600",
                         state === "warning" && "text-warning-600",
                         state === "ok" && "text-neutral-500",
+                        limitTextClass(state),
                     )}
                 >
                     {words} / {maxWords} words

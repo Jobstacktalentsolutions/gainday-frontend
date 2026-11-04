@@ -1,20 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
-import type { JobStatus } from "../types/job";
-import type { SimulationTask } from "@/features/simulation-tasks/types";
+import type { BackendJobWithSimulation } from "../types/job";
 
-interface JobWithSimulation {
-    id: string;
-    status: JobStatus;
-    simulation: {
-        id: string;
-        tasks: SimulationTask[];
-        timeLimitMinutes: number;
-    } | null;
-}
-
-const fetchJobWithSimulation = async (jobId: string): Promise<JobWithSimulation> => {
-    const { data } = await apiClient.get<JobWithSimulation>(
+const fetchJobWithSimulation = async (jobId: string): Promise<BackendJobWithSimulation> => {
+    const { data } = await apiClient.get<BackendJobWithSimulation>(
         `/jobs/${jobId}/with-simulation`,
     );
     return data;

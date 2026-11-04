@@ -10,21 +10,25 @@ const STAR_VALUES = [1, 2, 3, 4, 5];
 const COMMENT_MAX = 1000;
 
 interface ExperienceReviewFormProps {
+    /** The completed assessment being rated. */
+    submissionId: string;
     /** Called once the rating has been saved. */
     onSubmitted?: () => void;
+    /** Shows a "Skip" link when provided. */
+    onSkip?: () => void;
 }
 
-const ExperienceReviewForm = ({ onSubmitted }: ExperienceReviewFormProps) => {
+const ExperienceReviewForm = ({ submissionId, onSubmitted, onSkip }: ExperienceReviewFormProps) => {
     const [rating, setRating] = useState<number | null>(null);
     const [comment, setComment] = useState("");
     const { mutate, isPending } = useSubmitExperienceReview();
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (rating === null) return;
+        if (rating === null || comment.length > COMMENT_MAX) return;
 
         mutate(
-            { rating, comment: comment.trim() || undefined },
+            { submissionId, rating, comment: comment.trim() || undefined },
             {
                 onSuccess: () => {
                     toast.success("Thanks for sharing your experience");
@@ -65,10 +69,19 @@ const ExperienceReviewForm = ({ onSubmitted }: ExperienceReviewFormProps) => {
                     <Textarea
                         id="experience-review-comment"
                         value={comment}
-                        maxLength={COMMENT_MAX}
                         onChange={(event) => setComment(event.target.value)}
                         placeholder="How can we improve?"
+                        aria-describedby="experience-review-comment-limit"
                     />
+                    <p
+                        id="experience-review-comment-limit"
+                        className={cn(
+                            "text-right text-sm tabular-nums",
+                            comment.length > COMMENT_MAX ? "text-error-500" : "text-neutral-400",
+                        )}
+                    >
+                        {comment.length.toLocaleString("en-GB")} / {COMMENT_MAX.toLocaleString("en-GB")} characters
+                    </p>
                 </div>
             )}
 
@@ -78,10 +91,19 @@ const ExperienceReviewForm = ({ onSubmitted }: ExperienceReviewFormProps) => {
                     variant="ghost"
                     size="lg"
                     className="w-full"
-                    disabled={rating === null || isPending}
+                    disabled={rating === null || isPending || comment.length > COMMENT_MAX}
                 >
                     {isPending ? "Submitting..." : "Submit"}
                 </ActionButton>
+                {onSkip && (
+                    <button
+                        type="button"
+                        onClick={onSkip}
+                        className="cursor-pointer text-sm text-neutral-500 hover:text-neutral-700"
+                    >
+                        Skip
+                    </button>
+                )}
             </div>
         </form>
     );

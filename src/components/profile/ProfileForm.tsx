@@ -19,18 +19,24 @@ import {
 } from "@/features/auth/utils/profileOptions";
 import { cn } from "@/lib/utils";
 
+// Mirrors the backend limits in update-profile.dto.ts.
 const SUMMARY_MAX = 1000;
+const NAME_MAX = 255;
 
 const buildSchema = (isEmployer: boolean, isCandidate: boolean) =>
   z.object({
-    fullName: z.string().trim().min(1, "Full name is required"),
-    companyName: isEmployer ? z.string().trim().min(1, "Company name is required") : z.string().optional(),
+    fullName: z.string().trim().min(1, "Full name is required").max(NAME_MAX, `Keep your full name under ${NAME_MAX} characters`),
+    companyName: isEmployer
+      ? z.string().trim().min(1, "Company name is required").max(NAME_MAX, `Keep your company name under ${NAME_MAX} characters`)
+      : z.string().optional(),
     phoneNumber: z
       .string()
       .optional()
       .refine((value) => !value || isValidPhoneNumber(value), "Enter a valid phone number for the selected country"),
     pronouns: isCandidate ? z.string().min(1, "Select your pronouns") : z.string().optional(),
-    title: isCandidate ? z.string().trim().min(1, "Job title is required") : z.string().optional(),
+    title: isCandidate
+      ? z.string().trim().min(1, "Job title is required").max(NAME_MAX, `Keep your job title under ${NAME_MAX} characters`)
+      : z.string().optional(),
     gender: z.string().optional(),
     brief: z
       .string()
@@ -81,6 +87,11 @@ const ProfileForm = () => {
       if (dirtyFields.brief) payload.brief = (values.brief ?? "").trim();
     }
 
+    if (Object.keys(payload).length === 0) {
+      toast("No changes to save");
+      return;
+    }
+
     try {
       const updated = await updateProfile.mutateAsync(payload);
       reset(values);
@@ -97,12 +108,12 @@ const ProfileForm = () => {
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <FormInput label="Full name" required placeholder="Enter your full name" error={errors.fullName?.message} {...register("fullName")} />
+        <FormInput label="Full name" required placeholder="Enter your full name" hint={`Up to ${NAME_MAX} characters.`} error={errors.fullName?.message} {...register("fullName")} />
 
         <FormInput label="Email address" value={user?.email ?? ""} readOnly disabled hint="Your email address can't be changed." />
 
         {isEmployer && (
-          <FormInput label="Company name" required placeholder="Enter your company name" error={errors.companyName?.message} {...register("companyName")} />
+          <FormInput label="Company name" required placeholder="Enter your company name" hint={`Up to ${NAME_MAX} characters.`} error={errors.companyName?.message} {...register("companyName")} />
         )}
 
         <Controller
@@ -157,6 +168,7 @@ const ProfileForm = () => {
               label="Job title"
               required
               placeholder="The role you're looking for, e.g. Account Executive"
+              hint={`Up to ${NAME_MAX} characters.`}
               error={errors.title?.message}
               {...register("title")}
             />
@@ -173,13 +185,13 @@ const ProfileForm = () => {
               <FormTextarea
                 label="Professional summary"
                 rows={5}
-                hint="A short introduction employers will see once they unlock you."
+                hint={`Up to ${SUMMARY_MAX.toLocaleString("en-GB")} characters. Employers see this once they unlock your profile.`}
                 placeholder="Summarise your experience, strengths and what you're looking for"
                 error={errors.brief?.message}
                 {...register("brief")}
               />
               <p className={cn("text-right text-sm tabular-nums", overLimit ? "text-error-500" : "text-neutral-400")}>
-                {brief.length.toLocaleString("en-GB")} / {SUMMARY_MAX.toLocaleString("en-GB")}
+                {brief.length.toLocaleString("en-GB")} / {SUMMARY_MAX.toLocaleString("en-GB")} characters
               </p>
             </div>
           </>
@@ -197,7 +209,7 @@ const ProfileForm = () => {
             Discard changes
           </button>
         )}
-        <ActionButton type="submit" size="lg" className="w-full sm:w-auto sm:px-8" disabled={!isDirty || updateProfile.isPending}>
+        <ActionButton type="submit" size="lg" className="w-full sm:w-auto sm:px-8" disabled={updateProfile.isPending}>
           {updateProfile.isPending ? (
             <>
               <Loader2 className="size-4 animate-spin" aria-hidden="true" />

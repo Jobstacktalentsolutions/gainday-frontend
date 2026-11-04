@@ -29,4 +29,10 @@ export interface ExperienceReviewItem {
   email: string;
   /** Candidate's full name, or the employer's company name. */
   reviewerName: string | null;
+  /** The reviewer's user ID, which the admin candidate page is keyed by. */
+  reviewerUserId: string;
+  /** The completed assessment this rating is for. Null for ratings given before assessments were linked. */
+  submissionId: string | null;
+  jobId: string | null;
+  jobTitle: string | null;
 }

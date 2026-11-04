@@ -1,7 +1,7 @@
 import { toSafeRedirect, withRedirect } from "@/lib/safeRedirect";
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Mail, MailWarning } from "lucide-react";
 import { apiClient } from "@/lib/api/client";
 import { ActionButton } from "@/components/ui/ActionButton";
@@ -179,6 +179,14 @@ const VerifyEmailFlow = ({ role }: { role: Role }) => {
   const isVerified = verifyQuery.isSuccess || legacyVerified || meQuery.data?.isEmailVerified === true;
   const isChecking = (!!token && verifyQuery.isPending) || meQuery.isLoading;
   const isFailed = verifyQuery.isError || legacyFailed;
+
+  // The route guards read verification from the signed-in profile, so refresh it once verified.
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    if (isVerified && accessToken) {
+      queryClient.invalidateQueries({ queryKey: ["auth", "profile"] });
+    }
+  }, [isVerified, accessToken, queryClient]);
 
   const startOver = () => {
     useAuthStore.getState().clearAuth();

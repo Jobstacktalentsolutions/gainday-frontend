@@ -1,42 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
-import type { JobStatus } from "../types/job";
-import type { JobRole } from "../schemas/jobPosting";
 import type { JobPreviewDetails } from "../types/jobPreview";
-import type { SimulationTask } from "@/features/simulation-tasks/types";
 import { fetchJobSubmissionsCount } from "./useJobSubmissionsCount";
-
-interface BackendSalaryRange {
-    min: number | null;
-    max: number | null;
-    currency: string;
-}
-
-interface BackendJobWithSimulation {
-    id: string;
-    title: string | null;
-    description: string | null;
-    role: JobRole | null;
-    location: string | null;
-    employmentType: string | null;
-    isRemoteFriendly: boolean;
-    requiredSkills: string[];
-    salaryRange: BackendSalaryRange | null;
-    applicationDeadline: string | null;
-    businessProblem: string | null;
-    status: JobStatus;
-    updatedAt: string;
-    simulation: {
-        id: string;
-        tasks: SimulationTask[];
-        timeLimitMinutes: number;
-    } | null;
-}
+import type { BackendJobWithSimulation, BackendSalaryRange, JobStatus } from "../types/job";
 
 const POSTED_STATUSES: JobStatus[] = ["ACTIVE", "CLOSED"];
 
-const formatSalary = (range: BackendSalaryRange | null): string => {
-    if (!range || (range.min == null && range.max == null)) return "Not disclosed";
+// Only a positive amount counts as entered: null and 0 both mean "not provided".
+const toSalaryAmount = (amount: number | null): number | null => (amount !== null && amount > 0 ? amount : null);
+
+const formatSalary = (range: BackendSalaryRange | null): string | null => {
+    if (!range) return null;
+    const min = toSalaryAmount(range.min);
+    const max = toSalaryAmount(range.max);
+    const single = min ?? max;
+    if (single === null) return null;
+
     const currency = range.currency === "USD" || !range.currency ? "GBP" : range.currency;
     const format = (amount: number) =>
         new Intl.NumberFormat("en-GB", {
@@ -45,8 +24,8 @@ const formatSalary = (range: BackendSalaryRange | null): string => {
             maximumFractionDigits: 0,
         }).format(amount);
 
-    if (range.min != null && range.max != null) return `${format(range.min)} to ${format(range.max)}`;
-    return format(range.min ?? range.max ?? 0);
+    if (min !== null && max !== null) return `${format(min)} to ${format(max)}`;
+    return format(single);
 };
 
 const formatDeadline = (deadline: string | null): string => {

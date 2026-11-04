@@ -47,10 +47,6 @@ export default function EnvironmentCheckPage() {
     const { data: simulation } = useJobSimulation(job);
     const { appliedSet } = useAppliedJobIds();
 
-    if (jobId && appliedSet.has(jobId)) {
-        return <Navigate to="/job-board" replace />;
-    }
-
     const fullscreenCheck = useFullscreenCheck();
     const connectionCheck = useConnectionCheck();
     const tabGuard = useTabVisibilityGuard({
@@ -95,6 +91,10 @@ export default function EnvironmentCheckPage() {
             setStartError("Couldn't start your simulation attempt. Please try again.");
             setIsStarting(false);
         }
+    }
+
+    if (jobId && appliedSet.has(jobId)) {
+        return <Navigate to="/job-board" replace />;
     }
 
     return (

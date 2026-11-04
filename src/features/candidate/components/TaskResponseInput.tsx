@@ -1,9 +1,17 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { cn } from "@/lib/utils";
 import { INTERFACE_ANSWER_RENDERERS } from "./interfaceAnswers/registry";
 import { TaskObjectiveOptions } from "./TaskObjectiveOptions";
 import type { ClassificationAnswerState } from "./interfaceAnswers/types";
 import type { CandidateSimulationTask } from "../types/simulation";
+import {
+    MAX_RESPONSE_CHARS,
+    capResponse,
+    countWords,
+    limitState,
+    limitTextClass,
+} from "../utils/responseLimits";
 
 interface TaskResponseInputProps {
     task: CandidateSimulationTask;
@@ -13,8 +21,6 @@ interface TaskResponseInputProps {
     objectiveResponse: unknown;
     onObjectiveChange: (response: unknown) => void;
 }
-
-const MAX_CHARS = 1000;
 
 const DEFAULT_WORD_LIMIT = { min: 25, max: 150 };
 
@@ -26,11 +32,6 @@ function wordLimitOf(payload: Record<string, unknown>): { min: number; max: numb
         return { min: Number(limit.min), max: Number(limit.max) };
     }
     return DEFAULT_WORD_LIMIT;
-}
-
-function countWords(text: string) {
-    const trimmed = text.trim();
-    return trimmed.length === 0 ? 0 : trimmed.split(/\s+/).length;
 }
 
 // Which widget renders is resolved entirely through INTERFACE_ANSWER_RENDERERS, keyed by
@@ -50,6 +51,10 @@ export function TaskResponseInput({
     const Renderer = INTERFACE_ANSWER_RENDERERS[task.interfaceType];
     const wordCount = countWords(value);
     const wordLimit = wordLimitOf(task.interfacePayload);
+    const wordState = limitState(wordCount, wordLimit.max);
+    const charState = limitState(value.length, MAX_RESPONSE_CHARS);
+    // Every change goes through the caps, so no interface can store a response past either limit.
+    const setResponse = (next: string) => onChange(capResponse(next, wordLimit.max));
 
     const objectiveSlot = (
         <TaskObjectiveOptions task={task} response={objectiveResponse} onChange={onObjectiveChange} />
@@ -81,7 +86,7 @@ export function TaskResponseInput({
                 <Renderer
                     payload={task.interfacePayload}
                     value={value}
-                    onChange={onChange}
+                    onChange={setResponse}
                     objectiveSlot={objectiveSlot}
                     classification={classification}
                 />
@@ -95,8 +100,8 @@ export function TaskResponseInput({
             )}
 
             <div className="flex w-full items-center justify-between text-[16px] text-neutral-950">
-                <span>{wordCount} / {wordLimit.max} words</span>
-                <span>{value.length} / {MAX_CHARS} characters</span>
+                <span className={cn(limitTextClass(wordState))}>{wordCount} / {wordLimit.max} words</span>
+                <span className={cn(limitTextClass(charState))}>{value.length} / {MAX_RESPONSE_CHARS} characters</span>
             </div>
         </div>
     );

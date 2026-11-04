@@ -28,6 +28,11 @@ const EmployerRoute = () => {
         return <Navigate to="/landing" replace />;
     }
 
+    if (!user.isEmailVerified) {
+        const redirect = encodeURIComponent(`${location.pathname}${location.search}`);
+        return <Navigate to={`/employer/verify-email?redirect=${redirect}`} replace />;
+    }
+
     return <Outlet />;
 };
 

@@ -17,6 +17,8 @@ export interface AuthUser {
   brief?: string | null;
   title?: string | null;
   isProfileComplete?: boolean;
+  // Employers and job seekers must verify before using the app; the route guards check this.
+  isEmailVerified?: boolean;
   mustChangePassword?: boolean;
   adminRole?: 'SUPER_ADMIN' | 'MANAGER' | 'MODERATOR';
   isSuperAdmin?: boolean;

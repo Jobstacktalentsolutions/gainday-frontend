@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ActionButton } from "@/components/ui/ActionButton";
 import ExperienceReviewForm from "@/features/reviews/components/ExperienceReviewForm";
-import { useMyExperienceReview } from "@/features/reviews/hooks/useExperienceReview";
 import { useSimulationRunStore } from "@/features/candidate/store/useSimulationRunStore";
 import spinner from "@/assets/Spinner.svg";
 
 interface SimulationCompleteModalProps {
     timeLimitMinutes: number;
+    /** The submission just completed. Once it has submitted, the candidate is asked to rate it. */
+    submissionId: string | null;
     /** "pending" while the final PUT /submissions/:id/submit is in flight, "error" if it
      *  failed (answers are still safe locally — see useSimulationRunStore's persist), "done"
      *  once it succeeded. */
@@ -15,13 +16,16 @@ interface SimulationCompleteModalProps {
     onRetry?: () => void;
 }
 
-export function SimulationCompleteModal({ timeLimitMinutes, submitStatus, onRetry }: SimulationCompleteModalProps) {
+export function SimulationCompleteModal({
+    timeLimitMinutes,
+    submissionId,
+    submitStatus,
+    onRetry,
+}: SimulationCompleteModalProps) {
     const navigate = useNavigate();
     const [reviewHandled, setReviewHandled] = useState(false);
 
-    // Ask for a rating only once the submission went through, and only if they haven't rated before.
-    const { data: myReview } = useMyExperienceReview(submitStatus === "done");
-    const showReview = submitStatus === "done" && myReview?.review === null && !reviewHandled;
+    const showReview = submitStatus === "done" && submissionId !== null && !reviewHandled;
 
     useEffect(() => {
         if (document.fullscreenElement) {
@@ -67,9 +71,10 @@ export function SimulationCompleteModal({ timeLimitMinutes, submitStatus, onRetr
                         <p className="text-[20px] text-neutral-950">
                             Please rate your experience using Gainday.
                         </p>
-                        {/* Skip is omitted — "Return to job board" below covers that action */}
                         <ExperienceReviewForm
+                            submissionId={submissionId}
                             onSubmitted={() => setReviewHandled(true)}
+                            onSkip={() => setReviewHandled(true)}
                         />
                     </div>
                 )}

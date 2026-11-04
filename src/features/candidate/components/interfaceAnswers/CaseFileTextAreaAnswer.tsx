@@ -10,8 +10,6 @@ interface Props extends Omit<InterfaceAnswerProps, "payload"> {
     payload: CaseFileTextAreaPayload;
 }
 
-const MAX_CHARS = 1000;
-
 // The case file is reference material: read-only tabs (customer record, ticket, policy) the
 // candidate works from. Tabs switch in place, so the written answer stays on screen beneath them.
 const CaseFileTextAreaAnswer = ({ payload, value, onChange, objectiveSlot, readOnly }: Props) => {
@@ -52,7 +50,7 @@ const CaseFileTextAreaAnswer = ({ payload, value, onChange, objectiveSlot, readO
             ) : (
                 <textarea
                     value={value}
-                    onChange={(event) => onChange(event.target.value.slice(0, MAX_CHARS))}
+                    onChange={(event) => onChange(event.target.value)}
                     placeholder={payload.placeholder ?? "Type your response here..."}
                     className="h-38.25 w-full resize-none rounded-lg border border-neutral-200 px-3.5 py-2.5 text-[16px] text-neutral-700 shadow-[0px_1px_1px_rgba(10,13,18,0.05)] outline-none placeholder:text-neutral-400 focus:border-primary-500"
                 />

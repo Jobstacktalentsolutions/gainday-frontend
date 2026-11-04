@@ -9,6 +9,20 @@ import { useJobDraftStore } from "../stores/useJobDraftStore";
 import { JOB_POSTING_DEFAULT_VALUES } from "../mocks/jobPostingDefaults";
 import JobPostingStepIndicator from "../components/JobPostingStepIndicator";
 import { useSaveJobDraft } from "../hooks/useSaveJobDraft";
+import { useJobSimulation } from "../hooks/useJobSimulation";
+import { jobToFormValues } from "../utils/jobFormValues";
+import type { BackendJobWithSimulation } from "../types/job";
+
+// Tasks belong to the saved simulation, so they are never kept in the local draft.
+const toDraftDetails = (values: Partial<JobPostingFormInput>): Partial<JobPostingFormInput> => {
+    const details = { ...values };
+    delete details.tasks;
+    return details;
+};
+
+interface WizardFormProps {
+    savedJob: BackendJobWithSimulation | null;
+}
 
 // Spinner shown in the content area while a lazy step chunk is loading
 const StepContentFallback = () => (
@@ -17,27 +31,22 @@ const StepContentFallback = () => (
     </div>
 );
 
-const JobPostingWizardLayout = () => {
+const WizardForm = ({ savedJob }: WizardFormProps) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { draft, jobId, setDraft, setJobId, clearDraft } = useJobDraftStore();
     const saveDraftMutation = useSaveJobDraft();
     const [isSavingExit, setIsSavingExit] = useState(false);
 
-    
-
-    const sanitizedTasks = (draft.tasks || JOB_POSTING_DEFAULT_VALUES.tasks || [])
-        .filter((t) => t?.title?.trim() || t?.questionPrompt?.trim());
-
+    // A saved job seeds the whole form from the backend. The local draft is only for a job that has
+    // not been saved yet.
     const form = useForm<JobPostingFormInput>({
         resolver: zodResolver(jobPostingSchema),
-        defaultValues: {
-            ...JOB_POSTING_DEFAULT_VALUES,
-            ...draft,
-            tasks: sanitizedTasks,
-        },
+        defaultValues: savedJob
+            ? jobToFormValues(savedJob)
+            : { ...JOB_POSTING_DEFAULT_VALUES, ...draft, tasks: [] },
         mode: "onChange",
-    })
+    });
 
     const [isDone, setIsDone] = useState(false);
 
@@ -53,10 +62,10 @@ const JobPostingWizardLayout = () => {
         return "details" as const;
     })();
 
-    //persist to localstorage as the form is being filled
+    //persist the details to localstorage as the form is being filled
     useEffect(() => {
         const subscription = form.watch((values) => {
-            setDraft(values as Partial<JobPostingFormInput>);
+            setDraft(toDraftDetails(values as Partial<JobPostingFormInput>));
         });
         return () => subscription.unsubscribe();
 
@@ -75,12 +84,12 @@ const JobPostingWizardLayout = () => {
         } finally {
             setIsSavingExit(false);
         }
-    }
+    };
 
     const handleDiscardDraft = () => {
         clearDraft();
         form.reset(JOB_POSTING_DEFAULT_VALUES);
-    }
+    };
 
     // Steps after "details" only make sense for a job in progress. Publishing clears the draft and
     // job ID, so pressing Back into them would show an empty form. The success screen is exempt.
@@ -121,6 +130,25 @@ const JobPostingWizardLayout = () => {
             </div>
         </FormProvider>
     );
-}
+};
+
+// The job the wizard was opened with is read from the backend before the form mounts, so the form is
+// created from saved values and never reset afterwards. Ids saved during this visit are already in
+// the form, so they are not re-read.
+const JobPostingWizardLayout = () => {
+    const { jobId: storedJobId } = useJobDraftStore();
+    const [initialJobId] = useState(storedJobId);
+    const savedJobQuery = useJobSimulation(initialJobId);
+
+    if (initialJobId && savedJobQuery.isError) {
+        return <p className="px-4 pt-40 text-center text-neutral-500">Couldn't load this job — refresh the page to try again.</p>;
+    }
+
+    if (initialJobId && !savedJobQuery.data) {
+        return <p className="px-4 pt-40 text-center text-neutral-500">Loading your job…</p>;
+    }
+
+    return <WizardForm savedJob={savedJobQuery.data ?? null} />;
+};
 
 export default JobPostingWizardLayout;

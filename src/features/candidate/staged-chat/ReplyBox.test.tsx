@@ -18,14 +18,15 @@ function Harness({ maxWords, onSend }: { maxWords: number; onSend: () => void })
 }
 
 describe("ReplyBox", () => {
-    it("blocks Send and shows the count as over the limit", () => {
+    it("stops the reply at the word limit and shows the count in red", () => {
         render(<Harness maxWords={2} onSend={vi.fn()} />);
         const box = screen.getByRole("textbox", { name: "Your reply" });
 
         fireEvent.change(box, { target: { value: "one two three" } });
 
-        expect(screen.getByRole("button", { name: "Send" })).toBeDisabled();
-        expect(screen.getByText("3 / 2 words")).toHaveClass("text-error-600");
+        expect(box).toHaveValue("one two");
+        expect(screen.getByText("2 / 2 words")).toHaveClass("text-error-600");
+        expect(screen.getByRole("button", { name: "Send" })).toBeEnabled();
     });
 
     it("sends on Ctrl+Enter when the reply is within the limit", () => {
@@ -41,14 +42,4 @@ describe("ReplyBox", () => {
         expect(onSend).toHaveBeenCalledTimes(1);
     });
 
-    it("does not send on Ctrl+Enter when the reply is over the limit", () => {
-        const onSend = vi.fn();
-        render(<Harness maxWords={1} onSend={onSend} />);
-        const box = screen.getByRole("textbox", { name: "Your reply" });
-
-        fireEvent.change(box, { target: { value: "two words" } });
-        fireEvent.keyDown(box, { key: "Enter", ctrlKey: true, metaKey: false });
-
-        expect(onSend).not.toHaveBeenCalled();
-    });
 });
