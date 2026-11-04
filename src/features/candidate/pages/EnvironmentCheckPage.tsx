@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useAppliedJobIds } from "../hooks/useAppliedJobIds";
 import { Sparkles, Maximize, Wifi, MonitorCheck, Check, X, Loader2 } from "lucide-react";
 import CandidateHeader from "../components/CandidateHeader";
 import { ActionButton } from "@/components/ui/ActionButton";
@@ -44,6 +45,7 @@ export default function EnvironmentCheckPage() {
 
     const { job } = useJobDetails(jobId);
     const { data: simulation } = useJobSimulation(job);
+    const { appliedSet } = useAppliedJobIds();
 
     const fullscreenCheck = useFullscreenCheck();
     const connectionCheck = useConnectionCheck();
@@ -89,6 +91,10 @@ export default function EnvironmentCheckPage() {
             setStartError("Couldn't start your simulation attempt. Please try again.");
             setIsStarting(false);
         }
+    }
+
+    if (jobId && appliedSet.has(jobId)) {
+        return <Navigate to="/job-board" replace />;
     }
 
     return (

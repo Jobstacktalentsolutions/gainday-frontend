@@ -1,5 +1,5 @@
 import { useEffect, useState, Suspense } from "react";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, useNavigate, useLocation, Navigate } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -46,9 +46,12 @@ const WizardForm = ({ savedJob }: WizardFormProps) => {
             ? jobToFormValues(savedJob)
             : { ...JOB_POSTING_DEFAULT_VALUES, ...draft, tasks: [] },
         mode: "onChange",
-    })
+    });
 
     const [isDone, setIsDone] = useState(false);
+
+    const isLaterStep = location.pathname.includes("simulation-builder") || location.pathname.includes("review");
+    const isShowingPublishSuccess = isDone && location.pathname.includes("review");
 
     // Derive current step from the URL or published state
     const currentStep = (() => {
@@ -81,11 +84,17 @@ const WizardForm = ({ savedJob }: WizardFormProps) => {
         } finally {
             setIsSavingExit(false);
         }
-    }
+    };
 
     const handleDiscardDraft = () => {
         clearDraft();
         form.reset(JOB_POSTING_DEFAULT_VALUES);
+    };
+
+    // Steps after "details" only make sense for a job in progress. Publishing clears the draft and
+    // job ID, so pressing Back into them would show an empty form. The success screen is exempt.
+    if (isLaterStep && !jobId && !isShowingPublishSuccess) {
+        return <Navigate to="/employer/jobs" replace />;
     }
 
     return (
@@ -121,7 +130,7 @@ const WizardForm = ({ savedJob }: WizardFormProps) => {
             </div>
         </FormProvider>
     );
-}
+};
 
 // The job the wizard was opened with is read from the backend before the form mounts, so the form is
 // created from saved values and never reset afterwards. Ids saved during this visit are already in
@@ -140,6 +149,6 @@ const JobPostingWizardLayout = () => {
     }
 
     return <WizardForm savedJob={savedJobQuery.data ?? null} />;
-}
+};
 
 export default JobPostingWizardLayout;

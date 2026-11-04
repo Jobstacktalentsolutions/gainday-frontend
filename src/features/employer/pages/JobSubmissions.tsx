@@ -155,23 +155,25 @@ const JobSubmissions = () => {
 
                 {!isLoading && !isError && (
                     hasSubmissions && jobId ? (
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-3">
+                            <div className="flex flex-wrap items-center gap-x-5 gap-y-1 rounded-xl bg-white px-4 py-3 text-sm text-neutral-600">
+                                <span className="font-medium uppercase tracking-wide text-neutral-500">Breakdown key</span>
+                                {CATEGORY_ORDER.map((category) => (
+                                    <span key={category.key}>
+                                        <abbr title={category.label} className="font-semibold text-neutral-900 no-underline">
+                                            {category.short}
+                                        </abbr>
+                                        {" = "}
+                                        {category.label}
+                                    </span>
+                                ))}
+                            </div>
                             <SubmissionsTable
                                 jobId={jobId}
                                 submissions={sortedSubmissions}
                                 selectedIds={lockedSelectedIds}
                                 onToggleSelect={toggleSelect}
                             />
-                            <div className="flex flex-wrap justify-end gap-x-4 gap-y-1 text-xs text-neutral-400">
-                                <span className="font-medium uppercase tracking-wide text-neutral-500">Breakdown key:</span>
-                                {CATEGORY_ORDER.map((category) => (
-                                    <span key={category.key}>
-                                        <span className="font-semibold text-neutral-600">{category.short}</span>
-                                        {" — "}
-                                        {category.label}
-                                    </span>
-                                ))}
-                            </div>
                         </div>
                     ) : (
                         <SubmissionsEmptyState />

@@ -110,7 +110,7 @@ const SignIn = () => {
 
     return (
         <AuthCard
-            title="Log in to Gainday"
+            title="Employer log in"
             subtitle="Review applications and manage job posts."
         >
             <form
@@ -182,6 +182,11 @@ const SignIn = () => {
                     prompt="New to Gainday?"
                     linkText="Create an account"
                     to="/employer/signup"
+                />
+                <AuthSwitchLink
+                    prompt="Looking for a job?"
+                    linkText="Candidate log in"
+                    to="/candidate/signin"
                 />
 
             </form>

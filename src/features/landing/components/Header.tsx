@@ -39,11 +39,6 @@ const Header = () => {
     const { user, isAuthenticated } = useCurrentUser();
     const navigate = useNavigate();
 
-    const logoTarget = isAuthenticated
-        ? user?.role === "EMPLOYER"
-            ? "/employer/jobs"
-            : "/job-board"
-        : "/";
 
 
     const employerTarget =
@@ -58,7 +53,7 @@ const Header = () => {
                 {/* ── Top bar ── */}
                 <div className="flex items-center justify-between px-6 py-4 lg:py-5 md:px-30">
                     <Link
-                        to={logoTarget}
+                        to="/"
                         className="shrink-0 cursor-pointer transition-opacity duration-200 hover:opacity-75 active:opacity-50"
                     >
                         <img
