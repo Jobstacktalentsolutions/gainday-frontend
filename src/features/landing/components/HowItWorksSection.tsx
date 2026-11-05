@@ -7,7 +7,7 @@ import { SectionSheen } from "./SectionSheen";
 
 const candidateSteps = [
     "Clicks apply, no CV upload as step one.",
-    "Complete a role-relevant task generated from the job description.",
+    "Completes a role-relevant task generated from the job description.",
     "Task is scored against role-relevant competencies. Results stack into your Capability Passport.",
 ];
 
