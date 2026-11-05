@@ -35,7 +35,7 @@ const cards: ProblemCard[] = [
     },
     {
         title: "Evidence evaporates",
-        description: "Candidates prove themselves in assessments and interviews, then start from zero on the next application.",
+        description: "Capable candidates rarely get the chance to prove their skills, and every new application starts from zero.",
         icon: secureIcon,
         tint: "bg-secondary-100/50",
         orb: "amber",
