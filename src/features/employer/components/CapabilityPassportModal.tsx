@@ -28,7 +28,7 @@ interface CapabilityPassportModalProps {
 }
 
 // The full passport is visible before unlock — the lock only gates the candidate's contact details
-// (and their brief; gender and pronouns show either way).
+// (and their brief; gender shows either way).
 const CapabilityPassportModal = ({
     open,
     onOpenChange,

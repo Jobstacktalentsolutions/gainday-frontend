@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
 import { useAuthStore } from "../store/authStore";
-import type { Gender, Pronouns } from "../utils/profileOptions";
+import type { Gender } from "../utils/profileOptions";
 
 export interface Profile {
   id: string;
@@ -13,7 +13,6 @@ export interface Profile {
   companyName?: string;
   phoneNumber?: string;
   gender?: Gender | null;
-  pronouns?: Pronouns | null;
   brief?: string | null;
   title?: string | null;
   isProfileComplete?: boolean;
@@ -25,7 +24,6 @@ export interface UpdateProfilePayload {
   phoneNumber?: string;
   /** `null` clears it. */
   gender?: Gender | null;
-  pronouns?: Pronouns;
   brief?: string;
   title?: string;
 }

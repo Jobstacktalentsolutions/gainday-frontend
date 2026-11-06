@@ -148,8 +148,8 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
             />
           )}
         />
-        <p className={cn("text-right text-sm tabular-nums", description.length > JOB_DESCRIPTION_MAX ? "text-error-500" : "text-neutral-400")}>
-          {description.length.toLocaleString("en-GB")} / {JOB_DESCRIPTION_MAX.toLocaleString("en-GB")} characters
+        <p className={cn("text-right text-sm tabular-nums", (description?.length ?? 0) > JOB_DESCRIPTION_MAX ? "text-error-500" : "text-neutral-400")}>
+          {(description?.length ?? 0).toLocaleString("en-GB")} / {JOB_DESCRIPTION_MAX.toLocaleString("en-GB")} characters
         </p>
       </div>
     </div>

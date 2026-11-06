@@ -8,7 +8,7 @@ interface CompleteProfileDialogProps {
 }
 
 // Shown in place of starting an application while the candidate's profile is missing the
-// required pronouns (the backend rejects the application too — see SubmissionsService.createSubmission).
+// required job title (the backend rejects the application too — see SubmissionsService.createSubmission).
 export function CompleteProfileDialog({ open, onOpenChange, onCompleteProfile }: CompleteProfileDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -18,7 +18,7 @@ export function CompleteProfileDialog({ open, onOpenChange, onCompleteProfile }:
             Complete your profile first
           </DialogTitle>
           <DialogDescription className="text-[16px] text-neutral-700">
-            Add your pronouns so employers address you correctly. It only takes a moment.
+            Add your job title so employers know what role you're looking for. It only takes a moment.
           </DialogDescription>
         </DialogHeader>
         <ActionButton variant="primary" size="lg" onClick={onCompleteProfile}>

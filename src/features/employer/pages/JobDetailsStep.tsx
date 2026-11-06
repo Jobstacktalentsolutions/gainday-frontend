@@ -230,6 +230,31 @@ const JobDetailsStep = () => {
                 </p>
             </div>
 
+            {/* Quick Import Callout */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-2xl border border-primary-100 bg-primary-50/70 p-4 sm:px-6 sm:py-4 transition-all">
+                <div className="flex items-center gap-3.5">
+                    <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary-100 text-primary-600">
+                        <Upload className="size-5" aria-hidden="true" />
+                    </div>
+                    <div className="flex flex-col gap-0.5">
+                        <p className="text-base font-semibold text-neutral-900">
+                            Do you already have a job description?
+                        </p>
+                        <p className="text-sm text-neutral-600">
+                            Import your text or file to automatically parse and pre-fill the job details.
+                        </p>
+                    </div>
+                </div>
+                <button
+                    type="button"
+                    onClick={() => setIsImportOpen(true)}
+                    className="flex shrink-0 cursor-pointer items-center gap-2 rounded-xl bg-primary-600 hover:bg-primary-500 active:bg-primary-700 px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition-colors"
+                >
+                    <Upload className="size-4" aria-hidden="true" />
+                    <span>Import job description</span>
+                </button>
+            </div>
+
             <ImportJobDescriptionModal
                 open={isImportOpen}
                 onOpenChange={setIsImportOpen}
@@ -424,22 +449,12 @@ const JobDetailsStep = () => {
                 <div className="flex flex-col gap-1.5 lg:col-span-2">
                     <div className="flex items-center justify-between gap-2">
                         <label className="text-base font-medium text-neutral-800">Job description<span aria-hidden="true" className="text-error-500">*</span></label>
-                        <div className="flex items-center gap-3">
-                            {isDescriptionAiGenerated && (
-                                <span className="flex w-fit items-center gap-1 rounded-full bg-primary-100 px-2.5 py-1 text-xs font-medium text-primary-700">
-                                    <Sparkles className="size-3" aria-hidden="true" />
-                                    AI-generated — review before continuing
-                                </span>
-                            )}
-                            <button
-                                type="button"
-                                onClick={() => setIsImportOpen(true)}
-                                className="flex cursor-pointer items-center gap-1.5 text-xs font-medium text-primary-600 hover:text-primary-500 transition-colors"
-                            >
-                                <Upload className="size-3.5" aria-hidden="true" />
-                                <span>Import existing</span>
-                            </button>
-                        </div>
+                        {isDescriptionAiGenerated && (
+                            <span className="flex w-fit items-center gap-1 rounded-full bg-primary-100 px-2.5 py-1 text-xs font-medium text-primary-700">
+                                <Sparkles className="size-3" aria-hidden="true" />
+                                AI-generated — review before continuing
+                            </span>
+                        )}
                     </div>
                     <Controller
                         control={control}
@@ -459,8 +474,8 @@ const JobDetailsStep = () => {
                             />
                         )}
                     />
-                    <p className={cn("text-right text-sm tabular-nums", formValues.description.length > JOB_DESCRIPTION_MAX ? "text-error-500" : "text-neutral-400")}>
-                        {formValues.description.length.toLocaleString("en-GB")} / {JOB_DESCRIPTION_MAX.toLocaleString("en-GB")} characters
+                    <p className={cn("text-right text-sm tabular-nums", (formValues.description?.length ?? 0) > JOB_DESCRIPTION_MAX ? "text-error-500" : "text-neutral-400")}>
+                        {(formValues.description?.length ?? 0).toLocaleString("en-GB")} / {JOB_DESCRIPTION_MAX.toLocaleString("en-GB")} characters
                     </p>
                 </div>
 

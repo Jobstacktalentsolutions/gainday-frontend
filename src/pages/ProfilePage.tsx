@@ -65,7 +65,7 @@ const ProfilePage = () => {
                 className="flex items-start gap-3 rounded-2xl border border-warning-200 bg-warning-50 p-4 text-sm text-warning-900"
               >
                 <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                <p>Your profile is incomplete. Add your pronouns and job title to be able to apply for jobs.</p>
+                <p>Your profile is incomplete. Add your job title to be able to apply for jobs.</p>
               </div>
             )}
 

@@ -197,7 +197,7 @@ export default function PreSimulation() {
                 </div>
             </main>
 
-            {/* Reached by direct link without a complete profile — applying needs pronouns. */}
+            {/* Reached by direct link without a complete profile — applying needs job title. */}
             <CompleteProfileDialog
                 open={user?.isProfileComplete === false}
                 onOpenChange={() => navigate(`/job-board/${job.id}`)}

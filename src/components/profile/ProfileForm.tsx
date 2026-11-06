@@ -13,9 +13,7 @@ import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { useUpdateProfile, type UpdateProfilePayload } from "@/features/auth/hooks/useProfile";
 import {
   GENDER_OPTIONS,
-  PRONOUN_OPTIONS,
   type Gender,
-  type Pronouns,
 } from "@/features/auth/utils/profileOptions";
 import { cn } from "@/lib/utils";
 
@@ -33,7 +31,6 @@ const buildSchema = (isEmployer: boolean, isCandidate: boolean) =>
       .string()
       .optional()
       .refine((value) => !value || isValidPhoneNumber(value), "Enter a valid phone number for the selected country"),
-    pronouns: isCandidate ? z.string().min(1, "Select your pronouns") : z.string().optional(),
     title: isCandidate
       ? z.string().trim().min(1, "Job title is required").max(NAME_MAX, `Keep your job title under ${NAME_MAX} characters`)
       : z.string().optional(),
@@ -64,7 +61,6 @@ const ProfileForm = () => {
       fullName: user?.fullName ?? "",
       companyName: user?.companyName ?? "",
       phoneNumber: user?.phoneNumber ?? "",
-      pronouns: user?.pronouns ?? "",
       title: user?.title ?? "",
       gender: user?.gender ?? "",
       brief: user?.brief ?? "",
@@ -81,7 +77,6 @@ const ProfileForm = () => {
     if (isEmployer && dirtyFields.companyName) payload.companyName = (values.companyName ?? "").trim();
     if (dirtyFields.phoneNumber) payload.phoneNumber = values.phoneNumber ?? "";
     if (isCandidate) {
-      if (dirtyFields.pronouns && values.pronouns) payload.pronouns = values.pronouns as Pronouns;
       if (dirtyFields.title) payload.title = (values.title ?? "").trim();
       if (dirtyFields.gender) payload.gender = values.gender ? (values.gender as Gender) : null;
       if (dirtyFields.brief) payload.brief = (values.brief ?? "").trim();
@@ -156,14 +151,6 @@ const ProfileForm = () => {
 
         {isCandidate && (
           <>
-            <FormSelect label="Pronouns" required placeholder="Select your pronouns" error={errors.pronouns?.message} {...register("pronouns")}>
-              {PRONOUN_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </FormSelect>
-
             <FormInput
               label="Job title"
               required

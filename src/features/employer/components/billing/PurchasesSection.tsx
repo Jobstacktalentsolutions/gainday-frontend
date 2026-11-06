@@ -17,17 +17,24 @@ const PurchasesSection = () => {
     const [date, setDate] = useState<string | null>(null);
     const [visible, setVisible] = useState(PAGE_SIZE);
 
-    const packOptions = useMemo(
-        () => Array.from(new Set((data ?? []).map((row) => row.packName))).map((name) => ({ value: name, label: name })),
+    // Pending transactions are excluded from display until settled (SUCCEEDED or FAILED)
+    // so employers aren't confused by unconfirmed or in-progress checkouts.
+    const settledPurchases = useMemo(
+        () => (data ?? []).filter((row) => row.status !== "PENDING"),
         [data],
+    );
+
+    const packOptions = useMemo(
+        () => Array.from(new Set(settledPurchases.map((row) => row.packName))).map((name) => ({ value: name, label: name })),
+        [settledPurchases],
     );
 
     const rows = useMemo(
         () =>
-            (data ?? []).filter(
+            settledPurchases.filter(
                 (row) => (!pack || row.packName === pack) && isWithinDatePreset(row.createdAt, date),
             ),
-        [data, pack, date],
+        [settledPurchases, pack, date],
     );
 
     const hasFilters = pack !== null || date !== null;
@@ -44,8 +51,8 @@ const PurchasesSection = () => {
             isLoading={isLoading}
             isError={isError}
             onRetry={() => refetch()}
-            isEmpty={!isLoading && !isError && (data?.length ?? 0) === 0}
-            isFilteredEmpty={rows.length === 0 && (data?.length ?? 0) > 0}
+            isEmpty={!isLoading && !isError && settledPurchases.length === 0}
+            isFilteredEmpty={rows.length === 0 && settledPurchases.length > 0}
             emptyTitle="No purchases yet"
             emptyHint="Packs you buy will show up here, with a receipt for each one."
             onClearFilters={clearFilters}

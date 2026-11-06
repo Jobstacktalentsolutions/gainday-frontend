@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Gender, Pronouns } from '../utils/profileOptions';
+import type { Gender } from '../utils/profileOptions';
 
 export interface AuthUser {
   id: string;
@@ -11,9 +11,8 @@ export interface AuthUser {
   fullName?: string;
   companyName?: string;
   phoneNumber?: string;
-  // Candidate-only. `isProfileComplete` is false until pronouns have been set.
+  // Candidate-only. `isProfileComplete` is false until job title has been set.
   gender?: Gender | null;
-  pronouns?: Pronouns | null;
   brief?: string | null;
   title?: string | null;
   isProfileComplete?: boolean;

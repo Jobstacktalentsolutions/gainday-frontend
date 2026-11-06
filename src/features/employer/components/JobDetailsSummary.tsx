@@ -76,7 +76,7 @@ const JobDetailsSummary = ({ onEdit }: JobDetailsSummaryProps) => {
       </div>
 
       {/* Skills tags */}
-      {values.skills.length > 0 && (
+      {Boolean(values.skills?.length) && (
         <div className="flex flex-wrap gap-2">
           {values.skills.map((skill) => (
             <span

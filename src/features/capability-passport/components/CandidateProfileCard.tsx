@@ -1,6 +1,5 @@
 import {
     GENDER_LABELS,
-    PRONOUN_LABELS,
     type CandidateProfileInfo,
 } from "@/features/auth/utils/profileOptions";
 
@@ -11,12 +10,12 @@ interface CandidateProfileCardProps {
 
 const isPresent = <T,>(value: T | null | undefined): value is T => value !== null && value !== undefined;
 
-// Job title, gender, pronouns and the candidate's own brief, as shown on a Capability Passport — to
+// Job title, gender and the candidate's own brief, as shown on a Capability Passport — to
 // the candidate themselves, and to employers. Employers get the brief only once unlocked, so it is
 // null beforehand and simply not rendered.
 const CandidateProfileCard = ({ profile }: CandidateProfileCardProps) => {
-    const { title, gender, pronouns, brief } = profile;
-    if (!isPresent(title) && !isPresent(gender) && !isPresent(pronouns) && !isPresent(brief)) {
+    const { title, gender, brief } = profile;
+    if (!isPresent(title) && !isPresent(gender) && !isPresent(brief)) {
         return null;
     }
 
@@ -29,20 +28,12 @@ const CandidateProfileCard = ({ profile }: CandidateProfileCardProps) => {
                     <p className="text-xl font-semibold text-neutral-950">{title}</p>
                 </div>
             )}
-            {(isPresent(pronouns) || isPresent(gender)) && (
+            {isPresent(gender) && (
                 <dl className="flex flex-wrap gap-x-10 gap-y-2 text-base text-neutral-950">
-                    {isPresent(pronouns) && (
-                        <div className="flex flex-col">
-                            <dt className="text-sm text-neutral-500">Pronouns</dt>
-                            <dd>{PRONOUN_LABELS[pronouns]}</dd>
-                        </div>
-                    )}
-                    {isPresent(gender) && (
-                        <div className="flex flex-col">
-                            <dt className="text-sm text-neutral-500">Gender</dt>
-                            <dd>{GENDER_LABELS[gender]}</dd>
-                        </div>
-                    )}
+                    <div className="flex flex-col">
+                        <dt className="text-sm text-neutral-500">Gender</dt>
+                        <dd>{GENDER_LABELS[gender]}</dd>
+                    </div>
                 </dl>
             )}
             {isPresent(brief) && <p className="whitespace-pre-line text-base text-neutral-700">{brief}</p>}

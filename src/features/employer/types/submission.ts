@@ -30,7 +30,7 @@ export interface SubmissionSummary {
     isSelected: boolean;
     /** Null until the employer has unlocked this candidate. */
     candidateName: string | null;
-    /** Gender and pronouns are always present; the brief only once unlocked. Null once the
+    /** Gender is always present; the brief only once unlocked. Null once the
      *  candidate's account has been deleted. */
     candidateProfile: CandidateProfileInfo | null;
     isUnlocked: boolean;
