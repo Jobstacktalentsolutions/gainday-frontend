@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { ChevronLeft, Lock, Plus } from "lucide-react";
-import { useInView, useReducedMotion } from "motion/react";
 import { GlowOrb } from "./GlowOrb";
 import GradientCard from "./GradientCard";
 import { GradientFrame } from "./GradientFrame";
+import { useAutoplayInView } from "../utils/useAutoplayInView";
 
-// Must match the encoded video: width 1200, height from ffprobe (675 for a 1920x1080 source).
+// Must match the encoded video: width 1200, height from ffprobe (676 for a 1920x1080 source scaled to 1200:-2).
 const VIDEO_WIDTH = 1200;
-const VIDEO_HEIGHT = 675;
+const VIDEO_HEIGHT = 676;
 const POSTER = "/media/hero-demo-poster.webp";
 
 const FRAME_WIDTH = 560;
@@ -57,16 +57,9 @@ const BrowserToolbar = () => (
 // the gradient card if the video can't load, so the hero never looks broken.
 export const HeroDemo = () => {
     const videoRef = useRef<HTMLVideoElement>(null);
-    const inView = useInView(videoRef, { amount: 0.3 });
-    const reduceMotion = useReducedMotion();
     const [failed, setFailed] = useState(false);
 
-    useEffect(() => {
-        const video = videoRef.current;
-        if (!video || reduceMotion) return;
-        if (inView) void video.play().catch(() => undefined);
-        else video.pause();
-    }, [inView, reduceMotion]);
+    useAutoplayInView(videoRef);
 
     return (
         <div className="relative isolate">
@@ -96,7 +89,7 @@ export const HeroDemo = () => {
                             loop
                             playsInline
                             preload="metadata"
-                            aria-label="Short demo: an employer opens a job, filters the submissions and picks a candidate"
+                            aria-label="Short demo: an employer posts a job, reviews candidate submissions and shortlists top performers"
                         >
                             <source src="/media/hero-demo.webm" type="video/webm" />
                             {/* Errors fire on <source>, not <video>. The last source failing means nothing can play. */}
