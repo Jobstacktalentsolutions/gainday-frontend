@@ -37,3 +37,17 @@ export function getVisitorId(): string {
   persist(id);
   return id;
 }
+
+/** Removes the visitor id from both the cookie and localStorage. */
+export function clearVisitorId(): void {
+  try {
+    document.cookie = `${COOKIE_NAME}=; Max-Age=0; Path=/; SameSite=Lax`;
+  } catch {
+    // Cookies blocked: nothing to clear.
+  }
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    // Storage blocked: nothing to clear.
+  }
+}
