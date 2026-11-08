@@ -52,8 +52,8 @@ const LiveJobPostsPanel = ({
       return null;
     }
     const currency = job.salaryRange.currency === "USD" || !job.salaryRange.currency ? "GBP" : job.salaryRange.currency;
-    const symbol = currency === "NGN" ? "₦" : currency === "GBP" || currency === "USD" ? "£" : currency;
-    const min = job.salaryRange.min ? `${symbol}${job.salaryRange.min.toLocaleString()}` : null;
+    const symbol = currency === "GBP" ? "£" : currency;
+     const min = job.salaryRange.min ? `${symbol}${job.salaryRange.min.toLocaleString()}` : null;
     const max = job.salaryRange.max ? `${symbol}${job.salaryRange.max.toLocaleString()}` : null;
 
     if (min && max) return `${min} - ${max}`;
@@ -87,11 +87,10 @@ const LiveJobPostsPanel = ({
               key={tab.id}
               type="button"
               onClick={() => onStatusFilterChange(tab.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-                statusFilter === tab.id
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${statusFilter === tab.id
                   ? "bg-primary-600 text-white shadow-xs"
                   : "bg-white text-neutral-600 hover:bg-neutral-50 border border-neutral-200"
-              }`}
+                }`}
             >
               {tab.label}
             </button>
@@ -120,11 +119,10 @@ const LiveJobPostsPanel = ({
               <div
                 key={job.id}
                 onClick={() => navigate(`/admin/content-moderation/jobs/${job.id}`)}
-                className={`group flex flex-col gap-3.5 rounded-2xl border bg-white p-5 shadow-xs transition-all hover:shadow-md hover:border-primary-300 cursor-pointer ${
-                  hasFlags
-                    ? "border-error-200 bg-gradient-to-r from-white via-white to-error-50/20"
+                className={`group flex flex-col gap-3.5 rounded-2xl border bg-white p-5 shadow-xs transition-all hover:shadow-md hover:border-primary-300 cursor-pointer ${hasFlags
+                    ? "border-error-200 bg-linear-to-r from-white via-white to-error-50/20"
                     : "border-neutral-200"
-                }`}
+                  }`}
               >
                 {/* Header Row */}
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">

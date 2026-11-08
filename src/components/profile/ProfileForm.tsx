@@ -138,6 +138,7 @@ const ProfileForm = () => {
                     id: "profile-phone",
                     className: "min-w-0 flex-1 bg-transparent text-base text-neutral-700 outline-none placeholder:text-neutral-400",
                   }}
+                  defaultCountry="GB"
                 />
               </div>
               {fieldState.error && (
