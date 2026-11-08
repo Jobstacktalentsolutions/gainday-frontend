@@ -31,7 +31,7 @@ const HeroSection = () => {
                 </motion.p>
 
                 <motion.div variants={fadeUp} className="flex flex-col items-center gap-4 py-2 lg:flex-row lg:gap-5">
-                    <CTAButton size="lg" label="I’m an employer" onClick={() => navigate("/employer/signup")} />
+                    <CTAButton size="lg" label="I'm an employer" onClick={() => navigate("/employer/signup")} />
                     <Button
                         type="button"
                         variant="outline"
