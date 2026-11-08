@@ -7,10 +7,12 @@ import { JobCard, JobCardSkeleton } from "../components/JobCard";
 import { EmptyJobBoardState } from "../components/EmptyJobBoardState";
 import { NoResultsState } from "../components/NoFilterResult";
 import { useJobBoardFilters } from "../hooks/useJobBoardFilters";
+import { useAppliedJobIds } from "../hooks/useAppliedJobIds";
 import type { JobBoardListing } from "../types/jobBoard";
 
 export function JobBoardPage() {
     const navigate = useNavigate();
+    const { getSubmissionUrlForJob } = useAppliedJobIds();
     const {
         isLoading,
         isSearching,
@@ -132,7 +134,9 @@ export function JobBoardPage() {
                                 key={job.id}
                                 job={job}
                                 isApplied={job.isApplied === true}
+                                submissionUrl={getSubmissionUrlForJob(job.id)}
                                 onApply={handleApply}
+                                onViewSubmission={(j) => navigate(getSubmissionUrlForJob(j.id))}
                             />
                         ))}
                     </div>

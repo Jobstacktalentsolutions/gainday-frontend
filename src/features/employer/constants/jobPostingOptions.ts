@@ -10,7 +10,7 @@ export const ROLES = [
     { value: "HR_PEOPLE", label: "HR & People" },
 ];
 
-export const SKILL_LEVELS = ["Entry level", "Mid level", "Senior level"];
+export const SKILL_LEVELS = ["Junior", "Mid level", "Senior level"];
 
 export const EMPLOYMENT_TYPES = ["Full-time", "Part-time", "Contract"];
 

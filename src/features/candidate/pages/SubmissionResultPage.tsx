@@ -86,17 +86,17 @@ export default function SubmissionResultPage() {
                         </div>
                     </div>
 
-                    {/* 3 Category Metric Cards */}
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    {/* Category Metric Cards */}
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
                         {metrics.map((metric, idx) => (
                             <div
                                 key={idx}
-                                className="flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-primary-200/70 bg-white py-6 px-4 text-center transition-colors hover:border-primary-400"
+                                className="flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-primary-200/70 bg-white py-5 px-3 text-center transition-colors hover:border-primary-400"
                             >
-                                <span className="text-3xl font-bold text-neutral-950">
+                                <span className="text-2xl sm:text-3xl font-bold text-neutral-950">
                                     {metric.score}
                                 </span>
-                                <span className="text-[11px] font-bold uppercase tracking-wider text-neutral-500">
+                                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-neutral-500">
                                     {metric.label}
                                 </span>
                             </div>

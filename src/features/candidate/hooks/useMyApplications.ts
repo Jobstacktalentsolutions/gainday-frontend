@@ -5,7 +5,7 @@ import type { Application } from "../types/application";
 export const APPLICATIONS_QUERY_KEY = ["candidate", "applications"] as const;
 
 // GET /submissions/mine — the signed-in candidate's submitted applications, newest first.
-const fetchMyApplications = async (): Promise<Application[]> => {
+export const fetchMyApplications = async (): Promise<Application[]> => {
     const { data } = await apiClient.get<Application[]>("/submissions/mine");
     return data;
 };

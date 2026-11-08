@@ -20,7 +20,7 @@ export default function JobDetailsPage() {
     const { jobId } = useParams<{ jobId: string }>();
     const navigate = useNavigate();
     const { job, isLoading } = useJobDetails(jobId);
-    const { appliedSet } = useAppliedJobIds();
+    const { appliedSet, getSubmissionUrlForJob } = useAppliedJobIds();
     const { user, isAuthenticated } = useCurrentUser();
     const [authPromptOpen, setAuthPromptOpen] = useState(false);
     const [profilePromptOpen, setProfilePromptOpen] = useState(false);
@@ -61,7 +61,11 @@ export default function JobDetailsPage() {
     }
 
     function handleApplyClick() {
-        if (isApplied || isClosed) return;
+        if (isApplied) {
+            navigate(getSubmissionUrlForJob(job!.id));
+            return;
+        }
+        if (isClosed) return;
         if (isAuthenticated) {
             if (user?.isProfileComplete === false) {
                 setProfilePromptOpen(true);
@@ -131,12 +135,12 @@ export default function JobDetailsPage() {
                         <div className="flex shrink-0 items-center gap-4">
                             <StepContinueButton
                                 size="lg"
-                                disabled={isApplied || isClosed}
+                                disabled={!isApplied && isClosed}
                                 icon={isApplied ? <Check className="size-4" /> : undefined}
-                                className={`w-fit ${isApplied || isClosed ? "disabled:bg-neutral-200 disabled:text-neutral-500 disabled:opacity-100 disabled:shadow-none pointer-events-none" : ""}`}
+                                className={`w-fit ${!isApplied && isClosed ? "disabled:bg-neutral-200 disabled:text-neutral-500 disabled:opacity-100 disabled:shadow-none pointer-events-none" : ""}`}
                                 onClick={handleApplyClick}
                             >
-                                {isApplied ? "Applied" : isClosed ? "Closed" : "Apply"}
+                                {isApplied ? "View Submission" : isClosed ? "Closed" : "Apply"}
                             </StepContinueButton>
                             <ActionButton
                                 variant="outline"
@@ -217,12 +221,12 @@ export default function JobDetailsPage() {
                         )}
                         <StepContinueButton
                             size="lg"
-                            disabled={isApplied || isClosed}
+                            disabled={!isApplied && isClosed}
                             icon={isApplied ? <Check className="size-4" /> : undefined}
-                            className={`w-fit ${isApplied || isClosed ? "disabled:bg-neutral-200 disabled:text-neutral-500 disabled:opacity-100 disabled:shadow-none pointer-events-none" : ""}`}
+                            className={`w-fit ${!isApplied && isClosed ? "disabled:bg-neutral-200 disabled:text-neutral-500 disabled:opacity-100 disabled:shadow-none pointer-events-none" : ""}`}
                             onClick={handleApplyClick}
                         >
-                            {isApplied ? "Applied" : isClosed ? "Closed" : "Start Now"}
+                            {isApplied ? "View Submission" : isClosed ? "Closed" : "Start Now"}
                         </StepContinueButton>
                         <p className="text-[16px] text-neutral-400">
                             Uses a 20 to 30 minute work simulation, not a cover letter.

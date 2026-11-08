@@ -45,7 +45,7 @@ const normaliseRole = (value: string | undefined | null): string =>
 // purpose-built role module if one's registered for it, otherwise a generic fallback — see
 // backend's RoleRegistry.resolve), so a custom role here is a first-class value, not a workaround.
 const CUSTOM_ROLE_VALUE = "__custom__";
-const SKILL_LEVELS = ["Entry level", "Mid level", "Senior level"];
+const SKILL_LEVELS = ["Junior", "Mid level", "Senior level"];
 const EMPLOYMENT_TYPES = ["Full-time", "Part-time", "Contract"];
 
 interface JobPostingOutletContext {

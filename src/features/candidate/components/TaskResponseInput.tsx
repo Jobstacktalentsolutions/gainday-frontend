@@ -21,7 +21,9 @@ interface TaskResponseInputProps {
     onObjectiveChange: (response: unknown) => void;
 }
 
-function wordLimitOf(payload: Record<string, unknown>): { max: number } | null {
+const DEFAULT_MAX_WORDS = 250;
+
+function wordLimitOf(payload: Record<string, unknown>): { max: number } {
     const limit = payload.wordLimit;
     if (typeof limit === "object" && limit !== null && "max" in limit && Number(limit.max) > 0) {
         return { max: Number(limit.max) };
@@ -29,7 +31,7 @@ function wordLimitOf(payload: Record<string, unknown>): { max: number } | null {
     if (typeof limit === "number" && limit > 0) {
         return { max: limit };
     }
-    return null;
+    return { max: DEFAULT_MAX_WORDS };
 }
 
 export function TaskResponseInput({
@@ -42,9 +44,8 @@ export function TaskResponseInput({
     const Renderer = INTERFACE_ANSWER_RENDERERS[task.interfaceType];
     const wordCount = countWords(value);
     const wordLimit = wordLimitOf(task.interfacePayload);
-    const wordState = wordLimit ? limitState(wordCount, wordLimit.max) : "ok";
-    const setResponse = (next: string) =>
-        onChange(wordLimit ? capResponse(next, wordLimit.max) : next);
+    const wordState = limitState(wordCount, wordLimit.max);
+    const setResponse = (next: string) => onChange(capResponse(next, wordLimit.max));
 
     const objectiveSlot = (
         <TaskObjectiveOptions task={task} response={objectiveResponse} onChange={onObjectiveChange} />
@@ -87,7 +88,7 @@ export function TaskResponseInput({
 
             <div className="flex w-full items-center justify-end text-[14px] text-neutral-950">
                 <span className={cn(limitTextClass(wordState))}>
-                    {wordLimit ? `${wordCount} / ${wordLimit.max} words` : `${wordCount} words`}
+                    {wordCount} / {wordLimit.max} words
                 </span>
             </div>
         </div>
