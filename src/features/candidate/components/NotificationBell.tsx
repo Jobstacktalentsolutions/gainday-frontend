@@ -93,15 +93,23 @@ const NotificationBell = () => {
                                 <DialogDescription>{formatShortDate(selected.createdAt)}</DialogDescription>
                             </DialogHeader>
                             <p className="text-base text-neutral-700">{selected.message}</p>
-                            {selected.metadata && (
+                            {selected.type === "JOB_RECOMMENDATION" && selected.metadata?.jobId ? (
+                                <Link
+                                    to={`/job-board/${selected.metadata.jobId}`}
+                                    onClick={() => setSelected(null)}
+                                    className="w-fit rounded-xl bg-primary-500 px-5 py-2.5 text-base font-medium text-white transition-colors hover:bg-primary-600"
+                                >
+                                    View job
+                                </Link>
+                            ) : selected.metadata?.submissionId ? (
                                 <Link
                                     to={`/candidate/applications/${selected.metadata.submissionId}`}
                                     onClick={() => setSelected(null)}
-                                    className="w-fit rounded-xl bg-primary-500 px-5 py-2.5 text-base text-white transition-colors hover:bg-primary-600"
+                                    className="w-fit rounded-xl bg-primary-500 px-5 py-2.5 text-base font-medium text-white transition-colors hover:bg-primary-600"
                                 >
                                     View application
                                 </Link>
-                            )}
+                            ) : null}
                         </>
                     )}
                 </DialogContent>

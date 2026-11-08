@@ -20,11 +20,11 @@ const CaseFileTextAreaView = ({ payload }: Props) => (
                 </div>
             </section>
         ))}
-        {payload.wordLimit && (
+        {payload.wordLimit?.max ? (
             <p className="text-xs text-neutral-500">
-                Asks for {payload.wordLimit.min} to {payload.wordLimit.max} words.
+                Limit: {payload.wordLimit.max} words.
             </p>
-        )}
+        ) : null}
     </div>
 );
 export default CaseFileTextAreaView;

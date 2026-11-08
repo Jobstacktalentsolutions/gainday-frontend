@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import { Coins, ChevronDown, Receipt } from "lucide-react";
+import { Coins, ChevronDown } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useCreditBalance } from "../hooks/useCreditBalance";
 import { formatShortDate } from "@/lib/formatDate";
@@ -46,20 +45,11 @@ const CreditIndicator = () => {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: -8 }}
                         transition={{ duration: 0.15, ease: "easeOut" }}
-                        className="absolute right-0 z-50 mt-2 w-64 origin-top-right rounded-2xl border border-neutral-200 bg-white/95 p-4 shadow-xl backdrop-blur-md"
+                        className="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-xl border border-neutral-200 bg-white/95 p-3 shadow-lg backdrop-blur-md"
                     >
-                        <p className="text-sm text-neutral-500">Credit balance</p>
-                        <p className="mt-1 text-3xl font-bold text-neutral-950">{data?.balance ?? 0}</p>
-                        <p className="mt-1 text-xs text-neutral-500">Last recharged: {lastRecharged}</p>
-
-                        <Link
-                            to="/employer/billing"
-                            onClick={() => setIsOpen(false)}
-                            className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-neutral-200 px-3 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-100 hover:text-neutral-950"
-                        >
-                            <Receipt className="size-4 text-neutral-500" aria-hidden="true" />
-                            Billing
-                        </Link>
+                        <p className="text-xs font-medium text-neutral-500">Credit balance</p>
+                        <p className="mt-0.5 text-2xl font-bold tracking-tight text-neutral-950">{data?.balance ?? 0}</p>
+                        <p className="mt-1 text-[11px] text-neutral-500">Last recharged: {lastRecharged}</p>
                     </motion.div>
                 )}
             </AnimatePresence>

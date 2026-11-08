@@ -28,12 +28,17 @@ const toJob = (job: BackendJob, submissionsCount: number): Job => ({
     shareUrl: getJobShareUrl(job.id),
 });
 
-const fetchEmployerJobs = async (): Promise<Job[]> => {
-    const { data } = await apiClient.get<BackendJob[]>("/jobs/mine");
+const fetchEmployerJobs = async (search?: string): Promise<Job[]> => {
+    const { data } = await apiClient.get<BackendJob[]>("/jobs/mine", {
+        params: search?.trim() ? { search: search.trim() } : undefined,
+    });
     const counts = await Promise.all(data.map((job) => fetchJobSubmissionsCount(job.id)));
     return data.map((job, index) => toJob(job, counts[index]));
 };
 
-export const useEmployerJobs = () => {
-    return useQuery({ queryKey: ["employer", "jobs"], queryFn: fetchEmployerJobs });
+export const useEmployerJobs = (search?: string) => {
+    return useQuery({
+        queryKey: ["employer", "jobs", search?.trim() ?? ""],
+        queryFn: () => fetchEmployerJobs(search),
+    });
 };

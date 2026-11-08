@@ -21,25 +21,17 @@ interface TaskResponseInputProps {
     onObjectiveChange: (response: unknown) => void;
 }
 
-const DEFAULT_WORD_LIMIT = { min: 25, max: 150 };
-
-// A task may state the length it asks for in its payload (customer service case files do). Without
-// one, the default limits apply.
-function wordLimitOf(payload: Record<string, unknown>): { min: number; max: number } {
+function wordLimitOf(payload: Record<string, unknown>): { max: number } | null {
     const limit = payload.wordLimit;
-    if (typeof limit === "object" && limit !== null && "min" in limit && "max" in limit) {
-        return { min: Number(limit.min), max: Number(limit.max) };
+    if (typeof limit === "object" && limit !== null && "max" in limit && Number(limit.max) > 0) {
+        return { max: Number(limit.max) };
     }
-    return DEFAULT_WORD_LIMIT;
+    if (typeof limit === "number" && limit > 0) {
+        return { max: limit };
+    }
+    return null;
 }
 
-// Which widget renders is resolved entirely through INTERFACE_ANSWER_RENDERERS, keyed by
-// task.interfaceType — this component doesn't special-case any one interface type, so a new
-// InterfaceType only needs an entry in that registry (see interfaceAnswers/registry.tsx).
-//
-// The structured answer is handed to the interface rather than rendered above it: each
-// interface puts it after its own reference material (a table, say) and before the written
-// response, and a table can take a classification on its rows.
 export function TaskResponseInput({
     task,
     value,
@@ -50,9 +42,9 @@ export function TaskResponseInput({
     const Renderer = INTERFACE_ANSWER_RENDERERS[task.interfaceType];
     const wordCount = countWords(value);
     const wordLimit = wordLimitOf(task.interfacePayload);
-    const wordState = limitState(wordCount, wordLimit.max);
-    // Every change goes through the word cap, so no interface can store a response past the limit.
-    const setResponse = (next: string) => onChange(capResponse(next, wordLimit.max));
+    const wordState = wordLimit ? limitState(wordCount, wordLimit.max) : "ok";
+    const setResponse = (next: string) =>
+        onChange(wordLimit ? capResponse(next, wordLimit.max) : next);
 
     const objectiveSlot = (
         <TaskObjectiveOptions task={task} response={objectiveResponse} onChange={onObjectiveChange} />
@@ -74,14 +66,6 @@ export function TaskResponseInput({
                 <div className="prose max-w-none text-[15px] font-normal leading-relaxed text-neutral-950 prose-p:my-1">
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown>
                 </div>
-
-                {wordLimit.min > 0 && (
-                    <div className="flex justify-end">
-                        <span className="rounded-md bg-neutral-100 px-2.5 py-1 text-xs font-medium text-neutral-700">
-                            Minimum {wordLimit.min} words
-                        </span>
-                    </div>
-                )}
             </div>
 
             {Renderer ? (
@@ -102,7 +86,9 @@ export function TaskResponseInput({
             )}
 
             <div className="flex w-full items-center justify-end text-[14px] text-neutral-950">
-                <span className={cn(limitTextClass(wordState))}>{wordCount} / {wordLimit.max} words</span>
+                <span className={cn(limitTextClass(wordState))}>
+                    {wordLimit ? `${wordCount} / ${wordLimit.max} words` : `${wordCount} words`}
+                </span>
             </div>
         </div>
     );

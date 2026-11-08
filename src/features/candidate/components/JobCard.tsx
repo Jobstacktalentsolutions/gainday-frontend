@@ -64,3 +64,26 @@ export function JobCard({ job, isApplied = false, onApply }: JobCardProps) {
         </article>
     );
 }
+
+export function JobCardSkeleton() {
+    return (
+        <div className="flex flex-1 flex-col justify-between gap-3 rounded-3xl bg-white p-6 shadow-sm">
+            <div className="flex w-full flex-col items-start gap-2.5">
+                <div className="h-5 w-16 animate-pulse rounded-full bg-neutral-200" />
+                <div className="h-6 w-3/4 animate-pulse rounded-lg bg-neutral-200" />
+                <div className="flex items-center gap-2">
+                    <div className="h-4 w-20 animate-pulse rounded bg-neutral-200" />
+                    <span className="size-1 rounded-full bg-neutral-200" />
+                    <div className="h-4 w-24 animate-pulse rounded bg-neutral-200" />
+                </div>
+                <div className="h-4 w-32 animate-pulse rounded bg-neutral-200" />
+                <div className="h-4 w-28 animate-pulse rounded bg-neutral-200" />
+            </div>
+            <div className="h-px w-full bg-neutral-100" />
+            <div className="flex w-full items-center justify-between">
+                <div className="h-10 w-28 animate-pulse rounded-full bg-neutral-200" />
+                <div className="h-4 w-24 animate-pulse rounded bg-neutral-200" />
+            </div>
+        </div>
+    );
+}

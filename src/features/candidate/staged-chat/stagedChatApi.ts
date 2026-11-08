@@ -59,6 +59,8 @@ export const useStagedChatState = (submissionId: string, taskId: string) =>
 
 export const usePostStagedChatReply = (submissionId: string, taskId: string) => {
     const queryClient = useQueryClient();
+    const key = stateKey(submissionId, taskId);
+
     return useMutation({
         mutationFn: async (input: Omit<PostStagedChatReplyInput, "submissionId" | "taskId">) => {
             const { data } = await apiClient.post<PostStagedChatReplyResponse>(
@@ -71,7 +73,70 @@ export const usePostStagedChatReply = (submissionId: string, taskId: string) => 
             );
             return data;
         },
-        // Whatever the outcome, the server's transcript is the truth: refetch it.
-        onSettled: () => queryClient.invalidateQueries({ queryKey: stateKey(submissionId, taskId) }),
+        onMutate: async (newReply) => {
+            await queryClient.cancelQueries({ queryKey: key });
+            const previousState = queryClient.getQueryData<StagedChatState>(key);
+
+            // Optimistically update the candidate reply immediately so it renders with zero delay
+            if (previousState) {
+                queryClient.setQueryData<StagedChatState>(key, {
+                    ...previousState,
+                    transcript: previousState.transcript.map((entry) =>
+                        entry.turn === newReply.turn
+                            ? {
+                                  ...entry,
+                                  candidateReply: newReply.text,
+                                  candidateSentAt: newReply.clientSentAt,
+                              }
+                            : entry,
+                    ),
+                });
+            }
+
+            return { previousState };
+        },
+        onSuccess: (data, input) => {
+            queryClient.setQueryData<StagedChatState>(key, (current) => {
+                if (!current) return current;
+
+                const transcript = current.transcript.map((entry) =>
+                    entry.turn === input.turn
+                        ? {
+                              ...entry,
+                              candidateReply: input.text,
+                              candidateSentAt: input.clientSentAt,
+                          }
+                        : entry,
+                );
+
+                if (data.nextCustomerMessage && !data.completed) {
+                    const alreadyPresent = transcript.some((t) => t.turn === data.currentTurn);
+                    if (!alreadyPresent) {
+                        transcript.push({
+                            turn: data.currentTurn,
+                            customerMessage: data.nextCustomerMessage.message,
+                            typingDelayMs: 0,
+                            candidateReply: null,
+                            candidateSentAt: null,
+                        });
+                    }
+                }
+
+                return {
+                    ...current,
+                    status: data.completed ? "COMPLETE" : current.status,
+                    currentTurn: data.currentTurn,
+                    transcript,
+                };
+            });
+        },
+        onError: (_err, _newReply, context) => {
+            if (context?.previousState) {
+                queryClient.setQueryData(key, context.previousState);
+            }
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: key });
+        },
     });
 };

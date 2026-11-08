@@ -129,8 +129,11 @@ export function useJobBoardFilters() {
         setFilters(DEFAULT_JOB_BOARD_FILTERS);
     }
 
+    const isSearching = filters.search !== debouncedSearch || (feed.isFetching && !feed.isFetchingNextPage);
+
     return {
         isLoading: feed.isLoading,
+        isSearching,
         // Live jobs across the whole board, so the empty state can tell "no jobs" from "no matches".
         totalJobs: optionsQuery.data?.totalActive ?? 0,
         isCandidate,

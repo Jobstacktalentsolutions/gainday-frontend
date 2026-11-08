@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { JobBoardHeader } from "../components/JobBoardHeader";
 import { SearchField } from "../components/SearchField";
 import { FilterDropdown } from "../components/Filterdropdown";
-import { JobCard } from "../components/JobCard";
+import { JobCard, JobCardSkeleton } from "../components/JobCard";
 import { EmptyJobBoardState } from "../components/EmptyJobBoardState";
 import { NoResultsState } from "../components/NoFilterResult";
 import { useJobBoardFilters } from "../hooks/useJobBoardFilters";
@@ -13,6 +13,7 @@ export function JobBoardPage() {
     const navigate = useNavigate();
     const {
         isLoading,
+        isSearching,
         totalJobs,
         isCandidate,
         filteredJobs,
@@ -110,13 +111,21 @@ export function JobBoardPage() {
                     </button>
                 </div>
 
-                {!isLoading && totalJobs === 0 && <EmptyJobBoardState />}
+                {(isLoading || isSearching) && (
+                    <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        {Array.from({ length: 6 }).map((_, index) => (
+                            <JobCardSkeleton key={index} />
+                        ))}
+                    </div>
+                )}
 
-                {!isLoading && totalJobs > 0 && filteredJobs.length === 0 && (
+                {!isLoading && !isSearching && totalJobs === 0 && <EmptyJobBoardState />}
+
+                {!isLoading && !isSearching && totalJobs > 0 && filteredJobs.length === 0 && (
                     <NoResultsState onClearFilters={clearFilters} />
                 )}
 
-                {!isLoading && filteredJobs.length > 0 && (
+                {!isLoading && !isSearching && filteredJobs.length > 0 && (
                     <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {filteredJobs.map((job) => (
                             <JobCard
@@ -129,7 +138,7 @@ export function JobBoardPage() {
                     </div>
                 )}
 
-                {!isLoading && filteredJobs.length > 0 && (
+                {!isLoading && !isSearching && filteredJobs.length > 0 && (
                     <div ref={sentinelRef} className="flex h-10 items-center justify-center text-[14px] text-neutral-500">
                         {isFetchingNextPage ? "Loading more roles…" : null}
                     </div>

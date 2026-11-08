@@ -14,7 +14,7 @@ interface ExperienceReviewFormProps {
     submissionId: string;
     /** Called once the rating has been saved. */
     onSubmitted?: () => void;
-    /** Shows a "Skip" link when provided. */
+    /** Shows a "Skip" button side-by-side with Submit when provided. */
     onSkip?: () => void;
 }
 
@@ -40,7 +40,7 @@ const ExperienceReviewForm = ({ submissionId, onSubmitted, onSkip }: ExperienceR
     };
 
     return (
-        <form onSubmit={handleSubmit} className="flex w-full flex-col gap-5">
+        <form onSubmit={handleSubmit} className="flex w-full flex-col gap-4">
             <div className="flex items-center justify-center gap-2" role="group" aria-label="Rating">
                 {STAR_VALUES.map((value) => {
                     const isFilled = rating !== null && value <= rating;
@@ -54,7 +54,7 @@ const ExperienceReviewForm = ({ submissionId, onSubmitted, onSkip }: ExperienceR
                             className="cursor-pointer rounded-md p-1 outline-none focus-visible:ring-3 focus-visible:ring-primary-500/30"
                         >
                             <Star
-                                className={cn("size-9 transition-colors", isFilled ? "fill-amber-400 text-amber-400" : "text-neutral-300")}
+                                className={cn("size-8 transition-colors", isFilled ? "fill-amber-400 text-amber-400" : "text-neutral-300")}
                             />
                         </button>
                     );
@@ -62,7 +62,7 @@ const ExperienceReviewForm = ({ submissionId, onSubmitted, onSkip }: ExperienceR
             </div>
 
             {rating !== null && (
-                <div className="flex flex-col gap-2 text-left">
+                <div className="flex flex-col gap-1.5 text-left">
                     <label htmlFor="experience-review-comment" className="text-sm text-neutral-700">
                         Tell us why you gave this rating
                     </label>
@@ -71,39 +71,34 @@ const ExperienceReviewForm = ({ submissionId, onSubmitted, onSkip }: ExperienceR
                         value={comment}
                         onChange={(event) => setComment(event.target.value)}
                         placeholder="How can we improve?"
-                        aria-describedby="experience-review-comment-limit"
+                        rows={3}
+                        className="min-h-18 resize-none"
                     />
-                    <p
-                        id="experience-review-comment-limit"
-                        className={cn(
-                            "text-right text-sm tabular-nums",
-                            comment.length > COMMENT_MAX ? "text-error-500" : "text-neutral-400",
-                        )}
-                    >
-                        {comment.length.toLocaleString("en-GB")} / {COMMENT_MAX.toLocaleString("en-GB")} characters
-                    </p>
                 </div>
             )}
 
-            <div className="flex flex-col items-center gap-2">
+            <div className="flex w-full items-center justify-center gap-3 pt-2">
+                {onSkip && (
+                    <ActionButton
+                        type="button"
+                        variant="outline"
+                        size="md"
+                        onClick={onSkip}
+                        disabled={isPending}
+                        className="flex-1"
+                    >
+                        Skip
+                    </ActionButton>
+                )}
                 <ActionButton
                     type="submit"
-                    variant="ghost"
-                    size="lg"
-                    className="w-full"
+                    variant="primary"
+                    size="md"
+                    className="flex-1"
                     disabled={rating === null || isPending || comment.length > COMMENT_MAX}
                 >
                     {isPending ? "Submitting..." : "Submit"}
                 </ActionButton>
-                {onSkip && (
-                    <button
-                        type="button"
-                        onClick={onSkip}
-                        className="cursor-pointer text-sm text-neutral-500 hover:text-neutral-700"
-                    >
-                        Skip
-                    </button>
-                )}
             </div>
         </form>
     );

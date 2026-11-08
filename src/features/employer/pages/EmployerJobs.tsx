@@ -7,19 +7,25 @@ import JobCard, { JobCardSkeleton } from "../components/JobCard";
 import JobsEmptyState from "../components/JobsEmptyState";
 import EmployerPageHeader from "../components/EmployerPageHeader";
 import DeleteJobModal from "../components/DeleteJobModal";
+import { SearchField } from "@/features/candidate/components/SearchField";
 import { useEmployerJobs } from "../hooks/useEmployerJobs";
 import { useDeleteJob } from "../hooks/useDeleteJob";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import type { Job, JobStatusFilter } from "../types/job";
 import { useNavigate } from "react-router-dom";
 
 const EmployerJobs = () => {
     const navigate = useNavigate();
-    const { data: jobs, isLoading, isError } = useEmployerJobs();
+    const [search, setSearch] = useState("");
+    const debouncedSearch = useDebouncedValue(search, 300);
+    const { data: jobs, isLoading, isFetching, isError } = useEmployerJobs(debouncedSearch);
     const deleteJobMutation = useDeleteJob();
     const { user } = useCurrentUser();
     const [statusFilter, setStatusFilter] = useState<JobStatusFilter>("all");
     const [jobToDelete, setJobToDelete] = useState<Job | null>(null);
+
+    const isSearching = search !== debouncedSearch || (isFetching && !isLoading);
 
     const filteredJobs = useMemo(() => {
         if (!jobs) return [];
@@ -89,11 +95,28 @@ const EmployerJobs = () => {
                             Post a job
                         </AddItemButton>
                     </div>
-                    {!isLoading && !isError && hasJobs && (
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <SearchField
+                            value={search}
+                            onChange={setSearch}
+                            placeholder="Search by job title, role, or location"
+                        />
+                        {search.trim().length > 0 && (
+                            <button
+                                type="button"
+                                onClick={() => setSearch("")}
+                                className="cursor-pointer self-start text-[15px] text-primary-500 transition-colors hover:text-primary-700 sm:self-auto"
+                            >
+                                Clear search
+                            </button>
+                        )}
+                    </div>
+
+                    {!isLoading && !isError && (hasJobs || search.trim().length > 0) && (
                         <JobStatusTabs value={statusFilter} onChange={setStatusFilter} />
                     )}
 
-                    {isLoading && (
+                    {(isLoading || isSearching) && (
                         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
                             {Array.from({ length: 3 }).map((_, index) => (
                                 <JobCardSkeleton key={index} />
@@ -101,25 +124,55 @@ const EmployerJobs = () => {
                         </div>
                     )}
 
-                    {!isLoading && isError && (
+                    {!isLoading && !isSearching && isError && (
                         <div className="w-full rounded-3xl border border-error-200 bg-error-50 px-5 py-10 text-center text-sm text-error-600">
                             Something went wrong loading your jobs. Please refresh the page to try again.
                         </div>
                     )}
 
-                    {!isLoading && !isError && (
+                    {!isLoading && !isSearching && !isError && (
                         hasJobs ? (
-                            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-                                {filteredJobs.map((job) => (
-                                    <JobCard
-                                        key={job.id}
-                                        job={job}
-                                        onShareLink={handleShareLink}
-                                        onViewSubmissions={handleViewSubmissions}
-                                        onOpenPreview={handleOpenPreview}
-                                        onDelete={handleDeleteJob}
-                                    />
-                                ))}
+                            filteredJobs.length > 0 ? (
+                                <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                                    {filteredJobs.map((job) => (
+                                        <JobCard
+                                            key={job.id}
+                                            job={job}
+                                            onShareLink={handleShareLink}
+                                            onViewSubmissions={handleViewSubmissions}
+                                            onOpenPreview={handleOpenPreview}
+                                            onDelete={handleDeleteJob}
+                                        />
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="flex w-full flex-col items-center justify-center gap-4 rounded-3xl border border-dashed border-neutral-300 bg-white py-16 text-center">
+                                    <p className="text-lg font-semibold text-neutral-900">No jobs match your filter</p>
+                                    <p className="text-sm text-neutral-500">
+                                        {search.trim() ? "Try adjusting your search terms or status tab." : "No jobs found for this status tab."}
+                                    </p>
+                                    {search.trim() && (
+                                        <button
+                                            type="button"
+                                            onClick={() => setSearch("")}
+                                            className="text-sm font-medium text-primary-600 hover:text-primary-800"
+                                        >
+                                            Clear search
+                                        </button>
+                                    )}
+                                </div>
+                            )
+                        ) : search.trim().length > 0 ? (
+                            <div className="flex w-full flex-col items-center justify-center gap-4 rounded-3xl border border-dashed border-neutral-300 bg-white py-16 text-center">
+                                <p className="text-lg font-semibold text-neutral-900">No jobs found</p>
+                                <p className="text-sm text-neutral-500">No jobs match &ldquo;{search.trim()}&rdquo;.</p>
+                                <button
+                                    type="button"
+                                    onClick={() => setSearch("")}
+                                    className="text-sm font-medium text-primary-600 hover:text-primary-800"
+                                >
+                                    Clear search
+                                </button>
                             </div>
                         ) : (
                             <JobsEmptyState onPostJob={handlePostJob} />

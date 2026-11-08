@@ -3,7 +3,6 @@ import { isAxiosError } from "axios";
 import { X } from "lucide-react";
 import CaseFilePanel from "./CaseFilePanel";
 import ChatBubble from "./ChatBubble";
-import { initialsOf } from "./chatHelpers";
 import ReplyBox from "./ReplyBox";
 import { usePostStagedChatReply, useStagedChatState, type StagedChatTranscriptEntry } from "./stagedChatApi";
 
@@ -30,9 +29,8 @@ function errorMessageOf(error: unknown): string {
 }
 
 /**
- * A staged chat: a scripted customer and the candidate's replies, one turn at a time. The server
- * holds the script and releases each customer message only after the previous reply is stored, so
- * the page never has a future message to show.
+ * A staged chat: a scripted customer and the candidate's replies, one turn at a time.
+ * Messages appear instantly without artificial delays, and candidate replies render optimistically.
  */
 const StagedChatTask = ({ submissionId, taskId }: Props) => {
     const state = useStagedChatState(submissionId, taskId);
@@ -41,29 +39,41 @@ const StagedChatTask = ({ submissionId, taskId }: Props) => {
     const [text, setText] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [sheetOpen, setSheetOpen] = useState(false);
-    // The turn whose customer message has finished its typing delay on this screen.
-    const [revealedTurn, setRevealedTurn] = useState<number | null>(null);
-    const [revealedAt, setRevealedAt] = useState<Record<number, string>>({});
+    const [turnTimes, setTurnTimes] = useState<Record<number, string>>({});
+
     // Keeps one idempotency key per draft, so retrying the same send cannot store a second reply.
     const draft = useRef<Draft | null>(null);
+    const listRef = useRef<HTMLOListElement | null>(null);
 
     const data = state.data;
     const pending: StagedChatTranscriptEntry | null =
         data && data.status === "IN_PROGRESS"
             ? data.transcript.find((entry) => entry.candidateReply === null) ?? null
             : null;
-    const pendingTurn = pending?.turn ?? null;
-    const pendingDelay = pending?.typingDelayMs ?? 0;
 
-    // Hold a new customer message back for its typing delay before it appears.
+    // Track stable timestamps for released turns
     useEffect(() => {
-        if (pendingTurn === null) return;
-        const timer = window.setTimeout(() => {
-            setRevealedTurn(pendingTurn);
-            setRevealedAt((times) => ({ ...times, [pendingTurn]: timeOf(new Date().toISOString()) }));
-        }, pendingDelay);
-        return () => window.clearTimeout(timer);
-    }, [pendingTurn, pendingDelay]);
+        if (!data) return;
+        const now = timeOf(new Date().toISOString());
+        setTurnTimes((prev) => {
+            const next = { ...prev };
+            let changed = false;
+            for (const entry of data.transcript) {
+                if (!next[entry.turn]) {
+                    next[entry.turn] = now;
+                    changed = true;
+                }
+            }
+            return changed ? next : prev;
+        });
+    }, [data?.transcript]);
+
+    // Keep chat scrolled to bottom on new messages
+    useEffect(() => {
+        if (listRef.current) {
+            listRef.current.scrollTop = listRef.current.scrollHeight;
+        }
+    }, [data?.transcript.length, data?.transcript[data.transcript.length - 1]?.candidateReply]);
 
     if (state.isPending) return <p className="text-sm text-neutral-500">Loading the conversation…</p>;
     if (state.isError || !data) {
@@ -75,22 +85,21 @@ const StagedChatTask = ({ submissionId, taskId }: Props) => {
     }
 
     const turnCount = data.turnCount;
-    const shownPending = pending !== null && revealedTurn === pending.turn;
-    const visible = data.transcript.filter(
-        (entry) => entry.candidateReply !== null || entry.turn !== pendingTurn || shownPending,
-    );
-    const typing = pending !== null && !shownPending;
-    const canReply = shownPending && !post.isPending;
+    const canReply = pending !== null && !post.isPending;
 
     const send = () => {
-        if (!pending || !shownPending) return;
+        if (!pending) return;
         const body = text.trim();
+        if (!body) return;
+
         const key =
             draft.current && draft.current.turn === pending.turn && draft.current.text === body
                 ? draft.current.idempotencyKey
                 : crypto.randomUUID();
         draft.current = { turn: pending.turn, text: body, idempotencyKey: key };
         setError(null);
+        setText(""); // Instantly clear input for snappy UX
+
         post.mutate(
             {
                 turn: pending.turn,
@@ -101,9 +110,14 @@ const StagedChatTask = ({ submissionId, taskId }: Props) => {
             {
                 onSuccess: () => {
                     draft.current = null;
-                    setText("");
                 },
-                onError: (failure) => setError(errorMessageOf(failure)),
+                onError: (failure) => {
+                    // Restore text if send fails
+                    if (draft.current) {
+                        setText(draft.current.text);
+                    }
+                    setError(errorMessageOf(failure));
+                },
             },
         );
     };
@@ -132,35 +146,28 @@ const StagedChatTask = ({ submissionId, taskId }: Props) => {
                     {progress}
                 </p>
 
-                <ol aria-label="Conversation" className="flex max-h-[55dvh] flex-col gap-4 overflow-y-auto pr-1 md:max-h-[60vh]">
-                    {visible.map((entry) => (
+                <ol
+                    ref={listRef}
+                    aria-label="Conversation"
+                    className="flex max-h-[55dvh] flex-col gap-4 overflow-y-auto pr-1 md:max-h-[60vh] scroll-smooth"
+                >
+                    {data.transcript.map((entry) => (
                         <li key={entry.turn} className="flex flex-col gap-3">
                             <ChatBubble
                                 author="customer"
                                 customerName={data.displayName}
                                 text={entry.customerMessage}
-                                time={revealedAt[entry.turn]}
+                                time={turnTimes[entry.turn]}
                             />
                             {entry.candidateReply !== null && (
                                 <ChatBubble
                                     author="candidate"
                                     text={entry.candidateReply}
-                                    time={entry.candidateSentAt ? timeOf(entry.candidateSentAt) : undefined}
+                                    time={entry.candidateSentAt ? timeOf(entry.candidateSentAt) : timeOf(new Date().toISOString())}
                                 />
                             )}
                         </li>
                     ))}
-                    {typing && pending && (
-                        <li aria-label={`${data.displayName} is typing`} className="flex items-center gap-2">
-                            <span
-                                aria-hidden="true"
-                                className="flex size-8 shrink-0 items-center justify-center rounded-full bg-neutral-200 text-xs font-medium text-neutral-700"
-                            >
-                                {initialsOf(data.displayName)}
-                            </span>
-                            <span className="rounded-2xl bg-neutral-100 px-4 py-2.5 text-sm text-neutral-500">typing…</span>
-                        </li>
-                    )}
                 </ol>
 
                 {data.status === "IN_PROGRESS" && (
