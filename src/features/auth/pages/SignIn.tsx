@@ -1,3 +1,4 @@
+import { isAxiosError } from "axios";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -50,13 +51,33 @@ const SignIn = () => {
         mutationFn: (values: signInFormValues) =>
             apiClient.post("/auth/login", values),
         onSuccess: (res) => {
-            useAuthStore.getState().setAuth(res.data.access_token, res.data.user)
-            if (!res.data.isEmailVerified) {
-                navigate(redirect ? `/employer/verify-email?redirect=${encodeURIComponent(redirect)}` : "/employer/verify-email")
-            } else {
-                navigate(target)
+            const user = {
+                ...res.data.user,
+                isEmailVerified: res.data.user?.isEmailVerified ?? res.data.isEmailVerified ?? res.data.emailVerified ?? true,
+                emailVerified: res.data.user?.emailVerified ?? res.data.emailVerified ?? res.data.isEmailVerified ?? true,
+            };
+            useAuthStore.getState().setAuth(res.data.access_token, user);
+            navigate(target);
+        },
+        onError: (error) => {
+            if (isAxiosError(error) && error.response?.status === 403) {
+                const data = error.response.data as {
+                    emailVerified?: boolean;
+                    isEmailVerified?: boolean;
+                    code?: string;
+                    email?: string;
+                } | undefined;
+                if (data && (data.emailVerified === false || data.isEmailVerified === false || data.code === "EMAIL_NOT_VERIFIED")) {
+                    const targetEmail = email || data.email || "";
+                    const emailParam = targetEmail ? `?email=${encodeURIComponent(targetEmail)}` : "";
+                    const redirectParam = redirect ? `${emailParam ? "&" : "?"}redirect=${encodeURIComponent(redirect)}` : "";
+                    navigate(`/employer/verify-email${emailParam}${redirectParam}`, {
+                        state: { email: targetEmail },
+                    });
+                    return;
+                }
             }
-        }
+        },
     })
 
     if (isAuthenticated) {

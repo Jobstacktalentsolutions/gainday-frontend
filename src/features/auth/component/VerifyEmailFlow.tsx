@@ -175,7 +175,9 @@ const VerifyEmailFlow = ({ role }: { role: Role }) => {
     refetchOnWindowFocus: true,
   });
 
-  const email = meQuery.data?.email ?? storedEmail;
+  const stateEmail = (location.state as { email?: string } | null)?.email;
+  const paramEmail = searchParams.get("email") || undefined;
+  const email = meQuery.data?.email ?? storedEmail ?? stateEmail ?? paramEmail;
   const isVerified = verifyQuery.isSuccess || legacyVerified || meQuery.data?.isEmailVerified === true;
   const isChecking = (!!token && verifyQuery.isPending) || meQuery.isLoading;
   const isFailed = verifyQuery.isError || legacyFailed;

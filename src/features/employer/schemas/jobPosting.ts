@@ -81,6 +81,7 @@ export const simulationTaskSchema = z.object({
     taskType: z.string().min(1),
     category: z.string().min(1),
     title: z.string().min(1, "Task title is required"),
+    expectedDurationMinutes: z.number().int().optional(),
     scenarioDescription: z.string().min(1, "Scenario is required"),
     questionPrompt: z.string().min(1, "Task prompt is required"),
     objectiveComponent: z.record(z.string(), z.unknown()).optional(),

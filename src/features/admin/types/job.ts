@@ -12,6 +12,7 @@ export interface SalaryRange {
 export interface AdminJob {
   id: string;
   title: string;
+  expectedDurationMinutes?: number;
   company: string;
   employerEmail?: string;
   isEmployerVerified?: boolean;

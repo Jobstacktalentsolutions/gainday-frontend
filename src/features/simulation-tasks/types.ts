@@ -217,6 +217,7 @@ export interface SimulationTask {
   taskType: string;
   category: string;
   title: string;
+  expectedDurationMinutes?: number;
   scenarioDescription: MarkdownString;
   questionPrompt: MarkdownString;
   objectiveComponent?: Record<string, unknown>;

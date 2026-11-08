@@ -26,6 +26,11 @@ const TaskSummaryCard = ({ index, task, open, onToggle }: TaskSummaryCardProps) 
             >
                 <p className="shrink-0 text-sm font-bold uppercase tracking-wide text-neutral-900">Task {index + 1}</p>
                 <TaskTypeBadge taskType={task.taskType} interfaceType={task.interfaceType} />
+                {task.expectedDurationMinutes ? (
+                    <span className="shrink-0 rounded-md bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-600">
+                        ~{task.expectedDurationMinutes} mins
+                    </span>
+                ) : null}
                 <p className="min-w-0 flex-1 truncate text-base font-medium text-neutral-950">{task.title}</p>
                 <ChevronDown
                     className={cn("size-5 shrink-0 text-neutral-400 transition-transform duration-300", open && "rotate-180")}

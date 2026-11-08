@@ -35,6 +35,7 @@ const TaskCard = ({
     const interfacePayload = watch(`tasks.${index}.interfacePayload` as const);
     const businessProblemDerived = watch(`tasks.${index}.businessProblemDerived` as const);
     const questionPrompt = watch(`tasks.${index}.questionPrompt` as const);
+    const expectedDurationMinutes = watch(`tasks.${index}.expectedDurationMinutes` as const);
     const taskErrors = errors.tasks?.[index];
 
     const promptPreview = questionPrompt
@@ -45,12 +46,18 @@ const TaskCard = ({
     return (
         <div className="flex w-full flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white">
             <input type="hidden" {...register(`tasks.${index}.id` as const)} />
+            <input type="hidden" {...register(`tasks.${index}.expectedDurationMinutes` as const, { valueAsNumber: true })} />
             <div className="flex items-center justify-between border-b border-neutral-100 p-5">
                 <div className="flex items-center gap-3">
                     <p className="text-sm font-bold uppercase tracking-wide text-neutral-900">
                         TASK {index + 1}
                     </p>
                     <TaskTypeBadge taskType={taskType} interfaceType={interfaceType} />
+                    {expectedDurationMinutes ? (
+                        <span className="shrink-0 rounded-md bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-600">
+                            ~{expectedDurationMinutes} mins
+                        </span>
+                    ) : null}
                 </div>
 
                 {/* Desktop: action buttons in header */}

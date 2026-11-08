@@ -22,6 +22,20 @@ interface TaskGenerationModalProps {
   retryLabel?: string;
 }
 
+const DEFAULT_ERROR_DESCRIPTION =
+  "Something went wrong while generating tasks. We're looking into this and working on resolving it — please try again in a few moments.";
+
+function sanitizeErrorMessage(msg: string | null | undefined): string {
+  if (!msg) return DEFAULT_ERROR_DESCRIPTION;
+  // Filter out internal/technical exception stack traces
+  const isTechnical =
+    /zod|error:|exception|schema|structured output|json|status code|at |rethrow|pregel/i.test(msg);
+  if (isTechnical) {
+    return DEFAULT_ERROR_DESCRIPTION;
+  }
+  return msg;
+}
+
 export const TaskGenerationModal: React.FC<TaskGenerationModalProps> = ({
   open,
   onCancel,
@@ -40,7 +54,7 @@ export const TaskGenerationModal: React.FC<TaskGenerationModalProps> = ({
     : undefined;
   const headline = failed ? "Generation failed" : title;
   const description = failed
-    ? (errorMessage ?? "Something went wrong while generating your tasks.")
+    ? sanitizeErrorMessage(errorMessage)
     : progress
       ? describeStage(progress)
       : subtitle;

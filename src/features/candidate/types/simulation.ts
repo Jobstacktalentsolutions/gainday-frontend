@@ -120,6 +120,7 @@ export interface CandidateSimulationTask {
     taskType: string;
     category: string;
     title: string;
+    expectedDurationMinutes?: number;
     scenarioDescription: string;
     questionPrompt: string;
     objectiveComponent: CandidateObjectiveComponent | null;
