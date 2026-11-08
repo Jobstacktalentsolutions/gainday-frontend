@@ -26,3 +26,5 @@ dist-ssr
 #environment
 .env
 # pnpm-lock.yaml
+
+source-media/

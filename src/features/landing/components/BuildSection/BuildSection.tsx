@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import { fadeUp } from "@/lib/motion/variants";
 import { useTryChallengePath } from "../../utils/useTryChallengePath";
+import { CandidateDemo } from "../CandidateDemo";
 import StartNowButton from "./StartNowButton";
 
 const BuildSection = () => {
@@ -39,15 +40,8 @@ const BuildSection = () => {
                     </div>
                 </div>
 
-                <div className="h-55 w-full overflow-hidden rounded-xl bg-white/10 ring-1 ring-white/20 lg:h-86.5 lg:max-w-124.75">
-                    <img
-                        src="/images/landing/cta.jpg"
-                        alt="A smiling professional working on a laptop"
-                        width={500}
-                        height={346}
-                        loading="lazy"
-                        className="size-full object-cover"
-                    />
+                <div className="w-full lg:max-w-124.75">
+                    <CandidateDemo />
                 </div>
 
                 <div className="lg:hidden">

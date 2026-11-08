@@ -16,6 +16,9 @@ describe("usePageViewTracker", () => {
   beforeEach(() => {
     vi.mocked(apiClient.post).mockClear();
     vi.mocked(apiClient.post).mockResolvedValue({} as never);
+    localStorage.clear();
+    document.cookie = "gd_vid=; max-age=0";
+    localStorage.setItem("gainday-analytics-consent", "granted");
   });
 
   it("sends one ping for a page view", () => {
@@ -32,5 +35,12 @@ describe("usePageViewTracker", () => {
     renderHook(() => usePageViewTracker(), { wrapper: routerAt("/pricing") });
 
     expect(apiClient.post).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not ping without consent", () => {
+    localStorage.setItem("gainday-analytics-consent", "denied");
+    renderHook(() => usePageViewTracker(), { wrapper: routerAt("/support") });
+    expect(apiClient.post).not.toHaveBeenCalled();
+    expect(document.cookie).not.toContain("gd_vid");
   });
 });

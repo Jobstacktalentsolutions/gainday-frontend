@@ -1,6 +1,5 @@
 import { MotionConfig } from "motion/react";
 import BuildSection from "../components/BuildSection/BuildSection";
-import DevRouteLinks from "../components/devRouteLinks/DevRouteLinks";
 import { Footer } from "../components/footer/Footer";
 import Header from "../components/Header";
 import HeroSection from "../components/HeroSection";
@@ -30,7 +29,6 @@ const LandingPage = () => {
                     <LiveRolesSection />
                     <BuildSection />
                     <Footer />
-                    <DevRouteLinks />
                 </main>
             </div>
         </MotionConfig>

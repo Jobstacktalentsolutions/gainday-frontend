@@ -119,23 +119,23 @@ const JobModerationDetailPage = () => {
   const selectedJobSubmission = submissions.find((sub) => sub.id === selectedSubmissionId);
   const selectedSubmission: CandidateSubmission | null = selectedJobSubmission
     ? {
-        id: selectedJobSubmission.id,
-        jobId: job.id,
-        jobTitle: job.title || "Job Assessment",
-        companyName: employer.companyName,
-        simulationTitle: job.title || "Job Simulation",
-        status: selectedJobSubmission.status as CandidateSubmission["status"],
-        overallScore: selectedJobSubmission.overallScore,
-        categoryScores: selectedJobSubmission.categoryScores as CandidateSubmission["categoryScores"],
-        taskScores: selectedJobSubmission.taskScores as CandidateSubmission["taskScores"],
-        answers: selectedJobSubmission.answers,
-        timeTakenSeconds: selectedJobSubmission.timeTakenSeconds,
-        isAntiCheatFlagged: selectedJobSubmission.isAntiCheatFlagged,
-        antiCheatFlags: selectedJobSubmission.antiCheatFlags,
-        startedAt: null,
-        completedAt: selectedJobSubmission.completedAt,
-        createdAt: selectedJobSubmission.createdAt,
-      }
+      id: selectedJobSubmission.id,
+      jobId: job.id,
+      jobTitle: job.title || "Job Assessment",
+      companyName: employer.companyName,
+      simulationTitle: job.title || "Job Simulation",
+      status: selectedJobSubmission.status as CandidateSubmission["status"],
+      overallScore: selectedJobSubmission.overallScore,
+      categoryScores: selectedJobSubmission.categoryScores as CandidateSubmission["categoryScores"],
+      taskScores: selectedJobSubmission.taskScores as CandidateSubmission["taskScores"],
+      answers: selectedJobSubmission.answers,
+      timeTakenSeconds: selectedJobSubmission.timeTakenSeconds,
+      isAntiCheatFlagged: selectedJobSubmission.isAntiCheatFlagged,
+      antiCheatFlags: selectedJobSubmission.antiCheatFlags,
+      startedAt: null,
+      completedAt: selectedJobSubmission.completedAt,
+      createdAt: selectedJobSubmission.createdAt,
+    }
     : null;
 
   const closeSubmission = () => {
@@ -152,7 +152,7 @@ const JobModerationDetailPage = () => {
       return null;
     }
     const currency = job.salaryRange.currency === "USD" || !job.salaryRange.currency ? "GBP" : job.salaryRange.currency;
-    const symbol = currency === "NGN" ? "₦" : currency === "GBP" || currency === "USD" ? "£" : currency;
+    const symbol = currency === "GBP" ? "£" : currency;
     const min = job.salaryRange.min ? `${symbol}${job.salaryRange.min.toLocaleString()}` : null;
     const max = job.salaryRange.max ? `${symbol}${job.salaryRange.max.toLocaleString()}` : null;
 
@@ -183,13 +183,12 @@ const JobModerationDetailPage = () => {
             <div className="flex flex-wrap items-center gap-2.5">
               <h1 className="text-xl font-bold text-neutral-900">{job.title}</h1>
               <span
-                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${
-                  job.status === "ACTIVE"
-                    ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                    : job.status === "DRAFT"
+                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${job.status === "ACTIVE"
+                  ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                  : job.status === "DRAFT"
                     ? "bg-amber-50 text-amber-700 border border-amber-200"
                     : "bg-neutral-100 text-neutral-600 border border-neutral-200"
-                }`}
+                  }`}
               >
                 {job.status}
               </span>
@@ -536,9 +535,8 @@ const JobModerationDetailPage = () => {
                           </span>
                         </div>
                         <ChevronDown
-                          className={`size-4 text-neutral-400 shrink-0 transition-transform duration-200 ${
-                            isExpanded ? "rotate-180 text-neutral-700" : ""
-                          }`}
+                          className={`size-4 text-neutral-400 shrink-0 transition-transform duration-200 ${isExpanded ? "rotate-180 text-neutral-700" : ""
+                            }`}
                         />
                       </button>
 
@@ -618,9 +616,8 @@ const JobModerationDetailPage = () => {
                               navigate(`/admin/candidate-management/${sub.candidateId}`);
                             }
                           }}
-                          className={`font-semibold text-neutral-900 truncate ${
-                            sub.candidateId ? "hover:text-primary-600 cursor-pointer hover:underline" : ""
-                          }`}
+                          className={`font-semibold text-neutral-900 truncate ${sub.candidateId ? "hover:text-primary-600 cursor-pointer hover:underline" : ""
+                            }`}
                         >
                           {sub.candidateName}
                         </p>
@@ -695,13 +692,13 @@ const JobModerationDetailPage = () => {
         job={
           removeDialogOpen
             ? {
-                id: job.id,
-                title: job.title || "Untitled Role",
-                company: employer.companyName,
-                status: "live",
-                applicantCount: stats.totalApplicants,
-                createdAt: job.createdAt,
-              }
+              id: job.id,
+              title: job.title || "Untitled Role",
+              company: employer.companyName,
+              status: "live",
+              applicantCount: stats.totalApplicants,
+              createdAt: job.createdAt,
+            }
             : null
         }
         open={removeDialogOpen}

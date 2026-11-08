@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Cookie } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-const STORAGE_KEY = "gainday-cookie-notice-shown";
+import { getConsent, setConsent, type Consent } from "./consent";
+import { clearVisitorId } from "./visitorId";
 
 // Public pages only. Admin, dashboards and profile pages are behind sign-in and never show the notice.
 const PUBLIC_PATHS = ["/landing", "/pricing", "/job-board", "/support", "/terms", "/privacy"];
@@ -12,34 +12,18 @@ function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));
 }
 
-// Without storage the notice can show on each visit, which is the safe default.
-function wasShown(): boolean {
-  try {
-    return localStorage.getItem(STORAGE_KEY) === "true";
-  } catch {
-    return false;
-  }
-}
-
-function rememberShown(): void {
-  try {
-    localStorage.setItem(STORAGE_KEY, "true");
-  } catch {
-    // Storage blocked: the notice will show again next visit.
-  }
-}
-
-/** Shown once per browser, the first time a public page is opened. */
+/** Asks once, on a public page, whether anonymous visit counting is allowed. Until answered, nothing is tracked. */
 export function CookieNotice() {
   const { pathname } = useLocation();
-  const [dismissed, setDismissed] = useState(false);
-  const shown = !dismissed && !wasShown() && isPublicPath(pathname);
+  const [consent, setLocalConsent] = useState<Consent | null>(getConsent);
 
-  useEffect(() => {
-    if (shown) rememberShown();
-  }, [shown]);
+  if (consent !== null || !isPublicPath(pathname)) return null;
 
-  if (!shown) return null;
+  const choose = (value: Consent) => {
+    setConsent(value);
+    if (value === "denied") clearVisitorId();
+    setLocalConsent(value);
+  };
 
   return (
     <div
@@ -52,18 +36,19 @@ export function CookieNotice() {
           <Cookie className="size-4" />
         </div>
         <p className="text-xs text-neutral-600">
-          We use cookies to improve your experience on our website. By continuing to browse, you agree to our use of cookies.{" "}
+          Essential storage keeps you signed in. With your permission we also use a cookie to count visits
+          anonymously and improve Gainday. If you reject, we don&apos;t track visits.{" "}
           <Link to="/privacy" className="font-medium text-primary-600 underline-offset-4 hover:text-primary-700 hover:underline">
             Privacy policy
           </Link>
         </p>
       </div>
-      {/* Both choices look the same on purpose: refusing must be as easy as accepting. They only close the notice for now. */}
+      {/* Same look on purpose: refusing must be as easy as accepting. */}
       <div className="flex justify-start gap-2">
-        <Button variant="outline" size="xs" onClick={() => setDismissed(true)}>
+        <Button variant="outline" size="xs" onClick={() => choose("denied")}>
           Reject
         </Button>
-        <Button variant="outline" size="xs" onClick={() => setDismissed(true)}>
+        <Button variant="outline" size="xs" onClick={() => choose("granted")}>
           Accept
         </Button>
       </div>
