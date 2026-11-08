@@ -15,7 +15,7 @@ const CaseFileTextAreaView = ({ payload }: Props) => (
         {payload.caseFile.tabs.map((tab) => (
             <section key={tab.label} className="flex flex-col gap-1.5">
                 <h4 className="text-sm font-medium text-neutral-700">{tab.label}</h4>
-                <div className="prose prose-sm max-w-none rounded-md border border-neutral-200 p-3">
+                <div className="prose max-w-none rounded-md border border-neutral-200 p-3 text-[15px] leading-relaxed text-neutral-950 prose-p:my-2 prose-table:my-2 prose-table:w-full prose-table:text-[14px] prose-th:text-[14px] prose-th:font-semibold prose-th:py-2.5 prose-th:px-3.5 prose-th:text-neutral-900 prose-td:text-[14px] prose-td:py-2.5 prose-td:px-3.5 prose-td:text-neutral-800">
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>{tab.content}</ReactMarkdown>
                 </div>
             </section>

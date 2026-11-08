@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MAX_RESPONSE_CHARS, capResponse, countWords, limitState } from "./responseLimits";
+import { capResponse, countWords, limitState } from "./responseLimits";
 
 describe("countWords", () => {
     it("counts words split on any whitespace, and none for a blank response", () => {
@@ -25,10 +25,5 @@ describe("capResponse", () => {
 
     it("cuts a response at the word limit, keeping the text before it", () => {
         expect(capResponse("one  two three four", 2)).toBe("one  two");
-    });
-
-    it("cuts a response at the character limit", () => {
-        const long = "a".repeat(MAX_RESPONSE_CHARS + 50);
-        expect(capResponse(long, 1000)).toHaveLength(MAX_RESPONSE_CHARS);
     });
 });

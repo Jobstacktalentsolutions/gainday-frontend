@@ -13,6 +13,32 @@ export const JOB_DESCRIPTION_MIN = 40;
 export const JOB_DESCRIPTION_MAX = 5000;
 export const BUSINESS_PROBLEM_MAX = 500;
 
+export function isDeadlineAfterToday(
+    dateString: string | undefined | null,
+): boolean {
+    if (!dateString || dateString.trim() === "") return true;
+    const datePart = dateString.split("T")[0];
+    const parts = datePart.split("-").map(Number);
+    if (parts.length !== 3 || parts.some(isNaN)) return false;
+    const [year, month, day] = parts;
+    const selectedDate = new Date(year, month - 1, day);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return selectedDate.getTime() > today.getTime();
+}
+
+export function getTomorrowDateString(): string {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const yyyy = tomorrow.getFullYear();
+    const mm = String(tomorrow.getMonth() + 1).padStart(2, "0");
+    const dd = String(tomorrow.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+}
+
 export const jobDetailsBaseSchema = z.object({
     title: z.string().min(3, "Job title is required"),
     role: z.string().min(1, "Select or enter a role"),
@@ -21,7 +47,12 @@ export const jobDetailsBaseSchema = z.object({
     company: z.string().min(1),
     location: z.string().min(1, "Location is required"),
     employmentType: z.string().min(1, "Select an employment type"),
-    deadline: z.string().optional(),
+    deadline: z
+        .string()
+        .optional()
+        .refine(isDeadlineAfterToday, {
+            message: "Deadline must be greater than current day",
+        }),
     isRemoteFriendly: z.boolean().default(false),
     salaryFrom: z.preprocess(
         (val) => (val === "" || val === null || val === undefined || (typeof val === "number" && isNaN(val)) ? undefined : val),

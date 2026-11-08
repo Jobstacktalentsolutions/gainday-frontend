@@ -10,6 +10,7 @@ import {
     JOB_DESCRIPTION_MAX,
     JOB_DETAILS_REQUIRED_FIELDS,
     jobDetailsSchema,
+    getTomorrowDateString,
     type JobPostingFormValues,
 } from "../schemas/jobPosting";
 import TaskGenerationModal from "../components/TaskGenerationModal";
@@ -98,6 +99,8 @@ const JobDetailsStep = () => {
     const [customRoleActive, setCustomRoleActive] = useState(false);
     // Free-text mode only when the employer picks "Add yours..." (see the select below).
     const isCustomRole = customRoleActive;
+
+    const minDeadline = useMemo(() => getTomorrowDateString(), []);
 
     const isStepValid = useMemo(() => {
         return jobDetailsSchema.safeParse(formValues).success;
@@ -395,6 +398,7 @@ const JobDetailsStep = () => {
                 <JobFormInput
                     label="Deadline"
                     type="date"
+                    min={minDeadline}
                     error={errors.deadline?.message}
                     {...register("deadline")}
                 />

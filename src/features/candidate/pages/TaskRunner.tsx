@@ -27,6 +27,7 @@ import StagedChatTask from "../staged-chat/StagedChatTask";
 import { TimeWarningBanner } from "../components/TimeWarningBanner";
 import { ConnectionBanner } from "../components/ConnectionBanner";
 import { SimulationCompleteModal } from "../components/SimulationCompleteModal";
+import { ApproxIcon } from "@/components/ui/ApproxIcon";
 import type { CandidateAnswer } from "../types/submission";
 
 const EMPTY_ANSWER: TaskAnswer = { objectiveResponse: null, textResponse: "" };
@@ -338,8 +339,17 @@ export default function TaskRunner() {
             {/* Simulation header — sits at the very top, 117px tall */}
             <div className="fixed left-0 top-0 z-10 flex h-29.25 w-full items-center justify-between border-b-[0.5px] border-neutral-300 bg-white/10 px-30 py-5 backdrop-blur-[100px]">
                 <div className="flex w-50.5 flex-col gap-0.5">
-                    <p className="text-[16px] text-primary-950">
-                        Task {runStore.currentTaskIndex + 1} of {simulation.tasks.length}{currentTask?.expectedDurationMinutes ? ` • ~${currentTask.expectedDurationMinutes} mins` : ""}
+                    <p className="inline-flex items-center gap-1.5 text-[16px] text-primary-950">
+                        <span>Task {runStore.currentTaskIndex + 1} of {simulation.tasks.length}</span>
+                        {currentTask?.expectedDurationMinutes ? (
+                            <>
+                                <span className="text-neutral-400">•</span>
+                                <span className="inline-flex items-center gap-1">
+                                    <ApproxIcon className="size-3 text-neutral-500" />
+                                    <span>{currentTask.expectedDurationMinutes} mins</span>
+                                </span>
+                            </>
+                        ) : null}
                     </p>
                     <div className="h-2 w-full rounded-lg bg-[#d4d5d8]">
                         <div className="h-2 rounded bg-primary-500" style={{ width: `${progressPercent}%` }} />
@@ -369,9 +379,9 @@ export default function TaskRunner() {
                         <p className="text-[16px] text-primary-500">Task • {task.category}</p>
                     </div>
 
-                    <div className="flex flex-col gap-1">
-                        <h1 className="text-[40px] leading-12 tracking-[-0.4px] text-primary-950">{task.title}</h1>
-                        <div className="prose prose-sm max-w-none text-neutral-700 prose-p:my-1">
+                    <div className="flex flex-col gap-2">
+                        <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-primary-950">{task.title}</h1>
+                        <div className="prose max-w-none text-[15px] leading-relaxed text-neutral-700 prose-p:my-1.5">
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.scenarioDescription}</ReactMarkdown>
                         </div>
                     </div>

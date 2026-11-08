@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 import type { TableViewResponsePanelPayload } from "@/features/simulation-tasks/types";
 import BucketSelect from "../objectiveAnswers/BucketSelect";
 import ClassificationAnswer from "../objectiveAnswers/ClassificationAnswer";
@@ -44,8 +45,14 @@ const TableViewResponsePanelAnswer = ({
                 <table className="w-full text-left text-[14px]">
                     <thead className="bg-neutral-50">
                         <tr>
-                            {columns.map((column) => (
-                                <th key={column} className="px-3.5 py-2.5 font-medium text-neutral-700 align-bottom">
+                            {columns.map((column, columnIndex) => (
+                                <th
+                                    key={column}
+                                    className={cn(
+                                        "px-3.5 py-2.5 font-medium text-neutral-700 align-bottom",
+                                        columnIndex === 0 && "whitespace-nowrap"
+                                    )}
+                                >
                                     {column}
                                 </th>
                             ))}
@@ -62,7 +69,13 @@ const TableViewResponsePanelAnswer = ({
                             return (
                                 <tr key={rowIndex} className="border-t border-neutral-200">
                                     {row.map((cell, cellIndex) => (
-                                        <td key={cellIndex} className="px-3.5 py-2.5 text-neutral-950 align-middle">
+                                        <td
+                                            key={cellIndex}
+                                            className={cn(
+                                                "px-3.5 py-2.5 text-neutral-950 align-middle",
+                                                cellIndex === 0 && "whitespace-nowrap font-medium"
+                                            )}
+                                        >
                                             {cell}
                                         </td>
                                     ))}

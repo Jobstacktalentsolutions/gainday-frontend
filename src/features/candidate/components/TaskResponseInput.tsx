@@ -6,7 +6,6 @@ import { TaskObjectiveOptions } from "./TaskObjectiveOptions";
 import type { ClassificationAnswerState } from "./interfaceAnswers/types";
 import type { CandidateSimulationTask } from "../types/simulation";
 import {
-    MAX_RESPONSE_CHARS,
     capResponse,
     countWords,
     limitState,
@@ -52,8 +51,7 @@ export function TaskResponseInput({
     const wordCount = countWords(value);
     const wordLimit = wordLimitOf(task.interfacePayload);
     const wordState = limitState(wordCount, wordLimit.max);
-    const charState = limitState(value.length, MAX_RESPONSE_CHARS);
-    // Every change goes through the caps, so no interface can store a response past either limit.
+    // Every change goes through the word cap, so no interface can store a response past the limit.
     const setResponse = (next: string) => onChange(capResponse(next, wordLimit.max));
 
     const objectiveSlot = (
@@ -71,14 +69,18 @@ export function TaskResponseInput({
             : undefined;
 
     return (
-        <div className="flex w-full flex-col gap-1.5">
-            <div className="flex w-full flex-col gap-1">
-                <div className="prose prose-sm max-w-none text-neutral-950 prose-p:my-0">
+        <div className="flex w-full flex-col gap-2">
+            <div className="flex w-full flex-col gap-1.5">
+                <div className="prose max-w-none text-[15px] font-normal leading-relaxed text-neutral-950 prose-p:my-1">
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown>
                 </div>
 
                 {wordLimit.min > 0 && (
-                    <span className="self-end text-xs text-neutral-500">Minimum {wordLimit.min} words</span>
+                    <div className="flex justify-end">
+                        <span className="rounded-md bg-neutral-100 px-2.5 py-1 text-xs font-medium text-neutral-700">
+                            Minimum {wordLimit.min} words
+                        </span>
+                    </div>
                 )}
             </div>
 
@@ -99,9 +101,8 @@ export function TaskResponseInput({
                 </>
             )}
 
-            <div className="flex w-full items-center justify-between text-[16px] text-neutral-950">
+            <div className="flex w-full items-center justify-end text-[14px] text-neutral-950">
                 <span className={cn(limitTextClass(wordState))}>{wordCount} / {wordLimit.max} words</span>
-                <span className={cn(limitTextClass(charState))}>{value.length} / {MAX_RESPONSE_CHARS} characters</span>
             </div>
         </div>
     );

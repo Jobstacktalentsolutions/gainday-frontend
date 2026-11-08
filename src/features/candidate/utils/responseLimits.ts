@@ -1,6 +1,3 @@
-/** The longest written response, in characters. */
-export const MAX_RESPONSE_CHARS = 1000;
-
 /** Words in a response, split on whitespace. A blank response has no words. */
 export function countWords(text: string): number {
     const trimmed = text.trim();
@@ -22,17 +19,16 @@ export function limitTextClass(state: LimitState): string {
 }
 
 /**
- * Cuts a response back to the character cap and the word cap. Typing or pasting past either stops
+ * Cuts a response back to the word cap. Typing or pasting past it stops
  * at the cap instead of letting the response grow over it.
  */
 export function capResponse(text: string, maxWords: number): string {
-    const capped = text.slice(0, MAX_RESPONSE_CHARS);
     let words = 0;
-    for (const match of capped.matchAll(/\S+/g)) {
+    for (const match of text.matchAll(/\S+/g)) {
         words += 1;
         if (words === maxWords) {
-            return capped.slice(0, (match.index ?? 0) + match[0].length);
+            return text.slice(0, (match.index ?? 0) + match[0].length);
         }
     }
-    return capped;
+    return text;
 }

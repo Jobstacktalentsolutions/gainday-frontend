@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { JobFormInput } from "@/components/form/JobFormInput";
 import TaskTypeBadge from "./TaskTypeBadge";
 import TaskPromptEditor from "./TaskPromptEditor";
+import { ApproxIcon } from "@/components/ui/ApproxIcon";
 import { InterfaceRendererView } from "@/features/simulation-tasks/interfaceRenderers/registry";
 import { cn } from "@/lib/utils";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
@@ -54,8 +55,9 @@ const TaskCard = ({
                     </p>
                     <TaskTypeBadge taskType={taskType} interfaceType={interfaceType} />
                     {expectedDurationMinutes ? (
-                        <span className="shrink-0 rounded-md bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-600">
-                            ~{expectedDurationMinutes} mins
+                        <span className="inline-flex items-center gap-1 shrink-0 rounded-md bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-600">
+                            <ApproxIcon className="size-2.5 text-neutral-500" />
+                            <span>{expectedDurationMinutes} mins</span>
                         </span>
                     ) : null}
                 </div>

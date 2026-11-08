@@ -18,14 +18,16 @@ const ClassificationAnswer = ({ component, response, onChange, readOnly }: Props
                     key={item}
                     className="flex w-full items-center justify-between gap-4 rounded-xl border border-[#e6e6e8] px-6 py-3"
                 >
-                    <span className="text-[16px] text-primary-950">{item}</span>
-                    <BucketSelect
-                        value={mapping[item]}
-                        buckets={component.buckets}
-                        ariaLabel={`Bucket for ${item}`}
-                        readOnly={readOnly}
-                        onChange={(bucket) => onChange({ ...mapping, [item]: bucket })}
-                    />
+                    <span className="shrink-0 whitespace-nowrap text-[16px] font-medium text-primary-950">{item}</span>
+                    <div className="w-full max-w-xs sm:max-w-md">
+                        <BucketSelect
+                            value={mapping[item]}
+                            buckets={component.buckets}
+                            ariaLabel={`Bucket for ${item}`}
+                            readOnly={readOnly}
+                            onChange={(bucket) => onChange({ ...mapping, [item]: bucket })}
+                        />
+                    </div>
                 </div>
             ))}
         </div>

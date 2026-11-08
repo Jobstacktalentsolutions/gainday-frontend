@@ -19,7 +19,7 @@ const RichTextComposerAnswer = ({ payload, value, onChange, objectiveSlot, readO
     <div className="flex w-full flex-col gap-4">
         {objectiveSlot}
         {readOnly ? (
-            <div className="prose prose-sm max-w-none rounded-lg border border-neutral-200 p-4 text-neutral-950">
+            <div className="prose max-w-none rounded-lg border border-neutral-200 p-4 text-[15px] leading-relaxed text-neutral-950 prose-p:my-2 prose-table:my-2 prose-table:w-full prose-table:text-[14px] prose-th:text-[14px] prose-th:font-semibold prose-th:py-2.5 prose-th:px-3.5 prose-th:text-neutral-900 prose-td:text-[14px] prose-td:py-2.5 prose-td:px-3.5 prose-td:text-neutral-800">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>{value}</ReactMarkdown>
             </div>
         ) : (

@@ -38,7 +38,10 @@ const CaseFileTextAreaAnswer = ({ payload, value, onChange, objectiveSlot, readO
                         </button>
                     ))}
                 </div>
-                <div role="tabpanel" className="prose prose-sm max-w-none p-4 text-neutral-950">
+                <div
+                    role="tabpanel"
+                    className="prose max-w-none p-4 text-[15px] leading-relaxed text-neutral-950 prose-p:my-2 prose-table:my-2 prose-table:w-full prose-table:text-[14px] prose-th:text-[14px] prose-th:font-semibold prose-th:py-2.5 prose-th:px-3.5 prose-th:text-neutral-900 prose-td:text-[14px] prose-td:py-2.5 prose-td:px-3.5 prose-td:text-neutral-800"
+                >
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>{tabs[activeTab].content}</ReactMarkdown>
                 </div>
             </div>

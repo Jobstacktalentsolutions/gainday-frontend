@@ -12,6 +12,7 @@ import { formatPostedDate } from "../utils/formatters";
 import { useJobSimulation } from "../hooks/useJobSimulation";
 import BlueSparkles from "@/assets/blue-sparkles.svg";
 import { useFullscreenCheck } from "../hooks/useFullscreenCheck";
+import { ApproxIcon } from "@/components/ui/ApproxIcon";
 
 
 const CHECKS = [
@@ -162,8 +163,9 @@ export default function PreSimulation() {
                             </div>
                             <div className="rounded-lg bg-linear-to-r from-secondary-500 to-primary-950 px-px py-px flex-1">
                                 <div className="flex h-full flex-col gap-3 rounded-lg bg-white p-4 shadow-[0px_4px_20px_rgba(16,24,40,0.05)]">
-                                    <p className="text-[32px] leading-9.5 tracking-[-0.32px] text-black">
-                                        ~{simulation.timeLimitMinutes} min
+                                    <p className="inline-flex items-center gap-1.5 text-[32px] leading-9.5 tracking-[-0.32px] text-black">
+                                        <ApproxIcon className="size-5 text-neutral-500" />
+                                        <span>{simulation.timeLimitMinutes} min</span>
                                     </p>
                                     <p className="text-[16px] text-neutral-700">Est. time allowed</p>
                                 </div>

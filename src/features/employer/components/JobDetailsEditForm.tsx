@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Check } from "lucide-react";
 import { Controller, useFormContext } from "react-hook-form";
 import { JobFormInput } from "@/components/form/JobFormInput";
@@ -6,7 +7,12 @@ import { FormTextarea } from "@/components/form/FormTextarea";
 import TagInput from "@/components/ui/tagInput";
 import TaskPromptEditor from "./TaskPromptEditor";
 import { cn } from "@/lib/utils";
-import { BUSINESS_PROBLEM_MAX, JOB_DESCRIPTION_MAX, type JobPostingFormValues } from "../schemas/jobPosting";
+import {
+  BUSINESS_PROBLEM_MAX,
+  JOB_DESCRIPTION_MAX,
+  getTomorrowDateString,
+  type JobPostingFormValues,
+} from "../schemas/jobPosting";
 import { EMPLOYMENT_TYPES } from "../constants/jobPostingOptions";
 
 interface JobDetailsEditFormProps {
@@ -18,10 +24,28 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
     register,
     control,
     watch,
+    trigger,
     formState: { errors },
   } = useFormContext<JobPostingFormValues>();
   const title = watch("title");
   const description = watch("description");
+  const minDeadline = useMemo(() => getTomorrowDateString(), []);
+
+  const handleDone = async () => {
+    const valid = await trigger([
+      "title",
+      "skillCategory",
+      "location",
+      "employmentType",
+      "deadline",
+      "description",
+      "businessProblem",
+      "skills",
+    ]);
+    if (valid) {
+      onDone();
+    }
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -32,7 +56,7 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
         </p>
         <button
           type="button"
-          onClick={onDone}
+          onClick={handleDone}
           className="flex h-8 items-center gap-1.5 rounded-md border border-neutral-200 px-3 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
         >
           <Check className="size-3.5" aria-hidden="true" />
@@ -101,6 +125,7 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
         <JobFormInput
           label="Deadline"
           type="date"
+          min={minDeadline}
           error={errors.deadline?.message}
           {...register("deadline")}
         />

@@ -88,8 +88,8 @@ export const KeyedClassificationKeyView = ({ value }: { value: KeyedClassificati
         <ul className="flex flex-col gap-1">
             {value.correctMapping.map(({ item, bucket }) => (
                 <li key={item} className="flex justify-between gap-4">
-                    <span>{item}</span>
-                    <span className="font-medium">{bucket}</span>
+                    <span className="whitespace-nowrap font-medium">{item}</span>
+                    <span className="font-medium text-neutral-600">{bucket}</span>
                 </li>
             ))}
         </ul>
