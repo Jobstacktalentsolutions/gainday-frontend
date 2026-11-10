@@ -205,7 +205,7 @@ const SignIn = () => {
                     </Link>
                     {" · "}
                     Looking for a job?{" "}
-                    <Link to="/candidate/signin" className="text-primary-500">
+                      <Link to="/candidate/signin" className="text-primary-500">
                         Candidate log in
                     </Link>
                 </p>

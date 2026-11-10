@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
-import { X, ArrowRight, Briefcase, Sparkles } from "lucide-react";
+import { X, ArrowRight, Briefcase, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface AuthChoiceModalProps {
@@ -14,15 +14,15 @@ const OPTIONS = {
         heading: "Sign up",
         subheading: "How would you like to get started?",
         candidate: {
-            icon: Sparkles,
+            icon: User,
             label: "I'm looking for a job",
-            description: "Prove your skills through real tasks and land roles that match your true ability.",
+            description: "Discover roles and apply through job simulations.",
             href: "/candidate/signup",
         },
         employer: {
             icon: Briefcase,
             label: "I'm hiring talent",
-            description: "Post a role and let Gainday surface the most capable candidates, ranked by evidence.",
+            description: "Post a role and get the most capable candidates",
             href: "/employer/signup",
         },
     },
@@ -30,7 +30,7 @@ const OPTIONS = {
         heading: "Log in",
         subheading: "Welcome back",
         candidate: {
-            icon: Sparkles,
+            icon: User,
             label: "I'm a candidate",
             description: "Continue where you left off and track your Capability Passport.",
             href: "/candidate/signin",

@@ -80,7 +80,7 @@ const CreateAccount = () => {
     return (
         <AuthCard
             title="Create your Employer Account"
-            subtitle="Post your first job free. No card required."
+            subtitle="Post jobs and discover capable candidates."
         >
             <form
                 onSubmit={handleSubmit(onSubmit)}

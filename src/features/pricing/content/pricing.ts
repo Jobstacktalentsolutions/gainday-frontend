@@ -8,7 +8,7 @@ export interface PricingPack {
 
 export const PRICING_CHIPS = [
     "1 credit = 1 unlock",
-    "Packs are one-off, no repeated subscriptions",
+    "Packs are one-off, no subscriptions",
     "Credits never expire",
     "Credits work across all roles",
 ];
