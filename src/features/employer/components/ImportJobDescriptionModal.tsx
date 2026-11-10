@@ -97,7 +97,7 @@ const ImportJobDescriptionModal = ({
                     </Button>
                     <Button onClick={handleSubmit} disabled={!canSubmit}>
                         {isParsing && <Loader2 className="animate-spin" aria-hidden="true" />}
-                        {isParsing ? "Importing..." : "Import"}
+                        {isParsing ? "Parsing..." : "Parse"}
                     </Button>
                 </DialogFooter>
             </DialogContent>

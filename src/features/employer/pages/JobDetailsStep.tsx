@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useFormContext, Controller } from "react-hook-form";
-import { Sparkles, RotateCcw, Upload } from "lucide-react";
+import { Sparkles, RotateCcw, Copy } from "lucide-react";
 import { toast } from "sonner";
 import TagInput from "@/components/ui/tagInput";
 import { cn } from "@/lib/utils";
@@ -237,14 +237,14 @@ const JobDetailsStep = () => {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-2xl border border-primary-100 bg-primary-50/70 p-4 sm:px-6 sm:py-4 transition-all">
                 <div className="flex items-center gap-3.5">
                     <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary-100 text-primary-600">
-                        <Upload className="size-5" aria-hidden="true" />
+                        <Copy className="size-5" aria-hidden="true" />
                     </div>
                     <div className="flex flex-col gap-0.5">
                         <p className="text-base font-semibold text-neutral-900">
                             Do you already have a job description?
                         </p>
                         <p className="text-sm text-neutral-600">
-                            Import your text or file to automatically parse and pre-fill the job details.
+                            Paste your text to automatically parse and pre-fill the job details.
                         </p>
                     </div>
                 </div>
@@ -253,8 +253,8 @@ const JobDetailsStep = () => {
                     onClick={() => setIsImportOpen(true)}
                     className="flex shrink-0 cursor-pointer items-center gap-2 rounded-xl bg-primary-600 hover:bg-primary-500 active:bg-primary-700 px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition-colors"
                 >
-                    <Upload className="size-4" aria-hidden="true" />
-                    <span>Import job description</span>
+                    <Copy className="size-4" aria-hidden="true" />
+                    <span>Paste job description</span>
                 </button>
             </div>
 
