@@ -24,12 +24,12 @@ const PricingPage = () => {
     // Live catalogue from the backend, so the pack ids match what the purchase endpoint accepts.
     const packs: PricingPack[] = packsQuery.data
         ? packsQuery.data.map((pack) => ({
-              id: pack.id,
-              name: pack.name,
-              credits: pack.credits,
-              pricePence: pack.pricePence,
-              popular: pack.label !== null,
-          }))
+            id: pack.id,
+            name: pack.name,
+            credits: pack.credits,
+            pricePence: pack.pricePence,
+            popular: pack.label !== null,
+        }))
         : [];
 
     // The billing page opens its pack picker from ?buy=. A signed-out visitor goes through signup
@@ -55,7 +55,6 @@ const PricingPage = () => {
                         <span>Post for Free. Pay Only to Unlock</span>
                         <HighlightBox className={headingClass}>Candidates.</HighlightBox>
                     </h1>
-                    <p className="text-base text-neutral-700">No subscription.</p>
                 </section>
 
                 {/* Packs */}
