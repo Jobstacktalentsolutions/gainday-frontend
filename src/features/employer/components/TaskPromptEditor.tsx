@@ -8,7 +8,6 @@ import { Markdown } from "tiptap-markdown";
 import { Bold, Italic, Link as LinkIcon, List, Heading1, Heading2, Heading3, Table2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-
 interface TaskPromptEditorProps {
     value: string;
     onChange: (markdown: string) => void;
@@ -48,8 +47,7 @@ const ToolbarButton = ({
             {children}
         </button>
     );
-
-}
+};
 
 // Tiptap's markdown storage isn't populated until the Markdown extension has finished
 // initializing — reading it too early (e.g. the instant an editor is created, or a stray
@@ -103,7 +101,7 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder, contentClassNam
                     hasError && "border-error-400 ring-3 ring-error-400/20"
                 )}
             >
-                <div className="flex items-center gap-1 border-b border-neutral-200 bg-neutral-50/50 p-2">
+                <div className="flex flex-wrap items-center gap-1 border-b border-neutral-200 bg-neutral-50/50 p-2">
                     {/* H1 / H2 / H3 — each button independently toggles its heading level */}
                     <ToolbarButton
                         label="Heading 1"
@@ -183,39 +181,42 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder, contentClassNam
                         <List className="size-3.5" />
                     </ToolbarButton>
 
-                    <span className="mx-1 h-4 w-px bg-neutral-200" aria-hidden="true" />
+                    {/* Tables toolbar: hidden on mobile, visible on sm and up */}
+                    <div className="hidden sm:flex sm:items-center sm:gap-1">
+                        <span className="mx-1 h-4 w-px bg-neutral-200" aria-hidden="true" />
 
-                    {/* Tables. The row/column/delete buttons do nothing unless the cursor is
-                        inside a table, so they need no active state. */}
-                    <ToolbarButton
-                        label="Insert table"
-                        onClick={() =>
-                            editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
-                        }
-                    >
-                        <Table2 className="size-3.5" />
-                    </ToolbarButton>
-                    <ToolbarButton
-                        label="Add row below"
-                        className="w-auto px-2 text-xs"
-                        onClick={() => editor?.chain().focus().addRowAfter().run()}
-                    >
-                        + Row
-                    </ToolbarButton>
-                    <ToolbarButton
-                        label="Add column to the right"
-                        className="w-auto px-2 text-xs"
-                        onClick={() => editor?.chain().focus().addColumnAfter().run()}
-                    >
-                        + Column
-                    </ToolbarButton>
-                    <ToolbarButton
-                        label="Delete table"
-                        className="w-auto px-2 text-xs"
-                        onClick={() => editor?.chain().focus().deleteTable().run()}
-                    >
-                        Delete table
-                    </ToolbarButton>
+                        {/* Tables. The row/column/delete buttons do nothing unless the cursor is
+                            inside a table, so they need no active state. */}
+                        <ToolbarButton
+                            label="Insert table"
+                            onClick={() =>
+                                editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
+                            }
+                        >
+                            <Table2 className="size-3.5" />
+                        </ToolbarButton>
+                        <ToolbarButton
+                            label="Add row below"
+                            className="w-auto px-2 text-xs"
+                            onClick={() => editor?.chain().focus().addRowAfter().run()}
+                        >
+                            + Row
+                        </ToolbarButton>
+                        <ToolbarButton
+                            label="Add column to the right"
+                            className="w-auto px-2 text-xs"
+                            onClick={() => editor?.chain().focus().addColumnAfter().run()}
+                        >
+                            + Column
+                        </ToolbarButton>
+                        <ToolbarButton
+                            label="Delete table"
+                            className="w-auto px-2 text-xs"
+                            onClick={() => editor?.chain().focus().deleteTable().run()}
+                        >
+                            Delete table
+                        </ToolbarButton>
+                    </div>
                 </div>
                 <div
                     className={cn("min-h-45 cursor-text px-4 py-3 scrollbar-modern", contentClassName)}
@@ -257,7 +258,7 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder, contentClassNam
                 </p>
             )}
         </div>
-    )
-}
+    );
+};
 
 export default TaskPromptEditor;
