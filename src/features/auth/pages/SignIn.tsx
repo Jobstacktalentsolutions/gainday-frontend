@@ -12,7 +12,6 @@ import { ActionButton } from "@/components/ui/ActionButton";
 import { FormInput } from "@/components/form/FormInput";
 import { AuthDivider } from "../component/AuthDivider";
 import { GoogleSignIn } from "../component/GoogleSignIn";
-import AuthSwitchLink from "../component/AuthSwitchLink";
 import { signInSchema, type signInFormValues } from "../schemas/signInSchema";
 import AuthCard from "../component/AuthCard";
 import PasswordInput from "../component/passwordInput";
@@ -199,16 +198,17 @@ const SignIn = () => {
 
                 <AuthDivider />
                 <GoogleSignIn redirect={redirect} />
-                <AuthSwitchLink
-                    prompt="New to Gainday?"
-                    linkText="Create an account"
-                    to="/employer/signup"
-                />
-                <AuthSwitchLink
-                    prompt="Looking for a job?"
-                    linkText="Candidate log in"
-                    to="/candidate/signin"
-                />
+                <p className="text-center text-base text-neutral-700">
+                    New to Gainday?{" "}
+                    <Link to="/employer/signup" className="text-primary-500">
+                        Create an account
+                    </Link>
+                    {" · "}
+                    Looking for a job?{" "}
+                    <Link to="/candidate/signin" className="text-primary-500">
+                        Candidate log in
+                    </Link>
+                </p>
 
             </form>
 
