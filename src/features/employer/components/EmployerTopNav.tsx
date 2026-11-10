@@ -39,10 +39,12 @@ const EmployerTopNav = () => {
                     ))}
                 </nav>
 
-                {/* Right: credit balance + avatar dropdown + hamburger (mobile) */}
+                {/* Right: credit balance + avatar dropdown (desktop) + hamburger (mobile) */}
                 <div className="flex items-center gap-3">
-                    <CreditIndicator />
-                    <UserAvatarMenu />
+                    <div className="hidden items-center gap-3 lg:flex">
+                        <CreditIndicator />
+                        <UserAvatarMenu />
+                    </div>
 
                     {/* Hamburger: mobile only */}
                     <button
