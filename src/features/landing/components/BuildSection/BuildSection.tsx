@@ -45,7 +45,7 @@ const BuildSection = () => {
                 </div>
 
                 <div className="lg:hidden">
-                    <StartNowButton label="Start Now" onClick={start} />
+                    <StartNowButton label="Apply Now" onClick={start} />
                 </div>
             </div>
         </motion.div>
