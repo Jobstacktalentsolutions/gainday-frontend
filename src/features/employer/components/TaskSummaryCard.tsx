@@ -33,6 +33,14 @@ const TaskSummaryCard = ({ index, task, open, onToggle }: TaskSummaryCardProps) 
                         <span>{task.expectedDurationMinutes} mins</span>
                     </span>
                 ) : null}
+                {task.inReview && (
+                    <span
+                        title="This task was sent to AI oversight and may be tweaked by admins"
+                        className="inline-flex items-center gap-1 shrink-0 rounded-md bg-amber-50 border border-amber-200/80 px-2 py-0.5 text-xs font-semibold text-amber-800"
+                    >
+                        In Review
+                    </span>
+                )}
                 <p className="min-w-0 flex-1 truncate text-base font-medium text-neutral-950">{task.title}</p>
                 <ChevronDown
                     className={cn("size-5 shrink-0 text-neutral-400 transition-transform duration-300", open && "rotate-180")}

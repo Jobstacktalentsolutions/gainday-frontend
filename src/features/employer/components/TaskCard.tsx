@@ -37,6 +37,7 @@ const TaskCard = ({
     const businessProblemDerived = watch(`tasks.${index}.businessProblemDerived` as const);
     const questionPrompt = watch(`tasks.${index}.questionPrompt` as const);
     const expectedDurationMinutes = watch(`tasks.${index}.expectedDurationMinutes` as const);
+    const inReview = watch(`tasks.${index}.inReview` as const);
     const taskErrors = errors.tasks?.[index];
 
     const promptPreview = questionPrompt
@@ -48,8 +49,9 @@ const TaskCard = ({
         <div className="flex w-full flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white">
             <input type="hidden" {...register(`tasks.${index}.id` as const)} />
             <input type="hidden" {...register(`tasks.${index}.expectedDurationMinutes` as const, { valueAsNumber: true })} />
+            <input type="hidden" {...register(`tasks.${index}.inReview` as const)} />
             <div className="flex items-center justify-between border-b border-neutral-100 p-5">
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                     <p className="text-sm font-bold uppercase tracking-wide text-neutral-900">
                         TASK {index + 1}
                     </p>
@@ -60,6 +62,14 @@ const TaskCard = ({
                             <span>{expectedDurationMinutes} mins</span>
                         </span>
                     ) : null}
+                    {inReview && (
+                        <span
+                            title="This task was sent to AI oversight and may be tweaked by admins"
+                            className="inline-flex items-center gap-1 shrink-0 rounded-md bg-amber-50 border border-amber-200/80 px-2 py-0.5 text-xs font-semibold text-amber-800"
+                        >
+                            In Review
+                        </span>
+                    )}
                 </div>
 
                 {/* Desktop: action buttons in header */}

@@ -225,4 +225,5 @@ export interface SimulationTask {
   businessProblemDerived: boolean;
   interfaceType: InterfaceType;
   interfacePayload: Record<string, unknown>;
+  inReview?: boolean;
 }

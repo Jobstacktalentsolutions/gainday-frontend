@@ -61,7 +61,7 @@ const ImportJobDescriptionModal = ({
             <DialogContent className="w-full max-w-xl sm:max-w-xl p-6 sm:p-7">
                 <DialogHeader>
                     <DialogTitle className="text-xl font-semibold text-neutral-900">
-                        Import job description
+                        Paste job description
                     </DialogTitle>
                     <DialogDescription className="text-sm text-neutral-500">
                         Paste an existing job description. We'll fill in the form and rewrite the description for candidates.
@@ -69,7 +69,7 @@ const ImportJobDescriptionModal = ({
                 </DialogHeader>
 
                 <FormTextarea
-                    label="Job description to import"
+                    label="Paste job description"
                     hideLabel
                     rows={12}
                     placeholder="Paste the job description here..."
@@ -97,7 +97,7 @@ const ImportJobDescriptionModal = ({
                     </Button>
                     <Button onClick={handleSubmit} disabled={!canSubmit}>
                         {isParsing && <Loader2 className="animate-spin" aria-hidden="true" />}
-                        {isParsing ? "Importing..." : "Import"}
+                        {isParsing ? "Parsing..." : "Paste"}
                     </Button>
                 </DialogFooter>
             </DialogContent>

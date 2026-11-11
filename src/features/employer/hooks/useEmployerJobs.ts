@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
 import { getJobShareUrl } from "@/lib/shareLink";
-import type { Job, JobStatus } from "../types/job";
-import { fetchJobSubmissionsCount } from "./useJobSubmissionsCount";
+import type { Job, JobStatus, JobStatusFilter } from "../types/job";
 
 interface BackendJob {
     id: string;
@@ -12,33 +11,76 @@ interface BackendJob {
     status: JobStatus;
     createdAt: string;
     updatedAt: string;
+    submissionsCount?: number;
+}
+
+export interface PaginationMeta {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    totalAll?: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+}
+
+export interface PaginatedEmployerJobsResponse {
+    items: BackendJob[];
+    pagination: PaginationMeta;
 }
 
 const POSTED_STATUSES: JobStatus[] = ["ACTIVE", "CLOSED"];
 
-const toJob = (job: BackendJob, submissionsCount: number): Job => ({
+const toJob = (job: BackendJob): Job => ({
     id: job.id,
     title: job.title ?? "Untitled job",
     status: job.status,
     location: job.location ?? "Not set",
     employmentType: job.employmentType ?? "Not set",
-    submissionsCount,
+    submissionsCount: job.submissionsCount ?? 0,
     postedAt: POSTED_STATUSES.includes(job.status) ? job.updatedAt : null,
-    // shareUrl: `${window.location.origin}/jobs/${job.id}`,
     shareUrl: getJobShareUrl(job.id),
 });
 
-const fetchEmployerJobs = async (search?: string): Promise<Job[]> => {
-    const { data } = await apiClient.get<BackendJob[]>("/jobs/mine", {
-        params: search?.trim() ? { search: search.trim() } : undefined,
+export interface EmployerJobsFilterParams {
+    search?: string;
+    status?: JobStatusFilter;
+    page?: number;
+    limit?: number;
+}
+
+export interface PaginatedJobsResult {
+    jobs: Job[];
+    pagination: PaginationMeta;
+}
+
+const fetchEmployerJobs = async (params?: EmployerJobsFilterParams): Promise<PaginatedJobsResult> => {
+    const queryParams: Record<string, string | number> = {};
+    if (params?.search?.trim()) queryParams.search = params.search.trim();
+    if (params?.status && params.status !== "all") queryParams.status = params.status;
+    if (params?.page) queryParams.page = params.page;
+    if (params?.limit) queryParams.limit = params.limit;
+
+    const { data } = await apiClient.get<PaginatedEmployerJobsResponse>("/jobs/mine", {
+        params: queryParams,
     });
-    const counts = await Promise.all(data.map((job) => fetchJobSubmissionsCount(job.id)));
-    return data.map((job, index) => toJob(job, counts[index]));
+
+    return {
+        jobs: data.items.map(toJob),
+        pagination: data.pagination,
+    };
 };
 
-export const useEmployerJobs = (search?: string) => {
+export const useEmployerJobs = (params?: EmployerJobsFilterParams) => {
     return useQuery({
-        queryKey: ["employer", "jobs", search?.trim() ?? ""],
-        queryFn: () => fetchEmployerJobs(search),
+        queryKey: [
+            "employer",
+            "jobs",
+            params?.search?.trim() ?? "",
+            params?.status ?? "all",
+            params?.page ?? 1,
+            params?.limit ?? 9,
+        ],
+        queryFn: () => fetchEmployerJobs(params),
     });
 };

@@ -27,7 +27,6 @@ import StagedChatTask from "../staged-chat/StagedChatTask";
 import { TimeWarningBanner } from "../components/TimeWarningBanner";
 import { ConnectionBanner } from "../components/ConnectionBanner";
 import { SimulationCompleteModal } from "../components/SimulationCompleteModal";
-import { ApproxIcon } from "@/components/ui/ApproxIcon";
 import type { CandidateAnswer } from "../types/submission";
 
 const EMPTY_ANSWER: TaskAnswer = { objectiveResponse: null, textResponse: "" };
@@ -341,15 +340,6 @@ export default function TaskRunner() {
                 <div className="flex w-50.5 flex-col gap-0.5">
                     <p className="inline-flex items-center gap-1.5 text-[16px] text-primary-950">
                         <span>Task {runStore.currentTaskIndex + 1} of {simulation.tasks.length}</span>
-                        {currentTask?.expectedDurationMinutes ? (
-                            <>
-                                <span className="text-neutral-400">•</span>
-                                <span className="inline-flex items-center gap-1">
-                                    <ApproxIcon className="size-3 text-neutral-500" />
-                                    <span>{currentTask.expectedDurationMinutes} mins</span>
-                                </span>
-                            </>
-                        ) : null}
                     </p>
                     <div className="h-2 w-full rounded-lg bg-[#d4d5d8]">
                         <div className="h-2 rounded bg-primary-500" style={{ width: `${progressPercent}%` }} />

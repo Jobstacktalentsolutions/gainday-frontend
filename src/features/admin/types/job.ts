@@ -48,6 +48,7 @@ export interface SimulationTask {
   interfacePayload: Record<string, unknown>;
   /** Tagged with its component type and stripped of answer keys by the backend. */
   objectiveComponent: CandidateObjectiveComponent | null;
+  inReview?: boolean;
 }
 
 export interface AdminJobSubmission {

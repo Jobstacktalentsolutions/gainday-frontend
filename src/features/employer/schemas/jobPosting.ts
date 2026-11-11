@@ -120,6 +120,7 @@ export const simulationTaskSchema = z.object({
     businessProblemDerived: z.boolean(),
     interfaceType: z.nativeEnum(InterfaceType),
     interfacePayload: z.record(z.string(), z.unknown()),
+    inReview: z.boolean().optional(),
 });
 
 export const simulationBuilderSchema = z.object({
