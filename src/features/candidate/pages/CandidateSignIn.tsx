@@ -12,7 +12,6 @@ import { ActionButton } from "@/components/ui/ActionButton";
 import { FormInput } from "@/components/form/FormInput";
 import { AuthDivider } from "@/features/auth/component/AuthDivider";
 import { GoogleSignIn } from "@/features/auth/component/GoogleSignIn";
-import AuthSwitchLink from "@/features/auth/component/AuthSwitchLink";
 import AuthCard from "@/features/auth/component/AuthCard";
 import PasswordInput from "@/features/auth/component/passwordInput";
 import spinner from "@/assets/Spinner.svg";
@@ -165,16 +164,17 @@ const CandidateSignIn = () => {
 
                 <AuthDivider />
                 <GoogleSignIn redirect={redirect} />
-                <AuthSwitchLink
-                    prompt="New to Gainday?"
-                    linkText="Create an account"
-                    to={signUpHref}
-                />
-                <AuthSwitchLink
-                    prompt="Hiring?"
-                    linkText="Employer log in"
-                    to="/employer/signin"
-                />
+                <p className="text-center text-base text-neutral-700">
+                    New to Gainday?{" "}
+                    <Link to={signUpHref} className="text-primary-500">
+                        Create an account
+                    </Link>
+                    {" · "}
+                    Hiring?{" "}
+                    <Link to="/employer/signin" className="text-primary-500">
+                        Employer log in
+                    </Link>
+                </p>
 
             </form>
 

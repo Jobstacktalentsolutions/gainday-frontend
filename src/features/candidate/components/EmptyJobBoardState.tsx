@@ -12,7 +12,7 @@ export function EmptyJobBoardState() {
             </span>
             <div className="flex flex-col items-center gap-6">
                 <p className="w-86 text-center text-[16px] text-neutral-700">
-                    No live roles yet. New assessments are posted by employers every week.
+                    No live roles yet. New roles are posted by employers every week.
                 </p>
                 <AddItemButton onClick={() => navigate("/employer/signup")}>
                     Hiring? Post a Job

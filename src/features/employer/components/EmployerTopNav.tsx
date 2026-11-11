@@ -5,7 +5,6 @@ import EmployerNavDrawer from "./EmployerNavDrawer";
 import CreditIndicator from "./CreditIndicator";
 import BrandLogo from "@/assets/gainday icon.svg";
 import { UserAvatarMenu } from "@/components/ui/UserAvatarMenu";
-import { ViewDashboardButton } from "@/components/ui/ViewDashboardButton";
 import { cn } from "@/lib/utils";
 import { EMPLOYER_NAV_LINKS } from "../utils/employerNavLinks";
 
@@ -40,11 +39,12 @@ const EmployerTopNav = () => {
                     ))}
                 </nav>
 
-                {/* Right: credit balance + avatar dropdown + hamburger (mobile) */}
+                {/* Right: credit balance + avatar dropdown (desktop) + hamburger (mobile) */}
                 <div className="flex items-center gap-3">
-                    <CreditIndicator />
-                    <ViewDashboardButton />
-                    <UserAvatarMenu />
+                    <div className="hidden items-center gap-3 lg:flex">
+                        <CreditIndicator />
+                        <UserAvatarMenu />
+                    </div>
 
                     {/* Hamburger: mobile only */}
                     <button

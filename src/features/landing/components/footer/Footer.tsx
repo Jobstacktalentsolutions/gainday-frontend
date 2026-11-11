@@ -25,7 +25,7 @@ export function Footer() {
 
     const productLinks: FooterLinkItem[] = [
         { label: "How it works", to: landingSectionPath("assessment-process") },
-        { label: "Try work simulation", to: tryChallengePath },
+        { label: "Apply for a role", to: tryChallengePath },
         { label: "For candidates", to: landingSectionPath("for-candidates") },
         { label: "For employers", to: landingSectionPath("for-employers") },
     ]

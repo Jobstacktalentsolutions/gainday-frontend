@@ -45,10 +45,10 @@ export function CookieNotice() {
       </div>
       {/* Same look on purpose: refusing must be as easy as accepting. */}
       <div className="flex justify-start gap-2">
-        <Button variant="outline" size="xs" onClick={() => choose("denied")}>
+        <Button className="cursor-pointer" variant="outline" size="xs" onClick={() => choose("denied")}>
           Reject
         </Button>
-        <Button variant="outline" size="xs" onClick={() => choose("granted")}>
+        <Button className="cursor-pointer" variant="outline" size="xs" onClick={() => choose("granted")}>
           Accept
         </Button>
       </div>

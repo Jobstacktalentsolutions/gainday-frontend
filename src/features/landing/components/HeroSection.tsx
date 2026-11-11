@@ -25,13 +25,13 @@ const HeroSection = () => {
                 </motion.h1>
 
                 <motion.p variants={fadeUp} className="text-center text-base leading-6 text-neutral-700 lg:text-left">
-                    Paste your job description and AI turns it into a work simulation built from the day-to-day
+                    Paste your job description and Gainday turns it into a work simulation built from the day-to-day
                     task of the role. Candidates apply by completing it, and you get a ranked shortlist based on
                     how they perform.
                 </motion.p>
 
                 <motion.div variants={fadeUp} className="flex flex-col items-center gap-4 py-2 lg:flex-row lg:gap-5">
-                    <CTAButton size="lg" label="I’m an employer" onClick={() => navigate("/employer/signup")} />
+                    <CTAButton size="lg" label="I'm an employer" onClick={() => navigate("/employer/signup")} />
                     <Button
                         type="button"
                         variant="outline"

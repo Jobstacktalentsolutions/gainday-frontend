@@ -33,10 +33,10 @@ const BuildSection = () => {
                     <h2 className="heading-2">Built for Proof, not Paper.</h2>
                     <p className="text-base leading-6 text-neutral-200">
                         Show employers what you can actually do not just what your CV says you&rsquo;ve done.
-                        Try the live work simulation and get on the waitlist for what&rsquo;s next.
+                        view live roles and Apply.
                     </p>
                     <div className="hidden lg:block">
-                        <StartNowButton label="Start Now" onClick={start} />
+                        <StartNowButton label="Apply Now" onClick={start} />
                     </div>
                 </div>
 
@@ -45,7 +45,7 @@ const BuildSection = () => {
                 </div>
 
                 <div className="lg:hidden">
-                    <StartNowButton label="Start Now" onClick={start} />
+                    <StartNowButton label="Apply Now" onClick={start} />
                 </div>
             </div>
         </motion.div>
