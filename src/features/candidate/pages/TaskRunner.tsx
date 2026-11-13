@@ -3,7 +3,7 @@ import type { AxiosError } from "axios";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { CloudUpload, Timer } from "lucide-react";
+import { CloudUpload, Timer, Clock } from "lucide-react";
 
 import { ActionButton } from "@/components/ui/ActionButton";
 import AppLoader from "@/components/ui/AppLoader";
@@ -100,7 +100,7 @@ export default function TaskRunner() {
         if ((isComplete && storedJobId === jobId) || appliedSet.has(jobId ?? "")) {
             navigate("/job-board", { replace: true });
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Which task was on screen when a proctoring event fires — read via ref (not the `task`
@@ -131,7 +131,7 @@ export default function TaskRunner() {
     });
     useEffect(() => {
         arm(); // arm after mount — calling arm() during render triggers setStatus → infinite loop
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useFullscreenGuard({
@@ -142,14 +142,14 @@ export default function TaskRunner() {
     // Automatically exit fullscreen when simulation is complete or when unmounting
     useEffect(() => {
         if (runStore.isComplete && document.fullscreenElement) {
-            document.exitFullscreen().catch(() => {});
+            document.exitFullscreen().catch(() => { });
         }
     }, [runStore.isComplete]);
 
     useEffect(() => {
         return () => {
             if (document.fullscreenElement) {
-                document.exitFullscreen().catch(() => {});
+                document.exitFullscreen().catch(() => { });
             }
         };
     }, []);
@@ -178,7 +178,7 @@ export default function TaskRunner() {
                 },
             },
         );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [job?.id, simulation?.id, runStore.submissionId]);
 
     const timer = useSimulationTimer(runStore.endTimestamp);
@@ -189,7 +189,7 @@ export default function TaskRunner() {
         runStore.markComplete(currentTaskId);
 
         if (document.fullscreenElement) {
-            document.exitFullscreen().catch(() => {});
+            document.exitFullscreen().catch(() => { });
         }
 
         // Captures a still-open idle spell that never got closed out by an activity event
@@ -218,7 +218,7 @@ export default function TaskRunner() {
             const task = simulation.tasks[runStore.currentTaskIndex];
             finalizeSubmission(task.id);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [timer.isExpired, runStore.isComplete, simulation]);
 
     // Keyed by which status was dismissed, not a plain boolean — "lost" and "restored" are
@@ -335,31 +335,46 @@ export default function TaskRunner() {
                 />
             )}
 
-            {/* Simulation header — sits at the very top, 117px tall */}
-            <div className="fixed left-0 top-0 z-10 flex h-29.25 w-full items-center justify-between border-b-[0.5px] border-neutral-300 bg-white/10 px-30 py-5 backdrop-blur-[100px]">
-                <div className="flex w-50.5 flex-col gap-0.5">
-                    <p className="inline-flex items-center gap-1.5 text-[16px] text-primary-950">
-                        <span>Task {runStore.currentTaskIndex + 1} of {simulation.tasks.length}</span>
+            {/* Simulation header. Compact on phones, full 117px layout from lg. */}
+            <div className="fixed left-0 top-0 z-10 flex h-16 w-full items-center justify-between gap-3 border-b-[0.5px] border-neutral-300 bg-white/10 px-4 backdrop-blur-[100px] sm:h-20 sm:px-8 lg:h-29.25 lg:px-12 lg:py-5 xl:px-30">
+                <div className="flex min-w-0 flex-1 flex-col gap-1 lg:w-50.5 lg:flex-none">
+                    <p className="inline-flex items-center gap-1.5 text-sm text-primary-950 sm:text-base">
+                        <span className="whitespace-nowrap">
+                            Task {runStore.currentTaskIndex + 1} of {simulation.tasks.length}
+                        </span>
+                        {currentTask?.expectedDurationMinutes ? (
+                            <>
+                                <span className="text-neutral-400">•</span>
+                                <span className="inline-flex items-center gap-1 whitespace-nowrap">
+                                    <Clock className="size-3 text-neutral-500" aria-hidden="true" />
+                                    <span>{currentTask.expectedDurationMinutes} mins</span>
+                                </span>
+                            </>
+                        ) : null}
                     </p>
                     <div className="h-2 w-full rounded-lg bg-[#d4d5d8]">
                         <div className="h-2 rounded bg-primary-500" style={{ width: `${progressPercent}%` }} />
                     </div>
                 </div>
-                <div className="flex flex-col items-center gap-1">
-                    <p className="text-[28px] leading-[1.2] text-neutral-950">{job.title}</p>
+
+                <div className="hidden min-w-0 flex-col items-center gap-1 text-center lg:flex">
+                    <p className="max-w-[40ch] truncate text-[28px] leading-[1.2] text-neutral-950">{job.title}</p>
                     <p className="text-[16px] text-neutral-400">{job.employer.companyName}</p>
                 </div>
-                <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2 text-[16px] text-neutral-400">
-                        <CloudUpload className="size-6" />
-                        {isSaving ? "Saving..." : "Autosaved"}
+
+                <div className="flex shrink-0 items-center gap-3 lg:gap-4">
+                    <div className="flex items-center gap-2 text-base text-neutral-400" aria-live="polite">
+                        <CloudUpload className="size-5 sm:size-6" />
+                        <span className="hidden md:inline">{isSaving ? "Saving..." : "Autosaved"}</span>
                     </div>
                     <div
-                        className={`flex h-13 items-center gap-2 rounded px-3 py-2 ${timer.isWarning ? "bg-error-500" : "bg-primary-950"
+                        className={`flex h-10 items-center gap-2 rounded px-2.5 sm:h-13 sm:px-3 sm:py-2 ${timer.isWarning ? "bg-error-500" : "bg-primary-950"
                             }`}
                     >
-                        <Timer className="size-6 text-neutral-50" />
-                        <span className="text-[32px] leading-9.5 tracking-[-0.32px] text-neutral-50">{timer.formatted}</span>
+                        <Timer className="size-5 text-neutral-50 sm:size-6" />
+                        <span className="text-xl leading-6 tracking-[-0.32px] text-neutral-50 sm:text-[32px] sm:leading-9.5">
+                            {timer.formatted}
+                        </span>
                     </div>
                 </div>
             </div>
