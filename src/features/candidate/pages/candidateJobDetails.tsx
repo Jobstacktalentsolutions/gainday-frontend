@@ -13,6 +13,7 @@ import { useJobDetails } from "../hooks/useJobDetails";
 import { useAppliedJobIds } from "../hooks/useAppliedJobIds";
 import { formatPostedDate, formatSalaryRange, hasSalary } from "../utils/formatters";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
+import { useSimulationDeviceCheck } from "../hooks/useSimulationDeviceCheck";
 import { getJobShareUrl, shareLink } from "@/lib/shareLink";
 import { cleanText } from "@/lib/cleanText";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,7 @@ export default function JobDetailsPage() {
     const { job, isLoading } = useJobDetails(jobId);
     const { appliedSet, getSubmissionUrlForJob } = useAppliedJobIds();
     const { user, isAuthenticated } = useCurrentUser();
+    const { canStartSimulation } = useSimulationDeviceCheck();
     const [authPromptOpen, setAuthPromptOpen] = useState(false);
     const [profilePromptOpen, setProfilePromptOpen] = useState(false);
 
@@ -240,6 +242,7 @@ export default function JobDetailsPage() {
                         </StepContinueButton>
                         <p className="text-[16px] text-neutral-400">
                             Uses a 20 to 30 minute work simulation, not a cover letter.
+                            {!canStartSimulation && !isApplied && " Open this job on a laptop or desktop computer to take it."}
                         </p>
                     </section>
                 </div>
