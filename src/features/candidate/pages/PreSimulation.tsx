@@ -149,7 +149,7 @@ export default function PreSimulation() {
                             <div className="flex w-full flex-col gap-6 rounded-xl bg-neutral-50 p-6 text-left">
                                 {CHECKS.map((check, index) => (
                                     <div key={check.title} className="flex flex-col gap-6">
-                                        <div className="flex items-center gap-5">
+                                        <div className="flex items-start md:items-center gap-5">
                                             <check.icon className="size-5 shrink-0 text-primary-500" />
                                             <div className="flex flex-1 flex-col text-[16px]">
                                                 <p className="text-neutral-950">{check.title}</p>
@@ -163,7 +163,7 @@ export default function PreSimulation() {
                         </div>
 
                         <p className="text-[16px] text-neutral-400">
-                            These checks exist so employers can trust every ranked result.
+                            These checks exist as an anti-cheat mechanism.
                         </p>
 
                         <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-3">
@@ -182,7 +182,7 @@ export default function PreSimulation() {
                                 checked={consented}
                                 onCheckedChange={(checked) => setConsented(checked === true)}
                             />
-                            <label htmlFor="monitoring-consent" className="text-xs text-neutral-950">
+                            <label htmlFor="monitoring-consent" className="text-xs text-left text-neutral-950">
                                 I understand this session is monitored, as described above.
                             </label>
                         </div>

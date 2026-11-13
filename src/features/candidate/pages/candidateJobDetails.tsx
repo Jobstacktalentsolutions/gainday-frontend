@@ -236,7 +236,7 @@ export default function JobDetailsPage() {
                             className={applyButtonClass}
                             onClick={handleApplyClick}
                         >
-                            {isApplied ? "View Submission" : isClosed ? "Closed" : "Start Now"}
+                            {isApplied ? "View Submission" : isClosed ? "Closed" : "Apply Now"}
                         </StepContinueButton>
                         <p className="text-[16px] text-neutral-400">
                             Uses a 20 to 30 minute work simulation, not a cover letter.
