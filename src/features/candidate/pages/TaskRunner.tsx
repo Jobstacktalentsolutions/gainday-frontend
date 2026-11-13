@@ -378,8 +378,8 @@ export default function TaskRunner() {
                     </div>
                 </div>
             </div>
-            <main className="mx-auto flex w-full max-w-300 flex-col items-center px-5 pb-20 pt-34.25">
-                <div className="flex w-full max-w-246.5 flex-col gap-10 rounded-3xl bg-white p-10 shadow-[0px_4px_10px_rgba(16,24,40,0.05)]">
+            <main className="mx-auto flex w-full max-w-300 flex-col items-center px-4 pb-20 pt-24 sm:px-5 sm:pt-28 lg:pt-34.25">
+                <div className="flex w-full max-w-246.5 flex-col gap-6 rounded-3xl bg-white p-5 shadow-[0px_4px_10px_rgba(16,24,40,0.05)] sm:gap-10 sm:p-10">
                     <div className="flex w-full items-center justify-between">
                         <p className="text-[16px] text-primary-500">Task • {task.category}</p>
                     </div>
@@ -419,13 +419,13 @@ export default function TaskRunner() {
 
                     <div className="h-px w-full bg-neutral-200" />
 
-                    <div className="flex w-full items-center justify-between">
+                    <div className="flex w-full flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <ActionButton
                             variant="outline"
                             size="md"
                             onClick={handlePrevious}
                             disabled={runStore.currentTaskIndex === 0}
-                            className={runStore.currentTaskIndex === 0 ? "opacity-70" : undefined}
+                            className={`w-full sm:w-auto ${runStore.currentTaskIndex === 0 ? "opacity-70" : undefined}`}
                         >
                             Previous Task
                         </ActionButton>
@@ -434,6 +434,7 @@ export default function TaskRunner() {
                             size="md"
                             onClick={handleNext}
                             disabled={isLastTask && submitSimulation.isPending}
+                            className="w-full sm:w-auto"
                         >
                             {isLastTask
                                 ? submitSimulation.isPending
