@@ -168,13 +168,13 @@ export default function JobDetailsPage() {
                     <div className="h-px w-full bg-neutral-200" />
                     {Boolean(job.description?.trim()) && (
                         <>
-                            <div className="h-px w-full bg-neutral-200" />
                             <section className="flex flex-col gap-3">
                                 <h2 className="text-[16px] text-primary-500">ABOUT THIS ROLE</h2>
                                 <div className="prose prose-sm max-w-none text-[16px] text-primary-950 prose-headings:font-semibold prose-headings:text-primary-950 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-primary-950">
                                     <ReactMarkdown remarkPlugins={[remarkGfm]}>{job.description}</ReactMarkdown>
                                 </div>
                             </section>
+                            <div className="h-px w-full bg-neutral-200" />
                         </>
                     )}
 
