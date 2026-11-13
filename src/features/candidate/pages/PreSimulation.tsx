@@ -37,7 +37,7 @@ function StatCard({ children, label }: { children: React.ReactNode; label: strin
     return (
         <div className="rounded-lg bg-linear-to-r from-secondary-500 to-primary-950 p-px">
             <div className="flex h-full flex-col gap-2 rounded-lg bg-white p-4 text-left shadow-[0px_4px_20px_rgba(16,24,40,0.05)] sm:gap-3">
-                <p className="inline-flex items-center gap-1.5 break-words text-2xl leading-8 tracking-[-0.32px] text-black lg:text-[32px] lg:leading-9.5">
+                <p className="inline-flex items-center gap-1.5 wrap-break-word text-2xl leading-8 tracking-[-0.32px] text-black lg:text-[32px] lg:leading-9.5">
                     {children}
                 </p>
                 <p className="text-base text-neutral-700">{label}</p>
@@ -105,17 +105,16 @@ export default function PreSimulation() {
         <div className="min-h-screen w-full bg-neutral-50">
             <CandidateHeader />
 
-            <main className="mx-auto flex w-full max-w-300 flex-col items-center gap-20 px-5 pb-20 pt-33.75 sm:pt-43.75">
-                <button
-                    type="button"
-                    onClick={() => navigate(`/job-board/${job.id}`)}
-                    className="flex w-full items-center gap-5 text-[16px] text-primary-950"
-                >
-                    <ChevronLeft className="size-6" />
-                    Go back to job description
-                </button>
+            <main className="mx-auto flex w-full max-w-300 flex-col items-center gap-8 px-5 pb-20 pt-33.75 sm:gap-20 sm:pt-43.75">                <button
+                type="button"
+                onClick={() => navigate(`/job-board/${job.id}`)}
+                className="flex w-full items-center gap-5 text-[16px] text-primary-950"
+            >
+                <ChevronLeft className="size-6" />
+                Go back to job description
+            </button>
 
-                <div className="relative w-full max-w-246.5 overflow-hidden  rounded-3xl bg-white p-10 shadow-[0px_4px_10px_rgba(16,24,40,0.05)]">
+                <div className="relative w-full max-w-246.5 overflow-hidden rounded-3xl bg-white p-5 shadow-[0px_4px_10px_rgba(16,24,40,0.05)] sm:p-10">
 
                     {/* Decorative gradient blobs */}
                     <div
@@ -140,7 +139,7 @@ export default function PreSimulation() {
                                 />
                             </div>
                             <p className="text-[16px] text-primary-500">Applying to</p>
-                            <h1 className="text-[40px] leading-12 tracking-[-0.4px] text-neutral-950">
+                            <h1 className="text-[28px] leading-9 tracking-[-0.4px] text-neutral-950 sm:text-[40px] sm:leading-12">
                                 {job.title} at {job.employer.companyName}
                             </h1>
                             <p className="text-[16px] text-neutral-400">Before you begin...</p>
@@ -167,34 +166,17 @@ export default function PreSimulation() {
                             These checks exist so employers can trust every ranked result.
                         </p>
 
-                        <div className="flex w-full gap-3">
-                            <div className="rounded-lg bg-linear-to-r from-secondary-500 to-primary-950 px-px py-px flex-1">
-                                <div className="flex h-full flex-col gap-3 rounded-lg bg-white p-4 shadow-[0px_4px_20px_rgba(16,24,40,0.05)]">
-                                    <p className="text-[32px] leading-9.5 tracking-[-0.32px] text-black">{simulation.tasks.length}</p>
-                                    <p className="text-[16px] text-neutral-700">Tasks</p>
-                                </div>
-                            </div>
-                            <div className="rounded-lg bg-linear-to-r from-secondary-500 to-primary-950 px-px py-px flex-1">
-                                <div className="flex h-full flex-col gap-3 rounded-lg bg-white p-4 shadow-[0px_4px_20px_rgba(16,24,40,0.05)]">
-                                    <p className="inline-flex items-center gap-1.5 text-[32px] leading-9.5 tracking-[-0.32px] text-black">
-                                        <ApproxIcon className="size-5 text-neutral-500" />
-                                        <span>{simulation.timeLimitMinutes} min</span>
-                                    </p>
-                                    <p className="text-[16px] text-neutral-700">Est. time allowed</p>
-                                </div>
-                            </div>
-                            <div className="rounded-lg bg-linear-to-r from-secondary-500 to-primary-950 px-px py-px flex-1">
-                                <div className="flex h-full flex-col gap-3 rounded-lg bg-white p-4 shadow-[0px_4px_20px_rgba(16,24,40,0.05)]">
-                                    <p className="text-[32px] leading-9.5 tracking-[-0.32px] text-black">
-                                        {formatPostedDate(job.applicationDeadline)}
-                                    </p>
-                                    <p className="text-[16px] text-neutral-700">Deadline</p>
-                                </div>
-                            </div>
+                        <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-3">
+                            <StatCard label="Tasks">{simulation.tasks.length}</StatCard>
+                            <StatCard label="Est. time allowed">
+                                <ApproxIcon className="size-5 shrink-0 text-neutral-500" />
+                                <span>{simulation.timeLimitMinutes} min</span>
+                            </StatCard>
+                            <StatCard label="Deadline">{formatPostedDate(job.applicationDeadline)}</StatCard>
                         </div>
 
 
-                        <div className="flex w-full items-center gap-2 rounded-xl border border-[#e6e6e8] bg-neutral-50 p-3">
+                        <div className="flex w-full items-start gap-3 rounded-xl border border-[#e6e6e8] bg-neutral-50 p-3">
                             <Checkbox
                                 id="monitoring-consent"
                                 checked={consented}
