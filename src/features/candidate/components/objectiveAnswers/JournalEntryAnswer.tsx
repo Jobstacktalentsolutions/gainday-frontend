@@ -1,4 +1,5 @@
 import type { JournalEntryCandidateComponent, JournalEntryLine, JournalEntryResponse } from "../../types/simulation";
+import { cn } from "@/lib/utils";
 
 interface Props {
     component: JournalEntryCandidateComponent;
@@ -7,6 +8,10 @@ interface Props {
 }
 
 const SIDES = ["DEBIT", "CREDIT"] as const;
+
+// text-base on phones: iOS Safari zooms the page when a focused input is under 16px.
+const controlClass =
+    "w-full rounded-lg border border-neutral-200 bg-white px-2.5 py-2 text-base text-neutral-700 outline-none focus:border-primary-500 md:py-1.5 md:text-sm";
 
 // The candidate posts one or more lines against each transaction: an account, a side and an amount.
 // The grader matches each transaction's lines exactly, so partial entries earn nothing.
@@ -28,13 +33,13 @@ const JournalEntryAnswer = ({ component, response, onChange }: Props) => {
             {lines.map((line, index) => (
                 <div
                     key={index}
-                    className="grid w-full grid-cols-[minmax(0,1.4fr)_minmax(0,1.6fr)_minmax(0,0.8fr)_minmax(0,0.8fr)_auto] items-center gap-3"
+                    className="grid w-full grid-cols-2 items-center gap-2 rounded-xl border border-neutral-200 p-3 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1.6fr)_minmax(0,0.8fr)_minmax(0,0.8fr)_auto] md:gap-3 md:rounded-none md:border-0 md:p-0"
                 >
                     <select
                         aria-label={`Transaction for line ${index + 1}`}
                         value={line.reference}
                         onChange={(event) => setLine(index, { reference: event.target.value })}
-                        className="rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-sm text-neutral-700 outline-none focus:border-primary-500"
+                        className={cn(controlClass, "col-span-2 md:col-span-1")}
                     >
                         {component.references.map((reference) => (
                             <option key={reference} value={reference}>
@@ -46,7 +51,7 @@ const JournalEntryAnswer = ({ component, response, onChange }: Props) => {
                         aria-label={`Account for line ${index + 1}`}
                         value={line.account ?? ""}
                         onChange={(event) => setLine(index, { account: event.target.value === "" ? null : event.target.value })}
-                        className="rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-sm text-neutral-700 outline-none focus:border-primary-500"
+                        className={cn(controlClass, "col-span-2 md:col-span-1")}
                     >
                         <option value="" disabled>
                             Choose an account
@@ -65,7 +70,7 @@ const JournalEntryAnswer = ({ component, response, onChange }: Props) => {
                                 side: event.target.value === "" ? null : (event.target.value as JournalEntryLine["side"]),
                             })
                         }
-                        className="rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 text-sm text-neutral-700 outline-none focus:border-primary-500"
+                        className={controlClass}
                     >
                         <option value="" disabled>
                             Side
@@ -85,12 +90,12 @@ const JournalEntryAnswer = ({ component, response, onChange }: Props) => {
                             setLine(index, { amount: event.target.value === "" ? null : Number(event.target.value) })
                         }
                         placeholder={component.unit ?? "Amount"}
-                        className="rounded-lg border border-neutral-200 px-2.5 py-1.5 text-sm text-neutral-700 outline-none focus:border-primary-500"
+                        className={controlClass}
                     />
                     <button
                         type="button"
                         onClick={() => removeLine(index)}
-                        className="text-sm text-neutral-500 hover:text-error-500"
+                        className="col-span-2 justify-self-end py-2 text-sm text-neutral-500 hover:text-error-500 md:col-span-1 md:justify-self-auto md:py-0"
                     >
                         Remove
                     </button>

@@ -18,9 +18,9 @@ export function ApplyDialog({ open, onOpenChange, onSignUp, onSignIn }: ApplyDia
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-141.5 gap-10 rounded-2xl p-12">
+      <DialogContent className="max-h-[calc(100dvh-2rem)] max-w-[calc(100%-2rem)] gap-6 overflow-y-auto rounded-2xl p-6 sm:max-w-141.5 sm:gap-10 sm:p-12">
         <DialogHeader className="items-center gap-2 text-center">
-          <DialogTitle className="text-[32px] leading-9.5 tracking-[-0.32px] text-primary-950">
+          <DialogTitle className="text-2xl leading-8 tracking-[-0.32px] text-primary-950 sm:text-[32px] sm:leading-9.5">
             Apply and start building your capability passport
           </DialogTitle>
           <DialogDescription className="sr-only">

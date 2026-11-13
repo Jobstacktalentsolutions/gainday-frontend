@@ -37,6 +37,30 @@ function StatusBadge({ status, readyLabel }: { status: CheckStatus; readyLabel: 
     );
 }
 
+function CheckRow({
+    icon: Icon,
+    title,
+    description,
+    badge,
+}: {
+    icon: React.ComponentType<{ className?: string }>;
+    title: string;
+    description: string;
+    badge: React.ReactNode;
+}) {
+    return (
+        // Phones: icon + text on one line, badge dropped beneath the text. sm+: the original single row.
+        <div className="grid grid-cols-[auto_1fr] items-start gap-x-4 gap-y-2 sm:flex sm:items-center sm:gap-5">
+            <Icon className="mt-0.5 size-5 shrink-0 text-primary-500 sm:mt-0" />
+            <div className="flex min-w-0 flex-col text-base sm:flex-1">
+                <p className="text-neutral-950">{title}</p>
+                <p className="text-neutral-400">{description}</p>
+            </div>
+            <div className="col-start-2 sm:col-auto sm:shrink-0">{badge}</div>
+        </div>
+    );
+}
+
 export default function EnvironmentCheckPage() {
     const { jobId } = useParams<{ jobId: string }>();
     const navigate = useNavigate();
@@ -100,8 +124,8 @@ export default function EnvironmentCheckPage() {
     return (
         <div className="min-h-screen w-full bg-neutral-50">
             <CandidateHeader />
-            <main className="mx-auto flex w-full max-w-300 flex-col items-center gap-20 px-5 pb-20 pt-33.75 sm:pt-43.75">
-                <div className="relative w-full max-w-246.5 overflow-hidden rounded-3xl bg-white p-10 shadow-[0px_4px_10px_rgba(16,24,40,0.05)]">
+            <main className="mx-auto flex w-full max-w-300 flex-col items-center gap-8 px-4 pb-20 pt-33.75 sm:gap-20 sm:px-5 sm:pt-43.75">
+                <div className="relative w-full max-w-246.5 overflow-hidden rounded-3xl bg-white p-5 shadow-[0px_4px_10px_rgba(16,24,40,0.05)] sm:p-10">
                     {/* Decorative gradient blobs */}
                     <div
                         aria-hidden="true"
@@ -118,7 +142,7 @@ export default function EnvironmentCheckPage() {
                         <Sparkles className="size-8 text-primary-500" strokeWidth={1.5} />
                         <div className="flex flex-col items-center gap-1">
                             <p className="text-[16px] text-primary-500">System Verification</p>
-                            <h1 className="text-[32px] leading-9.5 tracking-[-0.32px] text-primary-950">
+                            <h1 className="text-2xl leading-8 tracking-[-0.32px] text-primary-950 sm:text-[32px] sm:leading-9.5">
                                 Checking your simulation environment...
                             </h1>
                             <p className="text-[16px] text-neutral-400">
@@ -127,43 +151,42 @@ export default function EnvironmentCheckPage() {
                         </div>
 
                         <div className="rounded-xl bg-linear-to-br from-secondary-500 to-primary-950 p-px w-full">
-                            <div className="flex w-full flex-col gap-6 rounded-[11px] bg-neutral-50 p-6 text-left">
-                                <div className="flex items-center gap-5">
-                                    <Maximize className="size-5 shrink-0 text-primary-500" />
-                                    <div className="flex flex-1 flex-col text-[16px]">
-                                        <p className="text-neutral-950">Fullscreen Mode Permission</p>
-                                        <p className="text-neutral-400">
-                                            {fullscreenStatus === "failed"
-                                                ? "Fullscreen was blocked — check your browser permissions and retry."
-                                                : "Verified. Your browser supports mandatory focus-lock diagnostics."}
-                                        </p>
-                                    </div>
-                                    <StatusBadge status={fullscreenStatus} readyLabel="READY" />
-                                </div>
+                            <div className="flex w-full flex-col gap-6 rounded-[11px] bg-neutral-50 p-4 text-left sm:p-6">
+                                <CheckRow
+                                    icon={Maximize}
+                                    title="Fullscreen Mode Permission"
+                                    description={
+                                        fullscreenStatus === "failed"
+                                            ? "Fullscreen was blocked — check your browser permissions and retry."
+                                            : "Verified. Your browser supports mandatory focus-lock diagnostics."
+                                    }
+                                    badge={<StatusBadge status={fullscreenStatus} readyLabel="READY" />}
+                                />
                                 <div className="h-px w-full bg-neutral-200" />
-                                <div className="flex items-center gap-5">
-                                    <Wifi className="size-5 shrink-0 text-primary-500" />
-                                    <div className="flex flex-1 flex-col text-[16px]">
-                                        <p className="text-neutral-950">Secure Connection Established</p>
-                                        <p className="text-neutral-400">
-                                            {connectionCheck.status === "secure" && connectionCheck.latencyMs !== null
-                                                ? `Latency: ${connectionCheck.latencyMs}ms. Highly stable connection to evaluation gateway.`
-                                                : connectionCheck.status === "failed"
-                                                    ? "Couldn't reach the evaluation gateway — check your connection and retry."
-                                                    : "Measuring connection quality..."}
-                                        </p>
-                                    </div>
-                                    <StatusBadge status={connectionCheck.status === "secure" ? "ready" : connectionCheck.status === "failed" ? "failed" : "checking"} readyLabel="SECURE" />
-                                </div>
+                                <CheckRow
+                                    icon={Wifi}
+                                    title="Secure Connection Established"
+                                    description={
+                                        connectionCheck.status === "secure" && connectionCheck.latencyMs !== null
+                                            ? `Latency: ${connectionCheck.latencyMs}ms. Highly stable connection to evaluation gateway.`
+                                            : connectionCheck.status === "failed"
+                                                ? "Couldn't reach the evaluation gateway — check your connection and retry."
+                                                : "Measuring connection quality..."
+                                    }
+                                    badge={
+                                        <StatusBadge
+                                            status={connectionCheck.status === "secure" ? "ready" : connectionCheck.status === "failed" ? "failed" : "checking"}
+                                            readyLabel="SECURE"
+                                        />
+                                    }
+                                />
                                 <div className="h-px w-full bg-neutral-200" />
-                                <div className="flex items-center gap-5">
-                                    <MonitorCheck className="size-5 shrink-0 text-primary-500" />
-                                    <div className="flex flex-1 flex-col text-[16px]">
-                                        <p className="text-neutral-950">Tab-switch monitoring armed</p>
-                                        <p className="text-neutral-400">Leaving this tab during the simulation is tracked from this point on.</p>
-                                    </div>
-                                    <StatusBadge status={tabGuard.status === "armed" ? "ready" : "checking"} readyLabel="ARMED" />
-                                </div>
+                                <CheckRow
+                                    icon={MonitorCheck}
+                                    title="Tab-switch monitoring armed"
+                                    description="Leaving this tab during the simulation is tracked from this point on."
+                                    badge={<StatusBadge status={tabGuard.status === "armed" ? "ready" : "checking"} readyLabel="ARMED" />}
+                                />
                             </div>
                         </div>
 

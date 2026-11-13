@@ -186,7 +186,7 @@ export default function SubmissionResultPage() {
             {/* Score History Modal */}
             {showHistoryModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-                    <div className="relative w-full max-w-lg rounded-3xl bg-white p-6 md:p-8 shadow-xl border border-neutral-200">
+                    <div className="relative max-h-[calc(100dvh-2rem)] w-full max-w-lg overflow-y-auto rounded-3xl bg-white p-6 shadow-xl border border-neutral-200 md:p-8">
                         <button
                             type="button"
                             onClick={() => setShowHistoryModal(false)}

@@ -26,7 +26,7 @@ const ApplicationCard = ({ application, onWithdraw }: ApplicationCardProps) => {
                 <h2 className="text-2xl leading-8 text-neutral-900">
                     <Link
                         to={`/candidate/applications/${application.id}`}
-                        className="flex items-center gap-2 after:absolute after:inset-0 after:rounded-xl focus-visible:outline-2 focus-visible:outline-primary-500"
+                        className="flex min-w-0 items-center gap-2 break-words after:absolute after:inset-0 after:rounded-xl focus-visible:outline-2 focus-visible:outline-primary-500"
                     >
                         {application.jobTitle}
                         {application.status === "SELECTED" && (

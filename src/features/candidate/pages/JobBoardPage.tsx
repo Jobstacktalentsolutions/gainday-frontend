@@ -67,7 +67,7 @@ export function JobBoardPage() {
                         placeholder="Search by job title, role, or keyword"
                     />
 
-                    <div className="flex flex-wrap items-center gap-3">
+                    <div className="-mx-5 flex w-[calc(100%+2.5rem)] items-center gap-3 overflow-x-auto px-5 py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:w-auto sm:flex-wrap sm:overflow-visible sm:px-0 sm:py-0">
                         <FilterDropdown
                             prefix="Sort: "
                             allLabel="Recommended"

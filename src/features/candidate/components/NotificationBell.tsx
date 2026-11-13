@@ -40,7 +40,7 @@ const NotificationBell = () => {
                         <span className="absolute top-2 right-2.5 size-2.5 rounded-full border-2 border-white bg-error-500" />
                     )}
                 </PopoverTrigger>
-                <PopoverContent align="end" sideOffset={12} className="w-88 gap-0 p-0">
+                <PopoverContent align="end" sideOffset={12} className="w-[min(22rem,calc(100vw-2rem))] gap-0 p-0">
                     <div className="flex items-center justify-between border-b border-neutral-100 px-4 py-3">
                         <p className="text-base font-medium text-neutral-900">Notifications</p>
                         {hasUnread && (
