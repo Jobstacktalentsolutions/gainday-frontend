@@ -33,6 +33,19 @@ const CHECKS = [
     },
 ];
 
+function StatCard({ children, label }: { children: React.ReactNode; label: string }) {
+    return (
+        <div className="rounded-lg bg-linear-to-r from-secondary-500 to-primary-950 p-px">
+            <div className="flex h-full flex-col gap-2 rounded-lg bg-white p-4 text-left shadow-[0px_4px_20px_rgba(16,24,40,0.05)] sm:gap-3">
+                <p className="inline-flex items-center gap-1.5 break-words text-2xl leading-8 tracking-[-0.32px] text-black lg:text-[32px] lg:leading-9.5">
+                    {children}
+                </p>
+                <p className="text-base text-neutral-700">{label}</p>
+            </div>
+        </div>
+    );
+}
+
 export default function PreSimulation() {
     const { jobId } = useParams<{ jobId: string }>();
     const navigate = useNavigate();
