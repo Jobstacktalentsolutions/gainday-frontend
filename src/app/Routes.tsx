@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import AppLoader from "@/components/ui/AppLoader";
 import { useSimulationRunStore } from "@/features/candidate/store/useSimulationRunStore";
+import SimulationDeviceGuard from "@/features/candidate/components/SimulationDeviceGuard";
 
 // DEV-ONLY: resets any stale completed-run state before entering the simulation.
 // Uses getState() so the reset is synchronous and fires before the first render
@@ -133,9 +134,16 @@ const AppRoutes = () => {
 
                 {/* Candidate-only pages — require a signed-in JOB_SEEKER */}
                 <Route element={<CandidateRoute />}>
-                    <Route path="/job-board/:jobId/pre-simulation" element={<PreSimulation />} />
-                    <Route path="/job-board/:jobId/environment-check" element={<EnvironmentCheckPage />} />
-                    <Route path="/job-board/:jobId/simulation" element={<TaskRunner />} />
+                    {/* Assessment is desktop-only. Entry is strict (touch device OR narrow window)… */}
+                    <Route element={<SimulationDeviceGuard />}>
+                        <Route path="/job-board/:jobId/pre-simulation" element={<PreSimulation />} />
+                        <Route path="/job-board/:jobId/environment-check" element={<EnvironmentCheckPage />} />
+                    </Route>
+                    {/* …but a run already in progress only blocks touch devices, so resizing a desktop window can't eject someone. */}
+                    <Route element={<SimulationDeviceGuard allowNarrowDesktop />}>
+                        <Route path="/job-board/:jobId/simulation" element={<TaskRunner />} />
+                    </Route>
+
                     <Route path="/job-board/submissions/:submissionId/result" element={<SubmissionResultPage />} />
                     <Route path="/candidate/submissions/:submissionId/result" element={<SubmissionResultPage />} />
                     <Route path="/candidate/applications" element={<MyApplications />} />
