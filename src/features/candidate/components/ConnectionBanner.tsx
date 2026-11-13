@@ -11,17 +11,17 @@ export function ConnectionBanner({ status, onDismiss }: ConnectionBannerProps) {
 
   return (
     <div
-      className={`fixed left-0 top-29.25 z-20 flex w-full items-center justify-center gap-12 border-b p-3 ${
+      className={`fixed left-0 top-16 sm:top-20 lg:top-29.25 z-20 flex w-full items-center justify-center gap-3 sm:gap-12 border-b p-3 px-4 ${
         isLost ? "border-error-500 bg-error-50" : "border-success-500 bg-success-50"
       }`}
     >
       <div className="flex items-center gap-3">
         {isLost ? (
-          <WifiOff className="size-6 text-error-500" />
+          <WifiOff className="size-6 shrink-0 text-error-500" />
         ) : (
-          <Wifi className="size-6 text-success-500" />
+          <Wifi className="size-6 shrink-0 text-success-500" />
         )}
-        <p className={`text-[16px] ${isLost ? "text-error-500" : "text-success-500"}`}>
+        <p className={`text-sm sm:text-[16px] ${isLost ? "text-error-500" : "text-success-500"}`}>
           {isLost
             ? "Connection lost. Your timer keeps running server-side — reconnect as soon as possible."
             : "Connection restored. Elapsed time is synced and all saved answers were retained."}
@@ -29,7 +29,7 @@ export function ConnectionBanner({ status, onDismiss }: ConnectionBannerProps) {
       </div>
       {!isLost && (
         <button type="button" onClick={onDismiss} aria-label="Dismiss">
-          <X className="size-6 text-success-500" />
+          <X className="size-6 shrink-0 text-success-500" />
         </button>
       )}
     </div>
