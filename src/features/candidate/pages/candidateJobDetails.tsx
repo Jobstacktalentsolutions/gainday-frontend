@@ -15,6 +15,10 @@ import { formatPostedDate, formatSalaryRange, hasSalary } from "../utils/formatt
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { getJobShareUrl, shareLink } from "@/lib/shareLink";
 import { cleanText } from "@/lib/cleanText";
+import { cn } from "@/lib/utils";
+
+
+const metaChipClass = "flex items-center gap-2 rounded-xl border border-neutral-200 px-3 py-2 text-sm text-primary-950 sm:px-4 sm:py-3 sm:text-base";
 
 export default function JobDetailsPage() {
     const { jobId } = useParams<{ jobId: string }>();
@@ -27,6 +31,11 @@ export default function JobDetailsPage() {
 
     const isApplied = Boolean(job && appliedSet.has(job.id));
     const isClosed = job?.status === "CLOSED";
+    const applyButtonClass = cn(
+        "w-full justify-between sm:w-fit sm:justify-start",
+        !isApplied && isClosed &&
+        "pointer-events-none disabled:bg-neutral-200 disabled:text-neutral-500 disabled:opacity-100 disabled:shadow-none",
+    );
     const businessProblem = cleanText(job?.businessProblem);
 
     if (isLoading) {
@@ -91,7 +100,7 @@ export default function JobDetailsPage() {
             <JobBoardHeader />
 
             <main className="mx-auto w-full max-w-300 px-5 pb-20 pt-33.75 sm:pt-43.75 lg:px-0">
-                <div className="relative flex flex-col gap-10 overflow-hidden rounded-[32px] bg-white p-8">
+                <div className="relative flex flex-col gap-8 overflow-hidden rounded-[32px] bg-white p-5 sm:gap-10 sm:p-8">
                     {/* Decorative gradient blobs */}
                     <div
                         aria-hidden="true"
@@ -104,40 +113,42 @@ export default function JobDetailsPage() {
                             bg-[linear-gradient(180deg,var(--color-primary-500)_40%,var(--color-secondary-500)_55%,var(--color-secondary-300)_65%,transparent_100%)]`}
                     />
 
-                    <div className="relative flex flex-wrap items-start justify-between gap-4">
-                        <div className="flex min-w-0 flex-1 flex-col gap-4">
-                            <div className="flex flex-wrap items-center gap-3">
-                                <h1 className="text-[32px] leading-[1.2] text-primary-950 sm:text-[48px] sm:leading-14.5 sm:tracking-[-0.48px]">
+                    <div className="relative flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+                        <div className="flex min-w-0 flex-col gap-4 md:flex-1">
+                            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                                <h1 className="min-w-0 wrap-break-word text-[28px] leading-[1.2] text-primary-950 sm:text-[40px] lg:text-[48px] lg:leading-14.5 lg:tracking-[-0.48px]">
                                     {job.title}
                                 </h1>
-                                <span className="rounded-full bg-primary-50 px-4 py-1 text-[16px] text-info-500">
+                                <span className="rounded-full bg-primary-50 px-3 py-1 text-sm text-info-500 sm:px-4 sm:text-base">
                                     {job.roleCategory}
                                 </span>
                             </div>
-                            <p className="text-[16px] text-neutral-400">{job.employer.companyName}</p>
-                            <div className="flex flex-wrap items-center gap-4">
+                            <p className="text-base text-neutral-400">{job.employer.companyName}</p>
+                            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                                 {hasSalary(job.salaryRange) && (
-                                    <span className="flex items-center gap-2 rounded-xl border border-neutral-200 px-4 py-3 text-[16px] text-primary-950">
-                                        <Wallet className="size-6" />
+                                    <span className={metaChipClass}>
+                                        <Wallet className="size-5 shrink-0 sm:size-6" />
                                         {formatSalaryRange(job.salaryRange)}
                                     </span>
                                 )}
-                                <span className="flex items-center gap-2 rounded-xl border border-neutral-200 px-4 py-3 text-[16px] text-primary-950">
-                                    <Clock className="size-6" />
+                                <span className={metaChipClass}>
+                                    <Clock className="size-5 shrink-0 sm:size-6" />
                                     Posted {formatPostedDate(job.createdAt)}
                                 </span>
-                                <span className="flex items-center gap-2 rounded-xl border border-neutral-200 px-4 py-3 text-[16px] text-primary-950">
-                                    <MapPin className="size-6" />
+                                <span className={metaChipClass}>
+                                    <MapPin className="size-5 shrink-0 sm:size-6" />
                                     {job.location}
                                 </span>
                             </div>
                         </div>
-                        <div className="flex shrink-0 items-center gap-4">
+
+                        {/* Stacked and full-width on phones; side by side from sm; beside the title from md. */}
+                        <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center md:shrink-0 md:gap-4">
                             <StepContinueButton
                                 size="lg"
                                 disabled={!isApplied && isClosed}
                                 icon={isApplied ? <Check className="size-4" /> : undefined}
-                                className={`w-fit ${!isApplied && isClosed ? "disabled:bg-neutral-200 disabled:text-neutral-500 disabled:opacity-100 disabled:shadow-none pointer-events-none" : ""}`}
+                                className={applyButtonClass}
                                 onClick={handleApplyClick}
                             >
                                 {isApplied ? "View Submission" : isClosed ? "Closed" : "Apply"}
@@ -145,7 +156,7 @@ export default function JobDetailsPage() {
                             <ActionButton
                                 variant="outline"
                                 size="lg"
-                                className="w-auto"
+                                className="w-full sm:w-auto"
                                 endIcon={<Share2 className="size-4" />}
                                 onClick={handleShareClick}
                             >
@@ -167,12 +178,11 @@ export default function JobDetailsPage() {
                         </>
                     )}
 
-                    <div className="h-px w-full bg-neutral-200" />
 
                     <section className="flex flex-col gap-6">
                         <div className="flex flex-col gap-3">
                             <h2 className="text-[16px] text-primary-500">ROLE DETAILS</h2>
-                            <div className="flex flex-wrap gap-10">
+                            <div className="flex flex-wrap gap-x-10 gap-y-4">
                                 <div className="flex flex-col gap-1">
                                     <p className="text-[14px] text-neutral-700">Category</p>
                                     <p className="text-[16px] text-primary-950">{job.roleCategory}</p>
@@ -211,7 +221,7 @@ export default function JobDetailsPage() {
                     )}
 
                     <div className="h-px w-full bg-neutral-200" />
-                    <section className="flex flex-col gap-4 rounded-xl bg-primary-50 p-4">
+                    <section className="flex flex-col gap-4 rounded-xl bg-primary-50 p-4 sm:p-6">
                         {businessProblem && (
                             <>
                                 <h2 className="text-[24px] leading-8 text-primary-950">About this role</h2>
@@ -223,7 +233,7 @@ export default function JobDetailsPage() {
                             size="lg"
                             disabled={!isApplied && isClosed}
                             icon={isApplied ? <Check className="size-4" /> : undefined}
-                            className={`w-fit ${!isApplied && isClosed ? "disabled:bg-neutral-200 disabled:text-neutral-500 disabled:opacity-100 disabled:shadow-none pointer-events-none" : ""}`}
+                            className={applyButtonClass}
                             onClick={handleApplyClick}
                         >
                             {isApplied ? "View Submission" : isClosed ? "Closed" : "Start Now"}
