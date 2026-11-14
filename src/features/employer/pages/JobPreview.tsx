@@ -268,37 +268,17 @@ const LiveJobActions = ({ job }: { job: JobPreviewDetails }) => {
     );
 };
 
-const StatsRow = ({ job }: { job: JobPreviewDetails }) => {
-    const isClosed = job.status === "CLOSED";
-    return (
-        <div className={`grid w-full grid-cols-1 gap-6 sm:grid-cols-3 ${isClosed ? "lg:grid-cols-4" : ""}`}>
-            <StatBox value={String(job.submissionsCount)} label="Applicants" />
-            <StatBox value={job.deadline} label="Deadline" />
-            <StatBox value={STATUS_LABELS[job.status]} label="Status" />
-            {/* TODO: wire up the real hired candidate once a "mark as hired" concept exists on
-                the backend: no such field currently exists on jobs or submissions, so this is
-                shown blurred rather than fabricating a value. */}
-            {isClosed && <StatBox value="Hired candidate" label="Hired candidate" blurValue />}
-        </div>
-    );
-};
+const StatsRow = ({ job }: { job: JobPreviewDetails }) => (
+    <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-3">
+        <StatBox value={String(job.submissionsCount)} label="Applicants" />
+        <StatBox value={job.deadline} label="Deadline" />
+        <StatBox value={STATUS_LABELS[job.status]} label="Status" />
+    </div>
+);
 
-const StatBox = ({
-    value,
-    label,
-    blurValue = false,
-}: {
-    value: string;
-    label: string;
-    blurValue?: boolean;
-}) => (
+const StatBox = ({ value, label }: { value: string; label: string }) => (
     <div className="flex flex-col gap-3 rounded-2xl border border-primary-200 bg-white/10 p-6">
-        <p
-            className={`text-3xl text-neutral-950 tracking-tight lg:text-5xl ${blurValue ? "select-none blur-sm" : ""}`}
-            aria-hidden={blurValue}
-        >
-            {value}
-        </p>
+        <p className="text-3xl text-neutral-950 tracking-tight lg:text-5xl">{value}</p>
         <p className="text-base text-neutral-700">{label}</p>
     </div>
 );
