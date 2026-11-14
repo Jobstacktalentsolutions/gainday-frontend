@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Skeleton from "@/components/ui/skeleton";
@@ -45,6 +45,8 @@ interface SubmissionsTableProps {
 }
 
 const SubmissionsTable = ({ jobId, submissions, selectedIds, onToggleSelect }: SubmissionsTableProps) => {
+    const navigate = useNavigate();
+
     return (
         <TableShell>
             <div className="flex flex-col divide-y divide-neutral-200">
@@ -54,9 +56,13 @@ const SubmissionsTable = ({ jobId, submissions, selectedIds, onToggleSelect }: S
                     return (
                         <div
                             key={submission.id}
+                            onClick={(event) => {
+                                if (event.target instanceof Element && event.target.closest("a, button, input, [role=checkbox]")) return;
+                                navigate(`/employer/jobs/${jobId}/submissions/${submission.id}`);
+                            }}
                             className={cn(
                                 ROW_GRID,
-                                "-mx-3 px-3 py-3 text-base text-neutral-950 transition-colors",
+                                "-mx-3 cursor-pointer px-3 py-3 text-base text-neutral-950 transition-colors",
                                 isSelected
                                     ? "rounded-xl border border-success-200 bg-success-50/70 hover:bg-success-100/70"
                                     : "hover:bg-neutral-50",
