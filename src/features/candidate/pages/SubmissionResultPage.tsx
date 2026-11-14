@@ -122,7 +122,7 @@ export default function SubmissionResultPage() {
                             <button
                                 type="button"
                                 onClick={() => setShowHistoryModal(true)}
-                                className="flex cursor-pointer items-center gap-2 rounded-xl border border-neutral-300/80 bg-white px-4 py-2.5 text-sm font-medium text-neutral-800 shadow-2xs transition-colors hover:bg-neutral-50 hover:text-neutral-950"
+                                className="button-gradient-outline flex cursor-pointer items-center gap-2 rounded-xl border border-neutral-300/80 bg-white px-4 py-2.5 text-sm font-medium text-neutral-800 shadow-2xs transition-colors hover:bg-neutral-50 hover:text-neutral-950"
                             >
                                 <span>View Score History</span>
                                 <ArrowRight className="size-4 text-neutral-500" />

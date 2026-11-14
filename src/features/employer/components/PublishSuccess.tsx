@@ -66,7 +66,7 @@ const PublishSuccess = ({ jobTitle, jobUrl, onViewJob, onCandidatePreview }: Pub
         <button
           type="button"
           onClick={onViewJob}
-          className="flex h-13 flex-1 items-center justify-center cursor-pointer rounded-xl border border-neutral-200 text-base font-medium text-neutral-700 transition-all hover:bg-neutral-50"
+          className="button-gradient-outline flex h-13 flex-1 items-center justify-center cursor-pointer rounded-xl border border-neutral-200 text-base font-medium text-neutral-700 transition-all hover:bg-neutral-50"
         >
           View job
         </button>

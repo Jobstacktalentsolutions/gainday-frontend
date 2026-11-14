@@ -31,7 +31,7 @@ const SubmissionDetailHeader = ({
             <div className="flex min-w-0 items-center gap-4 lg:gap-6">
                 <Link
                     to={`/employer/jobs/${jobId}/submissions`}
-                    className="flex h-13 shrink-0 items-center justify-center gap-2 rounded-lg border border-neutral-200 px-4 text-base text-neutral-950 transition-colors hover:bg-neutral-50 lg:px-6"
+                    className="button-gradient-outline flex h-13 shrink-0 items-center justify-center gap-2 rounded-lg border border-neutral-200 px-4 text-base text-neutral-950 transition-colors hover:bg-neutral-50 lg:px-6"
                 >
                     <ArrowLeft className="size-6" aria-hidden="true" />
                     <span className="hidden sm:inline">All Submissions</span>

@@ -53,7 +53,7 @@ export const JobPagination = ({
                     onClick={() => onPageChange(currentPage - 1)}
                     disabled={currentPage <= 1 || isLoading}
                     aria-label="Previous page"
-                    className="inline-flex h-9 items-center gap-1 rounded-xl border border-neutral-200 bg-white px-3 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-40"
+                    className="button-gradient-outline inline-flex h-9 items-center gap-1 rounded-xl border border-neutral-200 bg-white px-3 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                     <ChevronLeft className="h-4 w-4" />
                     <span className="hidden sm:inline">Previous</span>
@@ -98,7 +98,7 @@ export const JobPagination = ({
                     onClick={() => onPageChange(currentPage + 1)}
                     disabled={currentPage >= totalPages || isLoading}
                     aria-label="Next page"
-                    className="inline-flex h-9 items-center gap-1 rounded-xl border border-neutral-200 bg-white px-3 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-40"
+                    className="button-gradient-outline inline-flex h-9 items-center gap-1 rounded-xl border border-neutral-200 bg-white px-3 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-40"
                 >
                     <span className="hidden sm:inline">Next</span>
                     <ChevronRight className="h-4 w-4" />

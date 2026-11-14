@@ -24,7 +24,7 @@ const NavItem = ({ label, href = "#", onClick }: NavItemProps) => (
     <a
         href={href}
         onClick={onClick}
-        className="flex items-center gap-1 p-2.5 font-sans text-base text-neutral-700 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
+        className="flex items-center gap-1 p-2 font-sans text-sm text-neutral-700 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
     >
         {label}
     </a>
@@ -51,7 +51,7 @@ const Header = () => {
             <header className="fixed top-0 left-0 z-50 w-full border-t border-t-white/25 border-b border-b-white/15 bg-white/75 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),inset_0_-1px_0_0_rgba(255,255,255,0.1),0_4px_16px_rgba(0,0,0,0.06)] backdrop-blur-xs">
 
                 {/* ── Top bar ── */}
-                <div className="flex items-center justify-between px-6 py-4 lg:py-5 md:px-30">
+                <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-2">
                     <Link
                         to="/"
                         className="shrink-0 cursor-pointer transition-opacity duration-200 hover:opacity-75 active:opacity-50"
@@ -59,12 +59,12 @@ const Header = () => {
                         <img
                             src={brandLogo}
                             alt="Gainday logo"
-                            className="h-12.75 w-30 lg:h-[57.6px] lg:w-34"
+                            className="h-auto w-22 lg:w-24"
                         />
                     </Link>
 
                     {/* Desktop nav */}
-                    <nav className="hidden items-center gap-4 lg:flex">
+                    <nav className="hidden items-center gap-3 lg:flex">
                         <NavItem
                             label="For employers"
                             href={employerTarget}
@@ -104,8 +104,8 @@ const Header = () => {
                                     type="button"
                                     onClick={() => setAuthMode("login")}
                                     className={cn(
-                                        actionButtonVariants({ variant: "outline", size: "lg" }),
-                                        "w-auto cursor-pointer rounded-xl px-10 bg-transparent border-primary-400  hover:border-primary-400 hover:bg-primary-500/5 hover:shadow-[0_0_10px_rgba(75,120,255,0.7)]"
+                                        actionButtonVariants({ variant: "outline", size: "md" }),
+                                        "w-auto cursor-pointer rounded-xl px-7 bg-transparent border-primary-400 hover:border-transparent hover:bg-transparent hover:text-primary-500"
                                     )}
                                 >
                                     Log in
@@ -114,8 +114,8 @@ const Header = () => {
                                     type="button"
                                     onClick={() => setAuthMode("signup")}
                                     className={cn(
-                                        actionButtonVariants({ variant: "primary", size: "lg" }),
-                                        "w-auto cursor-pointer rounded-xl px-10"
+                                        actionButtonVariants({ variant: "primary", size: "md" }),
+                                        "w-auto cursor-pointer rounded-xl px-7 hover:bg-primary-500"
                                     )}
                                 >
                                     Sign up
@@ -185,7 +185,7 @@ const Header = () => {
                                         onClick={() => { setMenuOpen(false); setAuthMode("login"); }}
                                         className={cn(
                                             actionButtonVariants({ variant: "outline", size: "lg" }),
-                                            "cursor-pointer rounded-xl bg-transparent border-primary-400 shadow-[0_0_14px_rgba(75,120,255,0.45)] hover:border-primary-400 hover:bg-primary-500/5 hover:shadow-[0_0_20px_rgba(75,120,255,0.7)]"
+                                            "cursor-pointer rounded-xl bg-transparent border-primary-400 hover:border-transparent hover:bg-transparent hover:text-primary-500"
                                         )}
                                     >
                                         Log in
@@ -195,7 +195,7 @@ const Header = () => {
                                         onClick={() => { setMenuOpen(false); setAuthMode("signup"); }}
                                         className={cn(
                                             actionButtonVariants({ variant: "primary", size: "lg" }),
-                                            "cursor-pointer rounded-xl"
+                                            "cursor-pointer rounded-xl hover:bg-primary-500"
                                         )}
                                     >
                                         Sign up

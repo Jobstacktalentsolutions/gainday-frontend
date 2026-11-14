@@ -137,7 +137,7 @@ const StagedChatTask = ({ submissionId, taskId }: Props) => {
                 <button
                     type="button"
                     onClick={() => setSheetOpen(true)}
-                    className="self-start rounded-lg border border-neutral-300 px-3 py-2 text-sm md:hidden"
+                    className="button-gradient-outline self-start rounded-lg border border-neutral-300 px-3 py-2 text-sm md:hidden"
                 >
                     Case file
                 </button>

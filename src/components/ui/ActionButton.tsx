@@ -20,7 +20,7 @@ export const actionButtonVariants = cva(
             variant: {
                 /* ── 1. Primary  ─────────────────────────────── */
                 primary: [
-                    "bg-primary-500 text-white",
+                    "button-gradient-fill bg-primary-500 text-white",
                     "hover:bg-primary-400",
                     "active:bg-primary-700 active:scale-[0.97]",
                     "focus-visible:ring-3 focus-visible:ring-primary-500/30",
@@ -28,7 +28,7 @@ export const actionButtonVariants = cva(
 
                 /* ── 2. Outline  ─────────────────────────────── */
                 outline: [
-                    "border border-primary-400 bg-white text-primary-500",
+                    "button-gradient-outline border border-primary-400 bg-white text-primary-500",
                     "hover:border-transparent hover:text-primary-600 hover:bg-primary-50",
                     "active:bg-primary-100 active:scale-[0.97]",
                     "focus-visible:ring-3 focus-visible:ring-primary-500/30",

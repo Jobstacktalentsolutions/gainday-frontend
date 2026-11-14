@@ -160,7 +160,7 @@ const ReviewPublish = () => {
                         <button
                             type="button"
                             onClick={handleEditSimulation}
-                            className="flex h-8 items-center gap-1.5 rounded-md border border-neutral-200 px-3 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
+                            className="button-gradient-outline flex h-8 items-center gap-1.5 rounded-md border border-neutral-200 px-3 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
                         >
                             Edit
                         </button>

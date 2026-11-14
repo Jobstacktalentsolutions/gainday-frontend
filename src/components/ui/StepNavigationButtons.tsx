@@ -41,7 +41,7 @@ StepSecondaryButton.displayName = "StepSecondaryButton";
 
 const stepContinueButtonVariants = cva(
   [
-    "group inline-flex items-center gap-2 rounded-lg bg-primary-500 text-neutral-50 select-none cursor-pointer outline-none",
+    "button-arrow-hover group inline-flex items-center gap-2 rounded-lg bg-primary-500 text-neutral-50 select-none cursor-pointer outline-none",
     "shadow-sm transition-all duration-200 ease-out font-medium",
     "enabled:hover:bg-primary-400 enabled:hover:shadow-md",
     "enabled:active:scale-[0.96] enabled:active:translate-y-px enabled:active:bg-primary-700",
@@ -85,7 +85,7 @@ export const StepContinueButton = forwardRef<HTMLButtonElement, StepContinueButt
             iconWrapperSize[size ?? "md"],
           )}
         >
-          <span className="flex items-center justify-center group-hover-spiral will-change-transform">
+          <span className={cn("flex items-center justify-center", icon ? "group-hover-spiral" : "button-arrow-icon")}>
             {icon ?? <ArrowUpRight className="size-5" aria-hidden="true" />}
           </span>
         </span>

@@ -285,7 +285,7 @@ const SimulationBuilder = () => {
                         type="button"
                         onClick={handleRegenerate}
                         disabled={isWholeScenarioGenerating}
-                        className="flex h-10 self-start items-center justify-center gap-2 rounded-xl border border-neutral-300 px-6 py-2 text-base text-neutral-950 transition-all hover:bg-neutral-50 disabled:opacity-60"
+                        className="button-gradient-outline flex h-10 self-start items-center justify-center gap-2 rounded-xl border border-neutral-300 px-6 py-2 text-base text-neutral-950 transition-all hover:bg-neutral-50 disabled:opacity-60"
                     >
                         Regenerate
                         <RefreshCw className={isWholeScenarioGenerating ? "size-4 animate-spin" : "size-4"} aria-hidden="true" />
