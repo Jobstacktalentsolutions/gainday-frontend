@@ -18,6 +18,9 @@ export function GoogleSignIn({ redirect }: GoogleSignInProps) {
         <div className="flex w-full justify-center">
             <GoogleLogin
                 useOneTap
+                shape="pill"
+                size="large"
+                theme="outline"
                 onSuccess={(response) => {
                     if (response.credential) signIn.mutate(response.credential);
                 }}
