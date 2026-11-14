@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import { LogOut, Menu, User, X } from "lucide-react";
 import brandLogo from "@/assets/gainday icon.svg";
 import { cn } from "@/lib/utils";
+import { NavbarLinks } from "@/components/ui/NavbarLinks";
 import { NavbarShell } from "@/components/ui/NavbarShell";
 import { UserAvatarMenu } from "@/components/ui/UserAvatarMenu";
 import { ViewDashboardButton } from "@/components/ui/ViewDashboardButton";
@@ -10,12 +11,6 @@ import { useLogout } from "@/features/auth/hooks/useLogout";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { CANDIDATE_NAV_LINKS } from "../utils/candidateNavLinks";
 import NotificationBell from "./NotificationBell";
-
-const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-    cn(
-        "p-2 text-sm transition-colors hover:text-primary-950",
-        isActive ? "text-primary-950" : "text-neutral-700",
-    );
 
 // Header for signed-in candidates. Kept separate from the landing Header (which handles signed-out visitors,
 // the promo dropdowns and the auth modal) so neither grows to carry the other's concerns.
@@ -78,13 +73,7 @@ const CandidateHeader = () => {
                     <img src={brandLogo} alt="Gainday logo" className="h-auto w-22 lg:w-24" />
                 </Link>
 
-                <nav aria-label="Candidate" className="hidden items-center gap-3 lg:flex">
-                    {CANDIDATE_NAV_LINKS.map((link) => (
-                        <NavLink key={link.to} to={link.to} className={navLinkClass}>
-                            {link.label}
-                        </NavLink>
-                    ))}
-                </nav>
+                <NavbarLinks label="Candidate" links={CANDIDATE_NAV_LINKS} />
 
                 <div className="flex items-center gap-2">
                     <NotificationBell />

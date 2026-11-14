@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Menu } from "lucide-react";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import EmployerNavDrawer from "./EmployerNavDrawer";
 import CreditIndicator from "./CreditIndicator";
 import BrandLogo from "@/assets/gainday icon.svg";
 import { UserAvatarMenu } from "@/components/ui/UserAvatarMenu";
-import { cn } from "@/lib/utils";
+import { NavbarLinks } from "@/components/ui/NavbarLinks";
 import { NavbarShell } from "@/components/ui/NavbarShell";
 import { EMPLOYER_NAV_LINKS } from "../utils/employerNavLinks";
 
@@ -24,22 +24,7 @@ const EmployerTopNav = () => {
                     />
                 </Link>
 
-                <nav aria-label="Employer" className="hidden items-center gap-3 lg:flex">
-                    {EMPLOYER_NAV_LINKS.map((link) => (
-                        <NavLink
-                            key={link.to}
-                            to={link.to}
-                            className={({ isActive }) =>
-                                cn(
-                                    "p-2 text-sm transition-colors hover:text-primary-500",
-                                    isActive ? "text-primary-500" : "text-neutral-700",
-                                )
-                            }
-                        >
-                            {link.label}
-                        </NavLink>
-                    ))}
-                </nav>
+                <NavbarLinks label="Employer" links={EMPLOYER_NAV_LINKS} />
 
                 {/* Right: credit balance + avatar dropdown (desktop) + hamburger (mobile) */}
                 <div className="flex items-center gap-3">

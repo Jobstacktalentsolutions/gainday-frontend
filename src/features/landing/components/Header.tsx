@@ -1,11 +1,12 @@
 import { AUTH_ROLES } from "@/features/auth/utils/roles";
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import brandLogo from "@/assets/gainday icon.svg";
 import { Menu, X } from "lucide-react";
 import { actionButtonVariants } from "@/components/ui/ActionButton";
 import { cn } from "@/lib/utils";
+import { NavbarLinks } from "@/components/ui/NavbarLinks";
 import { NavbarShell } from "@/components/ui/NavbarShell";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { UserAvatarMenu } from "@/components/ui/UserAvatarMenu";
@@ -14,33 +15,10 @@ import AuthChoiceModal from "./AuthChoiceModal";
 import CandidateHeader from "@/features/candidate/components/CandidateHeader";
 
 
-// ---------------------------------------------------------------------------
-// NavItem — simple nav label (no dropdown)
-// ---------------------------------------------------------------------------
-interface NavItemProps {
-    label: string;
-    href?: string;
-    onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
-}
-
-const NavItem = ({ label, href = "#", onClick }: NavItemProps) => (
-    <a
-        href={href}
-        onClick={onClick}
-        className="flex items-center gap-1 p-2 font-sans text-sm text-neutral-700 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
-    >
-        {label}
-    </a>
-);
-
-// ---------------------------------------------------------------------------
-// Header
-// ---------------------------------------------------------------------------
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [authMode, setAuthMode] = useState<"login" | "signup" | null>(null);
     const { user, isAuthenticated } = useCurrentUser();
-    const navigate = useNavigate();
 
 
 
@@ -137,32 +115,11 @@ const Header = () => {
                     </Link>
 
                     {/* Desktop nav */}
-                    <nav className="hidden items-center gap-3 lg:flex">
-                        <NavItem
-                            label="For employers"
-                            href={employerTarget}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                navigate(employerTarget);
-                            }}
-                        />
-                        <NavItem
-                            label="Browse jobs"
-                            href="/job-board"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                navigate("/job-board");
-                            }}
-                        />
-                        <NavItem
-                            label="Pricing"
-                            href="/pricing"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                navigate("/pricing");
-                            }}
-                        />
-                    </nav>
+                    <NavbarLinks label="Main" links={[
+                        { label: "For employers", to: employerTarget },
+                        { label: "Browse jobs", to: "/job-board" },
+                        { label: "Pricing", to: "/pricing" },
+                    ]} />
 
                     {/* Desktop auth buttons */}
                     <div className="hidden items-center gap-3 lg:flex">
