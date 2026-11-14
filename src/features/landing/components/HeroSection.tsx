@@ -1,10 +1,13 @@
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import Aurora from "@/components/ui/Aurora";
 import { fadeUp, heroStagger } from "@/lib/motion/variants";
 import { HeroDemo } from "./HeroDemo";
 import { HighlightBox } from "./HighlightBox";
 import CTAButton from "./solutionSection/CTAButton";
+
+const HERO_COLORS = ["#1B17FF", "#4B78FF", "#A5D8FF", "#F4A74A", "#E0932E"];
 
 const HeroSection = () => {
     const navigate = useNavigate();
@@ -14,8 +17,22 @@ const HeroSection = () => {
             variants={heroStagger}
             initial="hidden"
             animate="visible"
-            className="relative isolate flex flex-col gap-20 overflow-hidden px-6 pb-10 pt-20 lg:flex-row lg:items-center lg:justify-between lg:gap-0 lg:px-30 lg:pb-30 lg:pt-23"
+            className="relative isolate flex flex-col gap-20 px-6 pb-10 pt-20 lg:flex-row lg:items-center lg:justify-between lg:gap-0 lg:px-30 lg:pb-30 lg:pt-23"
         >
+            <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 -top-24.25 bottom-0 -z-10">
+                <Aurora
+                    colorStops={HERO_COLORS}
+                    lightMode
+                    opacity={0.48}
+                    amplitude={1.2}
+                    blend={0.7}
+                    speed={5}
+                    height={0.6}
+                    glow={0.65}
+                    layers={2}
+                    mouseInteraction
+                />
+            </div>
             <div className="flex flex-col items-center gap-4 lg:w-134.75 lg:flex-none lg:items-start lg:gap-6">
 
                 <motion.h1 variants={fadeUp} className="heading-1 text-center text-black lg:text-left">
