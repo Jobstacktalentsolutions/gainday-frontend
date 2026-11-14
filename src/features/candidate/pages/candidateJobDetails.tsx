@@ -17,6 +17,7 @@ import { useSimulationDeviceCheck } from "../hooks/useSimulationDeviceCheck";
 import { getJobShareUrl, shareLink } from "@/lib/shareLink";
 import { cleanText } from "@/lib/cleanText";
 import { cn } from "@/lib/utils";
+import { summarise, useSeo } from "@/lib/seo";
 
 
 const metaChipClass = "flex items-center gap-2 rounded-xl border border-neutral-200 px-3 py-2 text-sm text-primary-950 sm:px-4 sm:py-3 sm:text-base";
@@ -39,6 +40,17 @@ export default function JobDetailsPage() {
         "pointer-events-none disabled:bg-neutral-200 disabled:text-neutral-500 disabled:opacity-100 disabled:shadow-none",
     );
     const businessProblem = cleanText(job?.businessProblem);
+
+    useSeo(
+        isLoading
+            ? null
+            : job
+              ? {
+                    title: `${job.title}${job.employer.companyName ? ` at ${job.employer.companyName}` : ""} | Gainday`,
+                    description: summarise(job.description) || undefined,
+                }
+              : { title: "Job not found | Gainday", noindex: true },
+    );
 
     if (isLoading) {
         return (
