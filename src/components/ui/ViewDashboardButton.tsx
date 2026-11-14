@@ -19,7 +19,7 @@ export const ViewDashboardButton = () => {
             onClick={() => navigate(dashboardPath)}
             className={cn(
                 actionButtonVariants({ variant: "outline", size: "sm" }),
-                "w-auto rounded-xl bg-transparent px-4 hover:bg-transparent"
+                "w-auto rounded-xl border-neutral-300 bg-transparent px-4 text-neutral-700 hover:bg-transparent hover:text-neutral-900"
             )}
         >
             <LayoutDashboard className="size-4" aria-hidden="true" />
