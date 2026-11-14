@@ -13,3 +13,5 @@ export const getResumeStep = (job: BackendJobWithSimulation): WizardStep => {
     const simulation = simulationBuilderSchema.safeParse({ tasks: job.simulation?.tasks ?? [] });
     return simulation.success ? "review" : "simulation-builder";
 };
+
+export default getResumeStep;

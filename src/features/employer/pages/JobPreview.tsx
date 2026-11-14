@@ -1,4 +1,4 @@
-import { wizardPath } from "../utils/wizardPath";
+import { wizardPath, type WizardStep } from "../utils/wizardPath";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, ChevronDown, Clock, MapPin, Play } from "lucide-react";
@@ -72,7 +72,7 @@ const JobPreview = () => {
             <JobPreviewHero job={job} />
 
             {isDraft ? (
-                <ContinueEditingAction jobId={job.id} />
+                <ContinueEditingAction jobId={job.id} step={job.resumeStep} />
             ) : (
                 <>
                     <LiveJobActions job={job} />
@@ -315,27 +315,12 @@ const BackButton = ({ onClick }: { onClick: () => void }) => (
     </button>
 );
 
-const ContinueEditingAction = ({ jobId }: { jobId: string }) => {
+const ContinueEditingAction = ({ jobId, step }: { jobId: string; step: WizardStep }) => {
     const navigate = useNavigate();
     return (
-        <>
-
-            {/* <button
-                type="button"
-                onClick={() => navigate(wizardPath("details", jobId))}
-                className="flex h-13 w-fit items-center gap-2 rounded-lg bg-primary-500 py-1 pr-1 pl-6 text-base text-neutral-50"
-            >
-                Continue Editing
-                <span className="flex h-full w-11 items-center justify-center rounded-lg bg-secondary-500">
-                    <ArrowRight className="size-4" aria-hidden="true" />
-                </span>
-            </button> */}
-            <StepContinueButton
-                onClick={() => navigate(wizardPath("details", jobId))}
-            >
-                Continue Editing
-            </StepContinueButton>
-        </>
+        <StepContinueButton onClick={() => navigate(wizardPath(step, jobId))}>
+            Continue Editing
+        </StepContinueButton>
     );
 };
 
