@@ -3,7 +3,6 @@ import { Check, Lock } from "lucide-react";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import Header from "@/features/landing/components/Header";
 import { HighlightBox } from "@/features/landing/components/HighlightBox";
-import SectionTag from "@/features/landing/components/SectionTag";
 import { Footer } from "@/features/landing/components/footer/Footer";
 import AppLoader from "@/components/ui/AppLoader";
 import { useCreditPacks } from "@/features/employer/hooks/useCreditPacks";
@@ -47,19 +46,21 @@ const PricingPage = () => {
         <div className="flex min-h-screen flex-col bg-neutral-50">
             <Header />
 
-            <main className="flex flex-1 flex-col gap-20 pt-40 lg:gap-30">
+            <main className="flex flex-1 flex-col gap-12 pt-28 lg:gap-16 lg:pt-32">
                 {/* Hero */}
                 <section className="flex flex-col items-center gap-4 px-6 text-center md:px-30">
-                    <SectionTag label="Pricing" />
                     <h1 className={`flex max-w-xl flex-col items-center gap-3 text-black ${headingClass}`}>
-                        <span>Post for Free. Pay Only to Unlock</span>
-                        <HighlightBox className={headingClass}>Candidates.</HighlightBox>
+                        <span>Post a role for free.</span>
+                        <HighlightBox className={headingClass}>Unlock when you are ready.</HighlightBox>
                     </h1>
+                    <p className="max-w-xl text-base text-neutral-700">
+                        Review scored work first. Use one credit to see a candidate's contact details.
+                    </p>
                 </section>
 
                 {/* Packs */}
-                <section className="bg-neutral-950 px-6 py-16 lg:p-30">
-                    <div className="mx-auto flex w-full max-w-300 flex-col gap-20">
+                <section className="bg-neutral-950 px-6 py-12 lg:px-30 lg:py-16">
+                    <div className="mx-auto flex w-full max-w-300 flex-col gap-10">
                         {packsQuery.isPending && <AppLoader />}
                         {packsQuery.isError && (
                             <p role="alert" className="text-base text-white">
@@ -77,7 +78,7 @@ const PricingPage = () => {
                             ))}
                         </div>
 
-                        <ul className="flex flex-wrap gap-4 lg:gap-6">
+                        <ul className="flex flex-wrap justify-center gap-4 lg:gap-6">
                             {PRICING_CHIPS.map((chip) => (
                                 <li key={chip} className="rounded-2xl bg-primary-50 px-6 py-1 text-base text-neutral-950">
                                     {chip}
@@ -88,8 +89,8 @@ const PricingPage = () => {
                 </section>
 
                 {/* Free vs paid */}
-                <section className="mx-auto grid w-full max-w-300 gap-6 px-6 pb-20 md:grid-cols-2 lg:px-0 lg:pb-30">
-                    <div className="flex flex-col gap-6 rounded-xl border border-primary-200 px-6 py-9">
+                <section className="mx-auto grid w-full max-w-300 gap-6 px-6 pb-12 md:grid-cols-2 lg:px-0 lg:pb-16">
+                    <div className="flex flex-col gap-4 rounded-xl border border-primary-200 px-6 py-6">
                         <p className="text-sm uppercase text-primary-500">Free</p>
                         <ul className="flex flex-col gap-3">
                             {FREE_FEATURES.map((item) => (
@@ -101,8 +102,8 @@ const PricingPage = () => {
                         </ul>
                     </div>
 
-                    <div className="flex flex-col gap-6 rounded-xl border border-primary-200 bg-linear-to-br from-secondary-500 via-[#5b3050] to-primary-500 px-6 py-9">
-                        <p className="text-sm uppercase text-primary-50">Paid: 1 credit per candidate</p>
+                    <div className="pricing-gradient flex flex-col gap-4 rounded-xl border border-primary-200 bg-linear-to-br from-secondary-500 via-[#5b3050] to-primary-500 px-6 py-6">
+                        <p className="text-sm uppercase text-primary-50">Unlock with 1 credit per candidate</p>
                         <ul className="flex flex-col gap-3">
                             {PAID_LOCKED.map((item) => (
                                 <li key={item} className="flex items-center gap-1 text-sm text-primary-50">

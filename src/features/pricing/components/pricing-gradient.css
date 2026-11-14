@@ -1,0 +1,15 @@
+.pricing-gradient {
+    background-size: 200% 200%;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .pricing-gradient:hover {
+        animation: pricing-gradient-sweep 800ms ease-out both;
+    }
+}
+
+@keyframes pricing-gradient-sweep {
+    from { background-position: 0% 0%; }
+    to { background-position: 100% 100%; }
+}
+

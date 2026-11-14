@@ -48,7 +48,7 @@ const Header = () => {
 
     return (
         <>
-            <header className="fixed top-0 left-0 z-50 w-full border-t border-t-white/25 border-b border-b-white/15 bg-white/75 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),inset_0_-1px_0_0_rgba(255,255,255,0.1),0_4px_16px_rgba(0,0,0,0.06)] backdrop-blur-xs">
+            <header className="fixed top-0 left-0 z-50 w-full border-b border-white/30 bg-white/70 backdrop-blur-md">
 
                 {/* ── Top bar ── */}
                 <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-2">

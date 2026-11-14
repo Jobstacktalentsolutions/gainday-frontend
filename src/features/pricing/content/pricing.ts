@@ -7,20 +7,16 @@ export interface PricingPack {
 }
 
 export const PRICING_CHIPS = [
-    "1 credit = 1 unlock",
-    "Packs are one-off, no subscriptions",
+    "1 credit unlocks 1 candidate",
     "Credits never expire",
-    "Credits work across all roles",
+    "Use credits across your roles",
 ];
 
 export const FREE_FEATURES = [
-    "Your account",
-    "Posting roles",
-    "The generated simulation",
-    "Scored work",
-    "Rubric evidence",
-    "Capability Passport summary",
-    "Right-to-work status",
+    "Post Job Adverts",
+    "Review the generated work simulation",
+    "Review scored candidate work",
+    "See evidence against the scoring criteria",
 ];
 
-export const PAID_LOCKED = ["Name", "Email", "Phone", "CV"];
+export const PAID_LOCKED = ["Candidate name", "Email address", "Phone number"];

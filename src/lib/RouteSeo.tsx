@@ -5,7 +5,7 @@ const PUBLIC_PAGES: Record<string, SeoMeta> = {
     "/": { title: "Gainday | Hire on proof of skill, not CVs" },
     "/pricing": {
         title: "Pricing | Gainday",
-        description: "Buy credits and unlock the candidates who prove they can do the job. See Gainday's credit packs and pricing.",
+        description: "Review scored candidate work and choose a credit pack to unlock contact details. See Gainday pricing.",
     },
     "/job-board": {
         title: "Browse jobs | Gainday",
