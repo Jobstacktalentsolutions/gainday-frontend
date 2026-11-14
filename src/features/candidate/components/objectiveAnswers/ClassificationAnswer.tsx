@@ -12,9 +12,9 @@ interface Props {
     readOnly?: boolean;
 }
 
-function Item({ item, buckets, value, onChange, readOnly }: {
+function Item({ item, buckets, value, onChange, readOnly, inBucket }: {
     item: string; buckets: string[]; value: string | undefined;
-    onChange: (bucket: string) => void; readOnly?: boolean;
+    onChange: (bucket: string) => void; readOnly?: boolean; inBucket?: boolean;
 }) {
     const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ id: `item:${item}`, disabled: readOnly });
     return (
@@ -24,8 +24,8 @@ function Item({ item, buckets, value, onChange, readOnly }: {
                 className="touch-none cursor-grab rounded p-1 text-neutral-400 hover:text-primary-500 focus-visible:outline-2 focus-visible:outline-primary-500 active:cursor-grabbing">
                 <GripVertical className="size-4" />
             </button>}
-            <span className="min-w-0 flex-1 break-words text-sm font-medium text-primary-950">{item}</span>
-            {!readOnly && <BucketSelect value={value} buckets={buckets} ariaLabel={`Bucket for ${item}`} onChange={onChange} className="max-w-32" />}
+            <span className={cn("min-w-0 flex-1 break-words font-medium text-primary-950", inBucket ? "text-xs" : "text-sm")}>{item}</span>
+            {!readOnly && !inBucket && <BucketSelect value={value} buckets={buckets} ariaLabel={`Bucket for ${item}`} onChange={onChange} className="max-w-32" />}
         </div>
     );
 }
@@ -49,7 +49,7 @@ const ClassificationAnswer = ({ component, response, onChange, readOnly }: Props
     const [activeItem, setActiveItem] = useState<string | null>(null);
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }), useSensor(KeyboardSensor));
     const unassigned = component.items.filter((item) => !component.buckets.includes(mapping[item]));
-    const renderItem = (item: string) => <Item key={item} item={item} buckets={component.buckets} value={mapping[item]} readOnly={readOnly}
+    const renderItem = (item: string, inBucket = false) => <Item key={item} item={item} buckets={component.buckets} value={mapping[item]} readOnly={readOnly} inBucket={inBucket}
         onChange={(bucket) => onChange({ ...mapping, [item]: bucket })} />;
     const handleDragEnd = ({ active, over }: DragEndEvent) => {
         setActiveItem(null);
@@ -65,12 +65,12 @@ const ClassificationAnswer = ({ component, response, onChange, readOnly }: Props
                 {!readOnly && <p className="text-sm text-neutral-600">Drag each item into a bucket, or choose a bucket from the list.</p>}
                 {unassigned.length > 0 && <div className="flex flex-col gap-2">
                     <h3 className="text-sm font-medium text-neutral-700">Unassigned <span className="text-neutral-500">({unassigned.length})</span></h3>
-                    <div className="grid gap-2 sm:grid-cols-2">{unassigned.map(renderItem)}</div>
+                    <div className="grid gap-2 sm:grid-cols-2">{unassigned.map((item) => renderItem(item))}</div>
                 </div>}
                 <div className="grid gap-3 md:grid-cols-3">
                     {component.buckets.map((bucket) => {
                         const items = component.items.filter((item) => mapping[item] === bucket);
-                        return <Bucket key={bucket} name={bucket} count={items.length} readOnly={readOnly}>{items.map(renderItem)}</Bucket>;
+                        return <Bucket key={bucket} name={bucket} count={items.length} readOnly={readOnly}>{items.map((item) => renderItem(item, true))}</Bucket>;
                     })}
                 </div>
             </div>
