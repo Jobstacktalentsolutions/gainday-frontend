@@ -6,6 +6,7 @@ import CreditIndicator from "./CreditIndicator";
 import BrandLogo from "@/assets/gainday icon.svg";
 import { UserAvatarMenu } from "@/components/ui/UserAvatarMenu";
 import { cn } from "@/lib/utils";
+import { NavbarShell } from "@/components/ui/NavbarShell";
 import { EMPLOYER_NAV_LINKS } from "../utils/employerNavLinks";
 
 const EmployerTopNav = () => {
@@ -13,23 +14,24 @@ const EmployerTopNav = () => {
 
     return (
         <>
-            <header className="fixed left-0 top-0 z-40 flex w-full items-center justify-between border-t border-t-white/25 border-b border-b-white/15 bg-white/70 px-6 py-3.5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.2),inset_0_-1px_0_0_rgba(255,255,255,0.1),0_4px_16px_rgba(0,0,0,0.06)] backdrop-blur-xs lg:px-12 xl:px-20">
+            <NavbarShell>
                 {/* Left: Brand logo */}
                 <Link to="/" className="shrink-0 transition-opacity hover:opacity-80">
                     <img
                         src={BrandLogo}
-                        alt="Brand logo"
+                        alt="Gainday logo"
+                        className="h-auto w-22 lg:w-24"
                     />
                 </Link>
 
-                <nav aria-label="Employer" className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-6 lg:flex">
+                <nav aria-label="Employer" className="hidden items-center gap-3 lg:flex">
                     {EMPLOYER_NAV_LINKS.map((link) => (
                         <NavLink
                             key={link.to}
                             to={link.to}
                             className={({ isActive }) =>
                                 cn(
-                                    "p-2.5 text-base transition-colors hover:text-primary-500",
+                                    "p-2 text-sm transition-colors hover:text-primary-500",
                                     isActive ? "text-primary-500" : "text-neutral-700",
                                 )
                             }
@@ -56,7 +58,7 @@ const EmployerTopNav = () => {
                         <Menu className="size-6 text-neutral-950" aria-hidden="true" />
                     </button>
                 </div>
-            </header>
+            </NavbarShell>
             <EmployerNavDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
         </>
     );

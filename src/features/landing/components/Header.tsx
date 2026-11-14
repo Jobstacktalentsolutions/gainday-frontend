@@ -1,3 +1,4 @@
+import { AUTH_ROLES } from "@/features/auth/utils/roles";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
@@ -5,10 +6,12 @@ import brandLogo from "@/assets/gainday icon.svg";
 import { Menu, X } from "lucide-react";
 import { actionButtonVariants } from "@/components/ui/ActionButton";
 import { cn } from "@/lib/utils";
+import { NavbarShell } from "@/components/ui/NavbarShell";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { UserAvatarMenu } from "@/components/ui/UserAvatarMenu";
 import { ViewDashboardButton } from "@/components/ui/ViewDashboardButton";
 import AuthChoiceModal from "./AuthChoiceModal";
+import CandidateHeader from "@/features/candidate/components/CandidateHeader";
 
 
 // ---------------------------------------------------------------------------
@@ -42,16 +45,86 @@ const Header = () => {
 
 
     const employerTarget =
-        isAuthenticated && user?.role === "EMPLOYER"
+        isAuthenticated && user?.role === AUTH_ROLES.employer
             ? "/employer/jobs"
             : "/employer/signup";
 
+    if (isAuthenticated && user?.role === AUTH_ROLES.candidate) return <CandidateHeader />;
+
     return (
         <>
-            <header className="fixed top-0 left-0 z-50 w-full border-b border-white/30 bg-white/70 backdrop-blur-md">
+            <NavbarShell mobileMenu={<>
+                {/* Mobile backdrop */}
+                {menuOpen && (
+                    <div
+                        className="fixed top-full left-0 w-full h-screen bg-black/20 backdrop-blur-sm lg:hidden z-40"
+                        onClick={() => setMenuOpen(false)}
+                    />
+                )}
 
-                {/* ── Top bar ── */}
-                <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-2">
+                {/* Mobile accordion menu */}
+                <AnimatePresence initial={false}>
+                    {menuOpen && (
+                        <motion.nav
+                            key="mobile-menu"
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.4, ease: "easeInOut" }}
+                            className="relative z-50 overflow-hidden lg:hidden border-t border-neutral-200 bg-white min-h-screen"
+                        >
+                            <div className="flex flex-col gap-1 px-6 py-4">
+                                <Link
+                                    to={employerTarget}
+                                    onClick={() => setMenuOpen(false)}
+                                    className="py-3 font-sans text-base text-neutral-700 border-b border-neutral-200/50 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
+                                >
+                                    For employers
+                                </Link>
+
+                                <Link
+                                    to="/job-board"
+                                    onClick={() => setMenuOpen(false)}
+                                    className="py-3 font-sans text-base text-neutral-700 border-b border-neutral-200/50 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
+                                >
+                                    Browse jobs
+                                </Link>
+
+                                <Link
+                                    to="/pricing"
+                                    onClick={() => setMenuOpen(false)}
+                                    className="py-3 font-sans text-base text-neutral-700 border-b border-neutral-200/50 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
+                                >
+                                    Pricing
+                                </Link>
+
+                                <div className="flex flex-col gap-3 pt-4">
+                                    <button
+                                        type="button"
+                                        onClick={() => { setMenuOpen(false); setAuthMode("login"); }}
+                                        className={cn(
+                                            actionButtonVariants({ variant: "outline", size: "lg" }),
+                                            "cursor-pointer rounded-xl bg-transparent border-primary-400 hover:border-transparent hover:bg-transparent hover:text-primary-500"
+                                        )}
+                                    >
+                                        Log in
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => { setMenuOpen(false); setAuthMode("signup"); }}
+                                        className={cn(
+                                            actionButtonVariants({ variant: "primary", size: "lg" }),
+                                            "cursor-pointer rounded-xl hover:bg-primary-500"
+                                        )}
+                                    >
+                                        Sign up
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.nav>
+                    )}
+                </AnimatePresence>
+            </>}>
                     <Link
                         to="/"
                         className="shrink-0 cursor-pointer transition-opacity duration-200 hover:opacity-75 active:opacity-50"
@@ -132,80 +205,8 @@ const Header = () => {
                     >
                         {menuOpen ? <X size={24} /> : <Menu size={24} />}
                     </button>
-                </div>
+            </NavbarShell>
 
-
-                {/* Mobile backdrop */}
-                {menuOpen && (
-                    <div
-                        className="fixed top-full left-0 w-full h-screen bg-black/20 backdrop-blur-sm lg:hidden z-40"
-                        onClick={() => setMenuOpen(false)}
-                    />
-                )}
-
-                {/* Mobile accordion menu */}
-                <AnimatePresence initial={false}>
-                    {menuOpen && (
-                        <motion.nav
-                            key="mobile-menu"
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.4, ease: "easeInOut" }}
-                            className="relative z-50 overflow-hidden lg:hidden border-t border-neutral-200 bg-white min-h-screen"
-                        >
-                            <div className="flex flex-col gap-1 px-6 py-4">
-                                <Link
-                                    to={employerTarget}
-                                    onClick={() => setMenuOpen(false)}
-                                    className="py-3 font-sans text-base text-neutral-700 border-b border-neutral-200/50 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
-                                >
-                                    For employers
-                                </Link>
-
-                                <Link
-                                    to="/job-board"
-                                    onClick={() => setMenuOpen(false)}
-                                    className="py-3 font-sans text-base text-neutral-700 border-b border-neutral-200/50 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
-                                >
-                                    Browse jobs
-                                </Link>
-
-                                <Link
-                                    to="/pricing"
-                                    onClick={() => setMenuOpen(false)}
-                                    className="py-3 font-sans text-base text-neutral-700 border-b border-neutral-200/50 cursor-pointer transition-colors duration-200 hover:text-primary-500 active:text-primary-700"
-                                >
-                                    Pricing
-                                </Link>
-
-                                <div className="flex flex-col gap-3 pt-4">
-                                    <button
-                                        type="button"
-                                        onClick={() => { setMenuOpen(false); setAuthMode("login"); }}
-                                        className={cn(
-                                            actionButtonVariants({ variant: "outline", size: "lg" }),
-                                            "cursor-pointer rounded-xl bg-transparent border-primary-400 hover:border-transparent hover:bg-transparent hover:text-primary-500"
-                                        )}
-                                    >
-                                        Log in
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => { setMenuOpen(false); setAuthMode("signup"); }}
-                                        className={cn(
-                                            actionButtonVariants({ variant: "primary", size: "lg" }),
-                                            "cursor-pointer rounded-xl hover:bg-primary-500"
-                                        )}
-                                    >
-                                        Sign up
-                                    </button>
-                                </div>
-                            </div>
-                        </motion.nav>
-                    )}
-                </AnimatePresence>
-            </header>
             <AuthChoiceModal mode={authMode} onClose={() => setAuthMode(null)} onSwitchMode={(m) => setAuthMode(m)} />
         </>
     );

@@ -1,3 +1,4 @@
+import { AUTH_ROLES } from "@/features/auth/utils/roles";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import CandidateHeader from "./CandidateHeader";
 import { PublicNavbar } from "./PublicNavbar";
@@ -10,5 +11,5 @@ export function JobBoardHeader() {
     // Wait for the profile so a job seeker does not see the public header flash past.
     if (isLoadingProfile) return null;
 
-    return isAuthenticated && user?.role === "JOB_SEEKER" ? <CandidateHeader /> : <PublicNavbar />;
+    return isAuthenticated && user?.role === AUTH_ROLES.candidate ? <CandidateHeader /> : <PublicNavbar />;
 }
