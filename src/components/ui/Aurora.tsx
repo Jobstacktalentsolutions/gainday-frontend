@@ -180,7 +180,8 @@ void main() {
     float alpha = body * lobes * (layer < 0.5 ? 1.0 : 0.32 / layer);
     alpha = clamp(alpha * (1.0 + reach * 0.25 * smootherstep(0.9, 0.0, abs(y - hem))), 0.0, 1.0);
 
-    vec3 tint = ramp(u + 0.05 * sin(pace * 0.08 + layer * 2.3) + layer * 0.1 + max(rise, 0.0) * 0.05);
+    float colorWave = 0.5 + 0.5 * cos(6.2831853 * (u - pace * 0.007) + layer * 0.4 + max(rise, 0.0) * 0.3);
+    vec3 tint = ramp(colorWave);
     glow = 1.0 - (1.0 - glow) * (1.0 - tint * alpha);
     cover = 1.0 - (1.0 - cover) * (1.0 - alpha);
   }
