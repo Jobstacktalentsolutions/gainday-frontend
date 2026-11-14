@@ -86,14 +86,14 @@ const ExperienceReviewsTable = () => {
                           {review.jobTitle}
                         </Link>
                       ) : (
-                        <span className="text-neutral-400">—</span>
+                        <span className="text-neutral-400">-</span>
                       )}
                     </TableCell>
                     <TableCell>
                       <RatingStars rating={review.rating} />
                     </TableCell>
                     <TableCell className="max-w-xs whitespace-normal text-neutral-700">
-                      {review.comment ?? <span className="text-neutral-400">—</span>}
+                      {review.comment ?? <span className="text-neutral-400">-</span>}
                     </TableCell>
                   </TableRow>
                 ))}

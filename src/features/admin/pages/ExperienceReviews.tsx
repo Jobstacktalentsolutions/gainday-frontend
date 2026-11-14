@@ -14,7 +14,7 @@ const TIMEFRAME_TABS: { id: Timeframe; label: string }[] = [
   { id: "all", label: "All" },
 ];
 
-const formatAverage = (average: number | null) => (average === null ? "—" : average.toFixed(2));
+const formatAverage = (average: number | null) => (average === null ? "-" : average.toFixed(2));
 
 const pluralize = (count: number, noun: string) => `${count} ${noun}${count === 1 ? "" : "s"}`;
 

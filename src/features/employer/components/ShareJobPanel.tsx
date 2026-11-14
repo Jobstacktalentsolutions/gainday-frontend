@@ -23,7 +23,7 @@ export const ShareJobPanel = ({ jobTitle, jobUrl }: ShareJobPanelProps) => {
             toast.success("Job link copied to clipboard");
             setTimeout(() => setCopied(false), 2000);
         } catch {
-            toast.error("Couldn't copy link — please copy manually");
+            toast.error("Couldn't copy link. Please copy manually.");
         }
     };
 

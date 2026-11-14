@@ -14,7 +14,7 @@ interface Props {
 // the choice inline, so both look and behave the same.
 const BucketSelect = ({ value, buckets, onChange, ariaLabel, className, readOnly }: Props) =>
     readOnly ? (
-        <span className="text-sm font-medium text-neutral-900">{value ?? "—"}</span>
+        <span className="text-sm font-medium text-neutral-900">{value ?? "-"}</span>
     ) : (
     <select
         aria-label={ariaLabel}

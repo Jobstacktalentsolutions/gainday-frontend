@@ -63,7 +63,7 @@ const GenerationReviewDetail = ({ review, onClose }: GenerationReviewDetailProps
         <div className="flex flex-col gap-6 rounded-2xl border border-neutral-200 bg-white p-6">
             <div className="flex items-center justify-between">
                 <p className="text-sm font-bold uppercase tracking-wide text-neutral-900">
-                    Slot {review.slotIndex + 1} — {review.category}
+                    Slot {review.slotIndex + 1}: {review.category}
                 </p>
                 <button
                     type="button"

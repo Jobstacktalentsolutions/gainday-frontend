@@ -74,7 +74,7 @@ export function describePriorityRanking(
     return response
         .map((itemIndex, position) => {
             const { label, description } = component.items[itemIndex];
-            return `${position + 1}. ${label} — ${description}`;
+            return `${position + 1}. ${label}: ${description}`;
         })
         .join("\n");
 }

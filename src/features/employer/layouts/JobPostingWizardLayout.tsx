@@ -80,7 +80,7 @@ const WizardForm = ({ savedJob }: WizardFormProps) => {
             toast.success("Draft saved");
             navigate("/employer/jobs");
         } catch {
-            toast.error("Couldn't save your draft — try again.");
+            toast.error("Couldn't save your draft. Please try again.");
         } finally {
             setIsSavingExit(false);
         }
@@ -141,7 +141,7 @@ const JobPostingWizardLayout = () => {
     const savedJobQuery = useJobSimulation(initialJobId);
 
     if (initialJobId && savedJobQuery.isError) {
-        return <p className="px-4 pt-40 text-center text-neutral-500">Couldn't load this job — refresh the page to try again.</p>;
+        return <p className="px-4 pt-40 text-center text-neutral-500">Couldn't load this job. Refresh the page to try again.</p>;
     }
 
     if (initialJobId && !savedJobQuery.data) {

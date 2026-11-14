@@ -39,7 +39,7 @@ const RegenerateGuidanceModal = ({
                         id="regenerate-guidance-description"
                         className="mt-1.5 text-sm text-neutral-500"
                     >
-                        Tell us what to change and we'll edit this exact task — everything else stays
+                        Tell us what to change and we'll edit this exact task. Everything else stays
                         as-is. Leave it blank instead for a completely fresh, unrelated task.
                     </Dialog.Description>
 

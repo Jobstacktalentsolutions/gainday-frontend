@@ -26,7 +26,7 @@ const HeroSection = () => {
 
                 <motion.p variants={fadeUp} className="text-center text-base leading-6 text-neutral-700 lg:text-left">
                     Paste your job description and Gainday turns it into a work simulation built from the day-to-day
-                    task of the role. Candidates apply by completing it, and you get a ranked shortlist based on
+                    tasks of the role. Candidates apply by completing it, and you get a ranked shortlist based on
                     how they perform.
                 </motion.p>
 

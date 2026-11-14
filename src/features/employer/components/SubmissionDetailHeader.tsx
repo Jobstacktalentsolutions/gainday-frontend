@@ -106,7 +106,7 @@ const SubmissionDetailHeader = ({
                     <div className="flex shrink-0 items-center gap-3 border-l border-primary-500 pl-3">
                         <div className="flex flex-col">
                             <p className="text-2xl leading-tight text-black lg:text-[28px]">
-                                {submission.overallScore === null ? "\u2014" : submission.overallScore}
+                                {submission.overallScore === null ? "-" : submission.overallScore}
                             </p>
                             <p className="text-xs text-neutral-500 lg:text-base">OVERALL/100</p>
                         </div>

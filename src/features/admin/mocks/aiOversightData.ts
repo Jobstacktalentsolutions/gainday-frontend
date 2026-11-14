@@ -41,7 +41,7 @@ export const mockFailedScoringSubmissions: FailedScoringSubmission[] = [
         candidateId: "cand_5512",
         candidateNumber: "5512",
         jobTitle: "Sales Analyst",
-        failureReason: "Scoring timeout — Task 3 response too long",
+        failureReason: "Scoring timeout: Task 3 response too long",
         failedTaskIndex: 2,
         status: "failed",
         occurredAt: "2026-09-29T08:22:00Z",

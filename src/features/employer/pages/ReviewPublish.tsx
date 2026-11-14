@@ -63,14 +63,14 @@ const ReviewPublish = () => {
     const handlePublish = async () => {
         const isValid = await trigger();
         if (!isValid) {
-            console.error("[ReviewPublish] Validation failed — blocking publish:", formState.errors);
-            toast.error("Some job details aren't valid yet — check the details step and try again.");
+            console.error("[ReviewPublish] Validation failed, blocking publish:", formState.errors);
+            toast.error("Some job details aren't valid yet. Check the details step and try again.");
             return;
         }
 
         if (!jobId) {
-            console.error("[ReviewPublish] No jobId in outlet context — cannot publish");
-            toast.error("Couldn't find this job — try going back a step.");
+            console.error("[ReviewPublish] No jobId in outlet context: cannot publish");
+            toast.error("Couldn't find this job. Try going back a step.");
             return;
         }
 
@@ -83,7 +83,7 @@ const ReviewPublish = () => {
             setPublishResult({ jobUrl: realJobUrl, jobId: published.id });
             toast.success("Job published!");
         } catch {
-            toast.error("Couldn't publish this job — try again.");
+            toast.error("Couldn't publish this job. Please try again.");
         } finally {
             setIsPublishing(false);
         }

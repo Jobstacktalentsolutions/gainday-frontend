@@ -58,7 +58,7 @@ const ApplicationCard = ({ application, onWithdraw }: ApplicationCardProps) => {
                     </Link>
                 ) : (
                     <div className="flex w-17.5 flex-col items-center gap-3 text-neutral-900">
-                        <p className="text-2xl">—</p>
+                        <p className="text-2xl">-</p>
                         <p className="text-sm text-primary-500">RATING</p>
                     </div>
                 )}

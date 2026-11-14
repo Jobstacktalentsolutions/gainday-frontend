@@ -130,7 +130,7 @@ export default function TaskRunner() {
         onViolation: (reason) => recordViolation(reason, currentTaskIdRef.current),
     });
     useEffect(() => {
-        arm(); // arm after mount — calling arm() during render triggers setStatus → infinite loop
+        arm(); // arm after mount: calling arm() during render triggers setStatus → infinite loop
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -202,7 +202,7 @@ export default function TaskRunner() {
         // wouldn't reflect it until next render, but getState() is always current).
         const antiCheatFlags = useSimulationIntegrityStore.getState().events;
 
-        if (!runStore.submissionId) return; // nothing to submit against — surfaced in the modal below
+        if (!runStore.submissionId) return; // nothing to submit against; surfaced in the modal below
         const answers = simulation.tasks.map((task) =>
             toCandidateAnswer(
                 task,

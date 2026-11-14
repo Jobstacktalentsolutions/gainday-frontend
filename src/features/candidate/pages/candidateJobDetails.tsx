@@ -68,7 +68,7 @@ export default function JobDetailsPage() {
         // "shared" needs no toast (the share sheet is its own confirmation), and neither does
         // "cancelled" — the person closed the sheet on purpose.
         if (result === "copied") toast.success("Job link copied to clipboard");
-        if (result === "failed") toast.error("Couldn't share the link — try again.");
+        if (result === "failed") toast.error("Couldn't share the link. Please try again.");
     }
 
     function handleApplyClick() {

@@ -15,7 +15,7 @@ const SummaryRow = ({ label, value, hideWhenEmpty }: SummaryRowProps) =>
   hideWhenEmpty && !value ? null : (
     <div className="flex flex-col gap-1">
       <p className="text-sm text-neutral-400">{label}</p>
-      <p className="text-base text-neutral-950">{value || "—"}</p>
+      <p className="text-base text-neutral-950">{value || "-"}</p>
     </div>
   );
 

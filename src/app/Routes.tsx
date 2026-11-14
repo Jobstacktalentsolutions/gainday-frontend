@@ -161,7 +161,7 @@ const AppRoutes = () => {
                         <Route path="/dev/pre-simulation" element={<PreSimulation />} />
                         <Route path="/dev/environment-check" element={<EnvironmentCheckPage />} />
                         {/* /dev/simulation → resets stale state then loads the real route with mock job-1
-                            (Custody Operations / Finance — 3 tasks) */}
+                            (Custody Operations / Finance: 3 tasks) */}
                         <Route path="/dev/simulation" element={<DevSimulationStart />} />
                     </>
                 )}

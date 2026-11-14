@@ -16,10 +16,10 @@ export const formatRevenue = (pence: number, usd: number | null) => {
 export const formatAmountForCurrency = (amount: number, currency: "USD" | "GBP") =>
   currencyFormatter(currency).format(amount);
 
-/** Signed fiat value of a ledger row: USD when available, otherwise GBP. "—" when unvalued. */
+/** Signed fiat value of a ledger row: USD when available, otherwise GBP. "-" when unvalued. */
 export const formatSignedFiat = (pence: number | null, usd: number | null) => {
   if (pence === null) {
-    return "—";
+    return "-";
   }
   const sign = pence > 0 ? "+" : "";
   if (usd === null) {

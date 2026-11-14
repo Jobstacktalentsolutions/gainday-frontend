@@ -43,7 +43,7 @@ export function Footer() {
                     <img src={brandLogo} alt="Gainday" className="h-[57.6px] w-34" />
                     <p className="w-74.5 text-base leading-6 text-neutral-700">
                         Built for proof, not paper. Show employers what you can actually
-                        do — not just what your CV says you&rsquo;ve done.
+                        do, not just what your CV says you&rsquo;ve done.
                     </p>
                 </div>
 

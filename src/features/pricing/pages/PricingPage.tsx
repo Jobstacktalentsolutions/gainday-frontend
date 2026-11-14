@@ -102,7 +102,7 @@ const PricingPage = () => {
                     </div>
 
                     <div className="flex flex-col gap-6 rounded-xl border border-primary-200 bg-linear-to-br from-secondary-500 via-[#5b3050] to-primary-500 px-6 py-9">
-                        <p className="text-sm uppercase text-primary-50">Paid — 1 credit per candidate</p>
+                        <p className="text-sm uppercase text-primary-50">Paid: 1 credit per candidate</p>
                         <ul className="flex flex-col gap-3">
                             {PAID_LOCKED.map((item) => (
                                 <li key={item} className="flex items-center gap-1 text-sm text-primary-50">

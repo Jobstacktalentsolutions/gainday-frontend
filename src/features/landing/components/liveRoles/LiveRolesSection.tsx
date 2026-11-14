@@ -56,7 +56,7 @@ const LiveRolesSection = () => {
                 <motion.div variants={fadeUp}>
                     <Link
                         to="/job-board"
-                        className="flex h-7.5 items-center justify-center curosr-pointer whitespace-nowrap gap-2 text-base text-primary-500 underline underline-offset-2 lg:h-13"
+                        className="flex h-7.5 items-center justify-center cursor-pointer whitespace-nowrap gap-2 text-base text-primary-500 underline underline-offset-2 lg:h-13"
                     >
                         All Roles
                         <ArrowRight className="text-primary-500" />
