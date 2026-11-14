@@ -5,6 +5,7 @@ import AppErrorBoundary from "./components/AppErrorBoundary"
 import ErrorFallback from "./components/ErrorFallback"
 import { usePageViewTracker } from "./features/analytics/usePageViewTracker"
 import { CookieNotice } from "./features/analytics/CookieNotice"
+import { RouteSeo } from "./lib/RouteSeo"
 
 function App() {
   const { pathname } = useLocation()
@@ -20,6 +21,7 @@ function App() {
       </AppErrorBoundary>
       <Toaster richColors position="top-right" />
       <CookieNotice />
+      <RouteSeo />
     </>
   )
 }
