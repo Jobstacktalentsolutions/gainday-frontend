@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
@@ -8,6 +7,7 @@ import SectionTag from "@/features/landing/components/SectionTag";
 import { useScrollToHash } from "@/features/landing/utils/useScrollToHash";
 import { fadeUp } from "@/lib/motion/variants";
 import { cn } from "@/lib/utils";
+import { useSeo } from "@/lib/seo";
 import { AtAGlanceCard } from "../components/AtAGlanceCard";
 import { LegalSectionView, RichText } from "../components/LegalBlocks";
 import { LegalToc, type TocItem } from "../components/LegalToc";
@@ -59,14 +59,7 @@ const LegalContent = ({ doc }: { doc: LegalDocument }) => {
         ...(doc.closing ? [{ id: doc.closing.id, title: doc.closing.title }] : []),
     ];
     const activeId = useActiveSection(tocItems.map((item) => item.id));
-
-    useEffect(() => {
-        const previous = document.title;
-        document.title = `${doc.partTitle} | Gainday`;
-        return () => {
-            document.title = previous;
-        };
-    }, [doc.partTitle]);
+    useSeo({ title: `${doc.partTitle} | Gainday` });
 
     const other =
         doc.kind === "terms"
