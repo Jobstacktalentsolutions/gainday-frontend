@@ -133,7 +133,7 @@ const CapabilityPassportModal = ({
                 {!isLoading && !isError && passport && <CapabilityPassportView passport={passport} variant="employer" />}
 
                 {!isUnlocked && onUnlockContact && (
-                    <ActionButton size="lg" className="rounded-xl" onClick={onUnlockContact}>
+                    <ActionButton gradient={false} size="lg" className="rounded-xl" onClick={onUnlockContact}>
                         Unlock Contact
                     </ActionButton>
                 )}

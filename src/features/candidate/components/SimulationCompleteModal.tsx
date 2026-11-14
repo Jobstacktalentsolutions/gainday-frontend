@@ -77,7 +77,7 @@ export function SimulationCompleteModal({
                         />
                     </div>
                 ) : submitStatus === "error" && onRetry ? (
-                    <ActionButton variant="primary" size="md" onClick={onRetry} className="w-full">
+                    <ActionButton gradient={false} variant="primary" size="md" onClick={onRetry} className="w-full">
                         Retry submission
                     </ActionButton>
                 ) : submitStatus === "pending" ? (
@@ -86,7 +86,7 @@ export function SimulationCompleteModal({
                         <span>Submitting assessment...</span>
                     </div>
                 ) : (
-                    <ActionButton
+                    <ActionButton gradient={false}
                         variant="primary"
                         size="md"
                         onClick={handleReturn}

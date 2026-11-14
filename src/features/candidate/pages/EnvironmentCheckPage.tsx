@@ -125,16 +125,16 @@ export default function EnvironmentCheckPage() {
         <div className="min-h-screen w-full bg-neutral-50">
             <CandidateHeader />
             <main className="mx-auto flex w-full max-w-300 flex-col items-center gap-8 px-4 pb-20 pt-33.75 sm:gap-20 sm:px-5 sm:pt-43.75">
-                <div className="relative w-full max-w-246.5 overflow-hidden rounded-3xl bg-white p-5 shadow-[0px_4px_10px_rgba(16,24,40,0.05)] sm:p-10">
+                <div className="relative isolate w-full max-w-246.5 overflow-hidden rounded-3xl bg-white p-5 shadow-[0px_4px_10px_rgba(16,24,40,0.05)] sm:p-10">
                     {/* Decorative gradient blobs */}
                     <div
                         aria-hidden="true"
-                        className={`pointer-events-none block absolute z-50 -left-5 -top-64 h-105 w-95 rotate-[-49deg] rounded-full bg-linear-to-b  opacity-38 blur-3xl
+                        className={`pointer-events-none block absolute -left-5 -top-64 h-105 w-95 rotate-[-49deg] rounded-full bg-linear-to-b  opacity-38 blur-3xl
                             bg-[linear-gradient(180deg,var(--color-primary-500)_40%,var(--color-secondary-500)_55%,var(--color-secondary-300)_65%,transparent_100%)]`}
                     />
                     <div
                         aria-hidden="true"
-                        className={`pointer-events-none block absolute z-50 -right-5 -top-64 h-105 w-95 rotate-49 rounded-full bg-linear-to-b  opacity-38 blur-3xl
+                        className={`pointer-events-none block absolute -right-5 -top-64 h-105 w-95 rotate-49 rounded-full bg-linear-to-b  opacity-38 blur-3xl
                             bg-[linear-gradient(180deg,var(--color-primary-500)_40%,var(--color-secondary-500)_55%,var(--color-secondary-300)_65%,transparent_100%)]`}
                     />
 
@@ -196,7 +196,7 @@ export default function EnvironmentCheckPage() {
 
                         {startError && <p className="text-[14px] text-error-500">{startError}</p>}
 
-                        <ActionButton variant="primary" size="lg" disabled={!allReady || isStarting} onClick={handleBegin}>
+                        <ActionButton gradient={false} variant="primary" size="lg" disabled={!allReady || isStarting} onClick={handleBegin}>
                             {isStarting ? "Starting..." : "Begin Simulation"}
                         </ActionButton>
                     </div>

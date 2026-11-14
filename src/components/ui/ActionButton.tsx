@@ -73,6 +73,8 @@ export const actionButtonVariants = cva(
 export interface ActionButtonProps
     extends ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof actionButtonVariants> {
+    /** Set to false for flows where a static button is preferable. */
+    gradient?: boolean;
     /** Optional icon rendered before the label */
     startIcon?: ReactNode;
     /** Optional icon rendered after the label */
@@ -80,11 +82,11 @@ export interface ActionButtonProps
 }
 
 export const ActionButton = forwardRef<HTMLButtonElement, ActionButtonProps>(
-    ({ className, variant, size, startIcon, endIcon, children, ...props }, ref) => {
+    ({ className, variant, size, gradient = true, startIcon, endIcon, children, ...props }, ref) => {
         return (
             <button
                 ref={ref}
-                className={cn(actionButtonVariants({ variant, size }), className)}
+                className={cn(actionButtonVariants({ variant, size }), !gradient && "button-gradient-none", className)}
                 {...props}
             >
                 {startIcon && (

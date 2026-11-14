@@ -130,7 +130,7 @@ const JobSubmissions = () => {
                             >
                                 Clear selection
                             </button>
-                            <ActionButton
+                            <ActionButton gradient={false}
                                 size="md"
                                 className="w-auto"
                                 disabled={unlockCandidates.isPending}

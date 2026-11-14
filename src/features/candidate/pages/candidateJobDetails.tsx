@@ -253,7 +253,7 @@ export default function JobDetailsPage() {
                             {isApplied ? "View Submission" : isClosed ? "Closed" : "Apply Now"}
                         </StepContinueButton>
                         <p className="text-[16px] text-neutral-400">
-                            Uses a 20 to 30 minute work simulation, not a cover letter.
+                            Apply by completing a work simulation for this role.
                             {!canStartSimulation && !isApplied && " Open this job on a laptop or desktop computer to take it."}
                         </p>
                     </section>

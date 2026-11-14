@@ -17,7 +17,7 @@ const CreditBalanceHero = ({ balance, isLoading, onBuy }: CreditBalanceHeroProps
             </p>
             <p className="text-base uppercase text-primary-500">Available credits · never expire</p>
         </div>
-        <ActionButton variant="primary" size="lg" className="h-13 w-auto px-6" onClick={onBuy}>
+        <ActionButton gradient={false} variant="primary" size="lg" className="h-13 w-auto px-6" onClick={onBuy}>
             Buy Credits
         </ActionButton>
     </div>

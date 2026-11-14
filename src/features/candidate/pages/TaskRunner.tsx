@@ -238,7 +238,7 @@ export default function TaskRunner() {
         return (
             <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-neutral-50 text-center text-neutral-700">
                 <p className="text-lg">Job not found.</p>
-                <ActionButton variant="outline" onClick={() => navigate("/job-board")}>
+                <ActionButton gradient={false} variant="outline" onClick={() => navigate("/job-board")}>
                     Back to job board
                 </ActionButton>
             </div>
@@ -249,7 +249,7 @@ export default function TaskRunner() {
         return (
             <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-neutral-50 text-center text-neutral-700">
                 <p className="text-lg">This job doesn't have a simulation ready yet.</p>
-                <ActionButton variant="outline" onClick={() => navigate(`/job-board/${job.id}`)}>
+                <ActionButton gradient={false} variant="outline" onClick={() => navigate(`/job-board/${job.id}`)}>
                     Back to job details
                 </ActionButton>
             </div>
@@ -420,7 +420,7 @@ export default function TaskRunner() {
                     <div className="h-px w-full bg-neutral-200" />
 
                     <div className="flex w-full flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <ActionButton
+                        <ActionButton gradient={false}
                             variant="outline"
                             size="md"
                             onClick={handlePrevious}
@@ -429,7 +429,7 @@ export default function TaskRunner() {
                         >
                             Previous Task
                         </ActionButton>
-                        <ActionButton
+                        <ActionButton gradient={false}
                             variant="primary"
                             size="md"
                             onClick={handleNext}

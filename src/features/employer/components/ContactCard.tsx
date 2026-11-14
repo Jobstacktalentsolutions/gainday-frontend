@@ -60,7 +60,7 @@ const ContactCard = ({ isUnlocked, contact, onUnlock, isSelected = false }: Cont
                         <p>+44 7700 900123</p>
                     </div>
                     <span className="sr-only">Contact details are locked.</span>
-                    <ActionButton size="lg" onClick={onUnlock}>
+                    <ActionButton gradient={false} size="lg" onClick={onUnlock}>
                         Unlock Contact
                     </ActionButton>
                 </>

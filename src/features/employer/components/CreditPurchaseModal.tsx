@@ -245,7 +245,7 @@ const CreditPurchaseModal = ({
                         {packsQuery.isError && (
                             <div className="flex flex-col items-center gap-3 py-4 text-center text-base text-neutral-700">
                                 Couldn&apos;t load the credit packs.
-                                <ActionButton variant="outline" size="md" className="w-auto" onClick={() => packsQuery.refetch()}>
+                                <ActionButton gradient={false} variant="outline" size="md" className="w-auto" onClick={() => packsQuery.refetch()}>
                                     Try again
                                 </ActionButton>
                             </div>
@@ -284,7 +284,7 @@ const CreditPurchaseModal = ({
                             </div>
                         )}
 
-                        <ActionButton
+                        <ActionButton gradient={false}
                             size="lg"
                             className="h-13 rounded-xl"
                             onClick={handleConfirm}
@@ -366,7 +366,7 @@ const CreditPurchaseModal = ({
                             Credits never expire. Use them whenever you&apos;re ready.
                         </p>
 
-                        <ActionButton size="lg" className="h-13 rounded-xl" onClick={() => onOpenChange(false)}>
+                        <ActionButton gradient={false} size="lg" className="h-13 rounded-xl" onClick={() => onOpenChange(false)}>
                             Done
                         </ActionButton>
                     </div>
@@ -377,7 +377,7 @@ const CreditPurchaseModal = ({
                         <XCircle className="size-10 text-error-500" aria-hidden="true" />
                         <DialogTitle>Something went wrong</DialogTitle>
                         <DialogDescription>{errorMessage}</DialogDescription>
-                        <ActionButton size="lg" className="h-13 rounded-xl" onClick={handleRetry}>
+                        <ActionButton gradient={false} size="lg" className="h-13 rounded-xl" onClick={handleRetry}>
                             Try again
                         </ActionButton>
                     </div>

@@ -63,3 +63,17 @@
         transition: none;
     }
 }
+
+.button-gradient-none.button-gradient-fill {
+    background-image: none;
+}
+
+.button-gradient-none.button-gradient-outline::after {
+    display: none;
+}
+
+@media (hover: hover) {
+    .button-gradient-none.button-gradient-outline:not(:disabled):hover {
+        border-color: var(--color-primary-400);
+    }
+}

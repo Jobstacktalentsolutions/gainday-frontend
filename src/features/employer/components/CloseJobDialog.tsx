@@ -33,13 +33,13 @@ const CloseJobDialog = ({ jobTitle, open, onOpenChange, onConfirm, isPending }: 
             </AlertDialogHeader>
             <AlertDialogFooter>
                 <AlertDialogCancel asChild>
-                    <ActionButton variant="outline" size="sm" disabled={isPending}>
+                    <ActionButton gradient={false} variant="outline" size="sm" disabled={isPending}>
                         Keep it open
                     </ActionButton>
                 </AlertDialogCancel>
                 {/* A plain button, not AlertDialogAction: that one closes the dialog on click, and it
                     should stay open (disabled) until the request has settled. */}
-                <ActionButton
+                <ActionButton gradient={false}
                     variant="primary"
                     size="sm"
                     className="bg-error-500 hover:bg-error-600 active:bg-error-600"
