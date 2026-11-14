@@ -1,3 +1,4 @@
+import { formatShortDate } from "@/lib/formatDate";
 import { useMemo, useState } from "react";
 import { Search, ShieldAlert, AlertTriangle, CheckCircle2, ChevronDown, ChevronUp, Layers } from "lucide-react";
 import { useGenerationReviewJobs } from "../hooks/useGenerationReviews";
@@ -182,6 +183,7 @@ const GenerationReviewsPanel = () => {
         filteredGroups.map((group) => {
           const isOpen = expandedJobId === group.jobId;
           const isResolved = group.pendingCount === 0;
+          const latestAdded = new Date(Math.max(...group.items.map((item) => new Date(item.createdAt).getTime()))).toISOString();
           return (
             <div key={group.jobId} className="border-b border-neutral-100 last:border-b-0">
               <button
@@ -199,6 +201,8 @@ const GenerationReviewsPanel = () => {
                   </div>
                   <div className="flex flex-wrap items-center gap-2 text-xs text-neutral-500">
                     <span>{group.job.employer.companyName ?? "Unknown company"}</span>
+                    <span>?</span>
+                    <span>Latest added {formatShortDate(latestAdded)}</span>
                     <span>·</span>
                     <span className="inline-flex items-center gap-1 rounded bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-700">
                       <Layers className="size-3 text-neutral-500" />
@@ -244,6 +248,8 @@ const GenerationReviewsPanel = () => {
                           <span className="font-medium text-neutral-600">{item.category}</span>
                           <span>·</span>
                           <span>{item.attempts.length} critic attempt(s)</span>
+                          <span>?</span>
+                          <span>Added {formatShortDate(item.createdAt)}</span>
                         </div>
                         <div className="flex items-center gap-3">
                           <span

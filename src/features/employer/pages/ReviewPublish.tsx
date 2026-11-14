@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AlertTriangle, ChevronDown, Lock } from "lucide-react";
+import { ChevronDown, Lock } from "lucide-react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useFormContext } from "react-hook-form";
 import { AnimatePresence, motion } from "motion/react";
@@ -13,7 +13,6 @@ import { useSaveJobDetails } from "../hooks/useSaveJobDraft";
 import { wizardPath } from "../utils/wizardPath";
 import { usePublishJob } from "../hooks/usePublishJob";
 import { useJobSimulation } from "../hooks/useJobSimulation";
-import { useTaskReviewStatus } from "../hooks/useTaskReviewStatus";
 import { useJobDraftStore } from "../stores/useJobDraftStore";
 import { DEFAULT_SIMULATION_TIME_LIMIT_MINUTES } from "../constants/jobPostingOptions";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
@@ -37,8 +36,6 @@ const ReviewPublish = () => {
     const tasks = jobSimulation?.simulation?.tasks ?? [];
     const timeLimitMinutes =
         jobSimulation?.simulation?.timeLimitMinutes ?? DEFAULT_SIMULATION_TIME_LIMIT_MINUTES;
-    const { data: taskReviewStatus } = useTaskReviewStatus(jobId);
-    const isUnderReview = taskReviewStatus !== undefined && taskReviewStatus.pendingCount > 0;
 
     const [editingJobDetails, setEditingJobDetails] = useState(false);
     const [tasksExpanded, setTasksExpanded] = useState(false);
@@ -172,15 +169,6 @@ const ReviewPublish = () => {
                         </button>
                     </div>
 
-                    {isUnderReview && (
-                        <div role="alert" className="flex items-start gap-2.5 rounded-xl bg-amber-50 px-4 py-3">
-                            <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-500" aria-hidden="true" />
-                            <p className="text-sm text-amber-700">
-                                Something went wrong while generating some tasks. An admin is reviewing them, and your progress has been saved as a draft. We'll email you when it's resolved.
-                            </p>
-                        </div>
-                    )}
-
                     <AnimatePresence initial={false}>
                         {tasksExpanded && (
                             <motion.div
@@ -245,7 +233,7 @@ const ReviewPublish = () => {
 
             <div className="flex items-center justify-between">
                 <StepSecondaryButton onClick={handleEditSimulation}>Back</StepSecondaryButton>
-                <StepContinueButton disabled={!agreed || isPublishing || isUnderReview || editingJobDetails || saveDetails.isPending} onClick={handlePublish}>
+                <StepContinueButton disabled={!agreed || isPublishing || editingJobDetails || saveDetails.isPending} onClick={handlePublish}>
                     {isPublishing ? "Publishing..." : "Publish job"}
                 </StepContinueButton>
             </div>

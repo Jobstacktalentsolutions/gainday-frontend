@@ -6,7 +6,6 @@ import { useSimulationRunStore } from "@/features/candidate/store/useSimulationR
 import spinner from "@/assets/Spinner.svg";
 
 interface SimulationCompleteModalProps {
-    timeLimitMinutes: number;
     /** The submission just completed. Once it has submitted, the candidate is asked to rate it. */
     submissionId: string | null;
     /** "pending" while the final PUT /submissions/:id/submit is in flight, "error" if it
@@ -17,7 +16,6 @@ interface SimulationCompleteModalProps {
 }
 
 export function SimulationCompleteModal({
-    timeLimitMinutes,
     submissionId,
     submitStatus,
     onRetry,
@@ -45,13 +43,12 @@ export function SimulationCompleteModal({
             <div className="flex w-full max-w-lg flex-col items-center gap-6 rounded-2xl bg-white p-6 shadow-[0px_1px_20px_rgba(123,123,123,0.05),0px_4px_10px_rgba(123,123,123,0.05)] sm:p-8">
                 <div className="flex flex-col items-center gap-1.5 text-center">
                     <h2 className="text-2xl font-semibold leading-tight tracking-tight text-primary-950 sm:text-[26px]">
-                        Your assessment task is complete
+                        Your assessment has ended
                     </h2>
                     {submitStatus === "error" ? (
                         <p role="alert" className="text-sm text-error-600 sm:text-base">
-                            Your {timeLimitMinutes}-minute allocation ended and your answers are saved on this device,
-                            but we couldn't reach Gainday to submit them for evaluation. Please retry before closing this
-                            tab.
+                            Your answers are saved on this device, but we couldn't reach Gainday to submit them for
+                            evaluation. Please retry before closing this tab.
                         </p>
                     ) : submitStatus === "pending" ? (
                         <p className="text-sm text-neutral-700 sm:text-base">

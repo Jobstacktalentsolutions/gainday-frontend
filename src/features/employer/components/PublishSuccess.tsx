@@ -1,5 +1,6 @@
 import { Check } from "lucide-react";
 import { motion } from "motion/react";
+import { Link } from "react-router-dom";
 import { ShareJobPanel } from "./ShareJobPanel";
 
 interface PublishSuccessProps {
@@ -78,6 +79,9 @@ const PublishSuccess = ({ jobTitle, jobUrl, onViewJob, onCandidatePreview }: Pub
           Candidate preview
         </button>
       </div>
+      <Link to="/employer/jobs" className="text-sm font-medium text-neutral-600 underline underline-offset-4 transition-colors hover:text-primary-500">
+        Back to jobs
+      </Link>
     </motion.div>
   );
 };

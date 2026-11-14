@@ -36,6 +36,7 @@ export function FilterDropdown({
       <DropdownMenuTrigger
         className={cn(
           "flex h-9 shrink-0 cursor-pointer items-center justify-center gap-1 rounded-full border border-neutral-200 pl-3 pr-2.5 py-2 text-sm text-neutral-700 outline-none transition-colors hover:border-neutral-300 focus-visible:border-primary-500 data-popup-open:border-primary-500",
+          selectedValue !== null && "border-primary-400 bg-primary-50 font-medium text-primary-700 hover:border-primary-500",
           className,
         )}
       >

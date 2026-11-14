@@ -294,7 +294,6 @@ export default function TaskRunner() {
         const submitFailed = submitSimulation.isError;
         return (
             <SimulationCompleteModal
-                timeLimitMinutes={simulation.timeLimitMinutes}
                 submissionId={runStore.submissionId}
                 submitStatus={submitFailed ? "error" : submitSimulation.isPending ? "pending" : "done"}
                 onRetry={
