@@ -8,6 +8,11 @@ import SimulationDeviceGuard from "@/features/candidate/components/SimulationDev
 // Uses getState() so the reset is synchronous and fires before the first render
 // of TaskRunner — avoiding the localStorage hydration race that shows the
 // "simulation complete" modal immediately.
+function WizardIndex() {
+    const { search } = useLocation();
+    return <Navigate to={{ pathname: "details", search }} replace />;
+}
+
 function DevSimulationStart() {
     useSimulationRunStore.getState().resetRun();
     return <Navigate to="/job-board/job-1/simulation" replace />;
@@ -119,7 +124,7 @@ const AppRoutes = () => {
                             <Route path="profile" element={<ProfilePage />} />
                             <Route path="billing" element={<BillingPage />} />
                             <Route path="jobs/new" element={<JobPostingWizardLayout />}>
-                                <Route index element={<Navigate to="details" replace />} />
+                                <Route index element={<WizardIndex />} />
                                 <Route path="details" element={<JobDetailsStep />} />
                                 <Route path="simulation-builder" element={<SimulationBuilder />} />
                                 <Route path="review" element={<ReviewPublish />} />

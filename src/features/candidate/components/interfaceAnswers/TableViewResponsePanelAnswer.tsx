@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import type { TableViewResponsePanelPayload } from "@/features/simulation-tasks/types";
-import BucketSelect from "../objectiveAnswers/BucketSelect";
 import ClassificationAnswer from "../objectiveAnswers/ClassificationAnswer";
 import ReadOnlyAnswerText from "./ReadOnlyAnswerText";
 import type { ClassificationAnswerState } from "./types";
@@ -15,10 +14,6 @@ interface Props {
     readOnly?: boolean;
 }
 
-// The table is the material the candidate reasons from (a ledger to reconcile, a lead list to
-// prioritise), so it comes first. A classification is answered on the table itself — one bucket
-// picker per row, matched to its item by the row's first cell — rather than in a separate list
-// of bare names. Any other structured answer sits between the table and the written response.
 const TableViewResponsePanelAnswer = ({
     payload,
     value,
@@ -28,16 +23,6 @@ const TableViewResponsePanelAnswer = ({
     readOnly,
 }: Props) => {
     const { columns, rows } = payload.table;
-    const rowLabels = rows.map((row) => row[0]?.trim() ?? "");
-
-    const matchedItem = (rowIndex: number) =>
-        classification?.component.items.find((item) => item.trim() === rowLabels[rowIndex]);
-
-    const hasInlineBuckets = rows.some((_, rowIndex) => matchedItem(rowIndex) !== undefined);
-    // Items that no row names still need a way to be answered.
-    const unmatchedItems =
-        classification?.component.items.filter((item) => !rowLabels.includes(item.trim())) ?? [];
-    const mapping = classification?.response ?? {};
 
     return (
         <div className="flex w-full flex-col gap-4">
@@ -56,60 +41,24 @@ const TableViewResponsePanelAnswer = ({
                                     {column}
                                 </th>
                             ))}
-                            {hasInlineBuckets && (
-                                <th className="whitespace-nowrap px-3.5 py-2.5 font-medium text-neutral-700 align-bottom w-36">
-                                    {readOnly ? "Candidate's bucket" : "Your bucket"}
-                                </th>
-                            )}
+
                         </tr>
                     </thead>
                     <tbody>
-                        {rows.map((row, rowIndex) => {
-                            const item = matchedItem(rowIndex);
-                            return (
-                                <tr key={rowIndex} className="border-t border-neutral-200">
-                                    {row.map((cell, cellIndex) => (
-                                        <td
-                                            key={cellIndex}
-                                            className={cn(
-                                                "px-3.5 py-2.5 text-neutral-950 align-middle",
-                                                cellIndex === 0 && "whitespace-nowrap font-medium"
-                                            )}
-                                        >
-                                            {cell}
-                                        </td>
-                                    ))}
-                                    {hasInlineBuckets && (
-                                        <td className="whitespace-nowrap px-3.5 py-1.5 align-middle w-36">
-                                            {item !== undefined && classification && (
-                                                <BucketSelect
-                                                    value={mapping[item]}
-                                                    buckets={classification.component.buckets}
-                                                    ariaLabel={`Bucket for ${item}`}
-                                                    readOnly={readOnly}
-                                                    onChange={(bucket) =>
-                                                        classification.onChange({ ...mapping, [item]: bucket })
-                                                    }
-                                                />
-                                            )}
-                                        </td>
-                                    )}
-                                </tr>
-                            );
-                        })}
+                        {rows.map((row, rowIndex) => (
+                            <tr key={rowIndex} className="border-t border-neutral-200">
+                                {row.map((cell, cellIndex) => (
+                                    <td key={cellIndex} className={cn("px-3.5 py-2.5 text-neutral-950 align-middle", cellIndex === 0 && "whitespace-nowrap font-medium")}>{cell}</td>
+                                ))}
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>
 
-            {classification && hasInlineBuckets && unmatchedItems.length > 0 && (
-                <ClassificationAnswer
-                    component={{ ...classification.component, items: unmatchedItems }}
-                    response={classification.response}
-                    onChange={classification.onChange}
-                    readOnly={readOnly}
-                />
-            )}
-            {!hasInlineBuckets && objectiveSlot}
+            {classification ? (
+                <ClassificationAnswer component={classification.component} response={classification.response} onChange={classification.onChange} readOnly={readOnly} />
+            ) : objectiveSlot}
 
             {readOnly ? (
                 <ReadOnlyAnswerText value={value} />

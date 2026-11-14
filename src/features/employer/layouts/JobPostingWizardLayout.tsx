@@ -1,5 +1,5 @@
 import { useEffect, useState, Suspense } from "react";
-import { Outlet, useNavigate, useLocation, Navigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation, useSearchParams, Navigate } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -22,6 +22,7 @@ const toDraftDetails = (values: Partial<JobPostingFormInput>): Partial<JobPostin
 
 interface WizardFormProps {
     savedJob: BackendJobWithSimulation | null;
+    jobId: string | null;
 }
 
 // Spinner shown in the content area while a lazy step chunk is loading
@@ -31,10 +32,10 @@ const StepContentFallback = () => (
     </div>
 );
 
-const WizardForm = ({ savedJob }: WizardFormProps) => {
+const WizardForm = ({ savedJob, jobId }: WizardFormProps) => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { draft, jobId, setDraft, setJobId, clearDraft } = useJobDraftStore();
+    const { draft, setDraft, clearDraft } = useJobDraftStore();
     const saveDraftMutation = useSaveJobDraft();
     const [isSavingExit, setIsSavingExit] = useState(false);
 
@@ -64,19 +65,20 @@ const WizardForm = ({ savedJob }: WizardFormProps) => {
 
     //persist the details to localstorage as the form is being filled
     useEffect(() => {
+        if (jobId || isLaterStep) return;
         const subscription = form.watch((values) => {
             setDraft(toDraftDetails(values as Partial<JobPostingFormInput>));
         });
         return () => subscription.unsubscribe();
 
-    }, [setDraft, form]);
+    }, [setDraft, form, jobId, isLaterStep]);
 
     const handleSaveAndExit = async () => {
         setIsSavingExit(true);
         try {
             const values = form.getValues();
-            const saved = await saveDraftMutation.mutateAsync({ ...values, id: jobId ?? undefined });
-            setJobId(saved.id);
+            await saveDraftMutation.mutateAsync({ ...values, id: jobId ?? undefined });
+            clearDraft();
             toast.success("Draft saved");
             navigate("/employer/jobs");
         } catch {
@@ -121,7 +123,6 @@ const WizardForm = ({ savedJob }: WizardFormProps) => {
                                 onDiscardDraft: handleDiscardDraft,
                                 isSavingExit,
                                 jobId,
-                                setJobId,
                                 setIsDone,
                             }} />
                         </Suspense>
@@ -132,23 +133,20 @@ const WizardForm = ({ savedJob }: WizardFormProps) => {
     );
 };
 
-// The job the wizard was opened with is read from the backend before the form mounts, so the form is
-// created from saved values and never reset afterwards. Ids saved during this visit are already in
-// the form, so they are not re-read.
+// Saved wizard steps are identified by the URL and hydrated from the backend.
 const JobPostingWizardLayout = () => {
-    const { jobId: storedJobId } = useJobDraftStore();
-    const [initialJobId] = useState(storedJobId);
-    const savedJobQuery = useJobSimulation(initialJobId);
+    const [searchParams] = useSearchParams();
+    const jobId = searchParams.get("postId");
+    const savedJobQuery = useJobSimulation(jobId);
 
-    if (initialJobId && savedJobQuery.isError) {
+    if (jobId && savedJobQuery.isError) {
         return <p className="px-4 pt-40 text-center text-neutral-500">Couldn't load this job. Refresh the page to try again.</p>;
     }
-
-    if (initialJobId && !savedJobQuery.data) {
-        return <p className="px-4 pt-40 text-center text-neutral-500">Loading your job…</p>;
+    if (jobId && !savedJobQuery.data) {
+        return <p className="px-4 pt-40 text-center text-neutral-500">Loading your job?</p>;
     }
 
-    return <WizardForm savedJob={savedJobQuery.data ?? null} />;
+    return <WizardForm key={jobId ?? "new"} savedJob={savedJobQuery.data ?? null} jobId={jobId} />;
 };
 
 export default JobPostingWizardLayout;

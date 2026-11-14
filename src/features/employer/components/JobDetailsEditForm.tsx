@@ -16,10 +16,11 @@ import {
 import { EMPLOYMENT_TYPES } from "../constants/jobPostingOptions";
 
 interface JobDetailsEditFormProps {
-  onDone: () => void;
+  onDone: () => void | Promise<void>;
+  isSaving?: boolean;
 }
 
-const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
+const JobDetailsEditForm = ({ onDone, isSaving }: JobDetailsEditFormProps) => {
   const {
     register,
     control,
@@ -43,7 +44,7 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
       "skills",
     ]);
     if (valid) {
-      onDone();
+      await onDone();
     }
   };
 
@@ -57,6 +58,7 @@ const JobDetailsEditForm = ({ onDone }: JobDetailsEditFormProps) => {
         <button
           type="button"
           onClick={handleDone}
+          disabled={isSaving}
           className="button-gradient-outline flex h-8 items-center gap-1.5 rounded-md border border-neutral-200 px-3 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
         >
           <Check className="size-3.5" aria-hidden="true" />

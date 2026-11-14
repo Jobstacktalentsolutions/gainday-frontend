@@ -9,6 +9,9 @@ import JobDetailsSummary from "../components/JobDetailsSummary";
 import JobDetailsEditForm from "../components/JobDetailsEditForm";
 import PublishSuccess from "../components/PublishSuccess";
 import TaskSummaryCard from "../components/TaskSummaryCard";
+import { useQueryClient } from "@tanstack/react-query";
+import { useSaveJobDetails } from "../hooks/useSaveJobDraft";
+import { wizardPath } from "../utils/wizardPath";
 import { usePublishJob } from "../hooks/usePublishJob";
 import { useJobSimulation } from "../hooks/useJobSimulation";
 import { useTaskReviewStatus } from "../hooks/useTaskReviewStatus";
@@ -26,7 +29,9 @@ interface JobPostingOutletContext {
 const ReviewPublish = () => {
     const navigate = useNavigate();
     const { jobId, setIsDone } = useOutletContext<JobPostingOutletContext>();
-    const { watch, trigger, formState } = useFormContext<JobPostingFormValues>();
+    const { watch, getValues } = useFormContext<JobPostingFormValues>();
+    const saveDetails = useSaveJobDetails();
+    const queryClient = useQueryClient();
     const publishJob = usePublishJob();
     const clearDraft = useJobDraftStore((state) => state.clearDraft);
     const values = watch();
@@ -56,18 +61,22 @@ const ReviewPublish = () => {
 
     const handleEditSimulation = () => {
 
-        navigate("/employer/jobs/new/simulation-builder");
+        if (jobId) navigate(wizardPath("simulation-builder", jobId));
 
     };
 
-    const handlePublish = async () => {
-        const isValid = await trigger();
-        if (!isValid) {
-            console.error("[ReviewPublish] Validation failed, blocking publish:", formState.errors);
-            toast.error("Some job details aren't valid yet. Check the details step and try again.");
-            return;
+    const handleSaveDetails = async () => {
+        if (!jobId) return;
+        try {
+            await saveDetails.mutateAsync({ ...getValues(), id: jobId });
+            await queryClient.invalidateQueries({ queryKey: ["employer", "job-simulation", jobId] });
+            setEditingJobDetails(false);
+        } catch {
+            toast.error("Couldn't save your changes. Please try again.");
         }
+    };
 
+    const handlePublish = async () => {
         if (!jobId) {
             console.error("[ReviewPublish] No jobId in outlet context: cannot publish");
             toast.error("Couldn't find this job. Try going back a step.");
@@ -124,7 +133,7 @@ const ReviewPublish = () => {
                                 exit={{ opacity: 0 }}
                                 transition={{ duration: 0.2 }}
                             >
-                                <JobDetailsEditForm onDone={() => setEditingJobDetails(false)} />
+                                <JobDetailsEditForm onDone={handleSaveDetails} isSaving={saveDetails.isPending} />
                             </motion.div>
                         ) : (
                             <motion.div
@@ -238,8 +247,8 @@ const ReviewPublish = () => {
             </div>
 
             <div className="flex items-center justify-between">
-                <StepSecondaryButton onClick={() => navigate(-1)}>Back</StepSecondaryButton>
-                <StepContinueButton disabled={!agreed || isPublishing || isUnderReview} onClick={handlePublish}>
+                <StepSecondaryButton onClick={handleEditSimulation}>Back</StepSecondaryButton>
+                <StepContinueButton disabled={!agreed || isPublishing || isUnderReview || editingJobDetails || saveDetails.isPending} onClick={handlePublish}>
                     {isPublishing ? "Publishing..." : "Publish job"}
                 </StepContinueButton>
             </div>

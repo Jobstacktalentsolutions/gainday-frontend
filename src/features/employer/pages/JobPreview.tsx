@@ -1,3 +1,4 @@
+import { wizardPath } from "../utils/wizardPath";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, ChevronDown, Clock, MapPin, Play } from "lucide-react";
@@ -321,8 +322,7 @@ const ContinueEditingAction = ({ jobId }: { jobId: string }) => {
 
             {/* <button
                 type="button"
-                // TODO: point this at wherever the job posting wizard resumes an existing draft
-                onClick={() => navigate(`/employer/jobs/${jobId}/edit`)}
+                onClick={() => navigate(wizardPath("details", jobId))}
                 className="flex h-13 w-fit items-center gap-2 rounded-lg bg-primary-500 py-1 pr-1 pl-6 text-base text-neutral-50"
             >
                 Continue Editing
@@ -331,8 +331,7 @@ const ContinueEditingAction = ({ jobId }: { jobId: string }) => {
                 </span>
             </button> */}
             <StepContinueButton
-                // TODO: point this at wherever the job posting wizard resumes an existing draft
-                onClick={() => navigate(`/employer/jobs/${jobId}/edit`)}
+                onClick={() => navigate(wizardPath("details", jobId))}
             >
                 Continue Editing
             </StepContinueButton>

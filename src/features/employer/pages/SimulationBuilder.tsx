@@ -18,6 +18,8 @@ import { useRegenerateTask } from "../hooks/useRegenerateTask";
 import { useRegenerateAllTasks } from "../hooks/useRegenerateAllTasks";
 import { useUpdateSimulationTasks } from "../hooks/useUpdateSimulationTasks";
 import { DEFAULT_SIMULATION_TIME_LIMIT_MINUTES } from "../constants/jobPostingOptions";
+import { wizardPath } from "../utils/wizardPath";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import type { SimulationTask } from "@/features/simulation-tasks/types";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -40,6 +42,7 @@ const SimulationBuilder = () => {
     const [failedTask, setFailedTask] = useState<FailedTaskInfo | null>(null);
     const [guidanceTarget, setGuidanceTarget] = useState<{ index: number; taskId: string } | null>(null);
     const [isContinuing, setIsContinuing] = useState(false);
+    const [confirmBack, setConfirmBack] = useState(false);
     const [isRegeneratingAll, setIsRegeneratingAll] = useState(false);
     const hasLoadedTasksRef = useRef(false);
 
@@ -255,7 +258,7 @@ const SimulationBuilder = () => {
             }
         }
 
-        navigate("/employer/jobs/new/review");
+        if (jobId) navigate(wizardPath("review", jobId));
     };
 
     const isAnyTaskBusy = Boolean(regeneratingTaskId) || isAddingTask || isRegeneratingAll;
@@ -373,13 +376,30 @@ const SimulationBuilder = () => {
 
             {/* Navigation buttons */}
             <div className="flex items-center justify-between">
-                <StepSecondaryButton onClick={() => navigate(-1)}>
+                <StepSecondaryButton onClick={() => setConfirmBack(true)}>
                     Back
                 </StepSecondaryButton>
                 <StepContinueButton disabled={!isStepValid || isContinuing} onClick={handleContinue}>
                     {isContinuing ? "Saving..." : "Continue"}
                 </StepContinueButton>
             </div>
+
+            <AlertDialog open={confirmBack} onOpenChange={setConfirmBack}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Go back to job details?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Unsaved task changes will be lost. You will need to generate the simulation again after editing the job details.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel className="rounded-lg border border-neutral-300 px-4 py-2 text-sm">Stay here</AlertDialogCancel>
+                        <AlertDialogAction className="rounded-lg bg-primary-500 px-4 py-2 text-sm text-white" onClick={() => { if (jobId) navigate(wizardPath("details", jobId)); }}>
+                            Go back
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
 
             {/* Full-scenario generation loading modal: covers both the initial generate-from-Job-Details
                 wait and an explicit "Regenerate" re-run. No cancel option: this is a real async

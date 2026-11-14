@@ -34,7 +34,6 @@ const TaskCard = ({
     const taskType = watch(`tasks.${index}.taskType` as const);
     const interfaceType = watch(`tasks.${index}.interfaceType` as const);
     const interfacePayload = watch(`tasks.${index}.interfacePayload` as const);
-    const businessProblemDerived = watch(`tasks.${index}.businessProblemDerived` as const);
     const questionPrompt = watch(`tasks.${index}.questionPrompt` as const);
     const expectedDurationMinutes = watch(`tasks.${index}.expectedDurationMinutes` as const);
     const inReview = watch(`tasks.${index}.inReview` as const);
@@ -47,9 +46,6 @@ const TaskCard = ({
 
     return (
         <div className="flex w-full flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white">
-            <input type="hidden" {...register(`tasks.${index}.id` as const)} />
-            <input type="hidden" {...register(`tasks.${index}.expectedDurationMinutes` as const, { valueAsNumber: true })} />
-            <input type="hidden" {...register(`tasks.${index}.inReview` as const)} />
             <div className="flex items-center justify-between border-b border-neutral-100 p-5">
                 <div className="flex flex-wrap items-center gap-3">
                     <p className="text-sm font-bold uppercase tracking-wide text-neutral-900">
@@ -214,12 +210,6 @@ const TaskCard = ({
                                 />
                             </div>
 
-                            {businessProblemDerived && (
-                                <p className="flex items-center gap-1.5 text-left text-sm text-primary-600">
-                                    <span className="inline-block size-1.5 rounded-full bg-primary-500" aria-hidden="true" />
-                                    Built from the specific business problem you described.
-                                </p>
-                            )}
                         </motion.div>
                     )}
                 </AnimatePresence>

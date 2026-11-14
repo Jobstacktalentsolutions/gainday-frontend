@@ -22,6 +22,7 @@ import { useTriggerGeneration } from "../hooks/useTriggerGeneration";
 import type { GenerationNavState } from "../hooks/useGenerationProgress";
 import { useProfile } from "@/features/auth/hooks/useProfile";
 import { useJobDraftStore } from "../stores/useJobDraftStore";
+import { wizardPath } from "../utils/wizardPath";
 
 import { FormSelect } from "@/components/form/FormSelect";
 import { FormTextarea } from "@/components/form/FormTextarea";
@@ -51,12 +52,11 @@ const EMPLOYMENT_TYPES = ["Full-time", "Part-time", "Contract"];
 interface JobPostingOutletContext {
     onSaveAndExit: () => void;
     jobId: string | null;
-    setJobId: (jobId: string | null) => void;
 }
 
 const JobDetailsStep = () => {
     const navigate = useNavigate();
-    const { onSaveAndExit, jobId, setJobId } = useOutletContext<JobPostingOutletContext>();
+    const { onSaveAndExit, jobId } = useOutletContext<JobPostingOutletContext>();
     const [isGenerating, setIsGenerating] = useState(false);
     // True only while the current description value is exactly what the parser
     // produced. Cleared the instant the person edits the field by hand.
@@ -178,13 +178,18 @@ const JobDetailsStep = () => {
         try {
             const values = watch();
             const saved = await saveDetailsMutation.mutateAsync({ ...values, id: jobId ?? undefined });
-            setJobId(saved.id);
+            useJobDraftStore.getState().clearDraft();
 
             // Queues the real generation pipeline (async on the backend); SimulationBuilder streams
             // its progress and shows the generating UI once we navigate there.
-            await triggerGeneration.mutateAsync(saved.id);
+            try {
+                await triggerGeneration.mutateAsync(saved.id);
+            } catch (error) {
+                navigate(wizardPath("details", saved.id), { replace: true });
+                throw error;
+            }
             const navState: GenerationNavState = { generationQueued: true };
-            navigate("/employer/jobs/new/simulation-builder", { state: navState });
+            navigate(wizardPath("simulation-builder", saved.id), { state: navState });
         } catch {
             toast.error("Couldn't start generation. Please try again.");
         } finally {
@@ -198,7 +203,7 @@ const JobDetailsStep = () => {
 
     const handleClearAll = () => {
         useJobDraftStore.getState().clearDraft();
-        setJobId(null);
+        if (jobId) navigate("/employer/jobs/new/details", { replace: true });
         reset({
             title: "",
             role: "",

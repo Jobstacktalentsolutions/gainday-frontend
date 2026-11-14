@@ -34,6 +34,7 @@ const buildBody = (values: Partial<JobPostingFormInput>) => ({
     companyDescription: values.companyDescription,
     skills: values.skills,
     description: values.description,
+    businessProblem: values.businessProblem,
 });
 
 export const useSaveJobDraft = () => {
