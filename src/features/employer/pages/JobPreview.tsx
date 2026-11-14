@@ -66,7 +66,7 @@ const JobPreview = () => {
     const isDraft = job.status === "DRAFT";
 
     return (
-        <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 py-10">
+        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-6 sm:px-6 lg:gap-10 lg:py-10">
 
             <BackButton onClick={() => navigate("/employer/jobs")} />
             <JobPreviewHero job={job} />
@@ -158,7 +158,7 @@ const JobPreviewDetailsCard = ({ job, showTasks }: { job: JobPreviewDetails, sho
     const hasTasks = showTasks && Boolean(job.tasks && job.tasks.length > 0);
 
     return (
-        <div className="flex w-full flex-col gap-6 rounded-3xl bg-white p-8">
+        <div className="flex w-full flex-col gap-4 rounded-3xl bg-white p-4 sm:p-6 lg:gap-6 lg:p-8">
             {hasDescription && (
                 <Section title="DESCRIPTION">
                     <Markdown>{job.description}</Markdown>
@@ -310,13 +310,13 @@ const JobPreviewHero = ({ job }: { job: JobPreviewDetails }) => {
 
     return (
         <div
-            className="relative w-full overflow-hidden rounded-xl p-10"
+            className="relative w-full overflow-hidden rounded-xl p-5 sm:p-10"
             style={{
                 backgroundImage:
                     "linear-gradient(172.25deg, rgb(27, 23, 255) 1.44%, rgb(16, 14, 153) 61.68%)",
             }}
         >
-            <div className="relative z-10 flex flex-col gap-10">
+            <div className="relative z-10 flex flex-col gap-6 lg:gap-10">
                 <div className="flex flex-wrap items-center gap-3">
                     <h1 className="font-['Glacial_Indifference'] text-3xl text-white tracking-tight lg:text-5xl">
                         {job.title}
@@ -354,7 +354,7 @@ const JobPreviewHero = ({ job }: { job: JobPreviewDetails }) => {
 
 
 const JobPreviewSkeleton = () => (
-    <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 py-10">
+    <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-6 sm:px-6 lg:gap-10 lg:py-10">
         <div className="h-59.5 w-full animate-pulse rounded-xl bg-neutral-100" />
         <div className="h-13 w-52 animate-pulse rounded-lg bg-neutral-100" />
         <div className="h-64 w-full animate-pulse rounded-3xl bg-neutral-100" />

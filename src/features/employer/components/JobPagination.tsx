@@ -7,6 +7,8 @@ interface JobPaginationProps {
     pageSize: number;
     onPageChange: (page: number) => void;
     isLoading?: boolean;
+    itemLabel?: string;
+    ariaLabel?: string;
 }
 
 const getPaginationRange = (current: number, total: number): (number | "ellipsis")[] => {
@@ -29,6 +31,8 @@ export const JobPagination = ({
     pageSize,
     onPageChange,
     isLoading = false,
+    itemLabel = "jobs",
+    ariaLabel = "Jobs pagination",
 }: JobPaginationProps) => {
     if (totalPages <= 1) return null;
 
@@ -38,13 +42,13 @@ export const JobPagination = ({
 
     return (
         <nav
-            aria-label="Jobs pagination"
+            aria-label={ariaLabel}
             className="flex flex-col items-center justify-between gap-4 pt-6 sm:flex-row"
         >
             <p className="text-sm text-neutral-500">
                 Showing <span className="font-medium text-neutral-900">{startItem}</span> to{" "}
                 <span className="font-medium text-neutral-900">{endItem}</span> of{" "}
-                <span className="font-medium text-neutral-900">{totalItems}</span> jobs
+                <span className="font-medium text-neutral-900">{totalItems}</span> {itemLabel}
             </p>
 
             <div className="flex items-center gap-1.5">

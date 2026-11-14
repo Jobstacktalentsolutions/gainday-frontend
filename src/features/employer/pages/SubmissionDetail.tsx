@@ -20,7 +20,7 @@ import type { PaymentRequiredBody } from "../types/payments";
 import type { SubmissionStatus } from "../types/submission";
 import { getCandidateLabel } from "../utils/submissionLabels";
 
-const PAGE_SHELL = "min-h-screen bg-neutral-50 px-6 pb-10 pt-40 lg:px-12 xl:px-20";
+const PAGE_SHELL = "min-h-screen bg-neutral-50 px-4 pb-10 pt-28 sm:px-6 lg:px-12 lg:pt-32 xl:px-20";
 const CONTENT_WIDTH = "mx-auto w-full max-w-6xl";
 
 // Shown above the task list while there is no score, so the answers below don't read as an
@@ -103,7 +103,7 @@ const SubmissionDetail = () => {
         return (
             <div className={PAGE_SHELL}>
                 <SubmissionDetailHeader jobId={jobId} isLoading />
-                <div className={`${CONTENT_WIDTH} flex flex-col gap-10 lg:flex-row`}>
+                <div className={`${CONTENT_WIDTH} flex flex-col gap-6 lg:flex-row lg:gap-10`}>
                     <div className="flex flex-1 flex-col gap-6">
                         <p className="text-base text-primary-950">Task-by-task breakdown</p>
                         {Array.from({ length: 4 }).map((_, index) => (
@@ -158,7 +158,7 @@ const SubmissionDetail = () => {
                 onToggleSelect={handleToggleSelect}
                 isUpdatingSelect={selectCandidate.isPending}
             />
-            <div className={`${CONTENT_WIDTH} flex flex-col gap-10 lg:flex-row`}>
+            <div className={`${CONTENT_WIDTH} flex flex-col gap-6 lg:flex-row lg:gap-10`}>
                 <section className="flex min-w-0 flex-1 flex-col gap-6" aria-labelledby="task-breakdown-heading">
                     <h2 id="task-breakdown-heading" className="text-base text-primary-950">
                         Task-by-task breakdown

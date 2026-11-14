@@ -4,6 +4,7 @@ import type { CandidateObjectiveComponent } from "@/features/candidate/types/sim
 import type { CandidateProfileInfo } from "@/features/auth/utils/profileOptions";
 
 export type IntegrityStatus = "CLEAN" | "MINOR_FLAGS" | "PENDING" | "REVIEW_NEEDED";
+export const SELECTED_SUBMISSION_STATUS = "SELECTED" as const;
 
 // The category types live with the shared capability-passport module; re-exported so existing
 // imports from this file keep working.

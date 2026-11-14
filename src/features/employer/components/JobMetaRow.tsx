@@ -5,7 +5,7 @@ interface JobMetaRowProps {
 
 const JobMetaRow = ({ location, employmentType }: JobMetaRowProps) => {
     return (
-        <div className="flex items-center gap-1 text-base text-neutral-700">
+        <div className="flex flex-wrap items-center gap-1 text-sm text-neutral-700 lg:text-base">
             <span>
                 {location}
             </span>

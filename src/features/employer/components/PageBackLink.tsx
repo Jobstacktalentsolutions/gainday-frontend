@@ -8,8 +8,8 @@ interface PageBackLinkProps {
 }
 
 const PageBackLink = ({ to, children }: PageBackLinkProps) => (
-    <Link to={to} className="flex w-fit items-center gap-5 text-base text-primary-950 transition-opacity hover:opacity-70">
-        <ArrowLeft className="size-6 shrink-0" aria-hidden="true" />
+    <Link to={to} className="flex w-fit items-center gap-2 text-sm sm:text-base text-primary-950 transition-opacity hover:opacity-70">
+        <ArrowLeft className="size-5 shrink-0" aria-hidden="true" />
         {children}
     </Link>
 );

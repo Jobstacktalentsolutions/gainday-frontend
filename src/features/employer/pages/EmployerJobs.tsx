@@ -5,13 +5,11 @@ import AddItemButton from "@/components/ui/AddItemButton";
 import JobStatusTabs from "../components/JobStatusTabs";
 import JobCard, { JobCardSkeleton } from "../components/JobCard";
 import JobsEmptyState from "../components/JobsEmptyState";
-import EmployerPageHeader from "../components/EmployerPageHeader";
 import DeleteJobModal from "../components/DeleteJobModal";
 import JobPagination from "../components/JobPagination";
 import { SearchField } from "@/features/candidate/components/SearchField";
 import { useEmployerJobs } from "../hooks/useEmployerJobs";
 import { useDeleteJob } from "../hooks/useDeleteJob";
-import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import type { Job, JobStatusFilter } from "../types/job";
 import { useNavigate } from "react-router-dom";
@@ -34,7 +32,6 @@ const EmployerJobs = () => {
     });
 
     const deleteJobMutation = useDeleteJob();
-    const { user } = useCurrentUser();
     const [jobToDelete, setJobToDelete] = useState<Job | null>(null);
 
     const isSearching = search !== debouncedSearch;
@@ -113,25 +110,15 @@ const EmployerJobs = () => {
     const hasAnyJobs = totalAll > 0 || search.trim().length > 0 || statusFilter !== "all";
 
     return (
-        <div className="min-h-screen bg-neutral-50 px-6 pb-10 pt-32 md:px-7.5 lg:px-12 xl:px-20">
-            <div className="mx-auto flex w-full max-w-85.5 flex-col gap-10 md:max-w-none lg:max-w-4xl xl:max-w-6xl">
-
-                {/* Mobile/Tablet: company name + Post a job button */}
-                <div className="lg:hidden">
-                    <EmployerPageHeader
-                        employerName={user?.companyName ?? ""}
-                        onPostJob={handlePostJob}
-                    />
-                </div>
-
-                <div className="flex flex-col gap-6">
-                    <div className="flex flex-row justify-between items-start gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div className="min-h-screen bg-neutral-50 px-4 pb-10 pt-28 sm:px-6 md:px-7.5 lg:px-12 lg:pt-32 xl:px-20">
+            <div className="mx-auto flex w-full max-w-85.5 flex-col md:max-w-none lg:max-w-4xl xl:max-w-6xl">
+                <div className="flex flex-col gap-4 lg:gap-6">
+                    <div className="flex items-start justify-between gap-3 lg:items-end">
                         <div className="flex flex-col items-start">
                             <h1 className="text-2xl text-black lg:text-3xl">Your jobs</h1>
-                            <p className="text-neutral-500">Track every post, from draft to hire.</p>
+                            <p className="text-sm text-neutral-500 lg:text-base">Track every post, from draft to hire.</p>
                         </div>
-                        {/* Desktop only: inline Post a job button */}
-                        <AddItemButton onClick={handlePostJob} className="hidden lg:inline-flex">
+                        <AddItemButton onClick={handlePostJob} className="shrink-0 text-sm lg:text-base">
                             Post a job
                         </AddItemButton>
                     </div>
@@ -142,7 +129,7 @@ const EmployerJobs = () => {
                         <>
                             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                                 <SearchField
-                                    className="sm:w-auto sm:flex-1"
+                                    className="h-11 bg-white sm:w-auto sm:flex-1"
                                     value={search}
                                     onChange={handleSearchChange}
                                     placeholder="Search by job title, role, or location"

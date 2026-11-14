@@ -78,12 +78,12 @@ const JobSubmissions = () => {
     const unlockLabel = lockedSelectedIds.length === 1 ? "Unlock candidate" : `Unlock ${lockedSelectedIds.length} candidates`;
 
     return (
-        <div className="min-h-screen bg-neutral-50 px-6 pb-30 pt-32 md:px-7.5 lg:px-12 xl:px-20">
-            <div className="mx-auto flex w-full max-w-6xl flex-col gap-10">
+        <div className="min-h-screen bg-neutral-50 px-4 pb-12 pt-28 sm:px-6 md:px-7.5 lg:px-12 lg:pt-32 xl:px-20">
+            <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 lg:gap-8">
                 <PageBackLink to="/employer/jobs">Go back to jobs posted</PageBackLink>
 
                 <div className="flex flex-col items-start">
-                    <h1 className="text-4xl text-black lg:text-5xl">All Submissions</h1>
+                    <h1 className="text-3xl text-black lg:text-4xl">All Submissions</h1>
                     {jobTitle.isLoading ? (
                         <Skeleton className="mt-2 h-6 w-64" />
                     ) : (
@@ -92,8 +92,8 @@ const JobSubmissions = () => {
                 </div>
 
                 {!isLoading && !isError && hasSubmissions && (
-                    <div className="flex flex-wrap items-center justify-end gap-x-6 gap-y-3">
-                        <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-2 lg:justify-end">
+                        <div className="flex flex-wrap items-center gap-2">
                             {SORT_CONFIG.map((config) => (
                                 <SubmissionSortDropdown
                                     key={config.key}
@@ -108,7 +108,7 @@ const JobSubmissions = () => {
                             onClick={reset}
                             disabled={isDefault}
                             className={cn(
-                                "w-full text-right text-sm text-primary-500 transition-opacity",
+                                "text-sm text-primary-500 transition-opacity",
                                 isDefault ? "cursor-default opacity-40" : "hover:underline",
                             )}
                         >

@@ -114,7 +114,7 @@ export default function JobDetailsPage() {
         <div className="min-h-screen w-full bg-neutral-50">
             <JobBoardHeader />
 
-            <main className="mx-auto w-full max-w-300 px-5 pb-20 pt-33.75 sm:pt-43.75 lg:px-0">
+            <main className="mx-auto w-full max-w-300 px-5 pb-20 pt-28 lg:pt-32 lg:px-0">
                 <div className="relative flex flex-col gap-8 overflow-hidden rounded-[32px] bg-white p-5 sm:gap-10 sm:p-8">
                     {/* Decorative gradient blobs */}
                     <div
