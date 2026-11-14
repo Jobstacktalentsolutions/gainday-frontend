@@ -9,7 +9,6 @@ import JobDetailsSummary from "../components/JobDetailsSummary";
 import JobDetailsEditForm from "../components/JobDetailsEditForm";
 import PublishSuccess from "../components/PublishSuccess";
 import TaskSummaryCard from "../components/TaskSummaryCard";
-import { useQueryClient } from "@tanstack/react-query";
 import { useSaveJobDetails } from "../hooks/useSaveJobDraft";
 import { wizardPath } from "../utils/wizardPath";
 import { usePublishJob } from "../hooks/usePublishJob";
@@ -31,7 +30,6 @@ const ReviewPublish = () => {
     const { jobId, setIsDone } = useOutletContext<JobPostingOutletContext>();
     const { watch, getValues } = useFormContext<JobPostingFormValues>();
     const saveDetails = useSaveJobDetails();
-    const queryClient = useQueryClient();
     const publishJob = usePublishJob();
     const clearDraft = useJobDraftStore((state) => state.clearDraft);
     const values = watch();
@@ -69,7 +67,6 @@ const ReviewPublish = () => {
         if (!jobId) return;
         try {
             await saveDetails.mutateAsync({ ...getValues(), id: jobId });
-            await queryClient.invalidateQueries({ queryKey: ["employer", "job-simulation", jobId] });
             setEditingJobDetails(false);
         } catch {
             toast.error("Couldn't save your changes. Please try again.");

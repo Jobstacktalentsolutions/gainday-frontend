@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
 import type { JobPostingFormInput } from "../schemas/jobPosting";
 
@@ -50,6 +50,7 @@ export const useSaveJobDraft = () => {
 };
 
 export const useSaveJobDetails = () => {
+    const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async ({ id, ...values }: SaveJobDraftPayload) => {
             const body = buildBody(values);
@@ -58,5 +59,6 @@ export const useSaveJobDetails = () => {
                 : await apiClient.post<SavedJob>("/jobs", body);
             return res.data;
         },
+        onSuccess: (job) => queryClient.invalidateQueries({ queryKey: ["employer", "job-simulation", job.id] }),
     });
 };

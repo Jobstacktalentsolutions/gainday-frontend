@@ -93,8 +93,7 @@ const WizardForm = ({ savedJob, jobId }: WizardFormProps) => {
         form.reset(JOB_POSTING_DEFAULT_VALUES);
     };
 
-    // Steps after "details" only make sense for a job in progress. Publishing clears the draft and
-    // job ID, so pressing Back into them would show an empty form. The success screen is exempt.
+    // Later steps require a saved job identified by the URL.
     if (isLaterStep && !jobId && !isShowingPublishSuccess) {
         return <Navigate to="/employer/jobs" replace />;
     }
@@ -139,7 +138,7 @@ const JobPostingWizardLayout = () => {
     const jobId = searchParams.get("postId");
     const savedJobQuery = useJobSimulation(jobId);
 
-    if (jobId && savedJobQuery.isError) {
+    if (jobId && (savedJobQuery.isError || (savedJobQuery.isSuccess && savedJobQuery.data === null))) {
         return <p className="px-4 pt-40 text-center text-neutral-500">Couldn't load this job. Refresh the page to try again.</p>;
     }
     if (jobId && !savedJobQuery.data) {

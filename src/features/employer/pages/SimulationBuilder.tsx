@@ -243,22 +243,21 @@ const SimulationBuilder = () => {
         if (!isValid) return;
 
         const simulationId = jobSimulation?.simulation?.id;
-        if (simulationId) {
-            setIsContinuing(true);
-            try {
-                await updateSimulationTasks.mutateAsync({
-                    simulationId,
-                    tasks: watch("tasks") as SimulationTask[],
-                });
-            } catch {
-                toast.error("Couldn't save your changes. Please try again.");
-                return;
-            } finally {
-                setIsContinuing(false);
-            }
+        if (!jobId || !simulationId) return;
+        setIsContinuing(true);
+        try {
+            await updateSimulationTasks.mutateAsync({
+                simulationId,
+                tasks: watch("tasks") as SimulationTask[],
+            });
+        } catch {
+            toast.error("Couldn't save your changes. Please try again.");
+            return;
+        } finally {
+            setIsContinuing(false);
         }
 
-        if (jobId) navigate(wizardPath("review", jobId));
+        navigate(wizardPath("review", jobId));
     };
 
     const isAnyTaskBusy = Boolean(regeneratingTaskId) || isAddingTask || isRegeneratingAll;
@@ -379,7 +378,7 @@ const SimulationBuilder = () => {
                 <StepSecondaryButton onClick={() => setConfirmBack(true)}>
                     Back
                 </StepSecondaryButton>
-                <StepContinueButton disabled={!isStepValid || isContinuing} onClick={handleContinue}>
+                <StepContinueButton disabled={!isStepValid || isContinuing || !jobSimulation?.simulation?.id || isAnyTaskBusy || isWholeScenarioGenerating} onClick={handleContinue}>
                     {isContinuing ? "Saving..." : "Continue"}
                 </StepContinueButton>
             </div>
