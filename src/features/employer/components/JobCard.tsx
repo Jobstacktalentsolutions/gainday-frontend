@@ -94,6 +94,7 @@ const JobCard = ({ job, onShareLink, onViewSubmissions, onOpenPreview, onDelete 
                 <JobMetaRow location={job.location} employmentType={job.employmentType} />
             </div>
 
+            <div className="mt-auto flex flex-col items-start gap-3">
             <button
                 type="button"
                 onClick={stopAnd(() => onViewSubmissions(job))}
@@ -109,6 +110,7 @@ const JobCard = ({ job, onShareLink, onViewSubmissions, onOpenPreview, onDelete 
             <p className="text-base text-neutral-400">
                 {formatPostedDate(job.postedAt)}
             </p>
+            </div>
 
         </article>
     )
