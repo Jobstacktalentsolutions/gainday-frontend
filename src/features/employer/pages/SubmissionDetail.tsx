@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { isAxiosError } from "axios";
 import { toast } from "sonner";
 import PageBackLink from "../components/PageBackLink";
@@ -33,6 +34,9 @@ const UNGRADED_NOTICE: Partial<Record<SubmissionStatus, string>> = {
 };
 
 const SubmissionDetail = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const isMobile = useMediaQuery("(max-width: 767px)");
     const { jobId = "", submissionId } = useParams<{ jobId: string; submissionId: string }>();
     const { data: submission, isLoading, isError, refetch } = useEmployerSubmission(jobId, submissionId);
     const [isPassportOpen, setIsPassportOpen] = useState(false);
@@ -185,7 +189,10 @@ const SubmissionDetail = () => {
                     {submission.candidateProfile && <CandidateProfileCard profile={submission.candidateProfile} />}
                     <CapabilityHistoryCard
                         history={submission.capabilityHistory}
-                        onViewDetails={() => setIsPassportOpen(true)}
+                        onViewDetails={() => {
+                            if (isMobile) navigate(`/employer/jobs/${jobId}/submissions/${submissionId}/passport`, { state: { returnTo: location.pathname } });
+                            else setIsPassportOpen(true);
+                        }}
                     />
                     <IntegrityCard status={submission.integrityStatus} events={submission.integrityEvents} />
                 </aside>

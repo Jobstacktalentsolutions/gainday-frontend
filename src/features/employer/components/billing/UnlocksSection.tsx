@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { LockOpen } from "lucide-react";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { FilterDropdown } from "@/features/candidate/components/Filterdropdown";
@@ -33,6 +35,9 @@ const CandidateName = ({ row, className }: { row: UnlockRecord; className: strin
 };
 
 const UnlocksSection = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const isMobile = useMediaQuery("(max-width: 767px)");
     const { data, isLoading, isError, refetch } = useUnlockHistory();
     const [query, setQuery] = useState("");
     const [role, setRole] = useState<string | null>(null);
@@ -42,7 +47,9 @@ const UnlocksSection = () => {
 
     const openRow = (row: UnlockRecord) => {
         const record = openableRecordOf(row);
-        if (record) setOpenRecord(record);
+        if (!record) return;
+        if (isMobile) navigate(`/employer/jobs/${record.jobId}/submissions/${record.submissionId}/passport`, { state: { returnTo: location.pathname } });
+        else setOpenRecord(record);
     };
 
     const roleOptions = useMemo(

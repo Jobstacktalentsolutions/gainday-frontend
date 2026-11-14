@@ -1,0 +1,11 @@
+- generic [active]:
+  - generic:
+    - region "Notifications alt+T"
+    - region "Cookie notice" [ref=e1]:
+      - paragraph [ref=e6]:
+        - text: Essential storage keeps you signed in. With your permission we also use a cookie to count visits anonymously and improve Gainday. If you reject, we don't track visits.
+        - link "Privacy policy" [ref=e7] [cursor=pointer]:
+          - /url: /privacy
+      - generic [ref=e8]:
+        - button "Reject" [ref=e9] [cursor=pointer]
+        - button "Accept" [ref=e10] [cursor=pointer]
