@@ -93,14 +93,14 @@ const UnlocksSection = () => {
             emptyHint="When you spend a credit to unlock a candidate's contact details, it will be listed here."
             onClearFilters={clearFilters}
             filters={
-                <div className="flex flex-wrap items-center gap-3 sm:gap-6">
+                <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                     <SearchField
-                        className="sm:min-w-60 sm:w-auto sm:flex-1"
+                        className="h-10 min-w-0 bg-white sm:min-w-60 sm:w-auto sm:flex-1"
                         value={query}
                         onChange={(value) => { setQuery(value); setVisible(PAGE_SIZE); }}
                         placeholder="Search by name or keyword"
                     />
-                    <div className="ml-auto flex flex-wrap items-center justify-end gap-3">
+                    <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
                         <FilterDropdown
                             allLabel="All Roles"
                             options={roleOptions}
@@ -113,8 +113,8 @@ const UnlocksSection = () => {
                             selectedValue={date}
                             onSelect={(value) => { setDate(value); setVisible(PAGE_SIZE); }}
                         />
+                        <ClearFiltersButton active={hasFilters} onClick={clearFilters} />
                     </div>
-                    <ClearFiltersButton active={hasFilters} onClick={clearFilters} />
                 </div>
             }
         >

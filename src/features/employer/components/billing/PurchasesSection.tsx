@@ -47,6 +47,7 @@ const PurchasesSection = () => {
     return (
         <HistoryShell
             title="Purchases"
+            compactFilters
             icon={<ShoppingBag className="size-6" aria-hidden="true" />}
             isLoading={isLoading}
             isError={isError}
@@ -57,8 +58,7 @@ const PurchasesSection = () => {
             emptyHint="Packs you buy will show up here, with a receipt for each one."
             onClearFilters={clearFilters}
             filters={
-                <div className="flex flex-wrap items-center gap-3 sm:gap-6">
-                    <div className="ml-auto flex flex-wrap items-center justify-end gap-3">
+                <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
                         <FilterDropdown
                             allLabel="Pack Type"
                             options={packOptions}
@@ -71,7 +71,6 @@ const PurchasesSection = () => {
                             selectedValue={date}
                             onSelect={(value) => { setDate(value); setVisible(PAGE_SIZE); }}
                         />
-                    </div>
                     <ClearFiltersButton active={hasFilters} onClick={clearFilters} />
                 </div>
             }
