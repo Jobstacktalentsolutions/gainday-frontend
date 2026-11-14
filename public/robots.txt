@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /employer/
+Disallow: /candidate/
+Disallow: /profile
+Disallow: /email-preferences
+Disallow: /api/
+Disallow: /job-board/*/pre-simulation
+Disallow: /job-board/*/environment-check
+Disallow: /job-board/*/simulation
+Disallow: /job-board/submissions/
+
+Sitemap: https://gainday.org/sitemap.xml
