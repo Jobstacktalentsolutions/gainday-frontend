@@ -6,15 +6,15 @@ import { HowItWorksCard, type StepTone } from "./HowItWorksCard";
 import { SectionSheen } from "./SectionSheen";
 
 const candidateSteps = [
-    "Clicks apply, no CV upload as step one.",
-    "Completes a role-relevant task generated from the job description.",
-    "Task is scored against role-relevant competencies. Results stack into your Capability Passport.",
+    "Apply directly without uploading a CV as step one.",
+    "Complete a role-specific work simulation generated from the job description.",
+    "Your work is scored against role competencies, and results are added to your Capability Passport.",
 ];
 
 const employerSteps = [
-    "Posts a role and reviews the generated role-relevant task.",
-    "Receives a shortlist ranked on objective task performance.",
-    "Reviews anonymised shortlist and capability passports. Unlocks only the candidates worth contacting.",
+    "Post a role and review the generated work simulation.",
+    "Receive a shortlist ranked by candidate task scores.",
+    "Review an anonymised shortlist and Capability Passports, then unlock contact details for the candidates you want to interview.",
 ];
 
 const StepRow = ({ heading, steps, tone }: { heading: string; steps: string[]; tone: StepTone }) => (

@@ -275,7 +275,7 @@ const StatsRow = ({ job }: { job: JobPreviewDetails }) => {
             <StatBox value={job.deadline} label="Deadline" />
             <StatBox value={STATUS_LABELS[job.status]} label="Status" />
             {/* TODO: wire up the real hired candidate once a "mark as hired" concept exists on
-                the backend — no such field currently exists on jobs or submissions, so this is
+                the backend: no such field currently exists on jobs or submissions, so this is
                 shown blurred rather than fabricating a value. */}
             {isClosed && <StatBox value="Hired candidate" label="Hired candidate" blurValue />}
         </div>

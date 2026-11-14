@@ -171,7 +171,7 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder, contentClassNam
                         <LinkIcon className="size-3.5" />
                     </ToolbarButton>
 
-                    {/* Bullet list — toggles disc-bullet list on the selected lines,
+                    {/* Bullet list: toggles disc-bullet list on the selected lines,
                         GitHub-style: each line becomes a `- ` item in the markdown output */}
                     <ToolbarButton
                         label="Bulleted list"
@@ -226,7 +226,7 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder, contentClassNam
                         if (event.target === event.currentTarget) editor?.commands.focus("end");
                     }}
                 >
-                    {/* Scoped prose styles — keeps heading/list/link rules self-contained
+                    {/* Scoped prose styles: keeps heading/list/link rules self-contained
                         and avoids relying on Tailwind scanning dynamic class arrays. */}
                     <style>{`
                         .tpe-content p          { min-height: 1.5em; }

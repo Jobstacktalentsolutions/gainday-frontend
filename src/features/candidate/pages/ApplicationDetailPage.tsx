@@ -56,7 +56,7 @@ const ApplicationDetailContent = ({ application }: { application: ApplicationDet
                                     <span className="text-lg">/100</span>
                                 </p>
                             ) : (
-                                <p className="text-2xl">—</p>
+                                <p className="text-2xl">-</p>
                             )}
                             <p className="text-sm text-primary-500">RATING</p>
                         </div>

@@ -112,7 +112,7 @@ export default function SubmissionResultPage() {
                             </div>
                             <div className="flex items-baseline gap-2 mt-1">
                                 <span className="text-4xl font-bold tracking-tight text-neutral-950">
-                                    {cumulativeCapabilityScore === null ? "\u2014" : cumulativeCapabilityScore}
+                                    {cumulativeCapabilityScore === null ? "-" : cumulativeCapabilityScore}
                                 </span>
                                 <span className="text-sm font-medium text-neutral-500">/1000</span>
                             </div>

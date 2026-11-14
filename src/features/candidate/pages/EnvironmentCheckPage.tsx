@@ -146,7 +146,7 @@ export default function EnvironmentCheckPage() {
                                 Checking your simulation environment...
                             </h1>
                             <p className="text-[16px] text-neutral-400">
-                                Please review the active diagnostics below to ensure a smooth simulation experience.
+                                Please check your browser and connection before starting the simulation.
                             </p>
                         </div>
 
@@ -157,8 +157,8 @@ export default function EnvironmentCheckPage() {
                                     title="Fullscreen Mode Permission"
                                     description={
                                         fullscreenStatus === "failed"
-                                            ? "Fullscreen was blocked — check your browser permissions and retry."
-                                            : "Verified. Your browser supports mandatory focus-lock diagnostics."
+                                            ? "Fullscreen was blocked. Check your browser permissions and try again."
+                                            : "Verified. Fullscreen is ready."
                                     }
                                     badge={<StatusBadge status={fullscreenStatus} readyLabel="READY" />}
                                 />
@@ -168,9 +168,9 @@ export default function EnvironmentCheckPage() {
                                     title="Secure Connection Established"
                                     description={
                                         connectionCheck.status === "secure" && connectionCheck.latencyMs !== null
-                                            ? `Latency: ${connectionCheck.latencyMs}ms. Highly stable connection to evaluation gateway.`
+                                            ? `Connected (${connectionCheck.latencyMs}ms latency).`
                                             : connectionCheck.status === "failed"
-                                                ? "Couldn't reach the evaluation gateway — check your connection and retry."
+                                                ? "Couldn't connect. Check your internet connection and try again."
                                                 : "Measuring connection quality..."
                                     }
                                     badge={
@@ -191,8 +191,7 @@ export default function EnvironmentCheckPage() {
                         </div>
 
                         <p className="text-[16px] text-neutral-400">
-                            Once you hit Begin, tab switching is flagged and full-screen stays enforced. Close other tabs for peak
-                            stability.
+                            Once you begin, leaving the tab or exiting full screen is tracked. Close other tabs to avoid distractions.
                         </p>
 
                         {startError && <p className="text-[14px] text-error-500">{startError}</p>}

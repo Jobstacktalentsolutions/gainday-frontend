@@ -97,10 +97,10 @@ const SubmissionsTable = ({ jobId, submissions, selectedIds, onToggleSelect }: S
                             {submission.categoryScores !== null ? (
                                 <CategoryBreakdownBars scores={submission.categoryScores} />
                             ) : (
-                                <div className="flex h-14.25 w-41 items-center justify-center text-neutral-400">&mdash;</div>
+                                <div className="flex h-14.25 w-41 items-center justify-center text-neutral-400">-</div>
                             )}
-                            <p>{submission.capabilityScore === null ? "—" : submission.capabilityScore}</p>
-                            <p>{submission.timeTakenSeconds === null ? "—" : formatDuration(submission.timeTakenSeconds)}</p>
+                            <p>{submission.capabilityScore === null ? "-" : submission.capabilityScore}</p>
+                            <p>{submission.timeTakenSeconds === null ? "-" : formatDuration(submission.timeTakenSeconds)}</p>
                             <p className="whitespace-nowrap">{formatSubmittedDate(submission.submittedAt)}</p>
                             <IntegrityLabel
                                 status={submission.integrityStatus}

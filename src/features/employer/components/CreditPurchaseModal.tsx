@@ -118,7 +118,7 @@ const CreditPurchaseModal = ({
         confirmTimeoutRef.current = setTimeout(() => {
             setStep("error");
             setErrorMessage(
-                "Still confirming your payment. This can take a little longer than usual — check back shortly, your credits will apply automatically once it completes.",
+                "Still confirming your payment. This can take a little longer than usual. Check back shortly; your credits will apply automatically once confirmed.",
             );
         }, CONFIRM_TIMEOUT_MS);
         return () => {
@@ -157,7 +157,7 @@ const CreditPurchaseModal = ({
             hasRetriedUnlock.current = true;
             queryClient.invalidateQueries({ queryKey: purchaseHistoryQueryKey });
             setStep("error");
-            setErrorMessage("The payment didn't go through. No credits were charged — you can try again.");
+            setErrorMessage("The payment didn't go through. No credits were charged. You can try again.");
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [purchaseStatus.data?.status, step]);
@@ -333,7 +333,7 @@ const CreditPurchaseModal = ({
                             </DialogTitle>
                             <DialogDescription>
                                 {purchasedPack
-                                    ? `${purchasedPack.name} pack ${claimedFree ? "claimed" : "purchased"} — ${pluralise(purchasedPack.credits, "credit")} added to your account.`
+                                    ? `${purchasedPack.name} pack ${claimedFree ? "claimed" : "purchased"}: ${pluralise(purchasedPack.credits, "credit")} added to your account.`
                                     : "Your credits have been added to your account."}
                             </DialogDescription>
                         </div>
@@ -363,7 +363,7 @@ const CreditPurchaseModal = ({
 
                         <p className="flex items-center gap-1.5 text-xs text-neutral-400">
                             <Sparkles className="size-3.5" aria-hidden="true" />
-                            Credits never expire — use them whenever you&apos;re ready.
+                            Credits never expire. Use them whenever you&apos;re ready.
                         </p>
 
                         <ActionButton size="lg" className="h-13 rounded-xl" onClick={() => onOpenChange(false)}>

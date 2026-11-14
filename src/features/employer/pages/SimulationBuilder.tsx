@@ -84,7 +84,7 @@ const SimulationBuilder = () => {
             await triggerGeneration.mutateAsync(jobId);
             generation.restart();
         } catch {
-            toast.error("Couldn't restart generation — try again.");
+            toast.error("Couldn't restart generation. Please try again.");
         }
     };
 
@@ -248,7 +248,7 @@ const SimulationBuilder = () => {
                     tasks: watch("tasks") as SimulationTask[],
                 });
             } catch {
-                toast.error("Couldn't save your changes — try again.");
+                toast.error("Couldn't save your changes. Please try again.");
                 return;
             } finally {
                 setIsContinuing(false);
@@ -381,7 +381,7 @@ const SimulationBuilder = () => {
                 </StepContinueButton>
             </div>
 
-            {/* Full-scenario generation loading modal — covers both the initial generate-from-Job-Details
+            {/* Full-scenario generation loading modal: covers both the initial generate-from-Job-Details
                 wait and an explicit "Regenerate" re-run. No cancel option: this is a real async
                 pipeline run on the backend with no cancel endpoint, so there's nothing to abort. */}
             <TaskGenerationModal

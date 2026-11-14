@@ -186,7 +186,7 @@ const JobDetailsStep = () => {
             const navState: GenerationNavState = { generationQueued: true };
             navigate("/employer/jobs/new/simulation-builder", { state: navState });
         } catch {
-            toast.error("Couldn't start generation — try again.");
+            toast.error("Couldn't start generation. Please try again.");
         } finally {
             setIsGenerating(false);
         }
@@ -443,7 +443,7 @@ const JobDetailsStep = () => {
                     />
                 </div>
 
-                {/* Job description — the full, candidate-facing writeup. Filled by importing an
+                {/* Job description: the full, candidate-facing writeup. Filled by importing an
                     existing description, or written by hand. */}
                 <div className="flex flex-col gap-1.5 lg:col-span-2">
                     <div className="flex items-center justify-between gap-2">
@@ -451,7 +451,7 @@ const JobDetailsStep = () => {
                         {isDescriptionAiGenerated && (
                             <span className="flex w-fit items-center gap-1 rounded-full bg-primary-100 px-2.5 py-1 text-xs font-medium text-primary-700">
                                 <Sparkles className="size-3" aria-hidden="true" />
-                                AI-generated — review before continuing
+                                AI-generated: review before continuing
                             </span>
                         )}
                     </div>

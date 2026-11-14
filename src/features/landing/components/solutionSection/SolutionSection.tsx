@@ -48,7 +48,7 @@ const SolutionSection = () => {
                     <h2 className="heading-2 text-black">See the talent, not the paperwork.</h2>
                     <p className="text-base leading-6 text-neutral-700">
                         Skip the CV pile and AI-generated applications. Get real evidence of how candidates
-                        think, solve problems and perform in the real world &ndash; before you interview.
+                        think, solve problems and perform in the real world before you interview.
                     </p>
                     <div className="hidden pt-2 lg:block">
                         <CTAButton size="lg" label="Post a job now" onClick={() => navigate("/employer/signup")} />

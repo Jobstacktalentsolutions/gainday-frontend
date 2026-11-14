@@ -19,5 +19,5 @@ const UNSCORED_LABELS: Partial<Record<SubmissionStatus, string>> = {
 /** The score, or what stands in for it while there isn't one. */
 export const formatOverallScore = ({ overallScore, status }: Pick<SubmissionSummary, "overallScore" | "status">): string => {
     if (overallScore !== null) return `${overallScore}%`;
-    return UNSCORED_LABELS[status] ?? "—";
+    return UNSCORED_LABELS[status] ?? "-";
 };

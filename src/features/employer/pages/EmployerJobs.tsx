@@ -82,7 +82,7 @@ const EmployerJobs = () => {
             await navigator.clipboard.writeText(job.shareUrl);
             toast.success("Job link copied to clipboard");
         } catch {
-            toast.error("Couldn't copy the link — try again.");
+            toast.error("Couldn't copy the link. Please try again.");
         }
     };
 

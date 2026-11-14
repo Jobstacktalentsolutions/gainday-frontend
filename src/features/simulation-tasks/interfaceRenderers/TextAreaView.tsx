@@ -25,7 +25,7 @@ const TextAreaView = ({ payload, mode, onChange }: Props) => {
     return (
         <div className="rounded-md border border-dashed border-neutral-300 bg-neutral-50 p-3 text-sm text-neutral-400">
             Candidate answers here in a plain text area
-            {payload.placeholder ? ` — placeholder: "${payload.placeholder}"` : ""}
+            {payload.placeholder ? ` (placeholder: "${payload.placeholder}")` : ""}
         </div>
     );
 };

@@ -201,7 +201,7 @@ const TaskCard = ({
                                 />
                             </div>
 
-                            {/* Read-only preview of how the candidate will answer — the response-interface
+                            {/* Read-only preview of how the candidate will answer: the response-interface
                                 type/shape is set by the generation pipeline, not editable at this tier. */}
                             <div className="flex flex-col gap-1.5 text-left">
                                 <label className="text-base font-medium text-neutral-800">

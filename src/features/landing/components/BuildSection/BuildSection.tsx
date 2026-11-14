@@ -32,8 +32,8 @@ const BuildSection = () => {
                 <div className="flex flex-col gap-y-3 lg:w-84 lg:gap-6">
                     <h2 className="heading-2">Built for Proof, not Paper.</h2>
                     <p className="text-base leading-6 text-neutral-200">
-                        Show employers what you can actually do not just what your CV says you&rsquo;ve done.
-                        view live roles and Apply.
+                        Show employers what you can actually do, not just what your CV says you&rsquo;ve done.
+                        View live roles and apply.
                     </p>
                     <div className="hidden lg:block">
                         <StartNowButton label="Apply Now" onClick={start} />

@@ -30,7 +30,7 @@ const RegenerationFailureModal = ({
                         Regeneration failed
                     </Dialog.Title>
                     <Dialog.Description id="regenerate-failure-description" className="mt-1.5 text-sm text-neutral-500">
-                        We couldn't regenerate {taskLabel}. Your previous content is still here — retry or dismiss.
+                        We couldn't regenerate {taskLabel}. Your previous content is still here. You can retry or dismiss.
                     </Dialog.Description>
 
                     <div className="mt-8 flex w-full gap-3">

@@ -42,7 +42,7 @@ const ProceduralSequencingEditor = ({ value, onChange }: Props) => {
     return (
         <div className="flex flex-col gap-2">
             <label className="text-sm font-medium text-neutral-700">
-                Steps (shuffled for the candidate) — position sets the correct order
+                Steps (shuffled for the candidate). Position sets the correct order:
             </label>
             {value.steps.map((step, i) => (
                 <div key={i} className="flex items-center gap-2">

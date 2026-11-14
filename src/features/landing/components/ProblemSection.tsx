@@ -19,7 +19,7 @@ const ProblemSection = () => (
         <motion.div variants={fadeUp} className="flex flex-col items-center justify-center gap-4 text-center">
             <h2 className="heading-2 text-black">Hiring Used to Mean Guessing</h2>
             <p className="max-w-155 text-base leading-6 text-neutral-700">
-                Hundred of CVs and no way to tell who can do the job?
+                Hundreds of CVs and no way to tell who can do the job?
             </p>
         </motion.div>
 
