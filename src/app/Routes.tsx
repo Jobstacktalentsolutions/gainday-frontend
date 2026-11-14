@@ -49,6 +49,7 @@ const JobPreview = lazy(() => import("@/features/employer/pages/JobPreview"));
 const JobSubmissions = lazy(() => import("@/features/employer/pages/JobSubmissions"));
 const EmployerUnlocks = lazy(() => import("@/features/employer/pages/EmployerUnlocks"));
 const SubmissionDetail = lazy(() => import("@/features/employer/pages/SubmissionDetail"));
+const EmployerPassportPage = lazy(() => import("@/features/employer/pages/EmployerPassportPage"));
 const BillingPage = lazy(() => import("@/features/employer/pages/BillingPage"));
 const JobBoardPage = lazy(() => import("@/features/candidate/pages/JobBoardPage"));
 const JobDetailsPage = lazy(() => import("@/features/candidate/pages/candidateJobDetails"));
@@ -134,6 +135,7 @@ const AppRoutes = () => {
                         {/* Standalone full-page routes, no employer shell, but still guarded */}
                         <Route path="jobs/:jobId/preview" element={<JobPreview />} />
                         <Route path="jobs/:jobId/submissions/:submissionId" element={<SubmissionDetail />} />
+                        <Route path="jobs/:jobId/submissions/:submissionId/passport" element={<EmployerPassportPage />} />
                     </Route>
                 </Route>
 

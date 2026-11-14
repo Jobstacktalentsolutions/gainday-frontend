@@ -41,7 +41,7 @@ export const CapabilityPassportContent = ({
     isSelected = false,
     contact,
     onUnlockContact,
-}: CapabilityPassportModalProps) => {
+}: Omit<CapabilityPassportModalProps, "open" | "onOpenChange">) => {
     return (
         <>
 

@@ -72,7 +72,7 @@ const DomainBreakdownCard = ({ domains }: { domains: PassportDomain[] }) => {
                                         {index + 1}
                                     </span>
                                     <div className="flex min-w-0 flex-wrap items-center gap-2">
-                                        <p className="truncate text-base font-semibold text-neutral-900">
+                                        <p className="truncate text-sm font-medium text-neutral-900 sm:text-base sm:font-semibold">
                                             {item.subCategory}
                                         </p>
                                         {item.category && (
@@ -92,7 +92,7 @@ const DomainBreakdownCard = ({ domains }: { domains: PassportDomain[] }) => {
                                         <ScoreBar score={item.score} label={`${item.subCategory} score`} />
                                     </div>
                                     <div className="w-14 text-right">
-                                        <span className="text-base font-bold text-neutral-900">{item.score}</span>
+                                        <span className="text-sm font-medium text-neutral-900 sm:text-base sm:font-bold">{item.score}</span>
                                         <span className="text-xs text-neutral-400">/100</span>
                                     </div>
                                 </div>

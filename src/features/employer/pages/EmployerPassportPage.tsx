@@ -11,6 +11,8 @@ import { useUnlockCandidates } from "../hooks/useUnlockCandidates";
 import { getCandidateLabel } from "../utils/submissionLabels";
 import type { PaymentRequiredBody } from "../types/payments";
 
+const UNLOCKS_PATH = "/employer/unlocks";
+
 const EmployerPassportPage = () => {
     const { jobId = "", submissionId } = useParams<{ jobId: string; submissionId: string }>();
     const location = useLocation();
@@ -19,8 +21,8 @@ const EmployerPassportPage = () => {
     const unlockCandidates = useUnlockCandidates();
     const [purchase, setPurchase] = useState<{ open: boolean; recommendedPackId?: string }>({ open: false });
     const submission = submissionQuery.data;
-    const returnTo = location.state?.returnTo === "/employer/unlocks"
-        ? "/employer/unlocks"
+    const returnTo = location.state?.returnTo === UNLOCKS_PATH
+        ? UNLOCKS_PATH
         : `/employer/jobs/${jobId}/submissions/${submissionId}`;
 
     const unlock = () => {
@@ -50,8 +52,6 @@ const EmployerPassportPage = () => {
                 )}
                 {submission && (
                     <CapabilityPassportContent
-                        open
-                        onOpenChange={() => {}}
                         candidateName={getCandidateLabel(submission)}
                         displayId={submission.displayId}
                         candidateProfile={submission.candidateProfile}
