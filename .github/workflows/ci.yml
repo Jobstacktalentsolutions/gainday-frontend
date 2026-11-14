@@ -19,12 +19,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4         # download the code
 
+      # Must come BEFORE setup-node, otherwise `cache: pnpm` can't find pnpm.
+      # No `version:` input needed: it reads "packageManager" from package.json.
+      - uses: pnpm/action-setup@v6
+
       - uses: actions/setup-node@v4       # install Node
         with:
           node-version-file: .nvmrc       # use the version from .nvmrc
-          cache: npm                      # reuse downloaded packages between runs
+          cache: pnpm                     # reuse the pnpm store between runs
 
-      - run: npm ci                       # exact install from the lockfile
-      - run: npm run lint
-      - run: npm test
-      - run: npm run build                # runs tsc -b, then vite build
+      - run: pnpm install --frozen-lockfile   # exact install from pnpm-lock.yaml
+      - run: pnpm lint
+      - run: pnpm test
+      - run: pnpm build                   # runs tsc -b, then vite build
