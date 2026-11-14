@@ -298,9 +298,14 @@ const BackButton = ({ onClick }: { onClick: () => void }) => (
 const ContinueEditingAction = ({ jobId, step }: { jobId: string; step: WizardStep }) => {
     const navigate = useNavigate();
     return (
-        <StepContinueButton onClick={() => navigate(wizardPath(step, jobId))}>
-            Continue Editing
-        </StepContinueButton>
+        <div className="flex flex-wrap items-center gap-6">
+            <StepContinueButton
+                className="w-fit"
+                onClick={() => navigate(wizardPath(step, jobId))}
+            >
+                Continue Editing
+            </StepContinueButton>
+        </div>
     );
 };
 
