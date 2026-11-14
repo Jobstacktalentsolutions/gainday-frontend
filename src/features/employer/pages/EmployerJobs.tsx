@@ -142,6 +142,7 @@ const EmployerJobs = () => {
                         <>
                             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                                 <SearchField
+                                    className="sm:w-auto sm:flex-1"
                                     value={search}
                                     onChange={handleSearchChange}
                                     placeholder="Search by job title, role, or location"

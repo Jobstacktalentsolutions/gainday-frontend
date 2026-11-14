@@ -88,11 +88,12 @@ const UnlocksSection = () => {
             filters={
                 <div className="flex flex-wrap items-center gap-3 sm:gap-6">
                     <SearchField
+                        className="sm:min-w-60 sm:w-auto sm:flex-1"
                         value={query}
                         onChange={(value) => { setQuery(value); setVisible(PAGE_SIZE); }}
                         placeholder="Search by name or keyword"
                     />
-                    <div className="flex flex-wrap items-center gap-3">
+                    <div className="ml-auto flex flex-wrap items-center justify-end gap-3">
                         <FilterDropdown
                             allLabel="All Roles"
                             options={roleOptions}

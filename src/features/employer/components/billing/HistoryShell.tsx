@@ -8,7 +8,7 @@ export const ClearFiltersButton = ({ active, onClick }: { active: boolean; onCli
         type="button"
         onClick={onClick}
         disabled={!active}
-        className="cursor-pointer text-base text-primary-500 transition-opacity hover:underline disabled:cursor-default disabled:no-underline disabled:opacity-40"
+        className="w-full cursor-pointer text-right text-sm text-primary-500 transition-opacity hover:underline disabled:cursor-default disabled:no-underline disabled:opacity-40"
     >
         Clear filters
     </button>

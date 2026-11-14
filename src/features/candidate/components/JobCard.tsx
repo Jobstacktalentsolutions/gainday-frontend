@@ -47,7 +47,7 @@ export function JobCard({
                 }
             }}
             aria-label={`${isApplied ? "View submission for" : "View job"} ${job.title}`}
-            className="flex flex-1 flex-col justify-between gap-3 rounded-3xl bg-white p-5 transition-all duration-150 cursor-pointer hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99] sm:p-6"
+            className="flex flex-1 flex-col gap-3 rounded-3xl bg-white p-5 transition-all duration-150 cursor-pointer hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99] sm:p-6"
         >
             <div className="flex w-full flex-col items-start gap-2">
                 <div className="flex flex-wrap items-center gap-2">
@@ -70,8 +70,9 @@ export function JobCard({
                 <p className="text-[16px] text-neutral-400">{job.employer.companyName}</p>
                 {hasSalary(job.salaryRange) && <p className="text-[16px] text-black">{formatSalaryRange(job.salaryRange)}</p>}
             </div>
-            <div className="h-px w-full bg-neutral-200" />
-            <div className="flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-3">
+            <div className="mt-auto flex w-full flex-col gap-3">
+              <div className="h-px w-full bg-neutral-200" />
+              <div className="flex w-full flex-wrap items-center justify-between gap-x-4 gap-y-3">
                 <StepContinueButton
                     onClick={(e) => {
                         e.stopPropagation();
@@ -81,6 +82,7 @@ export function JobCard({
                     {isApplied ? "View Submission" : "Apply Now"}
                 </StepContinueButton>
                 <p className="text-[14px] text-neutral-400">Posted {formatPostedDate(job.createdAt)}</p>
+              </div>
             </div>
         </article>
     );
@@ -88,7 +90,7 @@ export function JobCard({
 
 export function JobCardSkeleton() {
     return (
-        <div className="flex flex-1 flex-col justify-between gap-3 rounded-3xl bg-white p-6 shadow-sm">
+        <div className="flex flex-1 flex-col gap-3 rounded-3xl bg-white p-6 shadow-sm">
             <div className="flex w-full flex-col items-start gap-2.5">
                 <div className="h-5 w-16 animate-pulse rounded-full bg-neutral-200" />
                 <div className="h-6 w-3/4 animate-pulse rounded-lg bg-neutral-200" />
@@ -99,10 +101,12 @@ export function JobCardSkeleton() {
                 </div>
                 <div className="h-4 w-32 animate-pulse rounded bg-neutral-200" />
             </div>
-            <div className="h-px w-full bg-neutral-200" />
-            <div className="flex w-full items-center justify-between">
+            <div className="mt-auto flex w-full flex-col gap-3">
+              <div className="h-px w-full bg-neutral-200" />
+              <div className="flex w-full items-center justify-between">
                 <div className="h-10 w-28 animate-pulse rounded-xl bg-neutral-200" />
                 <div className="h-4 w-24 animate-pulse rounded bg-neutral-200" />
+              </div>
             </div>
         </div>
     );

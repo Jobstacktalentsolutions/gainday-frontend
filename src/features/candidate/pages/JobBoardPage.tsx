@@ -62,12 +62,13 @@ export function JobBoardPage() {
 
                 <div className="flex w-full flex-wrap items-center gap-4 sm:gap-6">
                     <SearchField
+                        className="sm:min-w-60 sm:w-auto sm:flex-1"
                         value={filters.search}
                         onChange={(value) => updateFilter("search", value)}
                         placeholder="Search by job title, role, or keyword"
                     />
 
-                    <div className="-mx-5 flex w-[calc(100%+2.5rem)] items-center gap-3 overflow-x-auto px-5 py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:w-auto sm:flex-wrap sm:overflow-visible sm:px-0 sm:py-0">
+                    <div className="-mx-5 flex w-[calc(100%+2.5rem)] items-center gap-3 overflow-x-auto px-5 py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:ml-auto sm:w-auto sm:flex-wrap sm:justify-end sm:overflow-visible sm:px-0 sm:py-0">
                         <FilterDropdown
                             prefix="Sort: "
                             allLabel="Recommended"
@@ -107,7 +108,7 @@ export function JobBoardPage() {
                         type="button"
                         onClick={clearFilters}
                         disabled={!hasActiveFilters}
-                        className="cursor-pointer text-[16px] text-primary-500 transition-colors hover:text-primary-700 disabled:cursor-default disabled:opacity-40"
+                        className="w-full cursor-pointer text-right text-sm text-primary-500 transition-colors hover:text-primary-700 hover:underline disabled:cursor-default disabled:opacity-40"
                     >
                         Clear filters
                     </button>

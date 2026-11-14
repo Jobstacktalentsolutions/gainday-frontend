@@ -31,7 +31,7 @@ const JobStatusTabs = ({ value, onChange }: JobStatusTabsProps) => (
           aria-selected={isActive}
           onClick={() => onChange(tab.value)}
           className={cn(
-            "shrink-0 snap-start whitespace-nowrap rounded-full border border-neutral-100 px-4 py-2 text-base transition-colors",
+            "shrink-0 snap-start whitespace-nowrap rounded-full border border-neutral-100 px-3 py-1.5 text-sm transition-colors",
             isActive ? "bg-neutral-950 text-neutral-50" : "text-neutral-700"
           )}
         >

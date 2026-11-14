@@ -58,7 +58,7 @@ const PurchasesSection = () => {
             onClearFilters={clearFilters}
             filters={
                 <div className="flex flex-wrap items-center gap-3 sm:gap-6">
-                    <div className="flex flex-wrap items-center gap-3">
+                    <div className="ml-auto flex flex-wrap items-center justify-end gap-3">
                         <FilterDropdown
                             allLabel="Pack Type"
                             options={packOptions}

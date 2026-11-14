@@ -8,7 +8,7 @@ import type { PricingPack } from "../content/pricing";
 const STAR_COLORS = ["#1e3fd8", "#f6f8ff", "#a5d8ff", "#38bdf8"];
 
 const GLASS =
-    "bg-[linear-gradient(194.75deg,color-mix(in_srgb,var(--color-primary-500)_35%,transparent)_0%,color-mix(in_srgb,var(--color-primary-500)_8%,transparent)_45%,color-mix(in_srgb,var(--color-secondary-500)_65%,transparent)_100%)]";
+    "bg-[linear-gradient(194.75deg,color-mix(in_srgb,var(--color-primary-500)_35%,transparent)_0%,color-mix(in_srgb,var(--color-primary-500)_8%,transparent)_45%,color-mix(in_srgb,var(--color-primary-500)_55%,transparent)_100%)]";
 
 const PACK_ICONS: Record<string, typeof Sprout> = {
     STARTER: Sprout,
@@ -30,7 +30,7 @@ const PackCard = ({ pack, onSelect }: PackCardProps) => {
             : `${pack.credits} credits · ${formatExactPrice(perUnlockPence(pack.pricePence, pack.credits))} each`;
 
     return (
-        <div className="relative flex-1">
+        <div className={cn("relative flex-1", pack.popular && "lg:flex-[1.15] lg:-my-5")}>
             {pack.popular && (
                 <span className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-xl bg-primary-50 px-4 py-0.5 text-base text-primary-500">
                     Growth pack

@@ -92,7 +92,7 @@ const JobSubmissions = () => {
                 </div>
 
                 {!isLoading && !isError && hasSubmissions && (
-                    <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                    <div className="flex flex-wrap items-center justify-end gap-x-6 gap-y-3">
                         <div className="flex flex-wrap items-center gap-3">
                             {SORT_CONFIG.map((config) => (
                                 <SubmissionSortDropdown
@@ -108,7 +108,7 @@ const JobSubmissions = () => {
                             onClick={reset}
                             disabled={isDefault}
                             className={cn(
-                                "text-base text-primary-500 transition-opacity",
+                                "w-full text-right text-sm text-primary-500 transition-opacity",
                                 isDefault ? "cursor-default opacity-40" : "hover:underline",
                             )}
                         >

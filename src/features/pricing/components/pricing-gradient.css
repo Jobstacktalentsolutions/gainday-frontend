@@ -1,15 +1,14 @@
 .pricing-gradient {
     background-size: 200% 200%;
+    background-position: 0% 0%;
 }
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .pricing-gradient {
+        transition: background-position 800ms ease-in-out;
+    }
+
     .pricing-gradient:hover {
-        animation: pricing-gradient-sweep 800ms ease-out both;
+        background-position: 100% 100%;
     }
 }
-
-@keyframes pricing-gradient-sweep {
-    from { background-position: 0% 0%; }
-    to { background-position: 100% 100%; }
-}
-
