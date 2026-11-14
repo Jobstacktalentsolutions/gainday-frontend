@@ -1,5 +1,7 @@
 const WIZARD_BASE = "/employer/jobs/new";
 
-export function wizardPath(step: "details" | "simulation-builder" | "review", postId: string): string {
+export type WizardStep = "details" | "simulation-builder" | "review";
+
+export function wizardPath(step: WizardStep, postId: string): string {
     return `${WIZARD_BASE}/${step}?${new URLSearchParams({ postId })}`;
 }
