@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { JobBoardHeader } from "../components/JobBoardHeader";
+import { JobNotFoundState } from "../components/JobNotFoundState";
 import { ApplyDialog } from "../components/ApplyDialog";
 import { CompleteProfileDialog } from "../components/CompleteProfileDialog";
 import { ActionButton } from "@/components/ui/ActionButton";
@@ -25,7 +26,7 @@ const metaChipClass = "flex items-center gap-2 rounded-xl border border-neutral-
 export default function JobDetailsPage() {
     const { jobId } = useParams<{ jobId: string }>();
     const navigate = useNavigate();
-    const { job, isLoading } = useJobDetails(jobId);
+    const { job, isLoading, isError, refetch } = useJobDetails(jobId);
     const { appliedSet, getSubmissionUrlForJob } = useAppliedJobIds();
     const { user, isAuthenticated } = useCurrentUser();
     const { canStartSimulation } = useSimulationDeviceCheck();
@@ -62,10 +63,10 @@ export default function JobDetailsPage() {
     }
 
     if (!job) {
-        //TODO : Ask Tofunmi for a proper job not found state
         return (
-            <div className="flex min-h-screen items-center justify-center bg-neutral-50 text-neutral-700">
-                Job not found
+            <div className="min-h-dvh bg-neutral-50">
+                <JobBoardHeader />
+                <JobNotFoundState variant={isError ? "error" : "notFound"} onRetry={() => void refetch()} />
             </div>
         )
     }

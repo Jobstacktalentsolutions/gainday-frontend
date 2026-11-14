@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { DndContext, DragOverlay, KeyboardSensor, PointerSensor, useDraggable, useDroppable, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core";
 import { Archive, GripVertical } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -25,7 +25,7 @@ function Item({ item, buckets, value, onChange, readOnly, inBucket }: {
                 <GripVertical className="size-4" />
             </button>}
             <span className={cn("min-w-0 flex-1 break-words font-medium text-primary-950", inBucket ? "text-xs" : "text-sm")}>{item}</span>
-            {!readOnly && !inBucket && <BucketSelect value={value} buckets={buckets} ariaLabel={`Bucket for ${item}`} onChange={onChange} className="max-w-32" />}
+            {!readOnly && <BucketSelect value={value} buckets={buckets} ariaLabel={`Bucket for ${item}`} onChange={onChange} className="max-w-32" />}
         </div>
     );
 }

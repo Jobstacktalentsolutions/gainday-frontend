@@ -13,8 +13,15 @@ export function useJobDetails(jobId: string | undefined) {
     queryKey: ["candidate", "job-details", jobId],
     queryFn: () => fetchJobDetails(jobId as string),
     enabled: Boolean(jobId),
-    retry: false,
   });
 
-  return { job: query.data ?? undefined, isLoading: query.isLoading };
+  return {
+    job: query.data ?? undefined,
+    isLoading: query.isLoading,
+    // A missing job comes back as 200 + null (valid data, not an error), so isError means the
+    // request itself failed (network, 5xx). Pages use it to offer "Try again" instead of
+    // claiming the job doesn't exist.
+    isError: query.isError,
+    refetch: query.refetch,
+  };
 }

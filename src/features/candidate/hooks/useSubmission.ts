@@ -1,6 +1,7 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api/client";
 import type { CandidateAnswer, AntiCheatEvent } from "../types/submission";
+import { APPLICATIONS_QUERY_KEY } from "./useMyApplications";
 
 export interface MetricDetail {
   label: string;
@@ -65,10 +66,19 @@ async function startSubmission(jobId: string, simulationId: string) {
   return data;
 }
 
+// Starting or submitting an attempt changes the "applied" state on the job board, My Applications
+// and the pre-simulation guard.
+function refreshApplications(queryClient: QueryClient) {
+  queryClient.invalidateQueries({ queryKey: APPLICATIONS_QUERY_KEY });
+  queryClient.invalidateQueries({ queryKey: ["candidate", "applied-job-ids"] });
+}
+
 export function useStartSubmission() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ jobId, simulationId }: { jobId: string; simulationId: string }) =>
       startSubmission(jobId, simulationId),
+    onSuccess: () => refreshApplications(queryClient),
   });
 }
 
@@ -82,6 +92,7 @@ async function submitAnswers(submissionId: string, answers: CandidateAnswer[], a
 }
 
 export function useSubmitSimulation() {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({
       submissionId,
@@ -92,6 +103,7 @@ export function useSubmitSimulation() {
       answers: CandidateAnswer[];
       antiCheatFlags?: AntiCheatEvent[];
     }) => submitAnswers(submissionId, answers, antiCheatFlags),
+    onSuccess: () => refreshApplications(queryClient),
   });
 }
 

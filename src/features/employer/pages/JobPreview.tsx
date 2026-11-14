@@ -1,4 +1,4 @@
-import { wizardPath } from "../utils/wizardPath";
+import { wizardPath, type WizardStep } from "../utils/wizardPath";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, ChevronDown, Clock, MapPin, Play } from "lucide-react";
@@ -72,7 +72,7 @@ const JobPreview = () => {
             <JobPreviewHero job={job} />
 
             {isDraft ? (
-                <ContinueEditingAction jobId={job.id} />
+                <ContinueEditingAction jobId={job.id} step={job.resumeStep} />
             ) : (
                 <>
                     <LiveJobActions job={job} />
@@ -268,37 +268,17 @@ const LiveJobActions = ({ job }: { job: JobPreviewDetails }) => {
     );
 };
 
-const StatsRow = ({ job }: { job: JobPreviewDetails }) => {
-    const isClosed = job.status === "CLOSED";
-    return (
-        <div className={`grid w-full grid-cols-1 gap-6 sm:grid-cols-3 ${isClosed ? "lg:grid-cols-4" : ""}`}>
-            <StatBox value={String(job.submissionsCount)} label="Applicants" />
-            <StatBox value={job.deadline} label="Deadline" />
-            <StatBox value={STATUS_LABELS[job.status]} label="Status" />
-            {/* TODO: wire up the real hired candidate once a "mark as hired" concept exists on
-                the backend: no such field currently exists on jobs or submissions, so this is
-                shown blurred rather than fabricating a value. */}
-            {isClosed && <StatBox value="Hired candidate" label="Hired candidate" blurValue />}
-        </div>
-    );
-};
+const StatsRow = ({ job }: { job: JobPreviewDetails }) => (
+    <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-3">
+        <StatBox value={String(job.submissionsCount)} label="Applicants" />
+        <StatBox value={job.deadline} label="Deadline" />
+        <StatBox value={STATUS_LABELS[job.status]} label="Status" />
+    </div>
+);
 
-const StatBox = ({
-    value,
-    label,
-    blurValue = false,
-}: {
-    value: string;
-    label: string;
-    blurValue?: boolean;
-}) => (
+const StatBox = ({ value, label }: { value: string; label: string }) => (
     <div className="flex flex-col gap-3 rounded-2xl border border-primary-200 bg-white/10 p-6">
-        <p
-            className={`text-3xl text-neutral-950 tracking-tight lg:text-5xl ${blurValue ? "select-none blur-sm" : ""}`}
-            aria-hidden={blurValue}
-        >
-            {value}
-        </p>
+        <p className="text-3xl text-neutral-950 tracking-tight lg:text-5xl">{value}</p>
         <p className="text-base text-neutral-700">{label}</p>
     </div>
 );
@@ -315,27 +295,12 @@ const BackButton = ({ onClick }: { onClick: () => void }) => (
     </button>
 );
 
-const ContinueEditingAction = ({ jobId }: { jobId: string }) => {
+const ContinueEditingAction = ({ jobId, step }: { jobId: string; step: WizardStep }) => {
     const navigate = useNavigate();
     return (
-        <>
-
-            {/* <button
-                type="button"
-                onClick={() => navigate(wizardPath("details", jobId))}
-                className="flex h-13 w-fit items-center gap-2 rounded-lg bg-primary-500 py-1 pr-1 pl-6 text-base text-neutral-50"
-            >
-                Continue Editing
-                <span className="flex h-full w-11 items-center justify-center rounded-lg bg-secondary-500">
-                    <ArrowRight className="size-4" aria-hidden="true" />
-                </span>
-            </button> */}
-            <StepContinueButton
-                onClick={() => navigate(wizardPath("details", jobId))}
-            >
-                Continue Editing
-            </StepContinueButton>
-        </>
+        <StepContinueButton onClick={() => navigate(wizardPath(step, jobId))}>
+            Continue Editing
+        </StepContinueButton>
     );
 };
 

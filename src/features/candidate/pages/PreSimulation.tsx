@@ -3,6 +3,7 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useAppliedJobIds } from "../hooks/useAppliedJobIds";
 import { Maximize, MonitorCheck, Clock, ChevronLeft } from "lucide-react";
 import CandidateHeader from "../components/CandidateHeader";
+import { JobNotFoundState } from "../components/JobNotFoundState";
 import { CompleteProfileDialog } from "../components/CompleteProfileDialog";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { ActionButton } from "@/components/ui/ActionButton";
@@ -49,7 +50,7 @@ function StatCard({ children, label }: { children: React.ReactNode; label: strin
 export default function PreSimulation() {
     const { jobId } = useParams<{ jobId: string }>();
     const navigate = useNavigate();
-    const { job, isLoading: isJobLoading } = useJobDetails(jobId);
+    const { job, isLoading: isJobLoading, isError: isJobError, refetch: refetchJob } = useJobDetails(jobId);
     const [consented, setConsented] = useState(false);
     const { requestFullscreen } = useFullscreenCheck();
     const { user } = useCurrentUser();
@@ -71,25 +72,19 @@ export default function PreSimulation() {
     }
 
     if (!job) {
-        // TODO: proper "job not found" state, same open item as JobDetailsPage
         return (
-            <div className="flex min-h-screen items-center justify-center bg-neutral-50 text-neutral-700">
+            <div className="min-h-dvh bg-neutral-50">
                 <CandidateHeader />
-                <main>
-                    Job not found.
-                </main>
+                <JobNotFoundState variant={isJobError ? "error" : "notFound"} onRetry={() => void refetchJob()} />
             </div>
         );
     }
 
-
     if (!simulation) {
         return (
-            <div className="flex min-h-screen items-center justify-center bg-neutral-50 text-neutral-700">
+            <div className="min-h-dvh bg-neutral-50">
                 <CandidateHeader />
-                <main>
-                    This job doesn't have a simulation ready yet.
-                </main>
+                <JobNotFoundState variant="noSimulation" />
             </div>
         );
     }

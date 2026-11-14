@@ -3,6 +3,7 @@ import { apiClient } from "@/lib/api/client";
 import type { JobPreviewDetails } from "../types/jobPreview";
 import { fetchJobSubmissionsCount } from "./useJobSubmissionsCount";
 import type { BackendJobWithSimulation, BackendSalaryRange, JobStatus } from "../types/job";
+import getResumeStep from "../utils/resumeStep";
 
 const POSTED_STATUSES: JobStatus[] = ["ACTIVE", "CLOSED"];
 
@@ -57,6 +58,7 @@ const toJobPreviewDetails = (
     requiredSkills: job.requiredSkills,
     whatThisHireNeedsToSolve: job.businessProblem ?? "",
     tasks: job.simulation?.tasks ?? [],
+    resumeStep: getResumeStep(job),
 });
 
 // The backend returns 200 + null (not a 404) for a missing job id — see

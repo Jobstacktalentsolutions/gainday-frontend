@@ -1,5 +1,6 @@
 import type { Job } from "./job";
 import type { JobPostingFormValues } from "../schemas/jobPosting";
+import type { WizardStep } from "../utils/wizardPath";
 
 export interface JobPreviewDetails extends Job {
     description: string;
@@ -10,4 +11,5 @@ export interface JobPreviewDetails extends Job {
     requiredSkills: string[];
     whatThisHireNeedsToSolve: string;
     tasks: JobPostingFormValues["tasks"];
+    resumeStep: WizardStep;
 }

@@ -16,7 +16,10 @@ export const useUpdateSimulationTasks = () => {
             });
             return data;
         },
-        // Review reads the saved tasks from the job-simulation query, so refresh it after a save.
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["employer", "job-simulation"] }),
+        onSuccess: () =>
+            Promise.all([
+                queryClient.invalidateQueries({ queryKey: ["employer", "job-simulation"] }),
+                queryClient.invalidateQueries({ queryKey: ["employer", "job-preview"] }),
+            ]),
     });
 };
