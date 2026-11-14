@@ -59,6 +59,12 @@ export const useSaveJobDetails = () => {
                 : await apiClient.post<SavedJob>("/jobs", body);
             return res.data;
         },
-        onSuccess: (job) => queryClient.invalidateQueries({ queryKey: ["employer", "job-simulation", job.id] }),
+        onSuccess: (job) =>
+            Promise.all([
+                queryClient.invalidateQueries({ queryKey: ["employer", "job-simulation", job.id] }),
+                queryClient.invalidateQueries({ queryKey: ["employer", "jobs"] }),
+                queryClient.invalidateQueries({ queryKey: ["employer", "job-preview", job.id] }),
+                queryClient.invalidateQueries({ queryKey: ["employer", "job-title", job.id] }),
+            ]),
     });
 };

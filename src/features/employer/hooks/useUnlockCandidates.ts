@@ -18,6 +18,9 @@ export const useUnlockCandidates = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: creditBalanceQueryKey });
+            queryClient.invalidateQueries({ queryKey: ["employer", "job-submissions"] });
+            queryClient.invalidateQueries({ queryKey: ["employer", "job-submission"] });
+            queryClient.invalidateQueries({ queryKey: ["employer", "submission-passport"] });
         },
     });
 };
