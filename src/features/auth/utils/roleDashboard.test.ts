@@ -25,6 +25,6 @@ describe("resolvePostLoginPath", () => {
     })
 
     it("falls back to the landing page for an unknown role", () => {
-        expect(resolvePostLoginPath("GUEST", null)).toBe("/landing")
+        expect(resolvePostLoginPath("GUEST", null)).toBe("/")
     })
 })

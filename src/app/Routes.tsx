@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import AppLoader from "@/components/ui/AppLoader";
 import { useSimulationRunStore } from "@/features/candidate/store/useSimulationRunStore";
 import SimulationDeviceGuard from "@/features/candidate/components/SimulationDeviceGuard";
@@ -69,13 +69,17 @@ const SupportPage = lazy(() => import("@/pages/SupportPage"));
 const LegalPage = lazy(() => import("@/features/legal/pages/LegalPage"));
 const PricingPage = lazy(() => import("@/features/pricing/pages/PricingPage"));
 
-
+// above AppRoutes. Keeps the #hash so old /landing#for-candidates links still scroll.
+const LandingRedirect = () => {
+    const { hash } = useLocation();
+    return <Navigate to={{ pathname: "/", hash }} replace />;
+};
 
 const AppRoutes = () => {
     return (
         <Suspense fallback={<AppLoader />}>
             <Routes>
-                <Route path="/" element={<Navigate to="/landing" />} />
+                <Route path="/" element={<LandingPage />} />
                 <Route path="/admin/login" element={<AdminLogin />} />
                 <Route path="/admin" element={<AdminLayout />}>
                     <Route index element={<Navigate to="overview" replace />} />
@@ -92,7 +96,7 @@ const AppRoutes = () => {
                     <Route path="credits" element={<CreditManagement />} />
                     <Route path="reviews" element={<ExperienceReviews />} />
                 </Route>
-                <Route path="/landing" element={<LandingPage />} />
+                <Route path="/landing" element={<LandingRedirect />} />
                 <Route path="/pricing" element={<PricingPage />} />
                 <Route path="/auth/verify-email" element={<LegacyVerifyEmailRedirect />} />
                 <Route path="/email-preferences" element={<EmailPreferencesPage />} />

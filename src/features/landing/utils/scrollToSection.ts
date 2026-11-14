@@ -11,6 +11,6 @@ export const scrollToSectionById = (id: string): boolean => {
     return true;
 };
 
-// Where a landing-page section lives. Links built with this work from any page: on /landing they
-// scroll, anywhere else they navigate there first (see useScrollToHash).
-export const landingSectionPath = (id: string): string => `/landing#${id}`;
+// Where a landing-page section lives. On "/" these scroll; from any other page they navigate
+// there first (see useScrollToHash).
+export const landingSectionPath = (id: string): string => `/#${id}`;

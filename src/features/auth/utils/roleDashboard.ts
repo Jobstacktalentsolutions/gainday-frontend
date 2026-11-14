@@ -22,7 +22,7 @@ const isWithinArea = (path: string, area: string) =>
  */
 export function resolvePostLoginPath(role: string, redirect: string | null): string {
     const dashboard = ROLE_DASHBOARD_PATHS[role];
-    if (!dashboard) return "/landing";
+    if (!dashboard) return "/";
 
     const areas = ROLE_AREAS[role] ?? [];
     const isSafe =

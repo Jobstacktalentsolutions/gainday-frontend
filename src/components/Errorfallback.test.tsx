@@ -32,7 +32,7 @@ describe("ErrorFallback", () => {
     })
 
     it.each([
-        [null, "Go to homepage", "/landing"],
+        [null, "Go to homepage", "/"],
         ["EMPLOYER", "Go to my jobs", "/employer/jobs"],
         ["JOB_SEEKER", "Go to the job board", "/job-board"],
         ["ADMIN", "Go to the dashboard", "/admin/dashboard"],

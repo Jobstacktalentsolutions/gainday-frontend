@@ -19,7 +19,7 @@ const CandidateRoute = () => {
     }
 
     if (user?.role !== "JOB_SEEKER") {
-        return <Navigate to={user?.role === "EMPLOYER" ? "/employer/jobs" : "/landing"} replace />;
+        return <Navigate to={user?.role === "EMPLOYER" ? "/employer/jobs" : "/"} replace />;
     }
 
     if (!user.isEmailVerified) {

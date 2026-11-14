@@ -25,7 +25,7 @@ const EmployerRoute = () => {
     if (user?.role !== "EMPLOYER") {
         if (user?.role === "JOB_SEEKER") return <Navigate to="/job-board" replace />;
         if (user?.role === "ADMIN") return <Navigate to="/admin/overview" replace />;
-        return <Navigate to="/landing" replace />;
+        return <Navigate to="/" replace />;
     }
 
     if (!user.isEmailVerified) {

@@ -231,7 +231,7 @@ const SupportPage = () => {
                     >
                       Submit another inquiry
                     </ActionButton>
-                    <Link to="/landing">
+                    <Link to="/">
                       <ActionButton type="button" className="w-full sm:w-auto">
                         Return to Home
                       </ActionButton>

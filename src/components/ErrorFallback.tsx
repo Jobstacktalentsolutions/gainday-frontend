@@ -9,7 +9,7 @@ const HOME_BY_ROLE: Record<string, { path: string; label: string }> = {
     JOB_SEEKER: { path: "/job-board", label: "Go to the job board" },
     ADMIN: { path: "/admin/dashboard", label: "Go to the dashboard" },
 }
-const DEFAULT_HOME = { path: "/landing", label: "Go to homepage" }
+const DEFAULT_HOME = { path: "/", label: "Go to homepage" }
 
 interface ErrorFallbackProps {
     error: Error

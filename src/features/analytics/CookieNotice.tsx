@@ -9,7 +9,7 @@ import { clearVisitorId } from "./visitorId";
 const PUBLIC_PATHS = ["/landing", "/pricing", "/job-board", "/support", "/terms", "/privacy"];
 
 function isPublicPath(pathname: string): boolean {
-  return PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));
+  return pathname === "/" || PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));
 }
 
 /** Asks once, on a public page, whether anonymous visit counting is allowed. Until answered, nothing is tracked. */

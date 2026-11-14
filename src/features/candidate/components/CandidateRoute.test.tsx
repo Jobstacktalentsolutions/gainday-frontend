@@ -72,7 +72,7 @@ describe("CandidateRoute", () => {
     it("sends any other role to the landing page", () => {
         signIn({ role: "ADMIN" })
         renderAt("/candidate/applications")
-        expect(screen.getByTestId("where")).toHaveTextContent("/landing")
+        expect(screen.getByTestId("where")).toHaveTextContent(/^\/$/)
     })
 
     it("shows the loader (not sign-in) while a stored token's profile is loading", () => {

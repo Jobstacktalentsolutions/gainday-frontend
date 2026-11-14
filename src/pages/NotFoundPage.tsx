@@ -10,7 +10,7 @@ const NotFoundPage = () => {
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center gap-10 bg-neutral-50 px-6 text-center">
-            <Link to="/landing" aria-label="Gainday home">
+            <Link to="/" aria-label="Gainday home">
                 <img src={brandLogo} alt="Gainday" />
             </Link>
 
@@ -27,7 +27,7 @@ const NotFoundPage = () => {
 
             <div className="flex w-full max-w-sm flex-col gap-3 sm:flex-row">
                 <Link
-                    to="/landing"
+                    to="/"
                     className={cn(actionButtonVariants({ size: "lg" }), "sm:flex-1")}
                 >
                     Go to homepage
