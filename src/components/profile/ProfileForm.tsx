@@ -1,8 +1,11 @@
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
-import "react-phone-number-input/style.css";
+import { useState } from "react";
+import IntlTelInput from "@intl-tel-input/react";
+import "intl-tel-input/styles";
+import "./profile-phone.css";
+import { isValidPhoneNumber } from "react-phone-number-input";
 import { Loader2 } from "@/components/ui/icons";
 import { toast } from "sonner";
 import { ActionButton } from "@/components/ui/ActionButton";
@@ -46,6 +49,7 @@ type ProfileFormValues = z.infer<ReturnType<typeof buildSchema>>;
 const ProfileForm = () => {
   const { user } = useCurrentUser();
   const updateProfile = useUpdateProfile();
+  const [phoneInputKey, setPhoneInputKey] = useState(0);
   const isEmployer = user?.role === "EMPLOYER";
   const isCandidate = user?.role === "JOB_SEEKER";
 
@@ -90,6 +94,7 @@ const ProfileForm = () => {
     try {
       const updated = await updateProfile.mutateAsync(payload);
       reset(values);
+      setPhoneInputKey((key) => key + 1);
       if (isCandidate && user?.isProfileComplete === false && updated.isProfileComplete !== false) {
         toast.success("Profile saved. You can now apply for jobs.");
       } else {
@@ -122,24 +127,25 @@ const ProfileForm = () => {
               </label>
               <div
                 className={cn(
-                  "rounded-lg border bg-white px-3.5 py-2.5 transition-all duration-200",
+                  "profile-phone h-[46px] rounded-lg border bg-white transition-all duration-200",
                   fieldState.error
                     ? "border-error-400 ring-3 ring-error-400/20"
                     : "border-neutral-200 focus-within:border-primary-500 focus-within:ring-3 focus-within:ring-primary-500/20",
                 )}
               >
-                <PhoneInput
-                  international
-                  value={field.value || undefined}
-                  onChange={(value) => field.onChange(value ?? "")}
-                  onBlur={field.onBlur}
-                  placeholder="Enter your phone number"
-                  className="flex items-center gap-2"
-                  numberInputProps={{
+                <IntlTelInput
+                  key={phoneInputKey}
+                  initialCountry="gb"
+                  separateDialCode
+                  loadUtils={() => import("intl-tel-input/utils")}
+                  onChangeNumber={field.onChange}
+                  inputProps={{
                     id: "profile-phone",
-                    className: "min-w-0 flex-1 bg-transparent text-base text-neutral-700 outline-none placeholder:text-neutral-400",
+                    defaultValue: field.value,
+                    onBlur: field.onBlur,
+                    placeholder: "Enter your phone number",
+                    "aria-invalid": !!fieldState.error,
                   }}
-                  defaultCountry="GB"
                 />
               </div>
               {fieldState.error && (
@@ -191,7 +197,7 @@ const ProfileForm = () => {
         {isDirty && (
           <button
             type="button"
-            onClick={() => reset()}
+            onClick={() => { reset(); setPhoneInputKey((key) => key + 1); }}
             disabled={updateProfile.isPending}
             className="h-12 cursor-pointer rounded-xl px-5 text-base font-medium text-neutral-600 transition-colors hover:bg-neutral-100 disabled:opacity-50"
           >
