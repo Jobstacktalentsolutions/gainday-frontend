@@ -12,6 +12,7 @@ import IntegrityCard, { IntegrityCardSkeleton } from "../components/IntegrityCar
 import CapabilityPassportModal from "../components/CapabilityPassportModal";
 import CandidateProfileCard from "@/features/capability-passport/components/CandidateProfileCard";
 import CreditPurchaseModal from "../components/CreditPurchaseModal";
+import { UnlockConfirmation } from "../components/UnlockConfirmation";
 import { useEmployerSubmission } from "../hooks/useEmployerSubmission";
 import { useSubmissionPassport } from "../hooks/useSubmissionPassport";
 import { useUnlockCandidates } from "../hooks/useUnlockCandidates";
@@ -40,6 +41,7 @@ const SubmissionDetail = () => {
     const { jobId = "", submissionId } = useParams<{ jobId: string; submissionId: string }>();
     const { data: submission, isLoading, isError, refetch } = useEmployerSubmission(jobId, submissionId);
     const [isPassportOpen, setIsPassportOpen] = useState(false);
+    const [confirmUnlock, setConfirmUnlock] = useState(false);
     // Only fetched once the modal is opened.
     const passportQuery = useSubmissionPassport(submissionId, isPassportOpen);
 
@@ -55,11 +57,13 @@ const SubmissionDetail = () => {
         if (!submissionId) return;
         unlockCandidates.mutate([submissionId], {
             onSuccess: () => {
+                setConfirmUnlock(false);
                 toast.success("Contact unlocked");
                 refetch();
             },
             onError: (error) => {
                 if (isAxiosError<PaymentRequiredBody>(error) && error.response?.status === 402) {
+                    setConfirmUnlock(false);
                     setUnlockModal({ open: true, recommendedPackId: error.response.data.recommendedPackId });
                     return;
                 }
@@ -72,8 +76,7 @@ const SubmissionDetail = () => {
         if (!submission) return;
         const currentlySelected = submission.isSelected || submission.status === "SELECTED";
         if (!currentlySelected && !submission.isUnlocked) {
-            toast.info("Please unlock this candidate before selecting them.");
-            handleUnlockContact();
+            setConfirmUnlock(true);
             return;
         }
         selectCandidate.mutate(
@@ -90,7 +93,7 @@ const SubmissionDetail = () => {
                 onError: (error) => {
                     if (isAxiosError(error) && error.response?.status === 403) {
                         toast.error(error.response.data?.message || "You must unlock this candidate before selecting them.");
-                        handleUnlockContact();
+                        setConfirmUnlock(true);
                     } else {
                         toast.error("Failed to update candidate selection status.");
                     }
@@ -183,7 +186,7 @@ const SubmissionDetail = () => {
                     <ContactCard
                         isUnlocked={submission.isUnlocked}
                         contact={submission.contact}
-                        onUnlock={handleUnlockContact}
+                        onUnlock={() => setConfirmUnlock(true)}
                         isSelected={submission.isSelected || submission.status === "SELECTED"}
                     />
                     {submission.candidateProfile && <CandidateProfileCard profile={submission.candidateProfile} />}
@@ -211,9 +214,10 @@ const SubmissionDetail = () => {
                 isUnlocked={submission.isUnlocked}
                 isSelected={submission.isSelected || submission.status === "SELECTED"}
                 contact={submission.contact}
-                onUnlockContact={handleUnlockContact}
+                onUnlockContact={() => setConfirmUnlock(true)}
             />
 
+            <UnlockConfirmation open={confirmUnlock} onOpenChange={setConfirmUnlock} count={1} pending={unlockCandidates.isPending} onConfirm={handleUnlockContact} onTopUp={() => { setConfirmUnlock(false); setUnlockModal({ open: true }); }} />
             {submissionId && (
                 <CreditPurchaseModal
                     open={unlockModal.open}

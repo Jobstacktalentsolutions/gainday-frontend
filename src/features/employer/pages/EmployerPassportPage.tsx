@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import PageBackLink from "../components/PageBackLink";
 import { CapabilityPassportContent } from "../components/CapabilityPassportModal";
 import CreditPurchaseModal from "../components/CreditPurchaseModal";
+import { UnlockConfirmation } from "../components/UnlockConfirmation";
 import { useEmployerSubmission } from "../hooks/useEmployerSubmission";
 import { useSubmissionPassport } from "../hooks/useSubmissionPassport";
 import { useUnlockCandidates } from "../hooks/useUnlockCandidates";
@@ -19,6 +20,7 @@ const EmployerPassportPage = () => {
     const submissionQuery = useEmployerSubmission(jobId, submissionId);
     const passportQuery = useSubmissionPassport(submissionId, true);
     const unlockCandidates = useUnlockCandidates();
+    const [confirmOpen, setConfirmOpen] = useState(false);
     const [purchase, setPurchase] = useState<{ open: boolean; recommendedPackId?: string }>({ open: false });
     const submission = submissionQuery.data;
     const returnTo = location.state?.returnTo === UNLOCKS_PATH
@@ -28,9 +30,10 @@ const EmployerPassportPage = () => {
     const unlock = () => {
         if (!submissionId) return;
         unlockCandidates.mutate([submissionId], {
-            onSuccess: () => { toast.success("Contact unlocked"); submissionQuery.refetch(); },
+            onSuccess: () => { setConfirmOpen(false); toast.success("Contact unlocked"); submissionQuery.refetch(); },
             onError: (error) => {
                 if (isAxiosError<PaymentRequiredBody>(error) && error.response?.status === 402) {
+                    setConfirmOpen(false);
                     setPurchase({ open: true, recommendedPackId: error.response.data.recommendedPackId });
                 } else {
                     toast.error("Couldn't unlock this candidate. Please try again.");
@@ -62,9 +65,10 @@ const EmployerPassportPage = () => {
                         isUnlocked={submission.isUnlocked}
                         isSelected={submission.isSelected}
                         contact={submission.contact}
-                        onUnlockContact={unlock}
+                        onUnlockContact={() => setConfirmOpen(true)}
                     />
                 )}
+                <UnlockConfirmation open={confirmOpen} onOpenChange={setConfirmOpen} count={1} pending={unlockCandidates.isPending} onConfirm={unlock} onTopUp={() => { setConfirmOpen(false); setPurchase({ open: true }); }} />
                 {submissionId && <CreditPurchaseModal open={purchase.open} onOpenChange={(open) => setPurchase((prev) => ({ ...prev, open }))} mode="unlock" submissionIds={[submissionId]} recommendedPackId={purchase.recommendedPackId} onUnlocked={() => submissionQuery.refetch()} />}
             </div>
         </main>

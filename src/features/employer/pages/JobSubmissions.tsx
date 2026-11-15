@@ -9,6 +9,7 @@ import SubmissionSortDropdown from "../components/SubmissionSortDropdown";
 import SubmissionsTable, { SubmissionsTableSkeleton } from "../components/SubmissionTable";
 import SubmissionsEmptyState from "../components/SubmissionsEmptyState";
 import CreditPurchaseModal from "../components/CreditPurchaseModal";
+import { UnlockConfirmation } from "../components/UnlockConfirmation";
 import { useJobSubmissions } from "../hooks/useJobSubmissions";
 import { useJobTitle } from "../hooks/useJobTitle";
 import { useSubmissionSort } from "../hooks/useSubmissionSort";
@@ -37,6 +38,7 @@ const JobSubmissions = () => {
     const hasSubmissions = !!submissions && submissions.length > 0;
 
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    const [confirmOpen, setConfirmOpen] = useState(false);
     const [unlockPrompt, setUnlockPrompt] = useState<UnlockPrompt>({ open: false, submissionIds: [] });
     const unlockCandidates = useUnlockCandidates();
 
@@ -56,12 +58,14 @@ const JobSubmissions = () => {
         const count = submissionIds.length;
         unlockCandidates.mutate(submissionIds, {
             onSuccess: () => {
+                setConfirmOpen(false);
                 toast.success(count === 1 ? "Candidate unlocked" : `${count} candidates unlocked`);
                 setSelectedIds([]);
                 refetch();
             },
             onError: (error) => {
                 if (isAxiosError<PaymentRequiredBody>(error) && error.response?.status === 402) {
+                    setConfirmOpen(false);
                     setUnlockPrompt({
                         open: true,
                         submissionIds,
@@ -133,7 +137,7 @@ const JobSubmissions = () => {
                                 size="md"
                                 className="w-auto"
                                 disabled={unlockCandidates.isPending}
-                                onClick={() => unlockSelected(lockedSelectedIds)}
+                                onClick={() => setConfirmOpen(true)}
                             >
                                 {unlockLabel}
                             </ActionButton>
@@ -168,6 +172,7 @@ const JobSubmissions = () => {
                 )}
             </div>
 
+            <UnlockConfirmation open={confirmOpen} onOpenChange={setConfirmOpen} count={lockedSelectedIds.length} pending={unlockCandidates.isPending} onConfirm={() => unlockSelected(lockedSelectedIds)} onTopUp={() => { setConfirmOpen(false); setUnlockPrompt({ open: true, submissionIds: lockedSelectedIds }); }} />
             {unlockPrompt.submissionIds.length > 0 && (
                 <CreditPurchaseModal
                     open={unlockPrompt.open}

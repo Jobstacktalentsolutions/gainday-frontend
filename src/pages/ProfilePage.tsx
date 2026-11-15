@@ -22,7 +22,13 @@ const ProfilePage = () => {
         <div className="mb-6">
           <button
             type="button"
-            onClick={() => navigate(-1)}
+            onClick={() => {
+              if (window.history.state?.idx > 0) {
+                navigate(-1);
+                return;
+              }
+              navigate(isEmployer ? "/employer/jobs" : isCandidate ? "/job-board" : "/");
+            }}
             className="inline-flex items-center gap-2 text-sm font-medium text-neutral-600 hover:text-neutral-950 transition-colors cursor-pointer"
           >
             <ArrowLeft className="size-4" />
@@ -66,7 +72,9 @@ const ProfilePage = () => {
                 className="flex items-start gap-3 rounded-2xl border border-warning-200 bg-warning-50 p-4 text-sm text-warning-900"
               >
                 <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                <p>To remove the profile warning, add your {missingFields.join(" and ")}. Phone number is optional to save.{user?.role === "JOB_SEEKER" && " You need a job title to apply for jobs."}</p>
+                <p>{user?.role === "EMPLOYER"
+                  ? "Add your phone number to remove the profile warning. Phone number is optional to save."
+                  : "Add your job title to apply for jobs."}</p>
               </div>
             )}
 
