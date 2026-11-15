@@ -11,6 +11,7 @@ import { useLogout } from "@/features/auth/hooks/useLogout";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { CANDIDATE_NAV_LINKS } from "../utils/candidateNavLinks";
 import NotificationBell from "./NotificationBell";
+import { getMissingProfileFields } from "@/features/auth/utils/profileCompletion";
 
 // Header for signed-in candidates. Kept separate from the landing Header (which handles signed-out visitors,
 // the promo dropdowns and the auth modal) so neither grows to carry the other's concerns.
@@ -49,8 +50,8 @@ const CandidateHeader = () => {
                     >
                         <User className="size-4 text-neutral-500" aria-hidden="true" />
                         Profile
-                        {user?.isProfileComplete === false && (
-                            <span className="rounded-full bg-error-500 px-2 py-0.5 text-xs font-semibold text-white">
+                        {user && getMissingProfileFields(user).length > 0 && (
+                            <span className="rounded-full bg-warning-100 px-2 py-0.5 text-xs font-semibold text-warning-900">
                                 Incomplete
                             </span>
                         )}
@@ -84,12 +85,13 @@ const CandidateHeader = () => {
 
                     <button
                         type="button"
-                        aria-label={menuOpen ? "Close menu" : "Open menu"}
+                        aria-label={menuOpen ? "Close menu" : user && getMissingProfileFields(user).length > 0 ? "Open menu, profile incomplete" : "Open menu"}
                         aria-expanded={menuOpen}
                         onClick={() => setMenuOpen((open) => !open)}
-                        className="flex size-10 cursor-pointer items-center justify-center transition-colors hover:text-neutral-500 lg:hidden"
+                        className="relative flex size-10 cursor-pointer items-center justify-center transition-colors hover:text-neutral-500 lg:hidden"
                     >
                         {menuOpen ? <X size={24} /> : <Menu size={24} />}
+                        {user && getMissingProfileFields(user).length > 0 && <span aria-hidden="true" className="absolute right-0 top-0 flex size-4 items-center justify-center rounded-full bg-warning-400 text-xs font-bold text-warning-950">!</span>}
                     </button>
                 </div>
         </NavbarShell>

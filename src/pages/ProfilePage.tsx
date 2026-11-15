@@ -4,12 +4,13 @@ import CandidateHeader from "@/features/candidate/components/CandidateHeader";
 import { PublicNavbar } from "@/features/candidate/components/PublicNavbar";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import ProfileForm from "@/components/profile/ProfileForm";
+import { getMissingProfileFields } from "@/features/auth/utils/profileCompletion";
 
 const ProfilePage = () => {
   const { user } = useCurrentUser();
   const navigate = useNavigate();
   const isEmployer = user?.role === "EMPLOYER";
-  const isCandidate = user?.role === "JOB_SEEKER";
+  const missingFields = user ? getMissingProfileFields(user) : [];
 
   return (
     <div className="min-h-screen w-full bg-neutral-50">
@@ -59,13 +60,13 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            {isCandidate && user?.isProfileComplete === false && (
+            {missingFields.length > 0 && (
               <div
                 role="status"
                 className="flex items-start gap-3 rounded-2xl border border-warning-200 bg-warning-50 p-4 text-sm text-warning-900"
               >
                 <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                <p>Your profile is incomplete. Add your job title to be able to apply for jobs.</p>
+                <p>To remove the profile warning, add your {missingFields.join(" and ")}. Phone number is optional to save.{user?.role === "JOB_SEEKER" && " You need a job title to apply for jobs."}</p>
               </div>
             )}
 

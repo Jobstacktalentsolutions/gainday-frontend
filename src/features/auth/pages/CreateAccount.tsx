@@ -61,6 +61,7 @@ const CreateAccount = () => {
             apiClient.post("/auth/signup", { ...values, redirectPath: safeRedirect }),
         onSuccess: (_res, values) => {
             useAuthStore.getState().clearAuth()
+            localStorage.setItem("gainday-profile-prompt", values.email.trim().toLowerCase())
             navigate(withRedirect("/employer/verify-email", safeRedirect), { state: { justSent: true, email: values.email } })
         },
     })

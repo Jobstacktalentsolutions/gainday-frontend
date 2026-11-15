@@ -60,6 +60,7 @@ const CandidateSignUp = () => {
             apiClient.post("/auth/register/candidate", values),
         onSuccess: (_res, values) => {
             useAuthStore.getState().clearAuth()
+            localStorage.setItem("gainday-profile-prompt", values.email.trim().toLowerCase())
             navigate(
                 redirect ? `/candidate/verify-email?redirect=${encodeURIComponent(redirect)}` : "/candidate/verify-email",
                 { state: { justSent: true, email: values.email } },

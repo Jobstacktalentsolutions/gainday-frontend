@@ -102,6 +102,7 @@ const ProfileForm = () => {
 
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+      <p className="text-sm text-neutral-600">Fields marked * are required to save. Add your phone number to remove the profile warning; it is optional to save.</p>
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <FormInput label="Full name" required placeholder="Enter your full name" hint={`Up to ${NAME_MAX} characters.`} error={errors.fullName?.message} {...register("fullName")} />
 
@@ -117,7 +118,7 @@ const ProfileForm = () => {
           render={({ field, fieldState }) => (
             <div className="flex flex-col gap-1.5">
               <label htmlFor="profile-phone" className="text-base font-medium text-neutral-800">
-                Phone number
+                Phone number <span className="font-normal text-neutral-500">(optional)</span>
               </label>
               <div
                 className={cn(
@@ -161,7 +162,7 @@ const ProfileForm = () => {
               {...register("title")}
             />
 
-            <FormSelect label="Gender" placeholder="Prefer not to say" error={errors.gender?.message} {...register("gender")}>
+            <FormSelect label="Gender (optional)" placeholder="Prefer not to say" error={errors.gender?.message} {...register("gender")}>
               {GENDER_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
@@ -171,7 +172,7 @@ const ProfileForm = () => {
 
             <div className="flex flex-col gap-1.5 sm:col-span-2">
               <FormTextarea
-                label="Professional summary"
+                label="Professional summary (optional)"
                 rows={5}
                 hint={`Up to ${SUMMARY_MAX.toLocaleString("en-GB")} characters. Employers see this once they unlock your profile.`}
                 placeholder="Summarise your experience, strengths and what you're looking for"

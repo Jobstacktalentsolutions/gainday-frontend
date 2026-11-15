@@ -6,6 +6,7 @@ import ErrorFallback from "./components/ErrorFallback"
 import { usePageViewTracker } from "./features/analytics/usePageViewTracker"
 import { CookieNotice } from "./features/analytics/CookieNotice"
 import { RouteSeo } from "./lib/RouteSeo"
+import { ProfilePrompt } from "./features/auth/component/ProfilePrompt"
 
 function App() {
   const { pathname } = useLocation()
@@ -18,6 +19,7 @@ function App() {
         renderFallback={({ error, reset }) => <ErrorFallback error={error} reset={reset} />}
       >
         <AppRoutes />
+        <ProfilePrompt />
       </AppErrorBoundary>
       <Toaster richColors position="top-right" />
       <CookieNotice />
