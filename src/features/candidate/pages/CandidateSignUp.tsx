@@ -58,11 +58,11 @@ const CandidateSignUp = () => {
     const signUpMutation = useMutation({
         mutationFn: (values: CandidateSignUpValues) =>
             apiClient.post("/auth/register/candidate", values),
-        onSuccess: (res) => {
-            useAuthStore.getState().setAuth(res.data.access_token, res.data.user)
+        onSuccess: (_res, values) => {
+            useAuthStore.getState().clearAuth()
             navigate(
                 redirect ? `/candidate/verify-email?redirect=${encodeURIComponent(redirect)}` : "/candidate/verify-email",
-                { state: { justSent: true } },
+                { state: { justSent: true, email: values.email } },
             )
         },
     })

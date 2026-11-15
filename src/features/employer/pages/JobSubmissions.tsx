@@ -15,7 +15,6 @@ import { useSubmissionSort } from "../hooks/useSubmissionSort";
 import { useUnlockCandidates } from "../hooks/useUnlockCandidates";
 import type { PaymentRequiredBody } from "../types/payments";
 import { SORT_CONFIG, sortSubmissions } from "../utils/submissionSort";
-import { CATEGORY_ORDER } from "../utils/submissionCategories";
 import { cn } from "@/lib/utils";
 
 interface UnlockPrompt {
@@ -156,18 +155,6 @@ const JobSubmissions = () => {
                 {!isLoading && !isError && (
                     hasSubmissions && jobId ? (
                         <div className="flex flex-col gap-3">
-                            <div className="flex flex-wrap items-center gap-x-5 gap-y-1 rounded-xl bg-white px-4 py-3 text-sm text-neutral-600">
-                                <span className="font-medium uppercase tracking-wide text-neutral-500">Breakdown key</span>
-                                {CATEGORY_ORDER.map((category) => (
-                                    <span key={category.key}>
-                                        <abbr title={category.label} className="font-semibold text-neutral-900 no-underline">
-                                            {category.short}
-                                        </abbr>
-                                        {" = "}
-                                        {category.label}
-                                    </span>
-                                ))}
-                            </div>
                             <SubmissionsTable
                                 jobId={jobId}
                                 submissions={sortedSubmissions}

@@ -324,6 +324,35 @@ input:-webkit-autofill:active {
   overflow: hidden;
 }
 
+.icon-gradient-frame {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 9999px;
+  padding: 2px;
+  background: var(--color-neutral-200);
+}
+
+.icon-gradient-frame::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: conic-gradient(var(--color-primary-500), var(--color-secondary-500), var(--color-primary-500));
+  content: "";
+  animation: auth-icon-gradient 4s linear infinite;
+}
+
+.icon-gradient-frame > span {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+  background: white;
+}
+
 .auth-choice-icon::before {
   content: "";
   position: absolute;
@@ -333,7 +362,8 @@ input:-webkit-autofill:active {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .auth-choice-icon::before { animation: none; }
+  .auth-choice-icon::before,
+  .icon-gradient-frame::before { animation: none; }
 }
 
 @utility heading-1 {

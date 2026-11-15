@@ -5,7 +5,6 @@ import type { PassportDomain } from "../types/passport";
 
 interface ParsedDomain {
     id: string;
-    category: string;
     subCategory: string;
     simulationCount: number;
     score: number;
@@ -18,7 +17,6 @@ function parseDomain(domain: PassportDomain): ParsedDomain {
     if (parts.length >= 2) {
         return {
             id: domain.id,
-            category: parts[0].trim(),
             subCategory: parts.slice(1).join(" > ").trim(),
             simulationCount: domain.simulationCount,
             score: domain.score,
@@ -26,7 +24,6 @@ function parseDomain(domain: PassportDomain): ParsedDomain {
     }
     return {
         id: domain.id,
-        category: "",
         subCategory: domain.name.trim(),
         simulationCount: domain.simulationCount,
         score: domain.score,
@@ -75,11 +72,6 @@ const DomainBreakdownCard = ({ domains }: { domains: PassportDomain[] }) => {
                                         <p className="truncate text-sm font-medium text-neutral-900 sm:text-base sm:font-semibold">
                                             {item.subCategory}
                                         </p>
-                                        {item.category && (
-                                            <span className="inline-flex items-center rounded-md bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-600">
-                                                {item.category}
-                                            </span>
-                                        )}
                                         <span className="text-xs text-neutral-400">
                                             • {item.simulationCount} {item.simulationCount === 1 ? "simulation" : "simulations"}
                                         </span>

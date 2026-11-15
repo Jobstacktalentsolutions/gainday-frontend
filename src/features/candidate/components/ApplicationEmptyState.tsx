@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 const ApplicationsEmptyState = () => {
     return (
         <div className="flex w-full flex-col items-center justify-center gap-6 rounded-3xl border border-dashed border-primary-300 bg-white px-6 py-12 lg:py-16">
-            <span className="flex size-12 items-center justify-center rounded-lg bg-primary-50">
-                <Briefcase className="size-6 text-primary-500" aria-hidden="true" />
+            <span className="icon-gradient-frame size-12">
+                <span className="text-primary-500"><Briefcase className="size-6" aria-hidden="true" /></span>
             </span>
             <div className="flex flex-col items-center gap-1 text-center">
                 <p className="text-xl text-black lg:text-2xl">No applications yet</p>

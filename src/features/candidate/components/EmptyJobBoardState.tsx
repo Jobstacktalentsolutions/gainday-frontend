@@ -7,8 +7,8 @@ export function EmptyJobBoardState() {
     const navigate = useNavigate();
     return (
         <div className="flex h-103.5 w-full flex-col items-center justify-center gap-6 rounded-3xl border border-dashed border-primary-300 bg-white py-7.25">
-            <span className="flex size-15 items-center justify-center rounded-lg bg-primary-50">
-                <Briefcase className="size-6 text-primary-500" />
+            <span className="icon-gradient-frame size-15">
+                <span className="text-primary-500"><Briefcase className="size-6" /></span>
             </span>
             <div className="flex flex-col items-center gap-6">
                 <p className="w-86 text-center text-[16px] text-neutral-700">

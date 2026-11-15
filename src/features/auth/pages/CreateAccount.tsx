@@ -59,9 +59,9 @@ const CreateAccount = () => {
     const signupMutation = useMutation({
         mutationFn: (values: CreateAccountFormValues) =>
             apiClient.post("/auth/signup", { ...values, redirectPath: safeRedirect }),
-        onSuccess: (res) => {
-            useAuthStore.getState().setAuth(res.data.access_token, res.data.user)
-            navigate(withRedirect("/employer/verify-email", safeRedirect), { state: { justSent: true } })
+        onSuccess: (_res, values) => {
+            useAuthStore.getState().clearAuth()
+            navigate(withRedirect("/employer/verify-email", safeRedirect), { state: { justSent: true, email: values.email } })
         },
     })
 

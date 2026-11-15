@@ -21,7 +21,9 @@ export function JobCard({
 }: JobCardProps) {
     const navigate = useNavigate();
 
-    const handleAction = () => {
+    const openJobDetails = () => navigate(`/job-board/${job.id}`);
+
+    const handleSubmissionAction = () => {
         if (isApplied) {
             if (onViewSubmission) {
                 onViewSubmission(job);
@@ -31,7 +33,7 @@ export function JobCard({
                 onApply(job);
             }
         } else {
-            onApply(job);
+            openJobDetails();
         }
     };
 
@@ -39,21 +41,18 @@ export function JobCard({
         <article
             role="button"
             tabIndex={0}
-            onClick={handleAction}
+            onClick={openJobDetails}
             onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    handleAction();
+                    openJobDetails();
                 }
             }}
-            aria-label={`${isApplied ? "View submission for" : "View job"} ${job.title}`}
+            aria-label={`View job details for ${job.title}`}
             className="flex flex-1 flex-col gap-3 rounded-3xl bg-white p-5 transition-all duration-150 cursor-pointer hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99] sm:p-6"
         >
             <div className="flex w-full flex-col items-start gap-2">
                 <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-full bg-primary-50 px-2 py-1 text-[10px] text-primary-500">
-                        {job.roleCategory}
-                    </span>
                     {isApplied && (
                         <span className="inline-flex items-center gap-1 rounded-full bg-success-50 px-2 py-0.5 text-[10px] font-medium text-success-700">
                             <Check className="size-3" />
@@ -76,7 +75,7 @@ export function JobCard({
                 <StepContinueButton
                     onClick={(e) => {
                         e.stopPropagation();
-                        handleAction();
+                        handleSubmissionAction();
                     }}
                 >
                     {isApplied ? "View Submission" : "Apply Now"}
