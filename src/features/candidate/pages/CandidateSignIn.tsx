@@ -97,7 +97,7 @@ const CandidateSignIn = () => {
     return (
         <AuthCard
             title="Candidate log in"
-            subtitle="Get discovered employers on Gainday"
+            subtitle="Get discovered by employers on Gainday"
         >
             <form
                 onSubmit={handleSubmit((values) => signInMutation.mutate(values))}
