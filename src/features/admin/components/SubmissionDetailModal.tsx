@@ -14,6 +14,7 @@ import {
 import type { CandidateSubmission } from "../types/candidateDetail";
 import type { SimulationTask } from "../types/job";
 import { SubmittedAnswer } from "@/features/candidate/components/SubmittedAnswer";
+import { CLIPBOARD_EVENTS } from "@/features/candidate/hooks/useClipboardMonitoring";
 
 interface SubmissionDetailModalProps {
   submission: CandidateSubmission | null;
@@ -54,6 +55,10 @@ export const SubmissionDetailModal = ({
       label = "Inactivity detected";
     } else if (type === "server-stale-heartbeat") {
       label = "Unexpected connection loss";
+    } else if (type === CLIPBOARD_EVENTS.copy) {
+      label = "Copied content";
+    } else if (type === CLIPBOARD_EVENTS.paste) {
+      label = "Pasted content";
     } else if (type === "pre-simulation-tab-hidden") {
       label = "Pre-check: Switched browser tab";
     } else if (type === "pre-simulation-window-blur") {

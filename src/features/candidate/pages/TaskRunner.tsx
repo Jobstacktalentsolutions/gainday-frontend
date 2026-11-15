@@ -21,6 +21,7 @@ import { useAutosaveAnswer } from "../hooks/useAutosaveAnswer";
 import { useTabVisibilityGuard } from "../hooks/useTabVisibilityGuard";
 import { useFullscreenGuard } from "../hooks/useFullscreenGuard";
 import { useIdleDetection } from "../hooks/useIdleDetection";
+import { useClipboardMonitoring } from "../hooks/useClipboardMonitoring";
 import { useSimulationIntegrityStore } from "../hooks/useSimulationIntegrityStore";
 import { TaskResponseInput } from "../components/TaskResponseInput";
 import StagedChatTask from "../staged-chat/StagedChatTask";
@@ -108,6 +109,10 @@ export default function TaskRunner() {
     // guards below are wired up unconditionally near the top of the component, before that
     // variable exists. Kept current by the effect right after.
     const currentTask = simulation?.tasks[runStore.currentTaskIndex];
+    useClipboardMonitoring(
+        isAuthorized && !runStore.isComplete && runStore.simulationId === simulation?.id && !!runStore.submissionId,
+        currentTask?.id ?? null,
+    );
     const currentTaskIdRef = useRef<string | null>(null);
     useEffect(() => {
         currentTaskIdRef.current = currentTask?.id ?? null;

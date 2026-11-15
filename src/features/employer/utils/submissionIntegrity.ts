@@ -1,4 +1,5 @@
 import type { IntegrityEventSummary, IntegrityStatus } from "../types/submission";
+import { CLIPBOARD_EVENTS } from "@/features/candidate/hooks/useClipboardMonitoring";
 
 // `summary` is the closing line of the Integrity card on the individual submission page.
 // `type` is an open string on the backend (a new listener needs no migration), so an unknown
@@ -9,6 +10,8 @@ const INTEGRITY_EVENT_LABELS: Record<string, string> = {
     "fullscreen-exit": "Fullscreen exits",
     idle: "Idle periods",
     "server-stale-heartbeat": "Connection lost",
+    [CLIPBOARD_EVENTS.copy]: "Copy actions",
+    [CLIPBOARD_EVENTS.paste]: "Paste actions",
 };
 
 export const formatIntegrityEvent = ({ type, count }: IntegrityEventSummary): string =>

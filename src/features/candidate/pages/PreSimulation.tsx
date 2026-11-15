@@ -134,6 +134,7 @@ export default function PreSimulation() {
                                         <li>Exiting full-screen mode</li>
                                         <li>Periods of inactivity</li>
                                         <li>Connection interruptions</li>
+                                        <li>Copying and pasting during the simulation (not clipboard contents)</li>
                                     </ul>
                                     <p>The simulation runs in full-screen mode.</p>
                                 </div>
