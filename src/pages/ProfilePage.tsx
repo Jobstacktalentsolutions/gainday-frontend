@@ -5,7 +5,7 @@ import { PublicNavbar } from "@/features/candidate/components/PublicNavbar";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { AUTH_ROLES } from "@/features/auth/utils/roles";
 import ProfileForm from "@/components/profile/ProfileForm";
-import { getMissingProfileFields } from "@/features/auth/utils/profileCompletion";
+import { getMissingProfileFields, getProfileWarning } from "@/features/auth/utils/profileCompletion";
 
 const ProfilePage = () => {
   const { user } = useCurrentUser();
@@ -13,6 +13,7 @@ const ProfilePage = () => {
   const isEmployer = user?.role === AUTH_ROLES.employer;
   const isCandidate = user?.role === AUTH_ROLES.candidate;
   const missingFields = user ? getMissingProfileFields(user) : [];
+  const warning = getProfileWarning(missingFields);
 
   return (
     <div className="min-h-screen w-full bg-neutral-50">
@@ -68,15 +69,13 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            {missingFields.length > 0 && (
+            {warning && (
               <div
                 role="status"
                 className="flex items-start gap-3 rounded-2xl border border-warning-200 bg-warning-50 p-4 text-sm text-warning-900"
               >
                 <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                <p>{user?.role === "EMPLOYER"
-                  ? "Add your phone number to remove the profile warning. Phone number is optional to save."
-                  : "Add your job title to apply for jobs."}</p>
+                <p>{warning}</p>
               </div>
             )}
 
