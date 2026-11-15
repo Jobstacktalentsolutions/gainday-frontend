@@ -315,6 +315,27 @@ input:-webkit-autofill:active {
 }
 
 /* ── Landing type scale (Figma Heading/1 and Heading/2, responsive) ── */
+@keyframes auth-icon-gradient {
+  to { transform: rotate(360deg); }
+}
+
+.auth-choice-icon {
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-choice-icon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: conic-gradient(var(--color-primary-500), var(--color-secondary-500), var(--color-primary-500));
+  animation: auth-icon-gradient 4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-choice-icon::before { animation: none; }
+}
+
 @utility heading-1 {
   font-size: 40px;
   line-height: 48px;

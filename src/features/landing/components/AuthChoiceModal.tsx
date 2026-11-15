@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
-import { X, ArrowRight, Briefcase, User } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { X, Briefcase, User } from "lucide-react";
+import arrowTr from "@/assets/arrow-tr.svg";
 
 interface AuthChoiceModalProps {
     mode: "login" | "signup" | null;
@@ -15,14 +15,14 @@ const OPTIONS = {
         subheading: "How would you like to get started?",
         candidate: {
             icon: User,
-            label: "I'm looking for a job",
-            description: "Discover roles and apply through job simulations.",
+            label: "Sign up as candidate",
+            description: "Find roles and apply",
             href: "/candidate/signup",
         },
         employer: {
             icon: Briefcase,
-            label: "I'm hiring talent",
-            description: "Post a role and get the most capable candidates",
+            label: "Sign up as employer",
+            description: "Post and manage roles",
             href: "/employer/signup",
         },
     },
@@ -31,14 +31,14 @@ const OPTIONS = {
         subheading: "Welcome back",
         candidate: {
             icon: User,
-            label: "I'm a candidate",
-            description: "Continue where you left off and track your Capability Passport.",
+            label: "Log in as candidate",
+            description: "Find roles and apply",
             href: "/candidate/signin",
         },
         employer: {
             icon: Briefcase,
-            label: "I'm an employer",
-            description: "Review applications and manage your active roles.",
+            label: "Log in as employer",
+            description: "Review your applicants",
             href: "/employer/signin",
         },
     },
@@ -79,7 +79,7 @@ const AuthChoiceModal = ({ mode, onClose, onSwitchMode }: AuthChoiceModalProps) 
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.96, y: 12 }}
                         transition={{ duration: 0.22, ease: "easeOut" }}
-                        className="fixed left-1/2 top-1/2 z-50 w-full max-w-xl -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-neutral-200 bg-white shadow-2xl shadow-neutral-900/15 p-8"
+                        className="fixed left-1/2 top-1/2 z-50 max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl border border-neutral-200 bg-white p-5 shadow-2xl shadow-neutral-900/15 sm:p-8"
                     >
                         {/* Close */}
                         <button
@@ -92,7 +92,7 @@ const AuthChoiceModal = ({ mode, onClose, onSwitchMode }: AuthChoiceModalProps) 
                         </button>
 
                         {/* Heading */}
-                        <div className="mb-8">
+                        <div className="mb-6 pr-10">
                             <h2 id="auth-choice-heading" className="text-2xl font-semibold text-neutral-950">
                                 {config.heading}
                             </h2>
@@ -100,7 +100,7 @@ const AuthChoiceModal = ({ mode, onClose, onSwitchMode }: AuthChoiceModalProps) 
                         </div>
 
                         {/* Options */}
-                        <div className="flex flex-col divide-y divide-neutral-100 overflow-hidden rounded-xl border border-neutral-200">
+                        <div className="flex flex-col gap-3">
                             {[config.candidate, config.employer].map((option) => {
                                 const Icon = option.icon;
                                 return (
@@ -108,30 +108,29 @@ const AuthChoiceModal = ({ mode, onClose, onSwitchMode }: AuthChoiceModalProps) 
                                         key={option.href}
                                         type="button"
                                         onClick={() => handleSelect(option.href)}
-                                        className={cn(
-                                            "group flex w-full cursor-pointer items-center gap-4 px-5 py-4 text-left transition-colors hover:bg-primary-50",
-                                        )}
+                                        className="group flex w-full cursor-pointer items-center gap-3 rounded-2xl border border-neutral-200 bg-neutral-50/60 p-3 text-left transition-colors hover:border-primary-300 hover:bg-primary-50/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-500 sm:gap-4 sm:p-4"
                                     >
                                         {/* Icon pill */}
-                                        <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-500 transition-colors group-hover:bg-primary-100">
-                                            <Icon size={18} />
+                                        <span className="auth-choice-icon size-11 shrink-0 rounded-full p-0.5 shadow-sm sm:size-12">
+                                            <span className="relative flex size-full items-center justify-center rounded-full bg-white text-primary-500">
+                                                <Icon size={21} strokeWidth={1.8} aria-hidden="true" />
+                                            </span>
                                         </span>
 
                                         {/* Text */}
-                                        <span className="flex flex-1 flex-col gap-0.5">
+                                        <span className="flex min-w-0 flex-1 flex-col gap-0.5">
                                             <span className="text-base font-medium text-neutral-900">
                                                 {option.label}
                                             </span>
-                                            <span className="text-sm text-neutral-500">
+                                            <span className="text-xs leading-5 text-neutral-500 sm:text-sm">
                                                 {option.description}
                                             </span>
                                         </span>
 
                                         {/* Arrow */}
-                                        <ArrowRight
-                                            size={16}
-                                            className="shrink-0 text-neutral-400 transition-transform group-hover:translate-x-0.5 group-hover:text-primary-500"
-                                        />
+                                        <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-secondary-500 transition-colors group-hover:bg-secondary-400 sm:size-10">
+                                            <img src={arrowTr} alt="" className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transform-none" />
+                                        </span>
                                     </button>
                                 );
                             })}

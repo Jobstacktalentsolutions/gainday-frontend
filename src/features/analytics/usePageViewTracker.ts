@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { apiClient } from "@/lib/api/client";
-import { getConsent } from "./consent";
+import { CONSENT, getConsent } from "./consent";
 import { getVisitorId } from "./visitorId";
 
 const DEDUPE_MS = 30_000;
@@ -13,7 +13,7 @@ export function usePageViewTracker(): void {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    if (getConsent() !== "granted") return; // checked before getVisitorId(), which creates the cookie
+    if (getConsent() !== CONSENT.granted) return; // checked before getVisitorId(), which creates the cookie
 
     const now = Date.now();
     if (lastPing?.path === pathname && now - lastPing.at < DEDUPE_MS) return;
