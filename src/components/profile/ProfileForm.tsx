@@ -24,8 +24,11 @@ import { cn } from "@/lib/utils";
 const SUMMARY_MAX = 1000;
 const NAME_MAX = 255;
 
-const buildSchema = (isEmployer: boolean, isCandidate: boolean) =>
-  z.object({
+const buildSchema = (isEmployer: boolean, isCandidate: boolean) => {
+  // Mirrors getMissingProfileFields: employers and candidates must have a phone number on file.
+  const requiresPhone = isEmployer || isCandidate;
+
+  return z.object({
     fullName: z.string().trim().min(1, "Full name is required").max(NAME_MAX, `Keep your full name under ${NAME_MAX} characters`),
     companyName: isEmployer
       ? z.string().trim().min(1, "Company name is required").max(NAME_MAX, `Keep your company name under ${NAME_MAX} characters`)
@@ -33,6 +36,7 @@ const buildSchema = (isEmployer: boolean, isCandidate: boolean) =>
     phoneNumber: z
       .string()
       .optional()
+      .refine((value) => !requiresPhone || Boolean(value?.trim()), "Phone number is required")
       .refine((value) => !value || isValidPhoneNumber(value), "Enter a valid phone number for the selected country"),
     title: isCandidate
       ? z.string().trim().min(1, "Job title is required").max(NAME_MAX, `Keep your job title under ${NAME_MAX} characters`)
@@ -43,6 +47,7 @@ const buildSchema = (isEmployer: boolean, isCandidate: boolean) =>
       .max(SUMMARY_MAX, `Keep your professional summary under ${SUMMARY_MAX.toLocaleString("en-GB")} characters`)
       .optional(),
   });
+};
 
 type ProfileFormValues = z.infer<ReturnType<typeof buildSchema>>;
 
@@ -52,6 +57,7 @@ const ProfileForm = () => {
   const [phoneInputKey, setPhoneInputKey] = useState(0);
   const isEmployer = user?.role === "EMPLOYER";
   const isCandidate = user?.role === "JOB_SEEKER";
+  const requiresPhone = isEmployer || isCandidate;
 
   const {
     register,
@@ -107,7 +113,7 @@ const ProfileForm = () => {
 
   return (
     <form noValidate onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-      <p className="text-sm text-neutral-600">Fields marked * are required to save. Add your phone number to remove the profile warning; it is optional to save.</p>
+      <p className="text-sm text-neutral-600">Fields marked * are required to save.</p>
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <FormInput label="Full name" required placeholder="Enter your full name" hint={`Up to ${NAME_MAX} characters.`} error={errors.fullName?.message} {...register("fullName")} />
 
@@ -122,12 +128,17 @@ const ProfileForm = () => {
           control={control}
           render={({ field, fieldState }) => (
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="profile-phone" className="text-base font-medium text-neutral-800">
-                Phone number <span className="font-normal text-neutral-500">(optional)</span>
+              <label htmlFor="profile-phone" className="flex items-center gap-1 text-base font-medium text-neutral-800 select-none">
+                Phone number
+                {requiresPhone ? (
+                  <span aria-hidden="true" className="text-error-500">*</span>
+                ) : (
+                  <span className="font-normal text-neutral-500">(optional)</span>
+                )}
               </label>
               <div
                 className={cn(
-                  "profile-phone h-[46px] rounded-lg border bg-white transition-all duration-200",
+                  "profile-phone h-11.5 rounded-lg border bg-white transition-all duration-200",
                   fieldState.error
                     ? "border-error-400 ring-3 ring-error-400/20"
                     : "border-neutral-200 focus-within:border-primary-500 focus-within:ring-3 focus-within:ring-primary-500/20",
@@ -145,6 +156,7 @@ const ProfileForm = () => {
                     onBlur: field.onBlur,
                     placeholder: "Enter your phone number",
                     "aria-invalid": !!fieldState.error,
+                    "aria-required": requiresPhone,
                   }}
                 />
               </div>
