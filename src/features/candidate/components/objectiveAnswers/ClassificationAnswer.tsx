@@ -24,7 +24,7 @@ function Item({ item, buckets, value, onChange, readOnly, inBucket }: {
                 className="touch-none cursor-grab rounded p-1 text-neutral-400 hover:text-primary-500 focus-visible:outline-2 focus-visible:outline-primary-500 active:cursor-grabbing">
                 <GripVertical className="size-4" />
             </button>}
-            <span className={cn("min-w-0 flex-1 break-words font-medium text-primary-950", inBucket ? "text-xs" : "text-sm")}>{item}</span>
+            <span className={cn("min-w-0 flex-1 wrap-break-word font-medium text-primary-950", inBucket ? "text-xs" : "text-sm")}>{item}</span>
             {!readOnly && <BucketSelect value={value} buckets={buckets} ariaLabel={`Bucket for ${item}`} onChange={onChange} className="max-w-32" />}
         </div>
     );
@@ -36,7 +36,7 @@ function Bucket({ name, children, count, readOnly }: { name: string; children: R
         <section ref={setNodeRef} aria-label={name} className={cn("min-w-0 rounded-xl border border-neutral-200 bg-neutral-50 p-3 transition-colors", isOver && "border-primary-500 bg-primary-50 ring-2 ring-primary-500/20")}>
             <div className="mb-3 flex items-center gap-2">
                 <span className="flex size-9 items-center justify-center rounded-lg bg-white text-primary-500 shadow-sm"><Archive className="size-4" /></span>
-                <h3 className="min-w-0 flex-1 break-words text-sm font-semibold text-primary-950">{name}</h3>
+                <h3 className="min-w-0 flex-1 wrap-break-word text-sm font-semibold text-primary-950">{name}</h3>
                 <span aria-label={`${count} ${count === 1 ? "item" : "items"} in ${name}`} className="rounded-full bg-white px-2 py-0.5 text-xs font-medium text-neutral-600">{count}</span>
             </div>
             <div className="flex min-h-16 flex-col gap-2">{children}</div>
