@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@/components/ui/icons";
 import JobCard from "./JobCard";
 import { fadeUp, staggerContainer } from "@/lib/motion/variants";
 

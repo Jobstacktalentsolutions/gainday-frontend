@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { CircleCheck } from "lucide-react";
+import { CircleCheck } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import Skeleton from "@/components/ui/skeleton";
 import { formatShortDate } from "@/lib/formatDate";

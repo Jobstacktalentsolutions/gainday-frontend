@@ -1,4 +1,4 @@
-import { Users } from "lucide-react";
+import { Users } from "@/components/ui/icons";
 
 const SubmissionsEmptyState = () => {
     return (

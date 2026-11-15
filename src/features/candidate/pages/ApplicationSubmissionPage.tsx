@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "@/components/ui/icons";
 import CandidateHeader from "../components/CandidateHeader";
 
 // Placeholder for the candidate's own view of what they submitted. Deliberately separate from

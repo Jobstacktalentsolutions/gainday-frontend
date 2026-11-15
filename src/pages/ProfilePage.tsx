@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, User, AlertCircle } from "lucide-react";
+import { ArrowLeft, User, AlertCircle } from "@/components/ui/icons";
 import CandidateHeader from "@/features/candidate/components/CandidateHeader";
 import { PublicNavbar } from "@/features/candidate/components/PublicNavbar";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";

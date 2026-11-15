@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Check, Lock } from "lucide-react";
+import { ArrowLeft, Check, Lock } from "@/components/ui/icons";
 import Skeleton from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { formatSubmittedDate } from "../utils/submissionFormatters";

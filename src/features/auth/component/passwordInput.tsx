@@ -1,5 +1,5 @@
 import { forwardRef, useState, type ChangeEvent, type FocusEvent } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "@/components/ui/icons";
 import { FormInput, type FormInputProps } from "@/components/form/FormInput";
 import PasswordChecklist from "./PasswordChecklist";
 

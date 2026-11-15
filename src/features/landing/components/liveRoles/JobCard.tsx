@@ -1,4 +1,4 @@
-import { Clock } from "lucide-react";
+import { Clock } from "@/components/ui/icons";
 import { motion } from "motion/react";
 import { fadeUp } from "@/lib/motion/variants";
 

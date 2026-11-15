@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { LockOpen } from "lucide-react";
+import { LockOpen } from "@/components/ui/icons";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { FilterDropdown } from "@/features/candidate/components/Filterdropdown";
 import { SearchField } from "@/features/candidate/components/SearchField";

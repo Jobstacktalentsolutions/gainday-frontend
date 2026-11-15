@@ -7,7 +7,7 @@ import {
     ShieldAlert,
     UserCheck,
     Clock,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { AdminButton } from "@/components/ui/AdminButton";
 import { formatShortDate } from "@/lib/formatDate";
 import { cn } from "@/lib/utils";

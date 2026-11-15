@@ -16,7 +16,7 @@ import {
   Bell,
   Coins,
   Star,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import SidebarNavItem from "./SidebarNavItem";
 import brandLogo from "@/assets/gainday.svg";
 import { useAuthStore } from "@/features/auth/store/authStore";

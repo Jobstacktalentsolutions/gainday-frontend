@@ -6,7 +6,7 @@ import {
     type ReactNode,
 } from "react";
 import { cn } from "@/lib/utils";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle } from "@/components/ui/icons";
 
 
 export interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {

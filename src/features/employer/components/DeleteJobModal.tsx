@@ -1,5 +1,5 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { Trash2, Loader2 } from "lucide-react";
+import { Trash2, Loader2 } from "@/components/ui/icons";
 import type { Job } from "../types/job";
 
 interface DeleteJobModalProps {

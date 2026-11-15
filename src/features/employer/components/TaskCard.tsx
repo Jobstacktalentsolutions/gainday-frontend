@@ -1,5 +1,5 @@
 
-import { Trash2, RefreshCw, ChevronDown, ChevronUp } from "lucide-react";
+import { Trash2, RefreshCw, ChevronDown, ChevronUp } from "@/components/ui/icons";
 import { useFormContext, Controller } from "react-hook-form";
 import { motion, AnimatePresence } from "motion/react";
 import { JobFormInput } from "@/components/form/JobFormInput";

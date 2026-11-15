@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Clock, MapPin, Wallet, Share2, Check } from "lucide-react";
+import { Clock, MapPin, Wallet, Share2, Check } from "@/components/ui/icons";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";

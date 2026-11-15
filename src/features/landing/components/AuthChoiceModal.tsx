@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
-import { X, Briefcase, User } from "lucide-react";
+import { X, CandidateIcon, EmployerIcon } from "@/components/ui/icons";
 import arrowTr from "@/assets/arrow-tr.svg";
 
 interface AuthChoiceModalProps {
@@ -14,13 +14,13 @@ const OPTIONS = {
         heading: "Sign up",
         subheading: "How would you like to get started?",
         candidate: {
-            icon: User,
+            icon: CandidateIcon,
             label: "Sign up as candidate",
             description: "Find roles and apply",
             href: "/candidate/signup",
         },
         employer: {
-            icon: Briefcase,
+            icon: EmployerIcon,
             label: "Sign up as employer",
             description: "Post and manage roles",
             href: "/employer/signup",
@@ -30,13 +30,13 @@ const OPTIONS = {
         heading: "Log in",
         subheading: "Welcome back",
         candidate: {
-            icon: User,
+            icon: CandidateIcon,
             label: "Log in as candidate",
             description: "Find roles and apply",
             href: "/candidate/signin",
         },
         employer: {
-            icon: Briefcase,
+            icon: EmployerIcon,
             label: "Log in as employer",
             description: "Review your applicants",
             href: "/employer/signin",

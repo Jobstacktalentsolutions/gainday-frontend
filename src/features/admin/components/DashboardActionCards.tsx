@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { UserCheck, ShieldAlert, FileText, UserPlus, ArrowUpRight, CheckCircle2 } from "lucide-react";
+import { UserCheck, ShieldAlert, FileText, UserPlus, ArrowUpRight, CheckCircle2 } from "@/components/ui/icons";
 import type { DashboardStats } from "../hooks/useDashboardStats";
 
 interface DashboardActionCardsProps {

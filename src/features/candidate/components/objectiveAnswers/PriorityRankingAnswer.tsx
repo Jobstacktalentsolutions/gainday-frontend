@@ -1,7 +1,7 @@
 ﻿import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { ChevronDown, ChevronUp, GripVertical } from "lucide-react";
+import { ChevronDown, ChevronUp, GripVertical } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import type { PriorityRankingCandidateComponent } from "../../types/simulation";
 

@@ -1,5 +1,5 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { X, LogOut, User, Coins } from "lucide-react";
+import { X, LogOut, User, Coins } from "@/components/ui/icons";
 import { Link, NavLink } from "react-router-dom";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { useLogout } from "@/features/auth/hooks/useLogout";

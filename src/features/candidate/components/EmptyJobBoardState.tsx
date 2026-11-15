@@ -1,4 +1,4 @@
-import { Briefcase } from "lucide-react";
+import { Briefcase } from "@/components/ui/icons";
 import { useNavigate } from "react-router-dom";
 import AddItemButton from "@/components/ui/AddItemButton";
 

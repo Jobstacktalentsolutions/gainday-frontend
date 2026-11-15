@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { LogOut, Menu, User, X } from "lucide-react";
+import { LogOut, Menu, User, X } from "@/components/ui/icons";
 import brandLogo from "@/assets/gainday icon.svg";
 import { cn } from "@/lib/utils";
 import { NavbarLinks } from "@/components/ui/NavbarLinks";

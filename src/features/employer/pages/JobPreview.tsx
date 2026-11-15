@@ -1,7 +1,7 @@
 import { wizardPath, type WizardStep } from "../utils/wizardPath";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, ChevronDown, Clock, MapPin, Play } from "lucide-react";
+import { ArrowLeft, ChevronDown, Clock, MapPin, Play } from "@/components/ui/icons";
 import Markdown from "@/components/ui/Markdown";
 import TaskTypeBadge from "../components/TaskTypeBadge";
 import StatusBadge from "../components/StatusBadge";

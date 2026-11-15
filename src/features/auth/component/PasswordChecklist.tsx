@@ -1,4 +1,4 @@
-import { Check, X } from "lucide-react";
+import { Check, X } from "@/components/ui/icons";
 import { passwordRules } from "../schemas/passwordRules";
 
 interface PasswordChecklistProps {

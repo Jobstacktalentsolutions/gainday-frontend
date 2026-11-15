@@ -7,7 +7,7 @@ import {
   CartesianGrid,
   Tooltip,
 } from "recharts";
-import { TrendingUp, Users, Award, Calendar } from "lucide-react";
+import { TrendingUp, Users, Award, Calendar } from "@/components/ui/icons";
 import type { AnalyticsDataPoint, Timeframe } from "../hooks/useDashboardStats";
 
 interface AnalyticsChartProps {

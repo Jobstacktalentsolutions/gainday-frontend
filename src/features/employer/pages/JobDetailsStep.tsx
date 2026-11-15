@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useFormContext, Controller } from "react-hook-form";
-import { Sparkles, RotateCcw, ClipboardPaste } from "lucide-react";
+import { Sparkles, RotateCcw, ClipboardPaste } from "@/components/ui/icons";
 import { toast } from "sonner";
 import TagInput from "@/components/ui/tagInput";
 import { cn } from "@/lib/utils";

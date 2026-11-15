@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { ShoppingBag } from "lucide-react";
+import { ShoppingBag } from "@/components/ui/icons";
 import { JobPagination } from "../JobPagination";
 import { FilterDropdown } from "@/features/candidate/components/Filterdropdown";
 import { formatShortDate } from "@/lib/formatDate";

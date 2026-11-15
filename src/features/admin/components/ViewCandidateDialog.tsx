@@ -1,4 +1,4 @@
-import { Phone, FileCheck, Calendar, ShieldCheck, AlertTriangle } from "lucide-react";
+import { Phone, FileCheck, Calendar, ShieldCheck, AlertTriangle } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { formatPhoneForDisplay } from "@/lib/phone";
 import {

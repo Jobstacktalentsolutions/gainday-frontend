@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
-import { Star } from "lucide-react";
+import { Star } from "@/components/ui/icons";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";

@@ -12,7 +12,7 @@ import {
   Lock,
   RefreshCw,
   ShieldCheck,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { type AdminLoginFormValues, adminLoginSchema } from "../schemas/loginSchema";
 import { apiClient } from "@/lib/api/client";
 import { useAuthStore } from "@/features/auth/store/authStore";

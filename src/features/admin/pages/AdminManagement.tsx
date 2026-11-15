@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { HelpCircle, Plus, Search } from "lucide-react";
+import { HelpCircle, Plus, Search } from "@/components/ui/icons";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import { AdminButton } from "@/components/ui/AdminButton";
 import { useAdmins, useDeleteAdmin, useToggleAdminStatus } from "../hooks/useAdmins";

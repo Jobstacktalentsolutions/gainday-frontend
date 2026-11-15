@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp } from "@/components/ui/icons";
 import ScoreBar from "@/components/ui/ScoreBar";
 import type { PassportDomain } from "../types/passport";
 

@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useSearchParams } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { ArrowLeft, Mail } from "lucide-react";
+import { ArrowLeft, Mail } from "@/components/ui/icons";
 import { apiClient } from "@/lib/api/client";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { FormInput } from "@/components/form/FormInput";

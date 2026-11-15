@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu } from "lucide-react";
+import { Menu } from "@/components/ui/icons";
 import { Link } from "react-router-dom";
 import EmployerNavDrawer from "./EmployerNavDrawer";
 import CreditIndicator from "./CreditIndicator";

@@ -6,7 +6,7 @@ import {
     CheckCircle2,
     Bot,
     Info,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import {
     useGeneratedSimulations,
     useRegenerateSimulation,

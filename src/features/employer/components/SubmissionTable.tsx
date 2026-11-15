@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Check } from "lucide-react";
+import { Check } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import Skeleton from "@/components/ui/skeleton";
 import { Checkbox } from "@/components/ui/checkbox";

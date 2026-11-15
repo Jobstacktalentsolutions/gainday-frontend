@@ -3,7 +3,7 @@ import type { AxiosError } from "axios";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { CloudUpload, Timer, Clock } from "lucide-react";
+import { CloudUpload, Timer, Clock } from "@/components/ui/icons";
 
 import { ActionButton } from "@/components/ui/ActionButton";
 import AppLoader from "@/components/ui/AppLoader";

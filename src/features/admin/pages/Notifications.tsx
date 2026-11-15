@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { AlertOctagon, BellRing, Inbox } from "lucide-react";
+import { AlertOctagon, BellRing, Inbox } from "@/components/ui/icons";
 import { AdminButton } from "@/components/ui/AdminButton";
 import { cn } from "@/lib/utils";
 import {

@@ -1,4 +1,4 @@
-import { Crown, Shield, ShieldAlert, Ban, CheckCircle2, Trash2 } from "lucide-react";
+import { Crown, Shield, ShieldAlert, Ban, CheckCircle2, Trash2 } from "@/components/ui/icons";
 import { AdminButton } from "@/components/ui/AdminButton";
 import { useAuthStore } from "@/features/auth/store/authStore";
 import type { AdminUserAccount } from "../types/user";

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { EmbeddedCheckoutProvider, EmbeddedCheckout } from "@stripe/react-stripe-js";
 import { useQueryClient } from "@tanstack/react-query";
-import { Info, Loader2, Sparkles, XCircle } from "lucide-react";
+import { Info, Loader2, Sparkles, XCircle } from "@/components/ui/icons";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ActionButton } from "@/components/ui/ActionButton";

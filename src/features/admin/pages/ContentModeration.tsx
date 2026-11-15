@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Briefcase, Zap, Users, ShieldCheck, ShieldAlert } from "lucide-react";
+import { Briefcase, Zap, Users, ShieldCheck, ShieldAlert } from "@/components/ui/icons";
 import { useAdminJobs, useRemoveJobPost } from "../hooks/useAdminJobs";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import LiveJobPostsPanel from "../components/LiveJobPostPanel";

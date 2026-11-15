@@ -5,7 +5,7 @@ import {
   CheckCircle2,
   Inbox,
   Search,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import {
   useSupportMessages,
   useSupportStats,

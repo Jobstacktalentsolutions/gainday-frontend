@@ -1,5 +1,5 @@
 import React from "react";
-import { ChevronDown, Loader2 } from "lucide-react";
+import { ChevronDown, Loader2 } from "@/components/ui/icons";
 import { AdminButton } from "@/components/ui/AdminButton";
 
 interface TableLoadMoreProps {

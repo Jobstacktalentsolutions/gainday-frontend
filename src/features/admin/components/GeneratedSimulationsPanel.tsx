@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Search, RotateCw } from "lucide-react";
+import { Search, RotateCw } from "@/components/ui/icons";
 import { AdminButton } from "@/components/ui/AdminButton";
 import { formatShortDate } from "@/lib/formatDate";
 import { cn } from "@/lib/utils";

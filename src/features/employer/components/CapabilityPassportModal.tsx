@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ActionButton } from "@/components/ui/ActionButton";
-import { Check, LockOpen, Mail, Phone, User } from "lucide-react";
+import { Check, LockOpen, Mail, Phone, User } from "@/components/ui/icons";
 import CapabilityPassportView from "@/features/capability-passport/components/CapabilityPassportView";
 import CapabilityPassportSkeleton from "@/features/capability-passport/components/CapabilityPassportSkeleton";
 import CandidateProfileCard from "@/features/capability-passport/components/CandidateProfileCard";

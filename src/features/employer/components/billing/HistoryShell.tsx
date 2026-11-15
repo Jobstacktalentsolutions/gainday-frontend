@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Inbox, XCircle } from "lucide-react";
+import { Inbox, XCircle } from "@/components/ui/icons";
 import { ActionButton } from "@/components/ui/ActionButton";
 import Skeleton from "@/components/ui/skeleton";
 

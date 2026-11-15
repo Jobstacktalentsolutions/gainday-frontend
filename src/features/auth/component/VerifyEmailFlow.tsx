@@ -2,7 +2,7 @@ import { toSafeRedirect, withRedirect } from "@/lib/safeRedirect";
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Mail, MailWarning } from "lucide-react";
+import { Mail, MailWarning } from "@/components/ui/icons";
 import { apiClient } from "@/lib/api/client";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { FormInput } from "@/components/form/FormInput";

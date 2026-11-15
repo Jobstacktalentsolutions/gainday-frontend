@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { Check } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { formatShortDate } from "@/lib/formatDate";
 import { buildApplicationTimeline } from "../utils/applicationTimeline";

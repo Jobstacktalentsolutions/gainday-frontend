@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Cookie } from "lucide-react";
+import { Cookie } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { CONSENT, setConsent, shouldShowConsentNotice, type Consent } from "./consent";
 import { clearVisitorId } from "./visitorId";

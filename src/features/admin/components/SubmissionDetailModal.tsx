@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { CheckCircle2, AlertTriangle, AlertOctagon, Clock, Calendar, Building2, Briefcase, Award, ShieldAlert, ShieldCheck } from "lucide-react";
+import { CheckCircle2, AlertTriangle, AlertOctagon, Clock, Calendar, Building2, Briefcase, Award, ShieldAlert, ShieldCheck } from "@/components/ui/icons";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Button } from "@/components/ui/button";

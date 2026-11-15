@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { isAxiosError } from "axios";
-import { X } from "lucide-react";
+import { X } from "@/components/ui/icons";
 import CaseFilePanel from "./CaseFilePanel";
 import ChatBubble from "./ChatBubble";
 import ReplyBox from "./ReplyBox";

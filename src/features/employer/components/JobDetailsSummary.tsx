@@ -1,4 +1,4 @@
-import { Pencil } from "lucide-react";
+import { Pencil } from "@/components/ui/icons";
 import { useFormContext } from "react-hook-form";
 import Markdown from "@/components/ui/Markdown";
 import type { JobPostingFormValues } from "../schemas/jobPosting";

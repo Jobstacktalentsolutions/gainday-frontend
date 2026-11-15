@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import brandLogo from "@/assets/gainday icon.svg";
-import { Menu, X } from "lucide-react";
+import { Menu, X } from "@/components/ui/icons";
 import { actionButtonVariants } from "@/components/ui/ActionButton";
 import { cn } from "@/lib/utils";
 import { NavbarLinks } from "@/components/ui/NavbarLinks";

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { User, LogOut, ChevronDown, AlertCircle } from "lucide-react";
+import { User, LogOut, ChevronDown, AlertCircle } from "@/components/ui/icons";
 import { motion, AnimatePresence } from "motion/react";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { useLogout } from "@/features/auth/hooks/useLogout";

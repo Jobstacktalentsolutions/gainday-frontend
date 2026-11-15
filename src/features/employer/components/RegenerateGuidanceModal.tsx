@@ -1,6 +1,6 @@
 import { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw } from "@/components/ui/icons";
 import { FormTextarea } from "@/components/form/FormTextarea";
 
 interface RegenerateGuidanceModalProps {

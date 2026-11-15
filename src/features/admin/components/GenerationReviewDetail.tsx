@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle } from "@/components/ui/icons";
 import { FormInput } from "@/components/form/FormInput";
 import TaskPromptEditor from "@/features/employer/components/TaskPromptEditor";
 import { InterfaceRendererView } from "@/features/simulation-tasks/interfaceRenderers/registry";

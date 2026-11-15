@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { ChevronLeft, Lock, Plus } from "lucide-react";
+import { ChevronLeft, Lock, Plus } from "@/components/ui/icons";
 
 // Scale unit: maps Figma px (based on 521.89px browser width) to container-query width units.
 // The browser-frame inner width in Figma is 521.89px.

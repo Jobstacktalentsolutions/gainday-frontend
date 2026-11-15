@@ -1,5 +1,5 @@
 import { forwardRef, useState, useId, type SelectHTMLAttributes, type ReactNode } from "react";
-import { ChevronDown, AlertCircle } from "lucide-react";
+import { ChevronDown, AlertCircle } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 export interface FormSelectProps extends SelectHTMLAttributes<HTMLSelectElement> {

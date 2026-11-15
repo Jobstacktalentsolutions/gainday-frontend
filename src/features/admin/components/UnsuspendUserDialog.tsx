@@ -1,4 +1,4 @@
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2 } from "@/components/ui/icons";
 import { AdminButton } from "@/components/ui/AdminButton";
 import {
   AlertDialog,

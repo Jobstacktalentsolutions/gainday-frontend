@@ -21,7 +21,7 @@ import {
   BrainCircuit,
   Eye,
   ChevronDown,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { toast } from "sonner";

@@ -1,4 +1,4 @@
-import { Layers, Sprout, TrendingUp } from "lucide-react";
+import { Layers, Sprout, TrendingUp } from "@/components/ui/icons";
 import GradientASCII from "@/components/ui/GradientASCII";
 import "./pricing-gradient.css";
 import { cn } from "@/lib/utils";

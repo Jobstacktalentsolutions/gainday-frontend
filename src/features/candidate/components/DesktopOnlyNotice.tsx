@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { Laptop } from "lucide-react";
+import { Laptop } from "@/components/ui/icons";
 import { toast } from "sonner";
 import { actionButtonVariants, ActionButton } from "@/components/ui/ActionButton";
 import { cn } from "@/lib/utils";

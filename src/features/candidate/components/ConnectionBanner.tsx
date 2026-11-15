@@ -1,4 +1,4 @@
-import { Wifi, WifiOff, X } from "lucide-react";
+import { Wifi, WifiOff, X } from "@/components/ui/icons";
 import type { ConnectionStatus } from "../hooks/useConnectionMonitor";
 
 interface ConnectionBannerProps {

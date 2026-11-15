@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { StepContinueButton } from "@/components/ui/StepNavigationButtons";
-import { Check } from "lucide-react";
+import { Check } from "@/components/ui/icons";
 import { formatPostedDate, formatSalaryRange, hasSalary } from "../utils/formatters";
 import type { JobBoardListing } from "../types/jobBoard";
 

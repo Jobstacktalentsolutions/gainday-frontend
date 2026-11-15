@@ -1,5 +1,5 @@
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
-import { Plus } from "lucide-react";
+import { Plus } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 export interface AddItemButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

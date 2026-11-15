@@ -10,7 +10,7 @@ import {
   Building2,
   UserCheck,
   Bell,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { useDashboardStats, type Timeframe } from "../hooks/useDashboardStats";
 import { useAdminNotificationStats } from "../hooks/useAdminNotifications";
 import { AnalyticsChart } from "../components/AnalyticsChart";

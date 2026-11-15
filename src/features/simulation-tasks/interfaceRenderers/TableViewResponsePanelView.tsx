@@ -1,4 +1,4 @@
-import { Plus, X } from "lucide-react";
+import { Plus, X } from "@/components/ui/icons";
 import { FormInput } from "@/components/form/FormInput";
 import {
     Table,

@@ -1,6 +1,6 @@
 import { Link, Navigate, useParams } from "react-router-dom";
 import { motion } from "motion/react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@/components/ui/icons";
 import Header from "@/features/landing/components/Header";
 import { Footer } from "@/features/landing/components/footer/Footer";
 import SectionTag from "@/features/landing/components/SectionTag";

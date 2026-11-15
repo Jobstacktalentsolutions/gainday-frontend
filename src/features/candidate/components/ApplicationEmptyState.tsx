@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Briefcase } from "lucide-react";
+import { Briefcase } from "@/components/ui/icons";
 import { actionButtonVariants } from "@/components/ui/ActionButton";
 import { cn } from "@/lib/utils";
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useAppliedJobIds } from "../hooks/useAppliedJobIds";
-import { Sparkles, Maximize, Wifi, MonitorCheck, Check, X, Loader2 } from "lucide-react";
+import { Sparkles, Maximize, Wifi, MonitorCheck, Check, X, Loader2 } from "@/components/ui/icons";
 import CandidateHeader from "../components/CandidateHeader";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { apiClient } from "@/lib/api/client";

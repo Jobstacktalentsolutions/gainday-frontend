@@ -1,4 +1,4 @@
-import { Check, Lock, LockOpen, Mail, Phone } from "lucide-react";
+import { Check, Lock, LockOpen, Mail, Phone } from "@/components/ui/icons";
 import Skeleton from "@/components/ui/skeleton";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { formatPhoneForDisplay } from "@/lib/phone";

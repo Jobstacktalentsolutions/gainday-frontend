@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, Lock } from "lucide-react";
+import { ChevronDown, Lock } from "@/components/ui/icons";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useFormContext } from "react-hook-form";
 import { AnimatePresence, motion } from "motion/react";

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useAppliedJobIds } from "../hooks/useAppliedJobIds";
-import { Maximize, MonitorCheck, Clock, ChevronLeft } from "lucide-react";
+import { Maximize, MonitorCheck, Clock, ChevronLeft } from "@/components/ui/icons";
 import CandidateHeader from "../components/CandidateHeader";
 import { JobNotFoundState } from "../components/JobNotFoundState";
 import { CompleteProfileDialog } from "../components/CompleteProfileDialog";
