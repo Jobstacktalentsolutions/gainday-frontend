@@ -5,7 +5,6 @@ import Skeleton from "@/components/ui/skeleton";
 import { Checkbox } from "@/components/ui/checkbox";
 import IntegrityLabel from "./IntegrityLabel";
 import CategoryBreakdownBars from "./CategoryBreakdownBars";
-import { CATEGORY_ORDER } from "../utils/submissionCategories";
 import { formatDuration, formatSubmittedDate } from "../utils/submissionFormatters";
 import { formatOverallScore, getCandidateLabel } from "../utils/submissionLabels";
 import type { SubmissionSummary } from "../types/submission";
@@ -57,9 +56,7 @@ const SubmissionsTable = ({ jobId, submissions, selectedIds, onToggleSelect }: S
                     <article key={submission.id} className="rounded-xl border border-neutral-200 bg-white p-4">
                         <div className="flex items-start justify-between gap-3">
                             <div className="flex min-w-0 items-start gap-3">
-                                {!submission.isUnlocked && (
-                                    <Checkbox checked={selectedIds.includes(submission.id)} onCheckedChange={() => onToggleSelect(submission.id)} aria-label={`Select ${label} to unlock`} />
-                                )}
+                                <Checkbox checked={selectedIds.includes(submission.id)} onCheckedChange={() => onToggleSelect(submission.id)} aria-label={`Select ${label}`} />
                                 <div className="min-w-0">
                                     <Link to={`/employer/jobs/${jobId}/submissions/${submission.id}`} className="font-medium text-neutral-950 underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-primary-500">{label}</Link>
                                     {submission.candidateName !== null && <p className="text-xs text-neutral-500">{submission.displayId}</p>}
@@ -100,15 +97,12 @@ const SubmissionsTable = ({ jobId, submissions, selectedIds, onToggleSelect }: S
                             )}
                         >
                             <div className="flex items-start gap-3">
-                                {/* Only locked candidates can be unlocked, so only they get a checkbox. */}
-                                {!submission.isUnlocked && (
                                     <Checkbox
                                         className="mt-1"
                                         checked={selectedIds.includes(submission.id)}
                                         onCheckedChange={() => onToggleSelect(submission.id)}
-                                        aria-label={`Select ${label} to unlock`}
+                                        aria-label={`Select ${label}`}
                                     />
-                                )}
                                 <div className="flex min-w-0 flex-col gap-1">
                                     <div className="flex flex-wrap items-center gap-2">
                                         <Link

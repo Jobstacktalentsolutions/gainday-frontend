@@ -1,4 +1,4 @@
-import Lottie from "lottie-react";
+import { Lottie } from "lottie-react";
 import successAnimation from "@/assets/lottie/success.json";
 
 export function SuccessAnimation({ className = "size-40" }: { className?: string }) {

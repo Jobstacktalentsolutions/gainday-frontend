@@ -14,6 +14,7 @@ import { useJobSubmissions } from "../hooks/useJobSubmissions";
 import { useJobTitle } from "../hooks/useJobTitle";
 import { useSubmissionSort } from "../hooks/useSubmissionSort";
 import { useUnlockCandidates } from "../hooks/useUnlockCandidates";
+import { useSelectCandidate } from "../hooks/useSelectCandidate";
 import type { PaymentRequiredBody } from "../types/payments";
 import { SORT_CONFIG, sortSubmissions } from "../utils/submissionSort";
 import { cn } from "@/lib/utils";
@@ -41,6 +42,7 @@ const JobSubmissions = () => {
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [unlockPrompt, setUnlockPrompt] = useState<UnlockPrompt>({ open: false, submissionIds: [] });
     const unlockCandidates = useUnlockCandidates();
+    const selectCandidate = useSelectCandidate();
 
     const toggleSelect = (submissionId: string) =>
         setSelectedIds((current) =>
@@ -53,6 +55,16 @@ const JobSubmissions = () => {
     const lockedSelectedIds = selectedIds.filter((id) =>
         submissions?.some((submission) => submission.id === id && !submission.isUnlocked),
     );
+    const unlockedSelectedIds = selectedIds.filter((id) => submissions?.some((submission) => submission.id === id && submission.isUnlocked));
+
+    const selectUnlocked = async () => {
+        const results = await Promise.allSettled(unlockedSelectedIds.map((submissionId) => selectCandidate.mutateAsync({ submissionId, selected: true, jobId })));
+        const failed = results.filter((result) => result.status === "rejected").length;
+        if (failed) toast.error(`${failed} candidate selections failed. Please try again.`);
+        else toast.success("Candidates selected");
+        setSelectedIds([]);
+        void refetch();
+    };
 
     const unlockSelected = (submissionIds: string[]) => {
         const count = submissionIds.length;
@@ -120,10 +132,10 @@ const JobSubmissions = () => {
                     </div>
                 )}
 
-                {lockedSelectedIds.length > 0 && (
+                {selectedIds.length > 0 && (
                     <div className="sticky top-24 z-10 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-primary-200 bg-white px-5 py-4 shadow-sm">
                         <p className="text-base text-neutral-950">
-                            {lockedSelectedIds.length} selected
+                            {selectedIds.length} selected
                         </p>
                         <div className="flex items-center gap-4">
                             <button
@@ -133,14 +145,15 @@ const JobSubmissions = () => {
                             >
                                 Clear selection
                             </button>
-                            <ActionButton gradient={false}
+                            {unlockedSelectedIds.length > 0 && <ActionButton gradient={false} size="md" disabled={selectCandidate.isPending} onClick={() => void selectUnlocked()}>Select {unlockedSelectedIds.length} {unlockedSelectedIds.length === 1 ? "candidate" : "candidates"}</ActionButton>}
+                            {lockedSelectedIds.length > 0 && <ActionButton gradient={false}
                                 size="md"
                                 className="w-auto"
                                 disabled={unlockCandidates.isPending}
                                 onClick={() => setConfirmOpen(true)}
                             >
                                 {unlockLabel}
-                            </ActionButton>
+                            </ActionButton>}
                         </div>
                     </div>
                 )}
@@ -162,7 +175,7 @@ const JobSubmissions = () => {
                             <SubmissionsTable
                                 jobId={jobId}
                                 submissions={sortedSubmissions}
-                                selectedIds={lockedSelectedIds}
+                                selectedIds={selectedIds}
                                 onToggleSelect={toggleSelect}
                             />
                         </div>
