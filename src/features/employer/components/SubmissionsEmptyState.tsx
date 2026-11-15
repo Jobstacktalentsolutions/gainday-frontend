@@ -1,4 +1,4 @@
-import { Users } from "lucide-react";
+import { Users } from "@/components/ui/icons";
 
 const SubmissionsEmptyState = () => {
     return (
@@ -9,7 +9,7 @@ const SubmissionsEmptyState = () => {
             <div className="flex flex-col items-center gap-1 text-center">
                 <p className="text-xl text-black lg:text-2xl">No submissions yet</p>
                 <p className="max-w-72 text-base text-neutral-700">
-                    Candidates who complete this job's simulation will show up here, ranked by capability.
+                    Completed applications for this job will appear here.
                 </p>
             </div>
         </div>

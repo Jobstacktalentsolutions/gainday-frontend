@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle } from "@/components/ui/icons";
 import { AdminButton } from "@/components/ui/AdminButton";
 import {
   AlertDialog,

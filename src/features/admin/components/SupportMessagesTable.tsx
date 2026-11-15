@@ -1,4 +1,4 @@
-import { Eye, Clock, CheckCircle2, RotateCcw } from "lucide-react";
+import { Eye, Clock, CheckCircle2, RotateCcw } from "@/components/ui/icons";
 import { AdminButton } from "@/components/ui/AdminButton";
 import type { SupportMessage } from "../types/support";
 import { cn } from "@/lib/utils";

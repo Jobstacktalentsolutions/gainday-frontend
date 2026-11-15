@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { User, LogOut, ChevronDown, AlertCircle } from "lucide-react";
+import { User, LogOut, ChevronDown, AlertCircle } from "@/components/ui/icons";
 import { motion, AnimatePresence } from "motion/react";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { useLogout } from "@/features/auth/hooks/useLogout";
+import { getMissingProfileFields } from "@/features/auth/utils/profileCompletion";
 
 interface UserAvatarMenuProps {
   className?: string;
@@ -57,11 +58,11 @@ export const UserAvatarMenu = ({ className, variant = "initials" }: UserAvatarMe
   const userDisplayName = user?.fullName || user?.companyName || "Account";
   const firstName = user?.fullName?.trim().split(/\s+/)[0] || "Account";
   const userEmail = user?.email || "";
-  const needsProfileCompletion = user?.role === "JOB_SEEKER" && user.isProfileComplete === false;
+  const needsProfileCompletion = !!user && getMissingProfileFields(user).length > 0;
 
   const avatarBadge = needsProfileCompletion && (
     <span
-      className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-error-500 text-[10px] font-bold leading-none text-white ring-2 ring-white"
+      className="absolute -right-0.5 -top-0.5 flex size-4 items-center justify-center rounded-full bg-warning-400 text-[10px] font-bold leading-none text-warning-950 ring-2 ring-white"
       title="Your profile is incomplete"
     >
       !
@@ -76,6 +77,7 @@ export const UserAvatarMenu = ({ className, variant = "initials" }: UserAvatarMe
         className="flex items-center gap-2 rounded-full p-1 transition-all hover:bg-neutral-100/80 focus:outline-hidden"
         aria-expanded={isOpen}
         aria-haspopup="true"
+        aria-label={needsProfileCompletion ? "Account menu, profile incomplete" : "Account menu"}
       >
         {variant === "named" ? (
           <>

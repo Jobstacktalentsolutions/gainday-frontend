@@ -8,7 +8,7 @@ import { ActionButton } from "@/components/ui/ActionButton";
 import AuthCard from "@/features/auth/component/AuthCard";
 import PasswordInput from "@/features/auth/component/passwordInput";
 import { resetPasswordSchema, type resetPasswordFormValues } from "@/features/auth/schemas/resetPasswordSchema";
-import successAnimation from "@/assets/successAnimation.gif";
+import { SuccessAnimation } from "@/components/ui/SuccessAnimation";
 
 
 const CandidateResetPassword = () => {
@@ -39,11 +39,7 @@ const CandidateResetPassword = () => {
                 subtitle=""
             >
                 <div className="flex w-full flex-col items-center gap-6 text-center ">
-                    <img
-                        src={successAnimation}
-                        alt="Success"
-                        className="h-35 w-35"
-                    />
+                    <SuccessAnimation />
                     <p className="text-2xl text-primary-950">
                         You successfully reset your password
                     </p>

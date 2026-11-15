@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { ChevronLeft, Lock, Plus } from "lucide-react";
+import { ChevronLeft, Lock, Plus } from "@/components/ui/icons";
 import { GlowOrb } from "./GlowOrb";
 import GradientCard from "./GradientCard";
 import { GradientFrame } from "./GradientFrame";

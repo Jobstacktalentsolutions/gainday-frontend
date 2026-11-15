@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, CircleCheck } from "lucide-react";
+import { ArrowLeft, CircleCheck } from "@/components/ui/icons";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
@@ -34,7 +34,7 @@ const ApplicationDetailContent = ({ application }: { application: ApplicationDet
 
     return (
         <>
-            <section className="flex flex-col gap-6 rounded-xl bg-white p-6 lg:p-8">
+            <section className="flex flex-col gap-4 rounded-xl bg-white p-4 sm:p-6 lg:gap-6 lg:p-8">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                     <div className="flex flex-col gap-2">
                         <h1 className="flex items-center gap-3 text-3xl leading-tight text-neutral-900 lg:text-4xl">
@@ -106,7 +106,7 @@ const ApplicationDetailContent = ({ application }: { application: ApplicationDet
                 </div>
             </section>
 
-            <section className="flex flex-col gap-6 rounded-xl bg-white p-6 lg:p-8">
+            <section className="flex flex-col gap-4 rounded-xl bg-white p-4 sm:p-6 lg:gap-6 lg:p-8">
                 <h2 className="text-xl text-neutral-900">About the job</h2>
 
                 <dl className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -170,8 +170,8 @@ const ApplicationDetailPage = () => {
         <div className="min-h-screen bg-neutral-50">
             <CandidateHeader />
 
-            <main className="px-6 pb-16 pt-32 lg:px-12 lg:pt-44 xl:px-20">
-                <div className="mx-auto flex w-full max-w-4xl flex-col gap-8">
+            <main className="px-4 pb-12 pt-28 sm:px-6 lg:px-12 lg:pt-32 xl:px-20">
+                <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 lg:gap-8">
                     <Link
                         to="/candidate/applications"
                         className="flex w-fit items-center gap-2 text-base text-neutral-700 hover:text-primary-500"

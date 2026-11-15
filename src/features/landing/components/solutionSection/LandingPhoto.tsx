@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { Check } from "@/components/ui/icons";
 import { motion } from "motion/react";
 import gaindayLogo from "@/assets/gainday.svg";
 import { GlowOrb } from "../GlowOrb";

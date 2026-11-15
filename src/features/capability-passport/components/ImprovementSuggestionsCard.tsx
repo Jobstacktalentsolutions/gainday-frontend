@@ -1,4 +1,4 @@
-import { TrendingUp } from "lucide-react";
+import { TrendingUp } from "@/components/ui/icons";
 import { CATEGORY_ORDER } from "../utils/passport";
 import type { ImprovementSuggestion } from "../types/passport";
 

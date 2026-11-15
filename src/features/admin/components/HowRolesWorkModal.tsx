@@ -1,4 +1,4 @@
-import { Crown, Shield, ShieldAlert, Check, X } from "lucide-react";
+import { Crown, Shield, ShieldAlert, Check, X } from "@/components/ui/icons";
 import {
   Dialog,
   DialogContent,

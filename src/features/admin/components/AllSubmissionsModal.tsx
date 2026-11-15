@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Search, Eye, Award, AlertTriangle, CheckCircle2, Clock } from "lucide-react";
+import { Search, Eye, Award, AlertTriangle, CheckCircle2, Clock } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { AdminButton } from "@/components/ui/AdminButton";
 import {

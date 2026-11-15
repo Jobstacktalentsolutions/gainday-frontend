@@ -20,11 +20,11 @@ const MyApplications = () => {
         <div className="min-h-screen bg-neutral-50">
             <CandidateHeader />
 
-            <main className="px-6 pb-16 pt-32 lg:px-12 lg:pt-44 xl:px-20">
-                <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 lg:gap-12">
+            <main className="px-4 pb-12 pt-28 sm:px-6 lg:px-12 lg:pt-32 xl:px-20">
+                <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 lg:gap-10">
                     <div className="flex flex-col">
                         <p className="text-base text-primary-500">MY APPLICATIONS</p>
-                        <h1 className="text-4xl leading-tight tracking-[-0.48px] text-black lg:text-5xl">
+                        <h1 className="text-3xl leading-tight tracking-[-0.48px] text-black lg:text-5xl">
                             Jobs you've applied to
                         </h1>
                     </div>

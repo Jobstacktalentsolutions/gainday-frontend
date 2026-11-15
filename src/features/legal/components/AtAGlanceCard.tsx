@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { Check } from "@/components/ui/icons";
 import { WHAT_GAINDAY_IS } from "../content/shared";
 
 export const AtAGlanceCard = () => (

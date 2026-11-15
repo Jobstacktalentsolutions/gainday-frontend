@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Clock, MapPin, Wallet, Share2, Check } from "lucide-react";
+import { Clock, MapPin, Wallet, Share2, ArrowUpRight } from "@/components/ui/icons";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -114,7 +114,7 @@ export default function JobDetailsPage() {
         <div className="min-h-screen w-full bg-neutral-50">
             <JobBoardHeader />
 
-            <main className="mx-auto w-full max-w-300 px-5 pb-20 pt-33.75 sm:pt-43.75 lg:px-0">
+            <main className="mx-auto w-full max-w-300 px-5 pb-20 pt-28 lg:pt-32 lg:px-0">
                 <div className="relative flex flex-col gap-8 overflow-hidden rounded-[32px] bg-white p-5 sm:gap-10 sm:p-8">
                     {/* Decorative gradient blobs */}
                     <div
@@ -134,9 +134,6 @@ export default function JobDetailsPage() {
                                 <h1 className="min-w-0 wrap-break-word text-[28px] leading-[1.2] text-primary-950 sm:text-[40px] lg:text-[48px] lg:leading-14.5 lg:tracking-[-0.48px]">
                                     {job.title}
                                 </h1>
-                                <span className="rounded-full bg-primary-50 px-3 py-1 text-sm text-info-500 sm:px-4 sm:text-base">
-                                    {job.roleCategory}
-                                </span>
                             </div>
                             <p className="text-base text-neutral-400">{job.employer.companyName}</p>
                             <div className="flex flex-wrap items-center gap-3 sm:gap-4">
@@ -162,7 +159,7 @@ export default function JobDetailsPage() {
                             <StepContinueButton
                                 size="lg"
                                 disabled={!isApplied && isClosed}
-                                icon={isApplied ? <Check className="size-4" /> : undefined}
+                                icon={isApplied ? <ArrowUpRight className="size-5" aria-hidden="true" /> : undefined}
                                 className={applyButtonClass}
                                 onClick={handleApplyClick}
                             >
@@ -198,10 +195,6 @@ export default function JobDetailsPage() {
                         <div className="flex flex-col gap-3">
                             <h2 className="text-[16px] text-primary-500">ROLE DETAILS</h2>
                             <div className="flex flex-wrap gap-x-10 gap-y-4">
-                                <div className="flex flex-col gap-1">
-                                    <p className="text-[14px] text-neutral-700">Category</p>
-                                    <p className="text-[16px] text-primary-950">{job.roleCategory}</p>
-                                </div>
                                 <div className="flex flex-col gap-1">
                                     <p className="text-[14px] text-neutral-700">Employment type</p>
                                     <p className="text-[16px] text-primary-950">{job.employmentType}</p>
@@ -247,7 +240,7 @@ export default function JobDetailsPage() {
                         <StepContinueButton
                             size="lg"
                             disabled={!isApplied && isClosed}
-                            icon={isApplied ? <Check className="size-4" /> : undefined}
+                            icon={isApplied ? <ArrowUpRight className="size-5" aria-hidden="true" /> : undefined}
                             className={applyButtonClass}
                             onClick={handleApplyClick}
                         >

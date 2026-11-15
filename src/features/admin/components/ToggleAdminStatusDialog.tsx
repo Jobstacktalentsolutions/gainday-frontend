@@ -1,4 +1,4 @@
-import { AlertTriangle, CheckCircle2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2 } from "@/components/ui/icons";
 import { AdminButton } from "@/components/ui/AdminButton";
 import {
   AlertDialog,

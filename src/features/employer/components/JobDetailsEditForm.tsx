@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Check } from "lucide-react";
+import { Check } from "@/components/ui/icons";
 import { Controller, useFormContext } from "react-hook-form";
 import { JobFormInput } from "@/components/form/JobFormInput";
 import { FormSelect } from "@/components/form/FormSelect";

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Check, Lock } from "lucide-react";
+import { Check, Lock } from "@/components/ui/icons";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import Header from "@/features/landing/components/Header";
 import { HighlightBox } from "@/features/landing/components/HighlightBox";

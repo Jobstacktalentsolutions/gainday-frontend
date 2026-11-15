@@ -1,4 +1,4 @@
-import { Trash2 } from "lucide-react";
+import { Trash2 } from "@/components/ui/icons";
 import { AdminButton } from "@/components/ui/AdminButton";
 import {
   AlertDialog,

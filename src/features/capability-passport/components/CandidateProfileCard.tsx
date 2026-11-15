@@ -25,7 +25,7 @@ const CandidateProfileCard = ({ profile }: CandidateProfileCardProps) => {
             {isPresent(title) && (
                 <div className="flex flex-col">
                     <span className="text-sm text-neutral-500">Job title</span>
-                    <p className="text-xl font-semibold text-neutral-950">{title}</p>
+                    <p className="text-base font-medium text-neutral-950 sm:text-xl sm:font-semibold">{title}</p>
                 </div>
             )}
             {isPresent(gender) && (

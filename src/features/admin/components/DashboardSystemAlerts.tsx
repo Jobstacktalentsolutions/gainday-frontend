@@ -9,7 +9,7 @@ import {
   ChevronRight,
   ExternalLink,
   Info,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { AdminButton } from "@/components/ui/AdminButton";
 import { cn } from "@/lib/utils";
 import {

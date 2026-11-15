@@ -11,7 +11,7 @@ import {
   Mail,
   MessageSquare,
   ShieldAlert,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { apiClient } from "@/lib/api/client";
 import { FormInput } from "@/components/form/FormInput";
 import { FormSelect } from "@/components/form/FormSelect";

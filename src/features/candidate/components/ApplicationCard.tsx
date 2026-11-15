@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { CircleCheck } from "lucide-react";
+import { CircleCheck } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import Skeleton from "@/components/ui/skeleton";
 import { formatShortDate } from "@/lib/formatDate";
@@ -19,11 +19,11 @@ const ApplicationCard = ({ application, onWithdraw }: ApplicationCardProps) => {
         .join(" · ");
 
     return (
-        <article className="relative flex w-full flex-col gap-6 rounded-xl border border-white bg-white p-6 lg:flex-row lg:items-center lg:justify-between">
+        <article className="relative flex w-full flex-col gap-4 rounded-xl border border-white bg-white p-4 sm:p-6 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
             <div className="flex min-w-0 flex-col gap-2 lg:w-100">
                 {/* The title link's ::after stretches over the whole card, making all of it clickable
                     without nesting the withdraw button inside an anchor. */}
-                <h2 className="text-2xl leading-8 text-neutral-900">
+                <h2 className="text-lg leading-snug text-neutral-900 lg:text-2xl lg:leading-8">
                     <Link
                         to={`/candidate/applications/${application.id}`}
                         className="flex min-w-0 items-center gap-2 break-words after:absolute after:inset-0 after:rounded-xl focus-visible:outline-2 focus-visible:outline-primary-500"
@@ -37,8 +37,8 @@ const ApplicationCard = ({ application, onWithdraw }: ApplicationCardProps) => {
                         )}
                     </Link>
                 </h2>
-                <p className="text-base text-neutral-500">{companyLine}</p>
-                <p className="text-base text-neutral-700">{statusLine}</p>
+                <p className="text-sm text-neutral-500 lg:text-base">{companyLine}</p>
+                <p className="text-sm text-neutral-700 lg:text-base">{statusLine}</p>
             </div>
 
             {/* Below lg these three sit in one wrapping row; at lg the wrapper disappears and they
@@ -47,7 +47,7 @@ const ApplicationCard = ({ application, onWithdraw }: ApplicationCardProps) => {
                 {application.rating !== null ? (
                     <Link
                         to={`/candidate/submissions/${application.id}/result`}
-                        className="relative z-10 flex w-17.5 flex-col items-center gap-3 text-neutral-900 transition-colors hover:text-primary-600"
+                        className="relative z-10 flex w-17.5 flex-col items-center gap-1 text-neutral-900 transition-colors hover:text-primary-600 lg:gap-3"
                         title="View submission result"
                     >
                         <p className="whitespace-nowrap">
@@ -57,7 +57,7 @@ const ApplicationCard = ({ application, onWithdraw }: ApplicationCardProps) => {
                         <p className="text-sm text-primary-500 underline underline-offset-4 decoration-primary-300">RATING</p>
                     </Link>
                 ) : (
-                    <div className="flex w-17.5 flex-col items-center gap-3 text-neutral-900">
+                    <div className="flex w-17.5 flex-col items-center gap-1 text-neutral-900 lg:gap-3">
                         <p className="text-2xl">-</p>
                         <p className="text-sm text-primary-500">RATING</p>
                     </div>
@@ -76,7 +76,7 @@ const ApplicationCard = ({ application, onWithdraw }: ApplicationCardProps) => {
                     type="button"
                     disabled={!canWithdraw}
                     onClick={() => onWithdraw(application)}
-                    className="relative z-10 flex h-13 w-40 items-center justify-center rounded-xl border border-neutral-700 px-10 py-2 text-base text-neutral-700 transition-colors hover:bg-neutral-50 focus-visible:outline-2 focus-visible:outline-primary-500 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent"
+                    className="relative z-10 flex h-11 w-auto items-center justify-center rounded-xl border border-neutral-700 px-5 text-sm text-neutral-700 transition-colors hover:bg-neutral-50 focus-visible:outline-2 focus-visible:outline-primary-500 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent lg:h-13 lg:w-40 lg:text-base"
                 >
                     {application.status === "WITHDRAWN" ? "Withdrawn" : "Withdraw"}
                 </button>

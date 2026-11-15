@@ -1,5 +1,5 @@
 import { forwardRef, useState, useId, type TextareaHTMLAttributes } from "react";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 

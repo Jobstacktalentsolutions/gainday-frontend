@@ -3,7 +3,7 @@ import { Outlet, useNavigate, useLocation, useSearchParams, Navigate } from "rea
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2 } from "@/components/ui/icons";
 import { jobPostingSchema, type JobPostingFormInput } from "../schemas/jobPosting";
 import { useJobDraftStore } from "../stores/useJobDraftStore";
 import { JOB_POSTING_DEFAULT_VALUES } from "../mocks/jobPostingDefaults";

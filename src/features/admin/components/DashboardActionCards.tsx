@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { UserCheck, ShieldAlert, FileText, UserPlus, ArrowUpRight, CheckCircle2 } from "lucide-react";
+import { UserCheck, ShieldAlert, FileText, UserPlus, ArrowUpRight, CheckCircle2 } from "@/components/ui/icons";
 import type { DashboardStats } from "../hooks/useDashboardStats";
 
 interface DashboardActionCardsProps {
@@ -17,8 +17,8 @@ export const DashboardActionCards = ({ stats }: DashboardActionCardsProps) => {
         className="group relative flex flex-col justify-between rounded-xl border border-neutral-200 bg-white p-4 shadow-xs hover:border-indigo-300 hover:shadow-md transition-all cursor-pointer overflow-hidden"
       >
         <div className="flex items-start justify-between">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-            <UserCheck className="h-5 w-5" />
+          <div className="icon-gradient-frame size-11">
+            <span className="text-indigo-600 group-hover:bg-indigo-50"><UserCheck className="size-5" /></span>
           </div>
           <span className="inline-flex items-center rounded-full bg-indigo-50 px-2.5 py-0.5 text-xs font-semibold text-indigo-700">
             {stats.candidatesCount} Registered
@@ -43,8 +43,8 @@ export const DashboardActionCards = ({ stats }: DashboardActionCardsProps) => {
         className="group relative flex flex-col justify-between rounded-xl border border-neutral-200 bg-white p-4 shadow-xs hover:border-amber-300 hover:shadow-md transition-all cursor-pointer overflow-hidden"
       >
         <div className="flex items-start justify-between">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50 text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition-colors">
-            <ShieldAlert className="h-5 w-5" />
+          <div className="icon-gradient-frame size-11">
+            <span className="text-amber-600 group-hover:bg-amber-50"><ShieldAlert className="size-5" /></span>
           </div>
           {stats.flaggedAntiCheatCount > 0 ? (
             <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-700">
@@ -75,8 +75,8 @@ export const DashboardActionCards = ({ stats }: DashboardActionCardsProps) => {
         className="group relative flex flex-col justify-between rounded-xl border border-neutral-200 bg-white p-4 shadow-xs hover:border-blue-300 hover:shadow-md transition-all cursor-pointer overflow-hidden"
       >
         <div className="flex items-start justify-between">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-            <FileText className="h-5 w-5" />
+          <div className="icon-gradient-frame size-11">
+            <span className="text-blue-600 group-hover:bg-blue-50"><FileText className="size-5" /></span>
           </div>
           <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-700">
             {stats.activeJobs} Live Posts
@@ -101,8 +101,8 @@ export const DashboardActionCards = ({ stats }: DashboardActionCardsProps) => {
         className="group relative flex flex-col justify-between rounded-xl border border-neutral-200 bg-white p-4 shadow-xs hover:border-emerald-300 hover:shadow-md transition-all cursor-pointer overflow-hidden"
       >
         <div className="flex items-start justify-between">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-            <UserPlus className="h-5 w-5" />
+          <div className="icon-gradient-frame size-11">
+            <span className="text-emerald-600 group-hover:bg-emerald-50"><UserPlus className="size-5" /></span>
           </div>
           <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700">
             Access Control

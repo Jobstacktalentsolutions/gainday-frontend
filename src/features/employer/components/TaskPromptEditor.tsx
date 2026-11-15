@@ -5,7 +5,7 @@ import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import { TableKit } from "@tiptap/extension-table";
 import { Markdown } from "tiptap-markdown";
-import { Bold, Italic, Link as LinkIcon, List, Heading1, Heading2, Heading3, Table2 } from "lucide-react";
+import { Bold, Italic, Link as LinkIcon, List, Heading1, Heading2, Heading3, Table2 } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 interface TaskPromptEditorProps {

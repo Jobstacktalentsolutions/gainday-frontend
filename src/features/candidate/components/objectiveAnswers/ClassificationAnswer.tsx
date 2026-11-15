@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { DndContext, DragOverlay, KeyboardSensor, PointerSensor, useDraggable, useDroppable, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core";
-import { Archive, GripVertical } from "lucide-react";
+import { Archive, GripVertical } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import BucketSelect from "./BucketSelect";
 import type { ClassificationCandidateComponent } from "../../types/simulation";

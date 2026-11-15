@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { ShoppingBag } from "lucide-react";
-import { ActionButton } from "@/components/ui/ActionButton";
+import { ShoppingBag } from "@/components/ui/icons";
+import { JobPagination } from "../JobPagination";
 import { FilterDropdown } from "@/features/candidate/components/Filterdropdown";
 import { formatShortDate } from "@/lib/formatDate";
 import { formatPrice } from "@/lib/formatPrice";
@@ -15,7 +15,7 @@ const PurchasesSection = () => {
     const { data, isLoading, isError, refetch } = usePurchaseHistory();
     const [pack, setPack] = useState<string | null>(null);
     const [date, setDate] = useState<string | null>(null);
-    const [visible, setVisible] = useState(PAGE_SIZE);
+    const [page, setPage] = useState(1);
 
     // Pending transactions are excluded from display until settled (SUCCEEDED or FAILED)
     // so employers aren't confused by unconfirmed or in-progress checkouts.
@@ -37,16 +37,21 @@ const PurchasesSection = () => {
         [settledPurchases, pack, date],
     );
 
+    const totalPages = Math.ceil(rows.length / PAGE_SIZE);
+    const currentPage = Math.min(page, Math.max(totalPages, 1));
+    const pageRows = rows.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
     const hasFilters = pack !== null || date !== null;
     const clearFilters = () => {
         setPack(null);
         setDate(null);
-        setVisible(PAGE_SIZE);
+        setPage(1);
     };
 
     return (
         <HistoryShell
             title="Purchases"
+            compactFilters
             icon={<ShoppingBag className="size-6" aria-hidden="true" />}
             isLoading={isLoading}
             isError={isError}
@@ -57,21 +62,19 @@ const PurchasesSection = () => {
             emptyHint="Packs you buy will show up here, with a receipt for each one."
             onClearFilters={clearFilters}
             filters={
-                <div className="flex flex-wrap items-center gap-3 sm:gap-6">
-                    <div className="ml-auto flex flex-wrap items-center justify-end gap-3">
+                <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
                         <FilterDropdown
                             allLabel="Pack Type"
                             options={packOptions}
                             selectedValue={pack}
-                            onSelect={(value) => { setPack(value); setVisible(PAGE_SIZE); }}
+                            onSelect={(value) => { setPack(value); setPage(1); }}
                         />
                         <FilterDropdown
                             allLabel="Date"
                             options={DATE_PRESET_OPTIONS}
                             selectedValue={date}
-                            onSelect={(value) => { setDate(value); setVisible(PAGE_SIZE); }}
+                            onSelect={(value) => { setDate(value); setPage(1); }}
                         />
-                    </div>
                     <ClearFiltersButton active={hasFilters} onClick={clearFilters} />
                 </div>
             }
@@ -89,7 +92,7 @@ const PurchasesSection = () => {
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-neutral-200/70 text-base text-neutral-950">
-                    {rows.slice(0, visible).map((row) => (
+                    {pageRows.map((row) => (
                         <tr key={row.id}>
                             <td className="py-3">{row.packName}</td>
                             <td className="py-3 text-center">+{row.creditsAdded}</td>
@@ -103,7 +106,7 @@ const PurchasesSection = () => {
 
             {/* Mobile */}
             <ul className="flex flex-col divide-y divide-neutral-200/70 md:hidden">
-                {rows.slice(0, visible).map((row) => (
+                {pageRows.map((row) => (
                     <li key={row.id} className="flex flex-col gap-2 py-4 first:pt-0 last:pb-0">
                         <div className="flex items-center justify-between gap-3">
                             <span className="text-base text-neutral-950">{row.packName} · +{row.creditsAdded}</span>
@@ -120,16 +123,15 @@ const PurchasesSection = () => {
                 ))}
             </ul>
 
-            {rows.length > visible && (
-                <ActionButton
-                    variant="ghost"
-                    size="md"
-                    className="mx-auto mt-4 w-auto"
-                    onClick={() => setVisible((count) => count + PAGE_SIZE)}
-                >
-                    Show more
-                </ActionButton>
-            )}
+            <JobPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={rows.length}
+                pageSize={PAGE_SIZE}
+                onPageChange={setPage}
+                itemLabel="purchases"
+                ariaLabel="Purchase history pagination"
+            />
         </HistoryShell>
     );
 };

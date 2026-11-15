@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard } from "@/components/ui/icons";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { ROLE_DASHBOARD_PATHS } from "@/features/auth/utils/roleDashboard";
 import { actionButtonVariants } from "@/components/ui/ActionButton";

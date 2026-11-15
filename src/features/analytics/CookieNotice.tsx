@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Cookie } from "lucide-react";
+import { Cookie } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
-import { getConsent, setConsent, type Consent } from "./consent";
+import { CONSENT, setConsent, shouldShowConsentNotice, type Consent } from "./consent";
 import { clearVisitorId } from "./visitorId";
 
 // Public pages only. Admin, dashboards and profile pages are behind sign-in and never show the notice.
@@ -12,17 +12,17 @@ function isPublicPath(pathname: string): boolean {
   return pathname === "/" || PUBLIC_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));
 }
 
-/** Asks once, on a public page, whether anonymous visit counting is allowed. Until answered, nothing is tracked. */
+/** Ask on public pages; a rejected choice remains in force until the visitor accepts. */
 export function CookieNotice() {
   const { pathname } = useLocation();
-  const [consent, setLocalConsent] = useState<Consent | null>(getConsent);
+  const [showNotice, setShowNotice] = useState(shouldShowConsentNotice);
 
-  if (consent !== null || !isPublicPath(pathname)) return null;
+  if (!showNotice || !isPublicPath(pathname)) return null;
 
   const choose = (value: Consent) => {
     setConsent(value);
-    if (value === "denied") clearVisitorId();
-    setLocalConsent(value);
+    if (value === CONSENT.denied) clearVisitorId();
+    setShowNotice(false);
   };
 
   return (
@@ -45,10 +45,10 @@ export function CookieNotice() {
       </div>
       {/* Same look on purpose: refusing must be as easy as accepting. */}
       <div className="flex justify-start gap-2">
-        <Button className="cursor-pointer" variant="outline" size="xs" onClick={() => choose("denied")}>
+        <Button className="cursor-pointer" variant="outline" size="xs" onClick={() => choose(CONSENT.denied)}>
           Reject
         </Button>
-        <Button className="cursor-pointer" variant="outline" size="xs" onClick={() => choose("granted")}>
+        <Button className="cursor-pointer" variant="outline" size="xs" onClick={() => choose(CONSENT.granted)}>
           Accept
         </Button>
       </div>

@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
-import { LockOpen } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { LockOpen } from "@/components/ui/icons";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { FilterDropdown } from "@/features/candidate/components/Filterdropdown";
 import { SearchField } from "@/features/candidate/components/SearchField";
@@ -33,6 +35,9 @@ const CandidateName = ({ row, className }: { row: UnlockRecord; className: strin
 };
 
 const UnlocksSection = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const isMobile = useMediaQuery("(max-width: 767px)");
     const { data, isLoading, isError, refetch } = useUnlockHistory();
     const [query, setQuery] = useState("");
     const [role, setRole] = useState<string | null>(null);
@@ -42,7 +47,9 @@ const UnlocksSection = () => {
 
     const openRow = (row: UnlockRecord) => {
         const record = openableRecordOf(row);
-        if (record) setOpenRecord(record);
+        if (!record) return;
+        if (isMobile) navigate(`/employer/jobs/${record.jobId}/submissions/${record.submissionId}/passport`, { state: { returnTo: location.pathname } });
+        else setOpenRecord(record);
     };
 
     const roleOptions = useMemo(
@@ -86,14 +93,14 @@ const UnlocksSection = () => {
             emptyHint="When you spend a credit to unlock a candidate's contact details, it will be listed here."
             onClearFilters={clearFilters}
             filters={
-                <div className="flex flex-wrap items-center gap-3 sm:gap-6">
+                <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                     <SearchField
-                        className="sm:min-w-60 sm:w-auto sm:flex-1"
+                        className="h-10 min-w-0 bg-white sm:min-w-60 sm:w-auto sm:flex-1"
                         value={query}
                         onChange={(value) => { setQuery(value); setVisible(PAGE_SIZE); }}
                         placeholder="Search by name or keyword"
                     />
-                    <div className="ml-auto flex flex-wrap items-center justify-end gap-3">
+                    <div className="flex flex-wrap items-center gap-2 sm:ml-auto">
                         <FilterDropdown
                             allLabel="All Roles"
                             options={roleOptions}
@@ -106,8 +113,8 @@ const UnlocksSection = () => {
                             selectedValue={date}
                             onSelect={(value) => { setDate(value); setVisible(PAGE_SIZE); }}
                         />
+                        <ClearFiltersButton active={hasFilters} onClick={clearFilters} />
                     </div>
-                    <ClearFiltersButton active={hasFilters} onClick={clearFilters} />
                 </div>
             }
         >

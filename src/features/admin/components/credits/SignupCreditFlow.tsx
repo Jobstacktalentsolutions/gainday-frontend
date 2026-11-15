@@ -1,4 +1,4 @@
-import { ChevronRight, Gift, LockOpen, SlidersHorizontal, UserPlus, type LucideIcon } from "lucide-react";
+import { ChevronRight, Gift, LockOpen, SlidersHorizontal, UserPlus, type AppIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 interface SignupCreditFlowProps {
@@ -7,7 +7,7 @@ interface SignupCreditFlowProps {
 }
 
 interface FlowStep {
-  icon: LucideIcon;
+  icon: AppIcon;
   title: string;
   description: string;
 }

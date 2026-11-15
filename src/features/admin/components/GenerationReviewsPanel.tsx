@@ -1,6 +1,6 @@
 import { formatShortDate } from "@/lib/formatDate";
 import { useMemo, useState } from "react";
-import { Search, ShieldAlert, AlertTriangle, CheckCircle2, ChevronDown, ChevronUp, Layers } from "lucide-react";
+import { Search, ShieldAlert, AlertTriangle, CheckCircle2, ChevronDown, ChevronUp, Layers } from "@/components/ui/icons";
 import { useGenerationReviewJobs } from "../hooks/useGenerationReviews";
 import GenerationReviewDetail from "./GenerationReviewDetail";
 import { TableLoadMore } from "./TableLoadMore";

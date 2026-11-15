@@ -19,7 +19,7 @@ const HeroSection = () => {
             animate="visible"
             className="relative isolate flex flex-col gap-20 px-6 pb-10 pt-20 lg:flex-row lg:items-center lg:justify-between lg:gap-0 lg:px-30 lg:pb-30 lg:pt-23"
         >
-            <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 -top-24.25 bottom-0 -z-10">
+            <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 -top-24.25 -z-10 h-110 sm:bottom-0 sm:h-auto">
                 <Aurora
                     colorStops={HERO_COLORS}
                     lightMode

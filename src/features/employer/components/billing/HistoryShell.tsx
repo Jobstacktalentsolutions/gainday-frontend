@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Inbox, XCircle } from "lucide-react";
+import { Inbox, XCircle } from "@/components/ui/icons";
 import { ActionButton } from "@/components/ui/ActionButton";
 import Skeleton from "@/components/ui/skeleton";
 
@@ -8,7 +8,7 @@ export const ClearFiltersButton = ({ active, onClick }: { active: boolean; onCli
         type="button"
         onClick={onClick}
         disabled={!active}
-        className="w-full cursor-pointer text-right text-sm text-primary-500 transition-opacity hover:underline disabled:cursor-default disabled:no-underline disabled:opacity-40"
+        className="cursor-pointer whitespace-nowrap text-sm text-primary-500 transition-opacity hover:underline disabled:cursor-default disabled:no-underline disabled:opacity-40"
     >
         Clear filters
     </button>
@@ -27,6 +27,7 @@ interface HistoryShellProps {
     title: string;
     icon: ReactNode;
     filters: ReactNode;
+    compactFilters?: boolean;
     isLoading: boolean;
     isError: boolean;
     onRetry: () => void;
@@ -44,6 +45,7 @@ const HistoryShell = ({
     title,
     icon,
     filters,
+    compactFilters = false,
     isLoading,
     isError,
     onRetry,
@@ -94,12 +96,15 @@ const HistoryShell = ({
     }
 
     return (
-        <section aria-label={title} className="flex flex-col gap-5">
-            <div className="flex items-center gap-1">
-                {icon}
-                <h2 className="text-[28px] leading-[1.2] text-neutral-950">{title}</h2>
+        <section aria-label={title} className="flex min-w-0 flex-col gap-4">
+            <div className={compactFilters ? "flex flex-wrap items-center justify-between gap-4" : "flex items-center gap-2"}>
+                <div className="flex items-center gap-2">
+                    {icon}
+                    <h2 className="text-xl leading-tight text-neutral-950 sm:text-2xl">{title}</h2>
+                </div>
+                {compactFilters && filters}
             </div>
-            {filters}
+            {!compactFilters && filters}
             <div className="rounded-xl bg-linear-to-br from-secondary-500/50 via-neutral-200 to-primary-500/60 p-px">
                 <div className="rounded-[11px] bg-white p-4 sm:p-6">{body}</div>
             </div>

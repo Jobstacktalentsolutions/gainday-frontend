@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useAppliedJobIds } from "../hooks/useAppliedJobIds";
-import { Maximize, MonitorCheck, Clock, ChevronLeft } from "lucide-react";
+import { MonitorCheck, ChevronLeft } from "@/components/ui/icons";
 import CandidateHeader from "../components/CandidateHeader";
 import { JobNotFoundState } from "../components/JobNotFoundState";
 import { CompleteProfileDialog } from "../components/CompleteProfileDialog";
@@ -15,24 +15,6 @@ import BlueSparkles from "@/assets/blue-sparkles.svg";
 import { useFullscreenCheck } from "../hooks/useFullscreenCheck";
 import { ApproxIcon } from "@/components/ui/ApproxIcon";
 
-
-const CHECKS = [
-    {
-        icon: Maximize,
-        title: "Full-screen mode",
-        description: "Your browser switches to full-screen for the length of the simulation.",
-    },
-    {
-        icon: MonitorCheck,
-        title: "Tab-switch detection",
-        description: "Switching to another tab or window during the simulation is tracked.",
-    },
-    {
-        icon: Clock,
-        title: "Idle-time tracking",
-        description: "Extended periods of inactivity are flagged for review.",
-    },
-];
 
 function StatCard({ children, label }: { children: React.ReactNode; label: string }) {
     return (
@@ -141,29 +123,26 @@ export default function PreSimulation() {
                         </div>
 
                         <div className="rounded-xl bg-linear-to-r from-secondary-500 to-primary-950 px-px py-px w-full">
-                            <div className="flex w-full flex-col gap-6 rounded-xl bg-neutral-50 p-6 text-left">
-                                {CHECKS.map((check, index) => (
-                                    <div key={check.title} className="flex flex-col gap-6">
-                                        <div className="flex items-start md:items-center gap-5">
-                                            <check.icon className="size-5 shrink-0 text-primary-500" />
-                                            <div className="flex flex-1 flex-col text-[16px]">
-                                                <p className="text-neutral-950">{check.title}</p>
-                                                <p className="text-neutral-400">{check.description}</p>
-                                            </div>
-                                        </div>
-                                        {index < CHECKS.length - 1 && <div className="h-px w-full bg-neutral-200" />}
-                                    </div>
-                                ))}
+                            <div className="flex w-full items-start gap-4 rounded-xl bg-neutral-50 p-5 text-left">
+                                <MonitorCheck className="mt-0.5 size-5 shrink-0 text-primary-500" />
+                                <div className="space-y-2 text-sm text-neutral-700 sm:text-base">
+                                    <h2 className="font-medium text-neutral-950">Activity monitoring</h2>
+                                    <p>Your activity will be monitored during the simulation and shared with the employer for review. It may affect their selection decision.</p>
+                                    <p>We monitor:</p>
+                                    <ul className="list-disc space-y-1 pl-5">
+                                        <li>Switching tabs or windows</li>
+                                        <li>Exiting full-screen mode</li>
+                                        <li>Periods of inactivity</li>
+                                        <li>Connection interruptions</li>
+                                    </ul>
+                                    <p>The simulation runs in full-screen mode.</p>
+                                </div>
                             </div>
                         </div>
 
-                        <p className="text-[16px] text-neutral-400">
-                            These checks exist as an anti-cheat mechanism.
-                        </p>
-
                         <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-3">
                             <StatCard label="Tasks">{simulation.tasks.length}</StatCard>
-                            <StatCard label="Est. time allowed">
+                            <StatCard label="Time allowed">
                                 <ApproxIcon className="size-5 shrink-0 text-neutral-500" />
                                 <span>{simulation.timeLimitMinutes} min</span>
                             </StatCard>

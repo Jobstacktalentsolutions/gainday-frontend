@@ -42,7 +42,7 @@ export function JobBoardPage() {
         );
         observer.observe(sentinel);
         return () => observer.disconnect();
-    }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+    }, [hasNextPage, isFetchingNextPage, fetchNextPage, isLoading, isSearching, filteredJobs.length]);
 
     function handleApply(job: JobBoardListing) {
         navigate(`/job-board/${job.id}`);
@@ -52,7 +52,7 @@ export function JobBoardPage() {
         <div className="min-h-screen w-full bg-neutral-50">
             <JobBoardHeader />
 
-            <main className="mx-auto flex w-full max-w-300 flex-col gap-10 px-5 pb-20 pt-33.75 sm:pt-43.75 lg:px-0">
+            <main className="mx-auto flex w-full max-w-300 flex-col gap-6 px-4 pb-12 sm:px-5 pt-28 lg:pt-32 lg:px-0">
                 <div className="flex flex-col">
                     <h1 className="text-[32px] leading-[1.2] text-black sm:text-[48px] sm:leading-14.5 sm:tracking-[-0.48px]">
                         Find your next role
@@ -68,7 +68,7 @@ export function JobBoardPage() {
                         placeholder="Search by job title, role, or keyword"
                     />
 
-                    <div className="-mx-5 flex w-[calc(100%+2.5rem)] items-center gap-3 overflow-x-auto px-5 py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:ml-auto sm:w-auto sm:flex-wrap sm:justify-end sm:overflow-visible sm:px-0 sm:py-0">
+                    <div className="-mx-4 flex w-[calc(100%+2rem)] items-center gap-3 overflow-x-auto px-4 py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:ml-auto sm:w-auto sm:flex-wrap sm:justify-end sm:overflow-visible sm:px-0 sm:py-0">
                         <FilterDropdown
                             prefix="Sort: "
                             allLabel="Recommended"

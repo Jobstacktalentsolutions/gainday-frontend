@@ -1,5 +1,5 @@
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { Coins } from "lucide-react";
+import { Coins } from "@/components/ui/icons";
 import { useCreditRevenue } from "../hooks/useCreditRevenue";
 import type { Timeframe } from "../hooks/useDashboardStats";
 import { formatAmountForCurrency, formatRevenue } from "../utils/money";

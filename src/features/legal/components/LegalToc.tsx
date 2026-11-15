@@ -1,5 +1,5 @@
 import type { MouseEvent } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { scrollToSectionById } from "@/features/landing/utils/scrollToSection";
 

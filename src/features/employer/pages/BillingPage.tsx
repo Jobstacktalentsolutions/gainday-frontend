@@ -23,9 +23,9 @@ const BillingPage = () => {
     }, [searchParams, setSearchParams]);
 
     return (
-        <div className="min-h-screen bg-neutral-50 px-6 pb-16 pt-40 lg:px-12 xl:px-20">
-            <div className="mx-auto flex w-full max-w-300 flex-col gap-10">
-                <h1 className="text-[32px] leading-9.5 tracking-[-0.32px] text-black lg:text-[48px] lg:leading-14.5 lg:tracking-[-0.48px]">
+        <div className="min-h-screen bg-neutral-50 px-4 pb-12 pt-28 sm:px-6 lg:px-12 lg:pt-32 xl:px-20">
+            <div className="mx-auto flex w-full max-w-300 flex-col gap-6 sm:gap-8">
+                <h1 className="text-3xl leading-tight tracking-tight text-black lg:text-4xl">
                     Billing &amp; Credits
                 </h1>
 

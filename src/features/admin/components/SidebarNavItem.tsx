@@ -1,11 +1,11 @@
 import { NavLink } from "react-router-dom";
-import { type LucideIcon } from "lucide-react";
+import { type AppIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 interface SidebarNavItemProps {
   to: string;
   label: string;
-  icon?: LucideIcon;
+  icon?: AppIcon;
   nested?: boolean;
   /** Count shown as a pill at the end of the row; hidden when zero or undefined. */
   badge?: number;

@@ -19,7 +19,7 @@ import {
   ShieldCheck,
   TrendingUp,
   BrainCircuit,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { toast } from "sonner";
 import { AdminButton } from "@/components/ui/AdminButton";
 import { formatPhoneForDisplay } from "@/lib/phone";

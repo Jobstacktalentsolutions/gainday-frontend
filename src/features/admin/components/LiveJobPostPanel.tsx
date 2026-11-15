@@ -12,7 +12,7 @@ import {
   ShieldAlert,
   Trash2,
   CheckCircle2,
-} from "lucide-react";
+} from "@/components/ui/icons";
 import { AdminButton } from "@/components/ui/AdminButton";
 import StatusBadge from "./StatusBadge";
 import { TableLoadMore } from "./TableLoadMore";

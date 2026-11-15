@@ -18,7 +18,7 @@ const LandingPage = () => {
         <MotionConfig reducedMotion="user">
             <div className="bg-neutral-50">
                 <Header />
-                <main className="pt-24.25">
+                <main className="overflow-x-clip pt-24.25">
                     <HeroSection />
                     <div className="pb-25 pt-15 lg:pt-0">
                         <MarqueeStrip />

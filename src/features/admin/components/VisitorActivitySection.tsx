@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { Activity } from "lucide-react";
+import { Activity } from "@/components/ui/icons";
 import { useVisitorActivity, type AudienceCounts, type VisitorActivity } from "../hooks/useVisitorActivity";
 import type { Timeframe } from "../hooks/useDashboardStats";
 

@@ -1,4 +1,4 @@
-import { Pencil, X } from "lucide-react";
+import { Pencil, X } from "@/components/ui/icons";
 import { AdminButton } from "@/components/ui/AdminButton";
 import type { GeneratedSimulation } from "../types/aiOversight";
 

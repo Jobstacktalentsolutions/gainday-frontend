@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { AlertOctagon, AlertTriangle, ChevronDown, Info } from "lucide-react";
+import { AlertOctagon, AlertTriangle, ChevronDown, Info } from "@/components/ui/icons";
 import { AdminButton } from "@/components/ui/AdminButton";
 import { cn } from "@/lib/utils";
 import type { AdminNotification, NotificationSeverity } from "../types/notification";

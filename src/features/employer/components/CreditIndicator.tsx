@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Coins, ChevronDown } from "lucide-react";
+import { Coins, ChevronDown } from "@/components/ui/icons";
 import { AnimatePresence, motion } from "motion/react";
 import { useCreditBalance } from "../hooks/useCreditBalance";
 import { formatShortDate } from "@/lib/formatDate";

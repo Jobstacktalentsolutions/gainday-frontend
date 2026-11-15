@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Pencil, Building2, User, Phone, Briefcase, FileText, CheckCircle2, XCircle, AlertTriangle } from "lucide-react";
+import { Pencil, Building2, User, Phone, Briefcase, FileText, CheckCircle2, XCircle, AlertTriangle } from "@/components/ui/icons";
 import { formatPhoneForDisplay } from "@/lib/phone";
 import { Button } from "@/components/ui/button";
 import {

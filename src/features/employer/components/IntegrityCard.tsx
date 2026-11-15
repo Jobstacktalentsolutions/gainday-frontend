@@ -1,4 +1,4 @@
-import { Shield, ShieldAlert, ShieldCheck } from "lucide-react";
+import { Shield, ShieldAlert, ShieldCheck } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import Skeleton from "@/components/ui/skeleton";
 import { INTEGRITY_META, formatIntegrityEvent } from "../utils/submissionIntegrity";

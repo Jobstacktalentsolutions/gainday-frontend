@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { TrendingUp, ArrowRight, CheckCircle2, History, X, ChevronLeft } from "lucide-react";
+import { TrendingUp, ArrowRight, CheckCircle2, History, X, ChevronLeft } from "@/components/ui/icons";
 import CandidateHeader from "../components/CandidateHeader";
 import AppLoader from "@/components/ui/AppLoader";
 import { ActionButton } from "@/components/ui/ActionButton";

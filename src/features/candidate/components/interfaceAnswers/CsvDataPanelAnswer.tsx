@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Download } from "lucide-react";
+import { Download } from "@/components/ui/icons";
 import { csvToTable, downloadCsv } from "@/features/simulation-tasks/csv";
 import type { CsvDataPanelPayload, TableViewResponsePanelPayload } from "@/features/simulation-tasks/types";
 import { InterfaceType } from "@/features/simulation-tasks/types";

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { isAxiosError } from "axios";
 import { toast } from "sonner";
 import PageBackLink from "../components/PageBackLink";
@@ -11,6 +12,7 @@ import IntegrityCard, { IntegrityCardSkeleton } from "../components/IntegrityCar
 import CapabilityPassportModal from "../components/CapabilityPassportModal";
 import CandidateProfileCard from "@/features/capability-passport/components/CandidateProfileCard";
 import CreditPurchaseModal from "../components/CreditPurchaseModal";
+import { UnlockConfirmation } from "../components/UnlockConfirmation";
 import { useEmployerSubmission } from "../hooks/useEmployerSubmission";
 import { useSubmissionPassport } from "../hooks/useSubmissionPassport";
 import { useUnlockCandidates } from "../hooks/useUnlockCandidates";
@@ -19,7 +21,7 @@ import type { PaymentRequiredBody } from "../types/payments";
 import type { SubmissionStatus } from "../types/submission";
 import { getCandidateLabel } from "../utils/submissionLabels";
 
-const PAGE_SHELL = "min-h-screen bg-neutral-50 px-6 pb-10 pt-40 lg:px-12 xl:px-20";
+const PAGE_SHELL = "min-h-screen bg-neutral-50 px-4 pb-10 pt-28 sm:px-6 lg:px-12 lg:pt-32 xl:px-20";
 const CONTENT_WIDTH = "mx-auto w-full max-w-6xl";
 
 // Shown above the task list while there is no score, so the answers below don't read as an
@@ -33,9 +35,14 @@ const UNGRADED_NOTICE: Partial<Record<SubmissionStatus, string>> = {
 };
 
 const SubmissionDetail = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const isMobile = useMediaQuery("(max-width: 767px)");
     const { jobId = "", submissionId } = useParams<{ jobId: string; submissionId: string }>();
     const { data: submission, isLoading, isError, refetch } = useEmployerSubmission(jobId, submissionId);
     const [isPassportOpen, setIsPassportOpen] = useState(false);
+    const [confirmUnlock, setConfirmUnlock] = useState(false);
+    const [selectAfterUnlock, setSelectAfterUnlock] = useState(false);
     // Only fetched once the modal is opened.
     const passportQuery = useSubmissionPassport(submissionId, isPassportOpen);
 
@@ -47,15 +54,28 @@ const SubmissionDetail = () => {
 
     const listPath = `/employer/jobs/${jobId}/submissions`;
 
+    const finishUnlock = () => {
+        if (selectAfterUnlock && submissionId) {
+            selectCandidate.mutate({ submissionId, selected: true, jobId }, {
+                onSuccess: () => { setSelectAfterUnlock(false); toast.success("Candidate selected"); refetch(); },
+                onError: () => { setSelectAfterUnlock(false); toast.error("Contact unlocked, but selection failed. Please try selecting again."); refetch(); },
+            });
+        } else {
+            refetch();
+        }
+    };
+
     const handleUnlockContact = () => {
         if (!submissionId) return;
         unlockCandidates.mutate([submissionId], {
             onSuccess: () => {
+                setConfirmUnlock(false);
                 toast.success("Contact unlocked");
-                refetch();
+                finishUnlock();
             },
             onError: (error) => {
                 if (isAxiosError<PaymentRequiredBody>(error) && error.response?.status === 402) {
+                    setConfirmUnlock(false);
                     setUnlockModal({ open: true, recommendedPackId: error.response.data.recommendedPackId });
                     return;
                 }
@@ -68,8 +88,8 @@ const SubmissionDetail = () => {
         if (!submission) return;
         const currentlySelected = submission.isSelected || submission.status === "SELECTED";
         if (!currentlySelected && !submission.isUnlocked) {
-            toast.info("Please unlock this candidate before selecting them.");
-            handleUnlockContact();
+            setSelectAfterUnlock(true);
+            setConfirmUnlock(true);
             return;
         }
         selectCandidate.mutate(
@@ -86,7 +106,8 @@ const SubmissionDetail = () => {
                 onError: (error) => {
                     if (isAxiosError(error) && error.response?.status === 403) {
                         toast.error(error.response.data?.message || "You must unlock this candidate before selecting them.");
-                        handleUnlockContact();
+                        setSelectAfterUnlock(true);
+                        setConfirmUnlock(true);
                     } else {
                         toast.error("Failed to update candidate selection status.");
                     }
@@ -99,7 +120,7 @@ const SubmissionDetail = () => {
         return (
             <div className={PAGE_SHELL}>
                 <SubmissionDetailHeader jobId={jobId} isLoading />
-                <div className={`${CONTENT_WIDTH} flex flex-col gap-10 lg:flex-row`}>
+                <div className={`${CONTENT_WIDTH} flex flex-col gap-6 lg:flex-row lg:gap-10`}>
                     <div className="flex flex-1 flex-col gap-6">
                         <p className="text-base text-primary-950">Task-by-task breakdown</p>
                         {Array.from({ length: 4 }).map((_, index) => (
@@ -154,7 +175,7 @@ const SubmissionDetail = () => {
                 onToggleSelect={handleToggleSelect}
                 isUpdatingSelect={selectCandidate.isPending}
             />
-            <div className={`${CONTENT_WIDTH} flex flex-col gap-10 lg:flex-row`}>
+            <div className={`${CONTENT_WIDTH} flex flex-col gap-6 lg:flex-row lg:gap-10`}>
                 <section className="flex min-w-0 flex-1 flex-col gap-6" aria-labelledby="task-breakdown-heading">
                     <h2 id="task-breakdown-heading" className="text-base text-primary-950">
                         Task-by-task breakdown
@@ -179,13 +200,16 @@ const SubmissionDetail = () => {
                     <ContactCard
                         isUnlocked={submission.isUnlocked}
                         contact={submission.contact}
-                        onUnlock={handleUnlockContact}
+                        onUnlock={() => { setSelectAfterUnlock(false); setConfirmUnlock(true); }}
                         isSelected={submission.isSelected || submission.status === "SELECTED"}
                     />
                     {submission.candidateProfile && <CandidateProfileCard profile={submission.candidateProfile} />}
                     <CapabilityHistoryCard
                         history={submission.capabilityHistory}
-                        onViewDetails={() => setIsPassportOpen(true)}
+                        onViewDetails={() => {
+                            if (isMobile) navigate(`/employer/jobs/${jobId}/submissions/${submissionId}/passport`, { state: { returnTo: location.pathname } });
+                            else setIsPassportOpen(true);
+                        }}
                     />
                     <IntegrityCard status={submission.integrityStatus} events={submission.integrityEvents} />
                 </aside>
@@ -204,9 +228,10 @@ const SubmissionDetail = () => {
                 isUnlocked={submission.isUnlocked}
                 isSelected={submission.isSelected || submission.status === "SELECTED"}
                 contact={submission.contact}
-                onUnlockContact={handleUnlockContact}
+                onUnlockContact={() => { setSelectAfterUnlock(false); setConfirmUnlock(true); }}
             />
 
+            <UnlockConfirmation open={confirmUnlock} onOpenChange={setConfirmUnlock} count={1} pending={unlockCandidates.isPending} onConfirm={handleUnlockContact} onTopUp={() => { setConfirmUnlock(false); setUnlockModal({ open: true }); }} />
             {submissionId && (
                 <CreditPurchaseModal
                     open={unlockModal.open}
@@ -214,7 +239,7 @@ const SubmissionDetail = () => {
                     mode="unlock"
                     submissionIds={[submissionId]}
                     recommendedPackId={unlockModal.recommendedPackId}
-                    onUnlocked={() => refetch()}
+                    onUnlocked={finishUnlock}
                 />
             )}
         </div>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { UserPlus, AlertCircle, MailCheck } from "lucide-react";
+import { UserPlus, AlertCircle, MailCheck } from "@/components/ui/icons";
 import {
   Dialog,
   DialogContent,

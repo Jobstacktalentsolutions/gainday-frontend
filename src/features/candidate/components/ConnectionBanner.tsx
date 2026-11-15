@@ -1,4 +1,4 @@
-import { Wifi, WifiOff, X } from "lucide-react";
+import { Wifi, WifiOff, X } from "@/components/ui/icons";
 import type { ConnectionStatus } from "../hooks/useConnectionMonitor";
 
 interface ConnectionBannerProps {
@@ -24,7 +24,7 @@ export function ConnectionBanner({ status, onDismiss }: ConnectionBannerProps) {
         <p className={`text-sm sm:text-[16px] ${isLost ? "text-error-500" : "text-success-500"}`}>
           {isLost
             ? "Connection lost. Your timer keeps running while disconnected. Reconnect as soon as possible."
-            : "Connection restored. Elapsed time is synced and all saved answers were retained."}
+            : "Connection restored. You can continue your simulation."}
         </p>
       </div>
       {!isLost && (

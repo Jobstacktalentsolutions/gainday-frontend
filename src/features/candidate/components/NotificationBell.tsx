@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Bell } from "lucide-react";
+import { Bell } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { formatShortDate } from "@/lib/formatDate";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";

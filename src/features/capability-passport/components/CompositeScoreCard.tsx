@@ -1,4 +1,4 @@
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { formatShortDate } from "@/lib/formatDate";
 import ScoreHistoryBars from "./ScoreHistoryBars";

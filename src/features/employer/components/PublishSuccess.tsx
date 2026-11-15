@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { Check } from "@/components/ui/icons";
 import { motion } from "motion/react";
 import { Link } from "react-router-dom";
 import { ShareJobPanel } from "./ShareJobPanel";

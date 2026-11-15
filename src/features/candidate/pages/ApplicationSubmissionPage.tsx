@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "@/components/ui/icons";
 import CandidateHeader from "../components/CandidateHeader";
 
 // Placeholder for the candidate's own view of what they submitted. Deliberately separate from
@@ -10,8 +10,8 @@ const ApplicationSubmissionPage = () => {
     return (
         <div className="min-h-screen bg-neutral-50">
             <CandidateHeader />
-            <main className="px-6 pb-16 pt-32 lg:px-12 lg:pt-44 xl:px-20">
-                <div className="mx-auto flex w-full max-w-4xl flex-col gap-8">
+            <main className="px-4 pb-12 pt-28 sm:px-6 lg:px-12 lg:pt-32 xl:px-20">
+                <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 lg:gap-8">
                     <Link
                         to={`/candidate/applications/${applicationId}`}
                         className="flex w-fit items-center gap-2 text-base text-neutral-700 hover:text-primary-500"

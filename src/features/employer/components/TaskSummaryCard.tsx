@@ -1,4 +1,4 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown } from "@/components/ui/icons";
 import Markdown from "@/components/ui/Markdown";
 import { cn } from "@/lib/utils";
 import TaskTypeBadge from "./TaskTypeBadge";

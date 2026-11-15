@@ -9,13 +9,14 @@ import SubmissionSortDropdown from "../components/SubmissionSortDropdown";
 import SubmissionsTable, { SubmissionsTableSkeleton } from "../components/SubmissionTable";
 import SubmissionsEmptyState from "../components/SubmissionsEmptyState";
 import CreditPurchaseModal from "../components/CreditPurchaseModal";
+import { UnlockConfirmation } from "../components/UnlockConfirmation";
 import { useJobSubmissions } from "../hooks/useJobSubmissions";
 import { useJobTitle } from "../hooks/useJobTitle";
 import { useSubmissionSort } from "../hooks/useSubmissionSort";
 import { useUnlockCandidates } from "../hooks/useUnlockCandidates";
+import { useSelectCandidate } from "../hooks/useSelectCandidate";
 import type { PaymentRequiredBody } from "../types/payments";
 import { SORT_CONFIG, sortSubmissions } from "../utils/submissionSort";
-import { CATEGORY_ORDER } from "../utils/submissionCategories";
 import { cn } from "@/lib/utils";
 
 interface UnlockPrompt {
@@ -38,8 +39,10 @@ const JobSubmissions = () => {
     const hasSubmissions = !!submissions && submissions.length > 0;
 
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
+    const [confirmOpen, setConfirmOpen] = useState(false);
     const [unlockPrompt, setUnlockPrompt] = useState<UnlockPrompt>({ open: false, submissionIds: [] });
     const unlockCandidates = useUnlockCandidates();
+    const selectCandidate = useSelectCandidate();
 
     const toggleSelect = (submissionId: string) =>
         setSelectedIds((current) =>
@@ -52,17 +55,29 @@ const JobSubmissions = () => {
     const lockedSelectedIds = selectedIds.filter((id) =>
         submissions?.some((submission) => submission.id === id && !submission.isUnlocked),
     );
+    const unlockedSelectedIds = selectedIds.filter((id) => submissions?.some((submission) => submission.id === id && submission.isUnlocked));
+
+    const selectUnlocked = async () => {
+        const results = await Promise.allSettled(unlockedSelectedIds.map((submissionId) => selectCandidate.mutateAsync({ submissionId, selected: true, jobId })));
+        const failed = results.filter((result) => result.status === "rejected").length;
+        if (failed) toast.error(`${failed} candidate selections failed. Please try again.`);
+        else toast.success("Candidates selected");
+        setSelectedIds([]);
+        void refetch();
+    };
 
     const unlockSelected = (submissionIds: string[]) => {
         const count = submissionIds.length;
         unlockCandidates.mutate(submissionIds, {
             onSuccess: () => {
+                setConfirmOpen(false);
                 toast.success(count === 1 ? "Candidate unlocked" : `${count} candidates unlocked`);
                 setSelectedIds([]);
                 refetch();
             },
             onError: (error) => {
                 if (isAxiosError<PaymentRequiredBody>(error) && error.response?.status === 402) {
+                    setConfirmOpen(false);
                     setUnlockPrompt({
                         open: true,
                         submissionIds,
@@ -78,12 +93,12 @@ const JobSubmissions = () => {
     const unlockLabel = lockedSelectedIds.length === 1 ? "Unlock candidate" : `Unlock ${lockedSelectedIds.length} candidates`;
 
     return (
-        <div className="min-h-screen bg-neutral-50 px-6 pb-30 pt-32 md:px-7.5 lg:px-12 xl:px-20">
-            <div className="mx-auto flex w-full max-w-6xl flex-col gap-10">
+        <div className="min-h-screen bg-neutral-50 px-4 pb-12 pt-28 sm:px-6 md:px-7.5 lg:px-12 lg:pt-32 xl:px-20">
+            <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 lg:gap-8">
                 <PageBackLink to="/employer/jobs">Go back to jobs posted</PageBackLink>
 
                 <div className="flex flex-col items-start">
-                    <h1 className="text-4xl text-black lg:text-5xl">All Submissions</h1>
+                    <h1 className="text-3xl text-black lg:text-4xl">All Submissions</h1>
                     {jobTitle.isLoading ? (
                         <Skeleton className="mt-2 h-6 w-64" />
                     ) : (
@@ -92,8 +107,8 @@ const JobSubmissions = () => {
                 </div>
 
                 {!isLoading && !isError && hasSubmissions && (
-                    <div className="flex flex-wrap items-center justify-end gap-x-6 gap-y-3">
-                        <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-2 lg:justify-end">
+                        <div className="flex flex-wrap items-center gap-2">
                             {SORT_CONFIG.map((config) => (
                                 <SubmissionSortDropdown
                                     key={config.key}
@@ -108,7 +123,7 @@ const JobSubmissions = () => {
                             onClick={reset}
                             disabled={isDefault}
                             className={cn(
-                                "w-full text-right text-sm text-primary-500 transition-opacity",
+                                "text-sm text-primary-500 transition-opacity",
                                 isDefault ? "cursor-default opacity-40" : "hover:underline",
                             )}
                         >
@@ -117,10 +132,10 @@ const JobSubmissions = () => {
                     </div>
                 )}
 
-                {lockedSelectedIds.length > 0 && (
+                {selectedIds.length > 0 && (
                     <div className="sticky top-24 z-10 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-primary-200 bg-white px-5 py-4 shadow-sm">
                         <p className="text-base text-neutral-950">
-                            {lockedSelectedIds.length} selected
+                            {selectedIds.length} selected
                         </p>
                         <div className="flex items-center gap-4">
                             <button
@@ -130,14 +145,15 @@ const JobSubmissions = () => {
                             >
                                 Clear selection
                             </button>
-                            <ActionButton gradient={false}
+                            {unlockedSelectedIds.length > 0 && <ActionButton gradient={false} size="md" disabled={selectCandidate.isPending} onClick={() => void selectUnlocked()}>Select {unlockedSelectedIds.length} {unlockedSelectedIds.length === 1 ? "candidate" : "candidates"}</ActionButton>}
+                            {lockedSelectedIds.length > 0 && <ActionButton gradient={false}
                                 size="md"
                                 className="w-auto"
                                 disabled={unlockCandidates.isPending}
-                                onClick={() => unlockSelected(lockedSelectedIds)}
+                                onClick={() => setConfirmOpen(true)}
                             >
                                 {unlockLabel}
-                            </ActionButton>
+                            </ActionButton>}
                         </div>
                     </div>
                 )}
@@ -156,22 +172,10 @@ const JobSubmissions = () => {
                 {!isLoading && !isError && (
                     hasSubmissions && jobId ? (
                         <div className="flex flex-col gap-3">
-                            <div className="flex flex-wrap items-center gap-x-5 gap-y-1 rounded-xl bg-white px-4 py-3 text-sm text-neutral-600">
-                                <span className="font-medium uppercase tracking-wide text-neutral-500">Breakdown key</span>
-                                {CATEGORY_ORDER.map((category) => (
-                                    <span key={category.key}>
-                                        <abbr title={category.label} className="font-semibold text-neutral-900 no-underline">
-                                            {category.short}
-                                        </abbr>
-                                        {" = "}
-                                        {category.label}
-                                    </span>
-                                ))}
-                            </div>
                             <SubmissionsTable
                                 jobId={jobId}
                                 submissions={sortedSubmissions}
-                                selectedIds={lockedSelectedIds}
+                                selectedIds={selectedIds}
                                 onToggleSelect={toggleSelect}
                             />
                         </div>
@@ -181,6 +185,7 @@ const JobSubmissions = () => {
                 )}
             </div>
 
+            <UnlockConfirmation open={confirmOpen} onOpenChange={setConfirmOpen} count={lockedSelectedIds.length} pending={unlockCandidates.isPending} onConfirm={() => unlockSelected(lockedSelectedIds)} onTopUp={() => { setConfirmOpen(false); setUnlockPrompt({ open: true, submissionIds: lockedSelectedIds }); }} />
             {unlockPrompt.submissionIds.length > 0 && (
                 <CreditPurchaseModal
                     open={unlockPrompt.open}

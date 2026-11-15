@@ -1,4 +1,4 @@
-import { Crown, Shield, ShieldAlert, ShieldCheck, Calendar, CheckCircle2 } from "lucide-react";
+import { Crown, Shield, ShieldAlert, ShieldCheck, Calendar, CheckCircle2 } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

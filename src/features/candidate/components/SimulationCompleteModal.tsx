@@ -56,8 +56,7 @@ export function SimulationCompleteModal({
                         </p>
                     ) : (
                         <p className="text-sm text-neutral-700 sm:text-base">
-                            You have successfully applied for the role. You will be contacted by the employer if
-                            you've been selected for the next stage.
+                            Your application has been submitted. You can follow its progress in your applications.
                         </p>
                     )}
                 </div>

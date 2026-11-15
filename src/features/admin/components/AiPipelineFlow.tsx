@@ -7,12 +7,12 @@ import {
   ShieldCheck,
   SlidersHorizontal,
   Bot,
-  type LucideIcon,
-} from "lucide-react";
+  type AppIcon,
+} from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 interface PipelineStep {
-  icon: LucideIcon;
+  icon: AppIcon;
   stepNumber: number;
   title: string;
   badge: string;

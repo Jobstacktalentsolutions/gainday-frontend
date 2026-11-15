@@ -58,11 +58,12 @@ const CandidateSignUp = () => {
     const signUpMutation = useMutation({
         mutationFn: (values: CandidateSignUpValues) =>
             apiClient.post("/auth/register/candidate", values),
-        onSuccess: (res) => {
-            useAuthStore.getState().setAuth(res.data.access_token, res.data.user)
+        onSuccess: (_res, values) => {
+            useAuthStore.getState().clearAuth()
+            localStorage.setItem("gainday-profile-prompt", values.email.trim().toLowerCase())
             navigate(
                 redirect ? `/candidate/verify-email?redirect=${encodeURIComponent(redirect)}` : "/candidate/verify-email",
-                { state: { justSent: true } },
+                { state: { justSent: true, email: values.email } },
             )
         },
     })
@@ -84,7 +85,7 @@ const CandidateSignUp = () => {
     return (
         <AuthCard
             title="Sign up to apply"
-            subtitle="Track your Capability Score across every application & see your full results and feedback anytime"
+            subtitle="Apply for roles and view your assessed results and feedback."
         >
             <form
                 onSubmit={handleSubmit(onSubmit)}

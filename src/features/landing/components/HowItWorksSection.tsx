@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight } from "@/components/ui/icons";
 import { motion } from "motion/react";
 import { fadeUp, staggerContainer } from "@/lib/motion/variants";
 import { HighlightBox } from "./HighlightBox";

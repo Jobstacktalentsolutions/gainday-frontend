@@ -3,7 +3,7 @@ import type { AxiosError } from "axios";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { CloudUpload, Timer, Clock } from "lucide-react";
+import { CloudUpload, Timer, Clock } from "@/components/ui/icons";
 
 import { ActionButton } from "@/components/ui/ActionButton";
 import AppLoader from "@/components/ui/AppLoader";
@@ -146,11 +146,13 @@ export default function TaskRunner() {
         }
     }, [runStore.isComplete]);
 
+    const fullscreenCleanupRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     useEffect(() => {
+        if (fullscreenCleanupRef.current !== null) clearTimeout(fullscreenCleanupRef.current);
         return () => {
-            if (document.fullscreenElement) {
-                document.exitFullscreen().catch(() => { });
-            }
+            fullscreenCleanupRef.current = setTimeout(() => {
+                if (document.fullscreenElement) document.exitFullscreen().catch(() => { });
+            }, 0);
         };
     }, []);
 
@@ -364,7 +366,7 @@ export default function TaskRunner() {
                 <div className="flex shrink-0 items-center gap-3 lg:gap-4">
                     <div className="flex items-center gap-2 text-base text-neutral-400" aria-live="polite">
                         <CloudUpload className="size-5 sm:size-6" />
-                        <span className="hidden md:inline">{isSaving ? "Saving..." : "Autosaved"}</span>
+                        <span className="hidden md:inline">{isSaving ? "Saving on this device..." : "Saved on this device"}</span>
                     </div>
                     <div
                         className={`flex h-10 items-center gap-2 rounded px-2.5 sm:h-13 sm:px-3 sm:py-2 ${timer.isWarning ? "bg-error-500" : "bg-primary-950"
@@ -380,7 +382,7 @@ export default function TaskRunner() {
             <main className="mx-auto flex w-full max-w-300 flex-col items-center px-4 pb-20 pt-24 sm:px-5 sm:pt-28 lg:pt-34.25">
                 <div className="flex w-full max-w-246.5 flex-col gap-6 rounded-3xl bg-white p-5 shadow-[0px_4px_10px_rgba(16,24,40,0.05)] sm:gap-10 sm:p-10">
                     <div className="flex w-full items-center justify-between">
-                        <p className="text-[16px] text-primary-500">Task • {task.category}</p>
+                        <p className="text-[16px] text-primary-500">Task {runStore.currentTaskIndex + 1}</p>
                     </div>
 
                     <div className="flex flex-col gap-2">

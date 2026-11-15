@@ -1,27 +1,36 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, User, AlertCircle } from "lucide-react";
+import { ArrowLeft, User, AlertCircle } from "@/components/ui/icons";
 import CandidateHeader from "@/features/candidate/components/CandidateHeader";
 import { PublicNavbar } from "@/features/candidate/components/PublicNavbar";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
+import { AUTH_ROLES } from "@/features/auth/utils/roles";
 import ProfileForm from "@/components/profile/ProfileForm";
+import { getMissingProfileFields } from "@/features/auth/utils/profileCompletion";
 
 const ProfilePage = () => {
   const { user } = useCurrentUser();
   const navigate = useNavigate();
-  const isEmployer = user?.role === "EMPLOYER";
-  const isCandidate = user?.role === "JOB_SEEKER";
+  const isEmployer = user?.role === AUTH_ROLES.employer;
+  const isCandidate = user?.role === AUTH_ROLES.candidate;
+  const missingFields = user ? getMissingProfileFields(user) : [];
 
   return (
     <div className="min-h-screen w-full bg-neutral-50">
       {/* If accessed standalone or outside employer shell, render candidate/public navbar */}
-      {!isEmployer && (user?.role === "JOB_SEEKER" ? <CandidateHeader /> : <PublicNavbar />)}
+      {!isEmployer && (isCandidate ? <CandidateHeader /> : <PublicNavbar />)}
 
       <main className="mx-auto flex w-full max-w-3xl flex-col px-4 pb-16 pt-28 sm:px-6 sm:pt-36 lg:px-8">
         {/* Back navigation button */}
         <div className="mb-6">
           <button
             type="button"
-            onClick={() => navigate(-1)}
+            onClick={() => {
+              if (window.history.state?.idx > 0) {
+                navigate(-1);
+                return;
+              }
+              navigate(isEmployer ? "/employer/jobs" : isCandidate ? "/job-board" : "/");
+            }}
             className="inline-flex items-center gap-2 text-sm font-medium text-neutral-600 hover:text-neutral-950 transition-colors cursor-pointer"
           >
             <ArrowLeft className="size-4" />
@@ -59,13 +68,15 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            {isCandidate && user?.isProfileComplete === false && (
+            {missingFields.length > 0 && (
               <div
                 role="status"
                 className="flex items-start gap-3 rounded-2xl border border-warning-200 bg-warning-50 p-4 text-sm text-warning-900"
               >
                 <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                <p>Your profile is incomplete. Add your job title to be able to apply for jobs.</p>
+                <p>{user?.role === "EMPLOYER"
+                  ? "Add your phone number to remove the profile warning. Phone number is optional to save."
+                  : "Add your job title to apply for jobs."}</p>
               </div>
             )}
 

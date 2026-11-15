@@ -1,5 +1,5 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { X, LogOut, User, Coins } from "lucide-react";
+import { X, LogOut, User, Coins } from "@/components/ui/icons";
 import { Link, NavLink } from "react-router-dom";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { useLogout } from "@/features/auth/hooks/useLogout";
@@ -25,7 +25,7 @@ const EmployerNavDrawer = ({ open, onOpenChange }: EmployerNavDrawerProps) => {
             <Dialog.Portal>
                 <Dialog.Overlay className="fixed inset-0 z-50 bg-black/40 data-[state=open]:animate-in data-[state=open]:fade-in data-[state=closed]:animate-out data-[state=closed]:fade-out" />
                 <Dialog.Content
-                    className="fixed inset-y-0 right-0 z-50 flex h-full w-72 flex-col justify-between bg-white px-6 py-6 shadow-xl data-[state=open]:animate-in data-[state=open]:slide-in-from-right data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right"
+                    className="fixed inset-y-0 right-0 z-50 flex h-full w-72 max-w-[calc(100vw-2rem)] flex-col justify-between gap-6 overflow-y-auto bg-white px-6 py-6 shadow-xl data-[state=open]:animate-in data-[state=open]:slide-in-from-right data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right"
                     aria-describedby={undefined}
                 >
                     <div className="flex flex-col gap-6">
@@ -57,18 +57,19 @@ const EmployerNavDrawer = ({ open, onOpenChange }: EmployerNavDrawerProps) => {
                             ))}
                         </nav>
 
-                        {/* Credit balance card (from CreditIndicator) */}
-                        <div className="rounded-xl border border-neutral-200 bg-neutral-50/80 p-3.5">
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <Coins className="size-4 text-primary-600" aria-hidden="true" />
-                                    <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500">Credit balance</span>
-                                </div>
-                                <span className="text-[11px] text-neutral-400">Recharged: {lastRecharged}</span>
+                        <div className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-neutral-50/80 px-3 py-2.5">
+                            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-600">
+                                <Coins className="size-4" aria-hidden="true" />
                             </div>
-                            <p className="mt-1 text-2xl font-bold tracking-tight text-neutral-950">
-                                {isCreditLoading ? "–" : (creditData?.balance ?? 0)}
-                            </p>
+                            <div className="min-w-0 flex-1">
+                                <div className="flex items-center justify-between gap-2">
+                                    <span className="text-sm text-neutral-700">Credit balance</span>
+                                    <span className="text-lg font-semibold leading-none text-neutral-950" aria-live="polite">
+                                        {isCreditLoading ? "–" : (creditData?.balance ?? 0)}
+                                    </span>
+                                </div>
+                                <p className="mt-0.5 text-xs text-neutral-500">Recharged: {lastRecharged}</p>
+                            </div>
                         </div>
                     </div>
 

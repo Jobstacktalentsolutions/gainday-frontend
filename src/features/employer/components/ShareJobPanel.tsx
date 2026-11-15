@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link2, Check } from "lucide-react";
+import { Link2, Check } from "@/components/ui/icons";
 import { toast } from "sonner";
 
 interface ShareJobPanelProps {
