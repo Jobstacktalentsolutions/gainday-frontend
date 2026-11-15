@@ -85,7 +85,7 @@ const CandidateSignUp = () => {
     return (
         <AuthCard
             title="Sign up to apply"
-            subtitle="Track your Capability Score across every application & see your full results and feedback anytime"
+            subtitle="Apply for roles and view your assessed results and feedback."
         >
             <form
                 onSubmit={handleSubmit(onSubmit)}

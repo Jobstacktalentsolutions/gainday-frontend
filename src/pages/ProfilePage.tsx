@@ -3,19 +3,21 @@ import { ArrowLeft, User, AlertCircle } from "@/components/ui/icons";
 import CandidateHeader from "@/features/candidate/components/CandidateHeader";
 import { PublicNavbar } from "@/features/candidate/components/PublicNavbar";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
+import { AUTH_ROLES } from "@/features/auth/utils/roles";
 import ProfileForm from "@/components/profile/ProfileForm";
 import { getMissingProfileFields } from "@/features/auth/utils/profileCompletion";
 
 const ProfilePage = () => {
   const { user } = useCurrentUser();
   const navigate = useNavigate();
-  const isEmployer = user?.role === "EMPLOYER";
+  const isEmployer = user?.role === AUTH_ROLES.employer;
+  const isCandidate = user?.role === AUTH_ROLES.candidate;
   const missingFields = user ? getMissingProfileFields(user) : [];
 
   return (
     <div className="min-h-screen w-full bg-neutral-50">
       {/* If accessed standalone or outside employer shell, render candidate/public navbar */}
-      {!isEmployer && (user?.role === "JOB_SEEKER" ? <CandidateHeader /> : <PublicNavbar />)}
+      {!isEmployer && (isCandidate ? <CandidateHeader /> : <PublicNavbar />)}
 
       <main className="mx-auto flex w-full max-w-3xl flex-col px-4 pb-16 pt-28 sm:px-6 sm:pt-36 lg:px-8">
         {/* Back navigation button */}

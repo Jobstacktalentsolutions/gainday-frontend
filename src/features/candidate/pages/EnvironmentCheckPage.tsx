@@ -143,7 +143,7 @@ export default function EnvironmentCheckPage() {
                         <div className="flex flex-col items-center gap-1">
                             <p className="text-[16px] text-primary-500">System Verification</p>
                             <h1 className="text-2xl leading-8 tracking-[-0.32px] text-primary-950 sm:text-[32px] sm:leading-9.5">
-                                Checking your simulation environment...
+                                Check your setup
                             </h1>
                             <p className="text-[16px] text-neutral-400">
                                 Please check your browser and connection before starting the simulation.
@@ -165,7 +165,7 @@ export default function EnvironmentCheckPage() {
                                 <div className="h-px w-full bg-neutral-200" />
                                 <CheckRow
                                     icon={Wifi}
-                                    title="Secure Connection Established"
+                                    title="Connection"
                                     description={
                                         connectionCheck.status === "secure" && connectionCheck.latencyMs !== null
                                             ? `Connected (${connectionCheck.latencyMs}ms latency).`
@@ -176,7 +176,7 @@ export default function EnvironmentCheckPage() {
                                     badge={
                                         <StatusBadge
                                             status={connectionCheck.status === "secure" ? "ready" : connectionCheck.status === "failed" ? "failed" : "checking"}
-                                            readyLabel="SECURE"
+                                            readyLabel="READY"
                                         />
                                     }
                                 />

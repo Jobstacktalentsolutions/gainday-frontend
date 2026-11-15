@@ -10,9 +10,9 @@ const PassportEmptyState = () => {
                 <span className="text-primary-500"><ShieldCheck className="size-6" aria-hidden="true" /></span>
             </span>
             <div className="flex flex-col items-center gap-1 text-center">
-                <p className="text-xl text-black lg:text-2xl">No capability passport yet</p>
+                <p className="text-xl text-black lg:text-2xl">No Capability Passport yet</p>
                 <p className="max-w-80 text-base text-neutral-700">
-                    Complete a simulation and your verified scores will build up here.
+                    Complete a work simulation to see your results here once they’re assessed.
                 </p>
             </div>
             <Link

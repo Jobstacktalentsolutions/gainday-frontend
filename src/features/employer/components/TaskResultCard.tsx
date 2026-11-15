@@ -32,8 +32,8 @@ const TaskResultCard = ({ task }: { task: TaskResult }) => {
 
             {task.gateTriggered === true && (
                 <div role="alert" className="flex flex-col gap-1 border border-error-200 bg-error-50 p-3 text-base">
-                    <p className="font-medium text-error-700">Gate triggered: judgment capped at 20</p>
-                    <p className="text-error-700">The response did what this task's gate forbids. Review the answer before deciding.</p>
+                    <p className="font-medium text-error-700">Judgment score capped at 20</p>
+                    <p className="text-error-700">The response triggered a scoring rule. Review the answer before deciding.</p>
                 </div>
             )}
 

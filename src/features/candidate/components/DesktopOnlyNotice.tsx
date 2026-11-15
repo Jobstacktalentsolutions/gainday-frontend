@@ -37,8 +37,7 @@ export default function DesktopOnlyNotice() {
                             Use a laptop or desktop to take this assessment
                         </h1>
                         <p className="text-base text-neutral-700">
-                            The work simulation needs a full-size screen, a keyboard and full-screen mode so
-                            your results are fair and comparable. It can't be taken on a phone or tablet.
+                            Use a laptop or desktop with a keyboard to complete the work simulation in full-screen mode.
                         </p>
                         <p className="text-base text-neutral-400">
                             Your account and progress are saved. Sign in on a computer and pick up from the job page.

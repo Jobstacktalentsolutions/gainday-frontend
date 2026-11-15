@@ -142,7 +142,7 @@ export default function PreSimulation() {
 
                         <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-3">
                             <StatCard label="Tasks">{simulation.tasks.length}</StatCard>
-                            <StatCard label="Est. time allowed">
+                            <StatCard label="Time allowed">
                                 <ApproxIcon className="size-5 shrink-0 text-neutral-500" />
                                 <span>{simulation.timeLimitMinutes} min</span>
                             </StatCard>

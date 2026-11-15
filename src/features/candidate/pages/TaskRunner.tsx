@@ -366,7 +366,7 @@ export default function TaskRunner() {
                 <div className="flex shrink-0 items-center gap-3 lg:gap-4">
                     <div className="flex items-center gap-2 text-base text-neutral-400" aria-live="polite">
                         <CloudUpload className="size-5 sm:size-6" />
-                        <span className="hidden md:inline">{isSaving ? "Saving..." : "Autosaved"}</span>
+                        <span className="hidden md:inline">{isSaving ? "Saving on this device..." : "Saved on this device"}</span>
                     </div>
                     <div
                         className={`flex h-10 items-center gap-2 rounded px-2.5 sm:h-13 sm:px-3 sm:py-2 ${timer.isWarning ? "bg-error-500" : "bg-primary-950"

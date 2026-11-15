@@ -23,7 +23,7 @@ interface TaskGenerationModalProps {
 }
 
 const DEFAULT_ERROR_DESCRIPTION =
-  "Something went wrong while generating tasks. We're looking into this. Please try again in a few moments.";
+  "We couldn't generate your tasks. Please try again.";
 
 function sanitizeErrorMessage(msg: string | null | undefined): string {
   if (!msg) return DEFAULT_ERROR_DESCRIPTION;

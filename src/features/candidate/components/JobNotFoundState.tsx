@@ -19,7 +19,7 @@ const COPY: Record<Variant, { label: string; title: string; description: string 
     noSimulation: {
         label: "Almost ready",
         title: "This role's simulation isn't ready yet",
-        description: "The employer is still setting it up. Check back soon, or look at other open roles.",
+        description: "Check back later, or browse other open roles.",
     },
 };
 

@@ -14,11 +14,11 @@ const JobsEmptyState = ({ onPostJob }: JobsEmptyStateProps) => {
             <div className="flex flex-col items-center gap-1 text-center">
                 <p className="text-xl text-black lg:text-2xl">No jobs posted yet</p>
                 <p className="w-80 max-w-full text-base text-neutral-700">
-                    Post your first job for free and review a ranked shortlist of qualified candidates.
+                    Post a job and review candidate work as applications come in.
                 </p>
             </div>
             <AddItemButton onClick={onPostJob}>
-                Post your new job
+                Post a job
             </AddItemButton>
 
         </div>
