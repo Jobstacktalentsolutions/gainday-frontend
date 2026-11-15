@@ -1,13 +1,15 @@
 // Mirrors gainday-backend/src/db/schema/job-seeker-profiles.schema.ts (Gender).
-export type Gender = "MALE" | "FEMALE" | "NON_BINARY";
+// Keep NON_BINARY readable for existing profiles while offering OTHER for new selections.
+export type Gender = "MALE" | "FEMALE" | "NON_BINARY" | "OTHER";
 
 export const GENDER_LABELS: Record<Gender, string> = {
     MALE: "Male",
     FEMALE: "Female",
-    NON_BINARY: "Non-binary",
+    NON_BINARY: "Other",
+    OTHER: "Other",
 };
 
-export const GENDER_OPTIONS = (Object.keys(GENDER_LABELS) as Gender[]).map((value) => ({
+export const GENDER_OPTIONS = (["MALE", "FEMALE", "OTHER"] as const).map((value) => ({
     value,
     label: GENDER_LABELS[value],
 }));

@@ -42,7 +42,7 @@ export function JobBoardPage() {
         );
         observer.observe(sentinel);
         return () => observer.disconnect();
-    }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+    }, [hasNextPage, isFetchingNextPage, fetchNextPage, isLoading, isSearching, filteredJobs.length]);
 
     function handleApply(job: JobBoardListing) {
         navigate(`/job-board/${job.id}`);

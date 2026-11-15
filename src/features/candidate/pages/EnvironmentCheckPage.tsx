@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useAppliedJobIds } from "../hooks/useAppliedJobIds";
-import { Sparkles, Maximize, Wifi, MonitorCheck, Check, X, Loader2 } from "@/components/ui/icons";
+import { Sparkles, Maximize, Wifi, Check, X, Loader2 } from "@/components/ui/icons";
 import CandidateHeader from "../components/CandidateHeader";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { apiClient } from "@/lib/api/client";
@@ -179,13 +179,6 @@ export default function EnvironmentCheckPage() {
                                             readyLabel="SECURE"
                                         />
                                     }
-                                />
-                                <div className="h-px w-full bg-neutral-200" />
-                                <CheckRow
-                                    icon={MonitorCheck}
-                                    title="Tab-switch monitoring armed"
-                                    description="Leaving this tab during the simulation is tracked from this point on."
-                                    badge={<StatusBadge status={tabGuard.status === "armed" ? "ready" : "checking"} readyLabel="ARMED" />}
                                 />
                             </div>
                         </div>
