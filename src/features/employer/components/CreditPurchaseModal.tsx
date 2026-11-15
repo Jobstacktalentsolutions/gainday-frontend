@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/compone
 import { ActionButton } from "@/components/ui/ActionButton";
 import { getStripe } from "@/lib/stripe";
 import { formatExactPrice, formatPrice, perUnlockPence } from "@/lib/formatPrice";
-import successAnimation from "@/assets/successAnimation.gif";
+import { SuccessAnimation } from "@/components/ui/SuccessAnimation";
 import { useClaimFreePack } from "../hooks/useClaimFreePack";
 import { creditBalanceQueryKey, useCreditBalance } from "../hooks/useCreditBalance";
 import { useCreditPacks } from "../hooks/useCreditPacks";
@@ -228,7 +228,7 @@ const CreditPurchaseModal = ({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-h-[90vh] gap-10 overflow-y-auto rounded-2xl p-6 sm:max-w-141.5 sm:p-12">
+            <DialogContent className={`max-h-[90vh] overflow-y-auto rounded-2xl sm:max-w-141.5 ${step === "checkout" ? "gap-0 p-0" : "gap-10 p-6 sm:p-12"}`}>
                 {step === "select" && (
                     <>
                         <div className="flex flex-col gap-2">
@@ -304,15 +304,13 @@ const CreditPurchaseModal = ({
 
                 {step === "checkout" && clientSecret && (
                     <>
-                        <DialogTitle className={titleClass}>Complete payment</DialogTitle>
-                        <div className="max-h-[70vh] overflow-y-auto">
-                            <EmbeddedCheckoutProvider
-                                stripe={getStripe()}
-                                options={{ clientSecret, onComplete: () => setStep("confirming") }}
-                            >
-                                <EmbeddedCheckout />
-                            </EmbeddedCheckoutProvider>
-                        </div>
+                        <DialogTitle className="sr-only">Secure checkout</DialogTitle>
+                        <EmbeddedCheckoutProvider
+                            stripe={getStripe()}
+                            options={{ clientSecret, onComplete: () => setStep("confirming") }}
+                        >
+                            <EmbeddedCheckout />
+                        </EmbeddedCheckoutProvider>
                     </>
                 )}
 
@@ -326,7 +324,7 @@ const CreditPurchaseModal = ({
 
                 {step === "success" && (
                     <div className="flex flex-col items-center gap-4 text-center">
-                        <img src={successAnimation} alt="" className="h-28 w-28" />
+                        <SuccessAnimation />
                         <div className="flex flex-col gap-1">
                             <DialogTitle className="text-xl">
                                 {claimedFree ? "Credit claimed!" : "Payment successful!"}

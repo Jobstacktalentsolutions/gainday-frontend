@@ -6,7 +6,7 @@ import { Mail, MailWarning } from "@/components/ui/icons";
 import { apiClient } from "@/lib/api/client";
 import { ActionButton } from "@/components/ui/ActionButton";
 import { FormInput } from "@/components/form/FormInput";
-import successAnimation from "@/assets/successAnimation.gif";
+import { SuccessAnimation } from "@/components/ui/SuccessAnimation";
 import spinner from "@/assets/Spinner.svg";
 import { useAuthStore } from "../store/authStore";
 import AuthCard from "./AuthCard";
@@ -199,7 +199,7 @@ const VerifyEmailFlow = ({ role }: { role: Role }) => {
     return (
       <AuthCard title="Email verified" subtitle={config.verifiedCopy}>
         <div className="flex w-full flex-col items-center gap-6">
-          <img src={successAnimation} alt="" className="h-32 w-32" />
+          <SuccessAnimation />
           {accessToken ? (
             <ActionButton size="lg" onClick={() => navigate(redirect ?? config.homePath)}>
               {config.homeLabel}
