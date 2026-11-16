@@ -221,7 +221,7 @@ export default function TaskRunner() {
     }
 
     useEffect(() => {
-        if (timer.isExpired && !runStore.isComplete && simulation) {
+        if (timer.isExpired && !runStore.isComplete && simulation && runStore.jobId === jobId && runStore.simulationId === simulation.id) {
             const task = simulation.tasks[runStore.currentTaskIndex];
             finalizeSubmission(task.id);
         }
