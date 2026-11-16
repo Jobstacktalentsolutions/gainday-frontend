@@ -50,7 +50,7 @@ const CandidateSignIn = () => {
 
     const signInMutation = useMutation({
         mutationFn: (values: CandidateSignInValues) =>
-            apiClient.post("/auth/login", values),
+            apiClient.post("/auth/candidate/login", values),
         onSuccess: (res) => {
             const user = {
                 ...res.data.user,
@@ -163,7 +163,7 @@ const CandidateSignIn = () => {
                 </ActionButton>
 
                 <AuthDivider />
-                <GoogleSignIn redirect={redirect} />
+                <GoogleSignIn redirect={redirect} portal="candidate" />
                 <p className="text-center text-base text-neutral-700">
                     New to Gainday?{" "}
                     <Link to={signUpHref} className="text-primary-500">

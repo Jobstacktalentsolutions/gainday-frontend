@@ -24,7 +24,7 @@ apiClient.interceptors.response.use(
     (response) => response,
     (error) => {
         const requestUrl = error.config?.url || ""
-        const isLoginRequest = requestUrl.includes("/auth/login")
+        const isLoginRequest = requestUrl.includes("/auth/employer/login") || requestUrl.includes("/auth/candidate/login")
 
         // The backend blocks unverified employers and job seekers from every app route. Send them to
         // the verification screen, which can resend the link and then return them to where they were.
@@ -49,10 +49,12 @@ apiClient.interceptors.response.use(
         if (error.response?.status === 401) {
             const requestUrl = error.config?.url || ""
             const isAuthRequest =
-                requestUrl.includes("/auth/login") ||
+                isLoginRequest ||
+                requestUrl.includes("/auth/admin/login") ||
                 requestUrl.includes("/auth/signup") ||
                 requestUrl.includes("/auth/register") ||
-                requestUrl.includes("/auth/google")
+                requestUrl.includes("/auth/employer/google") ||
+                requestUrl.includes("/auth/candidate/google")
 
             if (!isAuthRequest) {
                 useAuthStore.getState().clearAuth()

@@ -5,12 +5,13 @@ import { useGoogleSignIn } from "../hooks/useGoogleSignIn";
 
 interface GoogleSignInProps {
     redirect: string | null;
+    portal: "employer" | "candidate";
 }
 
 /** Google's own sign-in button, with One Tap (the card at the top right) on the same page. Renders
  *  nothing when no client ID is configured. */
-export function GoogleSignIn({ redirect }: GoogleSignInProps) {
-    const signIn = useGoogleSignIn(redirect);
+export function GoogleSignIn({ redirect, portal }: GoogleSignInProps) {
+    const signIn = useGoogleSignIn(redirect, portal);
 
     if (!GOOGLE_CLIENT_ID) return null;
 

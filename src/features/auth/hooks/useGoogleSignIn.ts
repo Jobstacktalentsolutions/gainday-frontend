@@ -15,13 +15,13 @@ const FALLBACK_MESSAGE = "Google sign-in didn't work. Please try again.";
 
 /** Signs in with the Google ID token from the button or One Tap. Login only: the backend never
  *  creates an account here. */
-export function useGoogleSignIn(redirect: string | null) {
+export function useGoogleSignIn(redirect: string | null, portal: "employer" | "candidate") {
     const navigate = useNavigate();
     const setAuth = useAuthStore((state) => state.setAuth);
 
     return useMutation({
         mutationFn: async (credential: string) =>
-            (await apiClient.post<GoogleSignInResponse>("/auth/google", { credential })).data,
+            (await apiClient.post<GoogleSignInResponse>(`/auth/${portal}/google`, { credential })).data,
         onSuccess: ({ access_token, user }) => {
             setAuth(access_token, user);
             navigate(resolvePostLoginPath(user.role, redirect), { replace: true });

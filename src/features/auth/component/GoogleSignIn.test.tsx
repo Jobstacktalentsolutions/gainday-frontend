@@ -31,24 +31,24 @@ describe("GoogleSignIn", () => {
     })
 
     it("renders Google's button when a client ID is configured", () => {
-        render(<GoogleSignIn redirect={null} />)
+        render(<GoogleSignIn redirect={null} portal="candidate" />)
         expect(screen.getByTestId("google-login")).toBeTruthy()
     })
 
     it("renders nothing when no client ID is configured", () => {
         clientId = undefined
-        render(<GoogleSignIn redirect={null} />)
+        render(<GoogleSignIn redirect={null} portal="candidate" />)
         expect(screen.queryByTestId("google-login")).toBeNull()
     })
 
     it("sends the credential to the backend when Google returns one", () => {
-        render(<GoogleSignIn redirect="/job-board" />)
+        render(<GoogleSignIn redirect="/job-board" portal="candidate" />)
         capturedProps?.onSuccess({ credential: "signed-id-token" })
         expect(mutate).toHaveBeenCalledWith("signed-id-token")
     })
 
     it("does nothing when Google returns no credential", () => {
-        render(<GoogleSignIn redirect={null} />)
+        render(<GoogleSignIn redirect={null} portal="candidate" />)
         capturedProps?.onSuccess({})
         expect(mutate).not.toHaveBeenCalled()
     })

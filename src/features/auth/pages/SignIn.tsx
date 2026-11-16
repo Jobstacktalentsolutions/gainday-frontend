@@ -16,6 +16,7 @@ import { signInSchema, type signInFormValues } from "../schemas/signInSchema";
 import AuthCard from "../component/AuthCard";
 import PasswordInput from "../component/passwordInput";
 import spinner from "@/assets/Spinner.svg";
+import { authErrorMessage } from "../utils/authErrorMessage";
 
 
 
@@ -48,7 +49,7 @@ const SignIn = () => {
 
     const signInMutation = useMutation({
         mutationFn: (values: signInFormValues) =>
-            apiClient.post("/auth/login", values),
+            apiClient.post("/auth/employer/login", values),
         onSuccess: (res) => {
             const user = {
                 ...res.data.user,
@@ -88,9 +89,7 @@ const SignIn = () => {
     }
 
     const renderErrorMessage = () => {
-        const data = (signInMutation.error as any)?.response?.data;
-        const message = data?.message;
-        const msgStr = Array.isArray(message) ? message[0] : message;
+        const msgStr = authErrorMessage(signInMutation.error, "We couldn't sign you in. Please try again.");
         if (typeof msgStr === "string" && msgStr.toLowerCase().includes("suspended")) {
             const supportUrl = `/support?email=${encodeURIComponent(email || "")}&topic=${encodeURIComponent("Account Suspension Appeal")}`;
             const parts = msgStr.split(/(contact support)/i);
@@ -125,7 +124,7 @@ const SignIn = () => {
                 </span>
             );
         }
-        return "Incorrect email or password";
+        return msgStr;
     };
 
     return (
@@ -197,7 +196,7 @@ const SignIn = () => {
                 </ActionButton>
 
                 <AuthDivider />
-                <GoogleSignIn redirect={redirect} />
+                <GoogleSignIn redirect={redirect} portal="employer" />
                 <p className="text-center text-base text-neutral-700">
                     New to Gainday?{" "}
                     <Link to="/employer/signup" className="text-primary-500">

@@ -18,6 +18,7 @@ import AuthSwitchLink from "../component/AuthSwitchLink";
 import { createAccountSchema, type CreateAccountFormValues } from "../schemas/createAccountSchema";
 import { ActionButton } from "@/components/ui/ActionButton";
 import spinner from "@/assets/Spinner.svg";
+import { authErrorMessage } from "../utils/authErrorMessage";
 
 
 const CreateAccount = () => {
@@ -136,6 +137,12 @@ const CreateAccount = () => {
                     }}
                     error={errors.agreedToTerms?.message}
                 />
+
+                {signupMutation.isError && (
+                    <p role="alert" className="text-center text-sm text-error-600">
+                        {authErrorMessage(signupMutation.error, "We couldn't create your account. Please try again.")}
+                    </p>
+                )}
 
                 <ActionButton
                     type="submit"
