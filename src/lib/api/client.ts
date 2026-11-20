@@ -1,6 +1,12 @@
 import axios from "axios"
 import { useAuthStore } from "@/features/auth/store/authStore"
 
+
+// Without a limit, a dead connection leaves the sign-in spinner running for minutes. Auth calls are
+// quick, so they get a short one; slower endpoints (AI parsing, chat) keep axios's default of none.
+const AUTH_REQUEST_TIMEOUT_MS = 20_000
+
+
 export const getBaseURL = () => {
     const url = import.meta.env.VITE_API_BASE_URL
     if (!url) return ""
@@ -12,10 +18,14 @@ export const apiClient = axios.create({
     withCredentials: true,
 })
 
+
 apiClient.interceptors.request.use((config) => {
     const token = useAuthStore.getState().accessToken
     if (token) {
         config.headers.Authorization = `Bearer ${token}`
+    }
+    if (!config.timeout && config.url?.startsWith("/auth/")) {
+        config.timeout = AUTH_REQUEST_TIMEOUT_MS
     }
     return config
 })
