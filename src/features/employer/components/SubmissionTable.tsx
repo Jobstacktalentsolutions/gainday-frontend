@@ -5,6 +5,7 @@ import Skeleton from "@/components/ui/skeleton";
 import { Checkbox } from "@/components/ui/checkbox";
 import IntegrityLabel from "./IntegrityLabel";
 import CategoryBreakdownBars from "./CategoryBreakdownBars";
+import { CATEGORY_ORDER } from "../utils/submissionCategories";
 import { formatDuration, formatSubmittedDate } from "../utils/submissionFormatters";
 import { formatOverallScore, getCandidateLabel } from "../utils/submissionLabels";
 import type { SubmissionSummary } from "../types/submission";
@@ -24,12 +25,24 @@ const HEADERS = [
     "Integrity",
 ];
 
+const CAPABILITY_HEADER = "Capability areas";
+// "(PS | JE | WC | CD)", built from the list the bars use so the order can't drift.
+const CAPABILITY_CODES = `(${CATEGORY_ORDER.map(({ short }) => short).join(" | ")})`;
+
 const TableShell = ({ children }: { children: React.ReactNode }) => (
     <div className="hidden w-full overflow-x-auto rounded-xl border border-primary-200 bg-white lg:block">
         <div className="flex min-w-225 flex-col gap-3 p-6">
             <div className={cn(ROW_GRID, "border-b border-neutral-200 pb-3 text-base uppercase text-neutral-500")}>
                 {HEADERS.map((header) => (
-                    <p key={header}>{header}</p>
+                    <p key={header}>
+                        {header}
+                        {header === CAPABILITY_HEADER && (
+                            <>
+                                {" "}
+                                <span className="whitespace-nowrap">{CAPABILITY_CODES}</span>
+                            </>
+                        )}
+                    </p>
                 ))}
             </div>
             {children}
@@ -71,7 +84,7 @@ const SubmissionsTable = ({ jobId, submissions, selectedIds, onToggleSelect }: S
                             <div><dt className="text-neutral-500">Time</dt><dd className="text-neutral-950">{submission.timeTakenSeconds === null ? "-" : formatDuration(submission.timeTakenSeconds)}</dd></div>
                             <div><dt className="text-neutral-500">Submitted</dt><dd className="text-neutral-950">{formatSubmittedDate(submission.submittedAt)}</dd></div>
                         </dl>
-                        {submission.categoryScores !== null && <div className="mt-4"><CategoryBreakdownBars scores={submission.categoryScores} /></div>}
+                        {submission.categoryScores !== null && <div className="mt-4"><CategoryBreakdownBars scores={submission.categoryScores} showCodes /></div>}
                     </article>
                 );
             })}
@@ -128,7 +141,7 @@ const SubmissionsTable = ({ jobId, submissions, selectedIds, onToggleSelect }: S
                             {submission.categoryScores !== null ? (
                                 <CategoryBreakdownBars scores={submission.categoryScores} />
                             ) : (
-                                <div className="flex h-19 w-41 items-center justify-center text-neutral-400">-</div>
+                                <div className="flex h-14.25 w-41 items-center justify-center text-neutral-400">-</div>
                             )}
                             <p>{submission.capabilityScore === null ? "-" : submission.capabilityScore}</p>
                             <p>{submission.timeTakenSeconds === null ? "-" : formatDuration(submission.timeTakenSeconds)}</p>
@@ -161,7 +174,7 @@ export const SubmissionsTableSkeleton = () => {
                             <Skeleton className="h-5 w-16" />
                         </div>
                         <Skeleton className="h-5 w-10" />
-                        <Skeleton className="h-19 w-41" />
+                        <Skeleton className="h-14.25 w-41" />
                         <Skeleton className="h-5 w-14" />
                         <Skeleton className="h-5 w-8" />
                         <Skeleton className="h-5 w-24" />
