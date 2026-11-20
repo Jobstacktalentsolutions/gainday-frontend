@@ -1,11 +1,20 @@
 import { AxiosError, type AxiosResponse } from "axios";
-import { describe, expect, it } from "vitest";
-import { authErrorMessage, EMAIL_TAKEN_MESSAGE, NETWORK_ERROR_MESSAGE, SERVER_ERROR_MESSAGE } from "./authErrorMessage";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import {
+    authErrorMessage,
+    EMAIL_TAKEN_MESSAGE,
+    NETWORK_ERROR_MESSAGE,
+    OFFLINE_MESSAGE,
+    SERVER_ERROR_MESSAGE,
+    TIMEOUT_MESSAGE,
+} from "./authErrorMessage";
 
 const httpError = (status: number, data?: unknown) =>
     new AxiosError("failed", undefined, undefined, undefined, { status, data } as AxiosResponse);
 
 describe("authErrorMessage", () => {
+    afterEach(() => vi.restoreAllMocks());
+
     it("shows the API's own message verbatim", () => {
         const error = httpError(409, { message: "That email is already registered" });
         expect(authErrorMessage(error, "fallback", { 409: EMAIL_TAKEN_MESSAGE })).toBe("That email is already registered");
@@ -25,7 +34,18 @@ describe("authErrorMessage", () => {
         expect(authErrorMessage(httpError(429), "fallback")).toMatch(/too many attempts/i);
     });
 
-    it("reports a lost connection", () => {
+    it("reports a request that timed out", () => {
+        const error = new AxiosError("timeout of 20000ms exceeded", "ECONNABORTED");
+        expect(authErrorMessage(error, "fallback")).toBe(TIMEOUT_MESSAGE);
+    });
+
+    it("reports an offline device", () => {
+        vi.spyOn(navigator, "onLine", "get").mockReturnValue(false);
+        expect(authErrorMessage(new AxiosError("Network Error"), "fallback")).toBe(OFFLINE_MESSAGE);
+    });
+
+    it("reports an unreachable server when the device is online", () => {
+        vi.spyOn(navigator, "onLine", "get").mockReturnValue(true);
         expect(authErrorMessage(new AxiosError("Network Error"), "fallback")).toBe(NETWORK_ERROR_MESSAGE);
     });
 
