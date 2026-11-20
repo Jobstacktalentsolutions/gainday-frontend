@@ -89,7 +89,9 @@ const SignIn = () => {
     }
 
     const renderErrorMessage = () => {
-        const msgStr = authErrorMessage(signInMutation.error, "We couldn't sign you in. Please try again.");
+        const msgStr = authErrorMessage(signInMutation.error, "We couldn't sign you in. Please try again.", {
+            401: "Incorrect email or password.",
+        });
         if (typeof msgStr === "string" && msgStr.toLowerCase().includes("suspended")) {
             const supportUrl = `/support?email=${encodeURIComponent(email || "")}&topic=${encodeURIComponent("Account Suspension Appeal")}`;
             const parts = msgStr.split(/(contact support)/i);

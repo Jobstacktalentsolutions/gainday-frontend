@@ -1,9 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
-import { isAxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { apiClient } from "@/lib/api/client";
 import { useAuthStore, type AuthUser } from "../store/authStore";
+import { authErrorMessage } from "../utils/authErrorMessage";
 import { resolvePostLoginPath } from "../utils/roleDashboard";
 
 interface GoogleSignInResponse {
@@ -27,10 +27,7 @@ export function useGoogleSignIn(redirect: string | null, portal: "employer" | "c
             navigate(resolvePostLoginPath(user.role, redirect), { replace: true });
         },
         onError: (error) => {
-            const message = isAxiosError<{ message?: unknown }>(error)
-                ? error.response?.data?.message
-                : undefined;
-            toast.error(typeof message === "string" ? message : FALLBACK_MESSAGE);
+            toast.error(authErrorMessage(error, FALLBACK_MESSAGE));
         },
     });
 }

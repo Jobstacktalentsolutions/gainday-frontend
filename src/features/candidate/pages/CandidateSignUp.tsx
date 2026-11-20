@@ -3,8 +3,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useSearchParams, Navigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { type AxiosError } from "axios";
 import { apiClient } from "@/lib/api/client";
+import { authErrorMessage, EMAIL_TAKEN_MESSAGE } from "@/features/auth/utils/authErrorMessage";
 import { useAuthStore } from "@/features/auth/store/authStore";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import AppLoader from "@/components/ui/AppLoader";
@@ -136,7 +136,7 @@ const CandidateSignUp = () => {
 
                 {signUpMutation.isError && (
                     <p role="alert" className="text-center text-sm text-error-600">
-                        {(signUpMutation.error as AxiosError<{ message?: string }>)?.response?.data?.message ?? "Something went wrong. Please try again."}
+                        {authErrorMessage(signUpMutation.error, "We couldn't create your account. Please try again.", { 409: EMAIL_TAKEN_MESSAGE })}
                     </p>
                 )}
 

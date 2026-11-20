@@ -18,7 +18,7 @@ import AuthSwitchLink from "../component/AuthSwitchLink";
 import { createAccountSchema, type CreateAccountFormValues } from "../schemas/createAccountSchema";
 import { ActionButton } from "@/components/ui/ActionButton";
 import spinner from "@/assets/Spinner.svg";
-import { authErrorMessage } from "../utils/authErrorMessage";
+import { authErrorMessage, EMAIL_TAKEN_MESSAGE } from "../utils/authErrorMessage";
 
 
 const CreateAccount = () => {
@@ -140,7 +140,7 @@ const CreateAccount = () => {
 
                 {signupMutation.isError && (
                     <p role="alert" className="text-center text-sm text-error-600">
-                        {authErrorMessage(signupMutation.error, "We couldn't create your account. Please try again.")}
+                        {authErrorMessage(signupMutation.error, "We couldn't create your account. Please try again.", { 409: EMAIL_TAKEN_MESSAGE })}
                     </p>
                 )}
 

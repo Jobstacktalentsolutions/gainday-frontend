@@ -15,6 +15,7 @@ import { GoogleSignIn } from "@/features/auth/component/GoogleSignIn";
 import AuthCard from "@/features/auth/component/AuthCard";
 import PasswordInput from "@/features/auth/component/passwordInput";
 import spinner from "@/assets/Spinner.svg";
+import { authErrorMessage } from "@/features/auth/utils/authErrorMessage";
 import { candidateSignInSchema, type CandidateSignInValues } from "../auth/schema";
 
 
@@ -137,7 +138,9 @@ const CandidateSignIn = () => {
                             role="alert"
                             className="text-center text-sm text-error-600"
                         >
-                            Incorrect email or password
+                            {authErrorMessage(signInMutation.error, "We couldn't sign you in. Please try again.", {
+                                401: "Incorrect email or password.",
+                            })}
                         </p>
                     )
                 }
