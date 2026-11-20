@@ -22,27 +22,34 @@ const MarqueeContent = () => {
     );
 }
 
+// Fades the text out at both edges. A mask (unlike an overlay) works on any background and
+// leaves the strip's top and bottom borders untouched.
+const EDGE_FADE = "linear-gradient(to right, transparent, #000 10%, #000 90%, transparent)";
+
 export function MarqueeStrip() {
     return (
         <div
             role="img"
             aria-label="Tested and trusted"
-            className="flex w-full items-center overflow-hidden border-t border-b border-neutral-300 py-[21.5px] lg:py-10"
+            className="w-full border-t border-b border-neutral-300 py-[21.5px] lg:py-10"
         >
-            <motion.div
-                className="flex items-center gap-12"
-                animate={{ x: ["0%", "-50%"] }}
-                transition={{
-                    duration: 25,
-                    ease: "linear",
-                    repeat: Infinity,
-                }}
+            <div
+                className="flex w-full items-center overflow-hidden"
+                style={{ maskImage: EDGE_FADE, WebkitMaskImage: EDGE_FADE }}
             >
-                <MarqueeContent />
-                <MarqueeContent />
-
-            </motion.div>
-
+                <motion.div
+                    className="flex items-center gap-12"
+                    animate={{ x: ["0%", "-50%"] }}
+                    transition={{
+                        duration: 25,
+                        ease: "linear",
+                        repeat: Infinity,
+                    }}
+                >
+                    <MarqueeContent />
+                    <MarqueeContent />
+                </motion.div>
+            </div>
         </div>
     );
 }
