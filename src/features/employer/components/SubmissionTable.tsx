@@ -128,7 +128,7 @@ const SubmissionsTable = ({ jobId, submissions, selectedIds, onToggleSelect }: S
                             {submission.categoryScores !== null ? (
                                 <CategoryBreakdownBars scores={submission.categoryScores} />
                             ) : (
-                                <div className="flex h-14.25 w-41 items-center justify-center text-neutral-400">-</div>
+                                <div className="flex h-19 w-41 items-center justify-center text-neutral-400">-</div>
                             )}
                             <p>{submission.capabilityScore === null ? "-" : submission.capabilityScore}</p>
                             <p>{submission.timeTakenSeconds === null ? "-" : formatDuration(submission.timeTakenSeconds)}</p>
@@ -161,7 +161,7 @@ export const SubmissionsTableSkeleton = () => {
                             <Skeleton className="h-5 w-16" />
                         </div>
                         <Skeleton className="h-5 w-10" />
-                        <Skeleton className="h-14.25 w-41" />
+                        <Skeleton className="h-19 w-41" />
                         <Skeleton className="h-5 w-14" />
                         <Skeleton className="h-5 w-8" />
                         <Skeleton className="h-5 w-24" />

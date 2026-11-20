@@ -7,6 +7,7 @@ import { ActionButton } from "@/components/ui/ActionButton";
 import PageBackLink from "../components/PageBackLink";
 import SubmissionSortDropdown from "../components/SubmissionSortDropdown";
 import SubmissionsTable, { SubmissionsTableSkeleton } from "../components/SubmissionTable";
+import CapabilityLegend from "../components/CapabilityLegend";
 import SubmissionsEmptyState from "../components/SubmissionsEmptyState";
 import CreditPurchaseModal from "../components/CreditPurchaseModal";
 import { UnlockConfirmation } from "../components/UnlockConfirmation";
@@ -172,6 +173,7 @@ const JobSubmissions = () => {
                 {!isLoading && !isError && (
                     hasSubmissions && jobId ? (
                         <div className="flex flex-col gap-3">
+                            <CapabilityLegend />
                             <SubmissionsTable
                                 jobId={jobId}
                                 submissions={sortedSubmissions}
