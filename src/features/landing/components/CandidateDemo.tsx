@@ -2,9 +2,9 @@ import { useRef, useState } from "react";
 import { BrowserMockup } from "./BrowserMockup";
 import { useAutoplayInView } from "../utils/useAutoplayInView";
 
-// Must match the encoded candidate-demo output: 1000×538 (crop=1920:1032:0:48, scale=1000:-2).
+// Must match the encoded candidate-demo output: 1000×562 (1920x1080 source scaled to 1000:-2).
 const VIDEO_WIDTH = 1000;
-const VIDEO_HEIGHT = 538;
+const VIDEO_HEIGHT = 562;
 
 /**
  * Candidate job-board / simulation demo video inside a browser mockup.
