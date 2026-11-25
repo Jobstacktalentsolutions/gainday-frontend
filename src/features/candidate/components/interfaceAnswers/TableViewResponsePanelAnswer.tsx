@@ -7,6 +7,7 @@ import BucketSelect from "../objectiveAnswers/BucketSelect";
 import { ItemReasons } from "../objectiveAnswers/ItemReasons";
 import { WrittenAnswer } from "./AnswerDock";
 import ReadOnlyAnswerText from "./ReadOnlyAnswerText";
+import { answerBoxHeight } from "./answerBoxSizing";
 import type { ClassificationAnswerState } from "./types";
 
 interface Props {
@@ -96,7 +97,9 @@ const TableViewResponsePanelAnswer = ({
                     value={value}
                     onChange={(event) => onChange(event.target.value)}
                     placeholder={payload.placeholder ?? "Type your response here..."}
-                    className="h-38.25 w-full resize-none rounded-lg border border-neutral-200 px-3.5 py-2.5 text-[16px] text-neutral-700 shadow-[0px_1px_1px_rgba(10,13,18,0.05)] outline-none placeholder:text-neutral-400 focus:border-primary-500"
+                    aria-label={classification ? "Additional response" : "Your response"}
+                    style={{ height: answerBoxHeight(undefined) }}
+                    className="min-h-40 max-h-[60dvh] w-full resize-y rounded-lg border border-neutral-200 px-3.5 py-2.5 text-[16px] leading-6 text-neutral-700 shadow-[0px_1px_1px_rgba(10,13,18,0.05)] outline-none placeholder:text-neutral-400 focus:border-primary-500"
                 />
                 </label></WrittenAnswer>
             )}

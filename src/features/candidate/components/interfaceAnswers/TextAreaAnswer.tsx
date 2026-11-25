@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { RichTextComposerPayload, TextAreaPayload } from "@/features/simulation-tasks/types";
 import ReadOnlyAnswerText from "./ReadOnlyAnswerText";
 import { WrittenAnswer } from "./AnswerDock";
+import { answerBoxHeight } from "./answerBoxSizing";
 
 interface Props {
     // TEXT_AREA and RICH_TEXT_COMPOSER share an identical payload shape today (see
@@ -26,7 +27,9 @@ const TextAreaAnswer = ({ payload, value, onChange, objectiveSlot, readOnly }: P
                 value={value}
                 onChange={(event) => onChange(event.target.value)}
                 placeholder={payload.placeholder ?? "Type your response here..."}
-                className="h-38.25 w-full resize-none rounded-lg border border-neutral-200 px-3.5 py-2.5 text-[16px] text-neutral-700 shadow-[0px_1px_1px_rgba(10,13,18,0.05)] outline-none placeholder:text-neutral-400 focus:border-primary-500"
+                aria-label="Your answer"
+                style={{ height: answerBoxHeight(undefined) }}
+                className="min-h-40 max-h-[60dvh] w-full resize-y rounded-lg border border-neutral-200 px-3.5 py-2.5 text-[16px] leading-6 text-neutral-700 shadow-[0px_1px_1px_rgba(10,13,18,0.05)] outline-none placeholder:text-neutral-400 focus:border-primary-500"
             /></WrittenAnswer>
         )}
     </div>
