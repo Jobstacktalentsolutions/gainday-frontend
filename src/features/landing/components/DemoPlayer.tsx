@@ -162,16 +162,24 @@ export const DemoPlayer = ({
         return () => cancelAnimationFrame(frame);
     }, [playing, start, end]);
 
-    const handleLoadedMetadata = () => {
+    const updateDuration = useCallback(() => {
         const video = videoRef.current;
         if (!video) return;
-        setFileDuration(video.duration);
-        if (video.currentTime < start) video.currentTime = start;
+        const d = video.duration;
+        if (Number.isFinite(d) && d > 0) setFileDuration(d);
+    }, []);
+
+    const handleLoadedMetadata = () => {
+        updateDuration();
+        const video = videoRef.current;
+        if (video && video.currentTime < start) video.currentTime = start;
     };
 
     const handleTimeUpdate = () => {
         const video = videoRef.current;
-        if (video?.paused) setPosition(Math.max(0, video.currentTime - start));
+        if (!video) return;
+        updateDuration(); // catch duration once it becomes finite (WebM often starts as Infinity)
+        if (video.paused) setPosition(Math.max(0, video.currentTime - start));
     };
 
     const handleEnded = () => {
@@ -235,6 +243,7 @@ export const DemoPlayer = ({
                 preload={preload}
                 onClick={togglePlay}
                 onLoadedMetadata={handleLoadedMetadata}
+                onDurationChange={updateDuration}
                 onPlay={() => setPlaying(true)}
                 onPause={() => setPlaying(false)}
                 onEnded={handleEnded}
