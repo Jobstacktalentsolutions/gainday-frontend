@@ -7,6 +7,20 @@ import ReadOnlyAnswerText from "./ReadOnlyAnswerText";
 import type { InterfaceAnswerProps } from "./types";
 import { WrittenAnswer } from "./AnswerDock";
 
+const DEFAULT_MAX_WORDS = 250;
+const APPROX_CHARS_PER_LINE = 80;
+const LINE_HEIGHT_PX = 24;
+const VERTICAL_PADDING_PX = 24;
+const MIN_HEIGHT_PX = 160;
+const MAX_HEIGHT_VH = 60;
+
+function answerBoxHeight(maxWords: number | undefined): string {
+    const words = maxWords && maxWords > 0 ? maxWords : DEFAULT_MAX_WORDS;
+    const estimatedLines = Math.ceil(words * 6 / APPROX_CHARS_PER_LINE);
+    const height = Math.max(MIN_HEIGHT_PX, estimatedLines * LINE_HEIGHT_PX + VERTICAL_PADDING_PX);
+    return `min(${height}px, ${MAX_HEIGHT_VH}dvh)`;
+}
+
 interface Props extends Omit<InterfaceAnswerProps, "payload"> {
     payload: CaseFileTextAreaPayload;
 }
@@ -56,7 +70,9 @@ const CaseFileTextAreaAnswer = ({ payload, value, onChange, objectiveSlot, readO
                     value={value}
                     onChange={(event) => onChange(event.target.value)}
                     placeholder={payload.placeholder ?? "Type your response here..."}
-                    className="h-38.25 w-full resize-none rounded-lg border border-neutral-200 px-3.5 py-2.5 text-[16px] text-neutral-700 shadow-[0px_1px_1px_rgba(10,13,18,0.05)] outline-none placeholder:text-neutral-400 focus:border-primary-500"
+                    aria-label="Your answer"
+                    style={{ height: answerBoxHeight(payload.wordLimit?.max) }}
+                    className="min-h-40 max-h-[60dvh] w-full resize-y rounded-lg border border-neutral-200 px-3.5 py-2.5 text-[16px] leading-6 text-neutral-700 shadow-[0px_1px_1px_rgba(10,13,18,0.05)] outline-none placeholder:text-neutral-400 focus:border-primary-500"
                 /></WrittenAnswer>
             )}
         </div>
