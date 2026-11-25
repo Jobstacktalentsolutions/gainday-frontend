@@ -3,7 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import TaskPromptEditor from "@/features/employer/components/TaskPromptEditor";
 import type { RichTextComposerPayload } from "@/features/simulation-tasks/types";
-import { DockedAnswer } from "./AnswerDock";
+import { WrittenAnswer } from "./AnswerDock";
 
 interface Props {
     payload: RichTextComposerPayload;
@@ -24,12 +24,12 @@ const RichTextComposerAnswer = ({ payload, value, onChange, objectiveSlot, readO
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>{value}</ReactMarkdown>
             </div>
         ) : (
-            <DockedAnswer><TaskPromptEditor
+            <WrittenAnswer><TaskPromptEditor
                 value={value}
                 onChange={onChange}
                 placeholder={payload.placeholder ?? "Write your response..."}
                 contentClassName="min-h-40 max-h-96 overflow-y-auto"
-            /></DockedAnswer>
+            /></WrittenAnswer>
         )}
     </div>
 );

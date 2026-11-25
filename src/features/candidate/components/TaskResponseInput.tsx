@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { INTERFACE_ANSWER_RENDERERS } from "./interfaceAnswers/registry";
 import { TaskObjectiveOptions } from "./TaskObjectiveOptions";
 import { ItemReasons } from "./objectiveAnswers/ItemReasons";
-import { DockedAnswer } from "./interfaceAnswers/AnswerDock";
+import { AnswerCounter, DockedAnswer } from "./interfaceAnswers/AnswerDock";
 import type { CandidateSimulationTask } from "../types/simulation";
 import {
     capResponse,
@@ -56,7 +56,7 @@ export function TaskResponseInput({
 
     const objective = task.objectiveComponent;
     return (
-        <div className="flex w-full flex-col gap-2">
+        <AnswerCounter.Provider value={<div className="flex justify-end text-sm"><span className={cn(limitTextClass(wordState))}>{wordCount} / {wordLimit.max} words</span></div>}><div className="flex w-full flex-col gap-2">
             {Renderer ? (
                 <Renderer
                     payload={task.interfacePayload}
@@ -75,11 +75,6 @@ export function TaskResponseInput({
 
             {objective && <DockedAnswer><ItemReasons component={objective} reasons={itemReasons} onChange={onItemReasonsChange} /></DockedAnswer>}
 
-            <DockedAnswer><div className="flex w-full items-center justify-end text-[14px] text-neutral-950">
-                <span className={cn(limitTextClass(wordState))}>
-                    {wordCount} / {wordLimit.max} words
-                </span>
-            </div></DockedAnswer>
-        </div>
+        </div></AnswerCounter.Provider>
     );
 }

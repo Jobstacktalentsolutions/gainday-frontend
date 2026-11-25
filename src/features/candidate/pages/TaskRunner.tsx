@@ -24,7 +24,7 @@ import { useIdleDetection } from "../hooks/useIdleDetection";
 import { useClipboardMonitoring } from "../hooks/useClipboardMonitoring";
 import { useSimulationIntegrityStore } from "../hooks/useSimulationIntegrityStore";
 import { TaskResponseInput } from "../components/TaskResponseInput";
-import { AnswerDock } from "../components/interfaceAnswers/AnswerDock";
+import { AnswerActions, AnswerDock } from "../components/interfaceAnswers/AnswerDock";
 import StagedChatTask from "../staged-chat/StagedChatTask";
 import { TimeWarningBanner } from "../components/TimeWarningBanner";
 import { ConnectionBanner } from "../components/ConnectionBanner";
@@ -420,21 +420,19 @@ export default function TaskRunner() {
                         )}
                     </div>
 
-                    {submitError && (
+                    <AnswerActions>{submitError && (
                         <p role="alert" className="text-center text-sm text-error-600">
                             {submitError}
                         </p>
                     )}
 
-                    <div className="h-px w-full bg-neutral-200" />
-
-                    <div className="flex w-full flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex w-full items-center justify-between gap-3">
                         <ActionButton gradient={false}
                             variant="outline"
                             size="md"
                             onClick={handlePrevious}
                             disabled={runStore.currentTaskIndex === 0}
-                            className={`w-full sm:w-auto ${runStore.currentTaskIndex === 0 ? "opacity-70" : undefined}`}
+                            className={runStore.currentTaskIndex === 0 ? "opacity-70" : undefined}
                         >
                             Previous Task
                         </ActionButton>
@@ -443,7 +441,6 @@ export default function TaskRunner() {
                             size="md"
                             onClick={handleNext}
                             disabled={isLastTask && submitSimulation.isPending}
-                            className="w-full sm:w-auto"
                         >
                             {isLastTask
                                 ? submitSimulation.isPending
@@ -452,6 +449,7 @@ export default function TaskRunner() {
                                 : "Next Task"}
                         </ActionButton>
                     </div>
+                    </AnswerActions>
                 </div></AnswerDock>
             </main>
         </div>

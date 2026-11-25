@@ -15,6 +15,8 @@ describe("task answer panel", () => {
         }
         render(<Workspace />);
         const panel = screen.getByRole("region", { name: "Answer panel" });
+        const written = within(panel).getByPlaceholderText("Type your response here...");
+        expect(within(written.parentElement as HTMLElement).getByText("0 / 250 words")).toBeInTheDocument();
         fireEvent.click(within(panel).getByRole("button", { name: "Move Second up" }));
         fireEvent.click(within(panel).getByRole("button", { name: "Expand answer" }));
         fireEvent.click(within(panel).getByRole("button", { name: "Restore task and answer" }));

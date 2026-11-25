@@ -2,9 +2,19 @@ import { createContext, useContext, useId, useRef, useState, type KeyboardEvent,
 import { createPortal } from "react-dom";
 
 const AnswerTarget = createContext<HTMLElement | null>(null);
+export const AnswerCounter = createContext<ReactNode>(null);
+const ActionsTarget = createContext<HTMLElement | null>(null);
+export function AnswerActions({ children }: { children: ReactNode }) {
+    const target = useContext(ActionsTarget);
+    return target ? createPortal(children, target) : null;
+}
 export function DockedAnswer({ children }: { children: ReactNode }) {
     const target = useContext(AnswerTarget);
     return target ? createPortal(children, target) : children;
+}
+export function WrittenAnswer({ children }: { children: ReactNode }) {
+    const counter = useContext(AnswerCounter);
+    return <DockedAnswer><div className="flex w-full flex-col gap-1">{children}{counter}</div></DockedAnswer>;
 }
 
 const MIN_PERCENT = 25;
@@ -20,6 +30,7 @@ function ExpandIcon({ restore }: { restore: boolean }) {
 
 export function AnswerDock({ children }: { children: ReactNode }) {
     const [target, setTarget] = useState<HTMLDivElement | null>(null);
+    const [actionsTarget, setActionsTarget] = useState<HTMLDivElement | null>(null);
     const [leftPercent, setLeftPercent] = useState(55);
     const [dragPercent, setDragPercent] = useState<number | null>(null);
     const [expanded, setExpanded] = useState<"task" | "answer" | null>(null);
@@ -61,7 +72,7 @@ export function AnswerDock({ children }: { children: ReactNode }) {
     const taskRail = expanded === "answer";
     const answerRail = expanded === "task";
     const panelClass = `flex min-w-0 flex-col overflow-hidden lg:min-h-0 ${dragPercent === null ? "transition-[flex-basis] duration-300 ease-out motion-reduce:transition-none" : ""}`;
-    return <AnswerTarget.Provider value={target}>
+    return <AnswerTarget.Provider value={target}><ActionsTarget.Provider value={actionsTarget}>
         <div ref={workspace} className="flex min-h-0 w-full flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm lg:h-[calc(100dvh-5rem)] lg:flex-row">
             <section id={leftId} aria-label="Task" style={{ flexBasis: taskRail ? `${RAIL_WIDTH}px` : answerRail ? `calc(100% - ${RAIL_WIDTH}px)` : `${percent}%` }} className={panelClass}>
                 {taskRail && <button type="button" onClick={() => setExpanded(null)} aria-label="Restore task question" className="flex h-full min-h-32 w-full items-center justify-center bg-neutral-50 text-sm font-medium text-neutral-700 hover:bg-primary-50 focus-visible:outline-2 focus-visible:outline-primary-500"><span style={{ writingMode: "vertical-rl" }}>Task question</span></button>}
@@ -76,8 +87,9 @@ export function AnswerDock({ children }: { children: ReactNode }) {
                 <div hidden={answerRail} className={`${answerRail ? "hidden" : "flex"} min-h-0 flex-1 flex-col`}>
                     <div className="flex shrink-0 items-center justify-between border-b border-neutral-200 px-5 py-3"><span className="text-sm font-semibold text-neutral-950">Your answer</span><button type="button" aria-label={taskRail ? "Restore task and answer" : "Expand answer"} title={taskRail ? "Restore panes" : "Expand answer"} onClick={() => toggle("answer")} className="rounded-lg p-2 text-neutral-600 hover:bg-neutral-50 focus-visible:outline-2 focus-visible:outline-primary-500"><ExpandIcon restore={taskRail} /></button></div>
                     <div ref={setTarget} className="flex min-h-0 flex-1 flex-col gap-4 overflow-auto p-5 sm:p-6 [&>textarea]:min-h-40 [&>label>textarea]:min-h-40" />
+                    <div ref={setActionsTarget} className="shrink-0 border-t border-neutral-200 px-5 py-3 empty:hidden" />
                 </div>
             </section>
         </div>
-    </AnswerTarget.Provider>;
+    </ActionsTarget.Provider></AnswerTarget.Provider>;
 }
