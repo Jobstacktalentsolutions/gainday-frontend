@@ -3,12 +3,14 @@ import { ChevronDown } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { INTERFACE_ANSWER_RENDERERS } from "./interfaceAnswers/registry";
 import { TaskObjectiveOptions } from "./TaskObjectiveOptions";
+import { ItemReasons } from "./objectiveAnswers/ItemReasons";
 import type { ClassificationAnswerState } from "./interfaceAnswers/types";
 import type { CandidateSimulationTask } from "../types/simulation";
 
 export interface SubmittedAnswerValue {
     objectiveResponse: unknown;
     textResponse: string;
+    itemReasons?: Record<string, string>;
 }
 
 interface SubmittedAnswerProps {
@@ -76,6 +78,7 @@ export function SubmittedAnswer({ task, answer }: SubmittedAnswerProps) {
                         This answer's interface ("{task.interfaceType}") can't be shown.
                     </p>
                 ))}
+            {isOpen && objective && <ItemReasons component={objective} reasons={answer.itemReasons} onChange={noop} readOnly />}
         </div>
     );
 }

@@ -8,6 +8,7 @@ export interface CandidateAnswer {
   /** Shape depends on the task's objective component type; null when it has none or was untouched. */
   objectiveResponse: unknown;
   textResponse: string;
+  itemReasons?: Record<string, string>;
   timeSpentSeconds: number;
 }
 

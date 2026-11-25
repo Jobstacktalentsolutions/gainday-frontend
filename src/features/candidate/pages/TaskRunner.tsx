@@ -57,6 +57,10 @@ function buildResponseBody(task: CandidateSimulationTask, answer: TaskAnswer): s
     if (answer.textResponse.trim()) {
         parts.push(answer.textResponse.trim());
     }
+    if (answer.itemReasons) {
+        const reasons = Object.entries(answer.itemReasons).filter(([, reason]) => reason.trim()).map(([item, reason]) => `${item}: ${reason.trim()}`);
+        if (reasons.length) parts.push(reasons.join("\n"));
+    }
 
     return parts.join("\n\n");
 }
@@ -71,6 +75,7 @@ function toCandidateAnswer(
         responseBody: buildResponseBody(task, answer),
         objectiveResponse: answer.objectiveResponse,
         textResponse: answer.textResponse,
+        itemReasons: answer.itemReasons,
         timeSpentSeconds,
     };
 }
@@ -413,6 +418,8 @@ export default function TaskRunner() {
                                 onChange={(value) => updateAnswer({ textResponse: value })}
                                 objectiveResponse={answer.objectiveResponse}
                                 onObjectiveChange={(response) => updateAnswer({ objectiveResponse: response })}
+                                itemReasons={answer.itemReasons}
+                                onItemReasonsChange={(itemReasons) => updateAnswer({ itemReasons })}
                             />
                         )}
                     </div>

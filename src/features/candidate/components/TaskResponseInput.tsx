@@ -3,6 +3,7 @@ import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
 import { INTERFACE_ANSWER_RENDERERS } from "./interfaceAnswers/registry";
 import { TaskObjectiveOptions } from "./TaskObjectiveOptions";
+import { ItemReasons } from "./objectiveAnswers/ItemReasons";
 import type { ClassificationAnswerState } from "./interfaceAnswers/types";
 import type { CandidateSimulationTask } from "../types/simulation";
 import {
@@ -19,6 +20,8 @@ interface TaskResponseInputProps {
     /** The candidate's answer to the task's structured (objective) part, if it has one. */
     objectiveResponse: unknown;
     onObjectiveChange: (response: unknown) => void;
+    itemReasons?: Record<string, string>;
+    onItemReasonsChange: (reasons: Record<string, string>) => void;
 }
 
 const DEFAULT_MAX_WORDS = 250;
@@ -40,6 +43,8 @@ export function TaskResponseInput({
     onChange,
     objectiveResponse,
     onObjectiveChange,
+    itemReasons,
+    onItemReasonsChange,
 }: TaskResponseInputProps) {
     const Renderer = INTERFACE_ANSWER_RENDERERS[task.interfaceType];
     const wordCount = countWords(value);
@@ -85,6 +90,8 @@ export function TaskResponseInput({
                     </div>
                 </>
             )}
+
+            {objective && <ItemReasons component={objective} reasons={itemReasons} onChange={onItemReasonsChange} />}
 
             <div className="flex w-full items-center justify-end text-[14px] text-neutral-950">
                 <span className={cn(limitTextClass(wordState))}>

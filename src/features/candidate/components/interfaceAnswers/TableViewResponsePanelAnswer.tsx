@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import type { TableViewResponsePanelPayload } from "@/features/simulation-tasks/types";
 import ClassificationAnswer from "../objectiveAnswers/ClassificationAnswer";
+import BucketSelect from "../objectiveAnswers/BucketSelect";
 import ReadOnlyAnswerText from "./ReadOnlyAnswerText";
 import type { ClassificationAnswerState } from "./types";
 
@@ -23,6 +24,9 @@ const TableViewResponsePanelAnswer = ({
     readOnly,
 }: Props) => {
     const { columns, rows } = payload.table;
+    const inlineClassification = classification &&
+        rows.length === classification.component.items.length &&
+        rows.every((row, index) => row[0] === classification.component.items[index]);
 
     return (
         <div className="flex w-full flex-col gap-4">
@@ -41,6 +45,7 @@ const TableViewResponsePanelAnswer = ({
                                     {column}
                                 </th>
                             ))}
+                            {inlineClassification && <th className="px-3.5 py-2.5 font-medium text-neutral-700">Classification</th>}
 
                         </tr>
                     </thead>
@@ -50,13 +55,20 @@ const TableViewResponsePanelAnswer = ({
                                 {row.map((cell, cellIndex) => (
                                     <td key={cellIndex} className={cn("px-3.5 py-2.5 text-neutral-950 align-middle", cellIndex === 0 && "whitespace-nowrap font-medium")}>{cell}</td>
                                 ))}
+                                {inlineClassification && classification && <td className="px-3.5 py-2.5"><BucketSelect
+                                    ariaLabel={`Classification for ${row[0]}`}
+                                    buckets={classification.component.buckets}
+                                    value={classification.response?.[row[0]]}
+                                    onChange={(bucket) => classification.onChange({ ...classification.response, [row[0]]: bucket })}
+                                    readOnly={readOnly}
+                                /></td>}
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
 
-            {classification ? (
+            {inlineClassification ? null : classification ? (
                 <ClassificationAnswer component={classification.component} response={classification.response} onChange={classification.onChange} readOnly={readOnly} />
             ) : objectiveSlot}
 

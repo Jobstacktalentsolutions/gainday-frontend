@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type ChangeEvent, type ReactNode } from "react";
 import { useInView, useReducedMotion } from "motion/react";
-import { Maximize, Minimize, Pause, Play, RotateCcw, Volume, VolumeOff } from "@/components/ui/icons";
+import { Maximize, Minimize, Play, RotateCcw, Volume, VolumeOff } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import { claimPlayback, releasePlayback, useDemoAudio } from "../utils/demoAudio";
 import { formatTime } from "../utils/demoVideo";
@@ -9,6 +9,7 @@ import { usePageLoaded } from "../utils/usePageLoaded";
 // Visitors who turned on their browser's data saver should not get a multi-megabyte autoplay.
 const prefersSavedData = (): boolean =>
     (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
+const PLAYBACK_KEYS = new Set(["Enter", " "]);
 
 interface DemoPlayerProps {
     sources: { webm: string; mp4: string };
@@ -241,7 +242,16 @@ export const DemoPlayer = ({
                 poster={poster}
                 playsInline
                 preload={preload}
+                role="button"
+                tabIndex={0}
+                aria-label={playing ? "Pause" : finished ? "Replay" : "Play"}
                 onClick={togglePlay}
+                onKeyDown={(event) => {
+                    if (PLAYBACK_KEYS.has(event.key)) {
+                        event.preventDefault();
+                        togglePlay();
+                    }
+                }}
                 onLoadedMetadata={handleLoadedMetadata}
                 onDurationChange={updateDuration}
                 onPlay={() => setPlaying(true)}
@@ -256,29 +266,29 @@ export const DemoPlayer = ({
             </video>
 
             {!playing && (
-                <div aria-hidden="true" className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                    <span className="flex size-14 items-center justify-center rounded-full bg-black/55 text-white backdrop-blur-sm">
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                    <button type="button" aria-label={finished ? "Replay" : "Play"} onClick={togglePlay} className="pointer-events-auto flex size-14 cursor-pointer items-center justify-center rounded-full bg-black/55 text-white backdrop-blur-sm focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-white">
                         {finished ? <RotateCcw className="size-6" /> : <Play className="size-6" />}
-                    </span>
+                    </button>
                 </div>
             )}
 
-            {muted && playing && (
+            <div className="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-black/35 text-white backdrop-blur-sm">
                 <button
                     type="button"
-                    onClick={() => setMuted(false)}
-                    className="absolute top-2 right-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-black/65 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-sm transition-colors hover:bg-black/80 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-white"
+                    aria-label={muted ? "Unmute" : "Mute"}
+                    onClick={() => setMuted(!muted)}
+                    className="flex min-h-8 cursor-pointer items-center gap-1.5 rounded-full px-2.5 text-[11px] font-medium transition-colors hover:bg-black/50 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-white"
                 >
-                    <VolumeOff className="size-3.5" aria-hidden="true" />
-                    Tap to unmute
+                    {muted ? <VolumeOff className="size-3.5" aria-hidden="true" /> : <Volume className="size-3.5" aria-hidden="true" />}
+                    {muted && "Tap to unmute"}
                 </button>
-            )}
-
-            <div className="absolute inset-x-0 bottom-0 flex items-center gap-1.5 bg-linear-to-t from-black/75 via-black/40 to-transparent px-2 pt-6 pb-1.5 text-white">
-                <ControlButton label={finished ? "Replay" : playing ? "Pause" : "Play"} onClick={togglePlay}>
-                    {finished ? <RotateCcw className="size-4" /> : playing ? <Pause className="size-4" /> : <Play className="size-4" />}
+                <ControlButton label={isFullscreen ? "Exit full screen" : "Full screen"} onClick={toggleFullscreen}>
+                    {isFullscreen ? <Minimize className="size-4" /> : <Maximize className="size-4" />}
                 </ControlButton>
+            </div>
 
+            {isFullscreen && <div className="absolute inset-x-0 bottom-0 flex items-center gap-1.5 bg-linear-to-t from-black/75 via-black/40 to-transparent px-2 pt-6 pb-1.5 text-white">
                 <span className="shrink-0 text-[11px] tabular-nums">
                     {formatTime(position)} / {formatTime(length)}
                 </span>
@@ -295,14 +305,7 @@ export const DemoPlayer = ({
                     className="h-1 min-w-0 flex-1 cursor-pointer accent-primary-500"
                 />
 
-                <ControlButton label={muted ? "Unmute" : "Mute"} onClick={() => setMuted(!muted)}>
-                    {muted ? <VolumeOff className="size-4" /> : <Volume className="size-4" />}
-                </ControlButton>
-
-                <ControlButton label={isFullscreen ? "Exit full screen" : "Full screen"} onClick={toggleFullscreen}>
-                    {isFullscreen ? <Minimize className="size-4" /> : <Maximize className="size-4" />}
-                </ControlButton>
-            </div>
+            </div>}
         </div>
     );
 };
