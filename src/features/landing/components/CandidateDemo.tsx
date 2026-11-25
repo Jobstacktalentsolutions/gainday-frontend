@@ -1,21 +1,15 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { BrowserMockup } from "./BrowserMockup";
-import { useAutoplayInView } from "../utils/useAutoplayInView";
-
-// Must match the encoded candidate-demo output: 1000×562 (1920x1080 source scaled to 1000:-2).
-const VIDEO_WIDTH = 1000;
-const VIDEO_HEIGHT = 562;
+import { DemoPlayer } from "./DemoPlayer";
+import { CANDIDATE_POSTER, CANDIDATE_SEGMENT, DEMO_VIDEO } from "../utils/demoVideo";
 
 /**
- * Candidate job-board / simulation demo video inside a browser mockup.
- * Plays only while in view, respects reduced-motion, and falls back to
- * the cta.jpg hero image if the video cannot load.
+ * Candidate job-board / simulation demo inside a browser mockup. It plays only the candidate part of
+ * the shared recording (see CANDIDATE_SEGMENT), and falls back to the cta.jpg image if the video
+ * cannot load.
  */
 export const CandidateDemo = () => {
-    const videoRef = useRef<HTMLVideoElement>(null);
     const [failed, setFailed] = useState(false);
-
-    useAutoplayInView(videoRef);
 
     if (failed) {
         return (
@@ -30,25 +24,18 @@ export const CandidateDemo = () => {
     }
 
     return (
-        <BrowserMockup url="gainday.com/job-board">
-            <video
-                ref={videoRef}
-                className="block w-full object-cover"
-                style={{ aspectRatio: `${VIDEO_WIDTH} / ${VIDEO_HEIGHT}` }}
-                width={VIDEO_WIDTH}
-                height={VIDEO_HEIGHT}
-                poster="/media/candidate-demo-poster.webp"
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                aria-label="Short demo: a candidate browses the job board, opens a role and completes a work simulation"
-            >
-                <source src="/media/candidate-demo.webm" type="video/webm" />
-                {/* Errors fire on <source>, not <video>. The last source failing means nothing can play. */}
-                <source src="/media/candidate-demo.mp4" type="video/mp4" onError={() => setFailed(true)} />
-            </video>
+        <BrowserMockup url="gainday.org/job-board">
+            <DemoPlayer
+                sources={DEMO_VIDEO.sources}
+                poster={CANDIDATE_POSTER}
+                width={DEMO_VIDEO.width}
+                height={DEMO_VIDEO.height}
+                start={CANDIDATE_SEGMENT.start}
+                end={CANDIDATE_SEGMENT.end}
+                label="Product demo: a candidate browses the job board, opens a role and completes a work simulation"
+                preload="none"
+                onUnavailable={() => setFailed(true)}
+            />
         </BrowserMockup>
     );
 };
-

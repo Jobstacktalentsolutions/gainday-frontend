@@ -29,7 +29,7 @@ export function HighlightBox({ children, color = "primary", className }: Highlig
     return (
         <span
             className={cn(
-                "relative inline-flex items-center justify-center border px-4 py-1 whitespace-nowrap",
+                "relative inline-flex items-center justify-center border px-4 py-1",
                 c.border,
                 c.bg,
                 c.text,

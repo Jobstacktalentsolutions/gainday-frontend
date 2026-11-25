@@ -1,14 +1,10 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { ChevronLeft, Lock, Plus } from "@/components/ui/icons";
 import { GlowOrb } from "./GlowOrb";
 import GradientCard from "./GradientCard";
 import { GradientFrame } from "./GradientFrame";
-import { useAutoplayInView } from "../utils/useAutoplayInView";
-
-// Must match the encoded video: width 1200, height from ffprobe (676 for a 1920x1080 source scaled to 1200:-2).
-const VIDEO_WIDTH = 1200;
-const VIDEO_HEIGHT = 676;
-const POSTER = "/media/hero-demo-poster.webp";
+import { DemoPlayer } from "./DemoPlayer";
+import { DEMO_VIDEO, HERO_POSTER } from "../utils/demoVideo";
 
 const FRAME_WIDTH = 560;
 const u = (px: number) => `${(px / FRAME_WIDTH) * 100}cqw`;
@@ -44,7 +40,7 @@ const BrowserToolbar = () => (
         >
             <img src="/gainday_icon.svg" alt="" style={{ width: u(6.14), height: u(6.14) }} />
             <span className="whitespace-nowrap leading-none" style={{ fontSize: u(4.99) }}>
-                gainday.com/employer/jobs
+                gainday.org/employer/jobs
             </span>
             <Lock style={{ width: u(3.6), height: u(3.6) }} />
         </div>
@@ -53,13 +49,11 @@ const BrowserToolbar = () => (
     </div>
 );
 
-// Plays only while visible, shows just the poster for reduced-motion users, and falls back to
-// the gradient card if the video can't load, so the hero never looks broken.
+// Plays the whole recording, and falls back to the gradient card if the video can't load, so the
+// hero never looks broken. (The old floating animation on the frame was removed: the frame now has
+// clickable controls and shouldn't drift under the cursor.)
 export const HeroDemo = () => {
-    const videoRef = useRef<HTMLVideoElement>(null);
     const [failed, setFailed] = useState(false);
-
-    useAutoplayInView(videoRef);
 
     return (
         <div className="relative isolate">
@@ -69,32 +63,18 @@ export const HeroDemo = () => {
             {failed ? (
                 <GradientCard />
             ) : (
-                <GradientFrame
-                    designWidth={FRAME_WIDTH}
-                    angle={156.49}
-                    padX={19}
-                    padY={27.93}
-                    className="animate-float-soft motion-reduce:animate-none"
-                >
+                <GradientFrame designWidth={FRAME_WIDTH} angle={156.49} padX={19} padY={27.93}>
                     <div className="overflow-hidden" style={{ borderRadius: u(4.66), filter: SHADOW }}>
                         <BrowserToolbar />
-                        <video
-                            ref={videoRef}
-                            className="block w-full object-cover"
-                            style={{ aspectRatio: `${VIDEO_WIDTH} / ${VIDEO_HEIGHT}` }}
-                            width={VIDEO_WIDTH}
-                            height={VIDEO_HEIGHT}
-                            poster={POSTER}
-                            muted
-                            loop
-                            playsInline
+                        <DemoPlayer
+                            sources={DEMO_VIDEO.sources}
+                            poster={HERO_POSTER}
+                            width={DEMO_VIDEO.width}
+                            height={DEMO_VIDEO.height}
+                            label="Product demo: an employer posts a job, reviews candidate submissions and shortlists top performers"
                             preload="metadata"
-                            aria-label="Short demo: an employer posts a job, reviews candidate submissions and shortlists top performers"
-                        >
-                            <source src="/media/hero-demo.webm" type="video/webm" />
-                            {/* Errors fire on <source>, not <video>. The last source failing means nothing can play. */}
-                            <source src="/media/hero-demo.mp4" type="video/mp4" onError={() => setFailed(true)} />
-                        </video>
+                            onUnavailable={() => setFailed(true)}
+                        />
                     </div>
                 </GradientFrame>
             )}
