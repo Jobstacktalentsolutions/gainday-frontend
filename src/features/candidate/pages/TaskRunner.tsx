@@ -392,10 +392,10 @@ export default function TaskRunner() {
 
                     <div className="flex flex-col gap-2">
                         <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-primary-950">{task.title}</h1>
-                        <div className="prose max-w-none text-[15px] leading-relaxed text-neutral-950"><ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown></div>
                         <div className="prose max-w-none text-[15px] leading-relaxed text-neutral-700 prose-p:my-1.5">
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.scenarioDescription}</ReactMarkdown>
                         </div>
+                        <div className="prose max-w-none text-[15px] leading-relaxed text-neutral-950"><ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown></div>
                     </div>
 
                     <div className="flex w-full flex-col gap-6">
