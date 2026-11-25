@@ -24,7 +24,7 @@ const SingleBestActionAnswer = ({ component, response, onChange }: Props) => (
                     >
                         {isSelected && <span className="size-2 rounded-full bg-white" />}
                     </span>
-                    <span className="text-[18px] leading-[1.2] text-primary-950">
+                    <span className="text-[16px] leading-[1.4] text-primary-950">
                         {letter}. {option}
                     </span>
                 </button>

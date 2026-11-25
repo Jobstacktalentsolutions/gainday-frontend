@@ -42,7 +42,7 @@ const MultiSelectUnderConstraintAnswer = ({ component, response, onChange }: Pro
                             >
                                 {isSelected && <span className="size-2 rounded-xs bg-white" />}
                             </span>
-                            <span className="text-[18px] leading-[1.2] text-primary-950">
+                                <span className="text-[16px] leading-[1.4] text-primary-950">
                                 {letter}. {option}
                             </span>
                         </button>
