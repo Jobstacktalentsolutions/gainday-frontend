@@ -3,34 +3,30 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { AnswerDock, DockedAnswer } from "./AnswerDock";
 
-describe("answer dock", () => {
-    it("keeps the answer when the panel is collapsed and reopened", () => {
+describe("task workspace", () => {
+    it("preserves an answer when either pane is expanded and restored", () => {
         function Workspace() {
             const [answer, setAnswer] = useState("");
-            return <AnswerDock question="Explain your choice."><DockedAnswer><textarea aria-label="Response" value={answer} onChange={(event) => setAnswer(event.target.value)} /></DockedAnswer></AnswerDock>;
+            return <AnswerDock><p>Reference data</p><DockedAnswer><textarea aria-label="Response" value={answer} onChange={(event) => setAnswer(event.target.value)} /></DockedAnswer></AnswerDock>;
         }
         render(<Workspace />);
         fireEvent.change(screen.getByRole("textbox", { name: "Response" }), { target: { value: "My answer" } });
-        fireEvent.click(screen.getByRole("button", { name: "Collapse answer" }));
-        fireEvent.click(screen.getByRole("button", { name: "Expand answer" }));
+        fireEvent.click(screen.getByRole("button", { name: "Expand task" }));
+        fireEvent.click(screen.getByRole("button", { name: "Restore task answer" }));
         expect(screen.getByRole("textbox", { name: "Response" })).toHaveValue("My answer");
-        fireEvent.click(screen.getByRole("button", { name: "View question" }));
-        expect(screen.getByText("Explain your choice.")).toBeVisible();
+        fireEvent.click(screen.getByRole("button", { name: "Expand answer" }));
+        fireEvent.click(screen.getByRole("button", { name: "Restore task question" }));
+        expect(screen.getByText("Reference data")).toBeVisible();
+        expect(screen.getByRole("textbox", { name: "Response" })).toHaveValue("My answer");
     });
 
-    it("resizes with the keyboard within its limits", () => {
-        render(<AnswerDock question="Question"><DockedAnswer><textarea aria-label="Response" /></DockedAnswer></AnswerDock>);
-        const handle = screen.getByRole("separator", { name: "Resize answer panel" });
-        fireEvent.keyDown(handle, { key: "ArrowUp" });
-        expect(handle).toHaveAttribute("aria-valuenow", "240");
+    it("resizes panes with the keyboard", () => {
+        render(<AnswerDock><DockedAnswer><textarea aria-label="Response" /></DockedAnswer></AnswerDock>);
+        const handle = screen.getByRole("separator", { name: "Resize task and answer", hidden: true });
+        fireEvent.keyDown(handle, { key: "ArrowRight" });
+        expect(handle).toHaveAttribute("aria-valuenow", "60");
         fireEvent.keyDown(handle, { key: "Home" });
-        expect(handle).toHaveAttribute("aria-valuenow", "140");
-    });
-
-    it("opens when the collapsed bar is clicked", () => {
-        render(<AnswerDock question="Question"><DockedAnswer><textarea aria-label="Response" /></DockedAnswer></AnswerDock>);
-        fireEvent.click(screen.getByRole("button", { name: "Collapse answer" }));
-        fireEvent.click(screen.getByText("Your answer"));
-        expect(screen.getByRole("textbox", { name: "Response" })).toBeVisible();
+        expect(screen.getByRole("button", { name: "Restore task question" })).toBeVisible();
+        fireEvent.click(screen.getByRole("button", { name: "Restore task question" }));
     });
 });

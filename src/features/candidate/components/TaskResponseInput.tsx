@@ -1,10 +1,8 @@
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
 import { INTERFACE_ANSWER_RENDERERS } from "./interfaceAnswers/registry";
 import { TaskObjectiveOptions } from "./TaskObjectiveOptions";
 import { ItemReasons } from "./objectiveAnswers/ItemReasons";
-import { AnswerDock, DockedAnswer } from "./interfaceAnswers/AnswerDock";
+import { DockedAnswer } from "./interfaceAnswers/AnswerDock";
 import type { CandidateSimulationTask } from "../types/simulation";
 import {
     capResponse,
@@ -58,13 +56,7 @@ export function TaskResponseInput({
 
     const objective = task.objectiveComponent;
     return (
-        <AnswerDock question={task.questionPrompt}><div className="flex w-full flex-col gap-2">
-            <div className="flex w-full flex-col gap-1.5">
-                <div className="prose max-w-none text-[15px] font-normal leading-relaxed text-neutral-950 prose-p:my-1">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown>
-                </div>
-            </div>
-
+        <div className="flex w-full flex-col gap-2">
             {Renderer ? (
                 <Renderer
                     payload={task.interfacePayload}
@@ -88,6 +80,6 @@ export function TaskResponseInput({
                     {wordCount} / {wordLimit.max} words
                 </span>
             </div></DockedAnswer>
-        </div></AnswerDock>
+        </div>
     );
 }

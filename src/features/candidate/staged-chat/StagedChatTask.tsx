@@ -5,12 +5,11 @@ import CaseFilePanel from "./CaseFilePanel";
 import ChatBubble from "./ChatBubble";
 import ReplyBox from "./ReplyBox";
 import { usePostStagedChatReply, useStagedChatState, type StagedChatTranscriptEntry } from "./stagedChatApi";
-import { AnswerDock, DockedAnswer } from "../components/interfaceAnswers/AnswerDock";
+import { DockedAnswer } from "../components/interfaceAnswers/AnswerDock";
 
 interface Props {
     submissionId: string;
     taskId: string;
-    question: string;
 }
 
 interface Draft {
@@ -34,7 +33,7 @@ function errorMessageOf(error: unknown): string {
  * A staged chat: a scripted customer and the candidate's replies, one turn at a time.
  * Messages appear instantly without artificial delays, and candidate replies render optimistically.
  */
-const StagedChatTask = ({ submissionId, taskId, question }: Props) => {
+const StagedChatTask = ({ submissionId, taskId }: Props) => {
     const state = useStagedChatState(submissionId, taskId);
     const post = usePostStagedChatReply(submissionId, taskId);
 
@@ -130,8 +129,8 @@ const StagedChatTask = ({ submissionId, taskId, question }: Props) => {
             : `Reply ${Math.min(data.currentTurn, turnCount)} of ${turnCount}`;
 
     return (
-        <AnswerDock question={question}><div className="flex w-full flex-col gap-4 md:grid md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:items-start md:gap-6">
-            <div className="hidden md:block">
+        <div className="flex w-full flex-col gap-4">
+            <div>
                 <CaseFilePanel tabs={data.caseFile.tabs} />
             </div>
 
@@ -215,7 +214,7 @@ const StagedChatTask = ({ submissionId, taskId, question }: Props) => {
                     <CaseFilePanel tabs={data.caseFile.tabs} />
                 </div>
             )}
-        </div></AnswerDock>
+        </div>
     );
 };
 

@@ -3,7 +3,7 @@ import type { AxiosError } from "axios";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { CloudUpload, Timer, Clock } from "@/components/ui/icons";
+import { Timer, Clock } from "@/components/ui/icons";
 
 import { ActionButton } from "@/components/ui/ActionButton";
 import AppLoader from "@/components/ui/AppLoader";
@@ -24,6 +24,7 @@ import { useIdleDetection } from "../hooks/useIdleDetection";
 import { useClipboardMonitoring } from "../hooks/useClipboardMonitoring";
 import { useSimulationIntegrityStore } from "../hooks/useSimulationIntegrityStore";
 import { TaskResponseInput } from "../components/TaskResponseInput";
+import { AnswerDock } from "../components/interfaceAnswers/AnswerDock";
 import StagedChatTask from "../staged-chat/StagedChatTask";
 import { TimeWarningBanner } from "../components/TimeWarningBanner";
 import { ConnectionBanner } from "../components/ConnectionBanner";
@@ -125,7 +126,7 @@ export default function TaskRunner() {
 
     const recordViolation = useSimulationIntegrityStore((state) => state.recordViolation);
     const recordIdleSpell = useSimulationIntegrityStore((state) => state.recordIdleSpell);
-    const { scheduleSave, isSaving } = useAutosaveAnswer();
+    const { scheduleSave } = useAutosaveAnswer();
     const connection = useConnectionMonitor(runStore.submissionId);
 
     const startSubmission = useStartSubmission();
@@ -346,9 +347,9 @@ export default function TaskRunner() {
                 />
             )}
 
-            <div className="fixed left-0 top-0 z-10 flex h-16 w-full items-center justify-between gap-3 border-b-[0.5px] border-neutral-300 bg-white/90 px-4 backdrop-blur-xl sm:h-18 sm:px-8 lg:h-20 lg:px-12 xl:px-30">
+            <div className="fixed left-0 top-0 z-10 flex h-14 w-full items-center justify-between gap-3 border-b-[0.5px] border-neutral-300 bg-white/90 px-4 backdrop-blur-xl sm:px-8 lg:px-12 xl:px-30">
                 <div className="flex min-w-0 flex-1 flex-col gap-1 lg:w-50.5 lg:flex-none">
-                    <p className="inline-flex items-center gap-1.5 text-sm text-primary-950 sm:text-base">
+                    <p className="inline-flex items-center gap-1.5 text-sm text-primary-950">
                         <span className="whitespace-nowrap">
                             Task {runStore.currentTaskIndex + 1} of {simulation.tasks.length}
                         </span>
@@ -362,40 +363,36 @@ export default function TaskRunner() {
                             </>
                         ) : null}
                     </p>
-                    <div className="h-2 w-full rounded-lg bg-[#d4d5d8]">
-                        <div className="h-2 rounded bg-primary-500" style={{ width: `${progressPercent}%` }} />
+                    <div className="h-1.5 w-full rounded-lg bg-[#d4d5d8]">
+                        <div className="h-1.5 rounded bg-primary-500" style={{ width: `${progressPercent}%` }} />
                     </div>
                 </div>
 
                 <div className="hidden min-w-0 flex-col items-center gap-1 text-center lg:flex">
-                    <p className="max-w-[40ch] truncate text-xl font-medium leading-tight text-neutral-950">{job.title}</p>
-                    <p className="text-sm text-neutral-400">{job.employer.companyName}</p>
+                    <p className="max-w-[40ch] truncate text-base font-medium leading-tight text-neutral-950">{job.title}</p>
                 </div>
 
                 <div className="flex shrink-0 items-center gap-3 lg:gap-4">
-                    <div className="flex items-center gap-2 text-base text-neutral-400" aria-live="polite">
-                        <CloudUpload className="size-5 sm:size-6" />
-                        <span className="hidden md:inline">{isSaving ? "Saving on this device..." : "Saved on this device"}</span>
-                    </div>
                     <div
-                        className={`flex h-10 items-center gap-2 rounded px-2.5 sm:h-13 sm:px-3 sm:py-2 ${timer.isWarning ? "bg-error-500" : "bg-primary-950"
+                        className={`flex h-9 items-center gap-1.5 rounded px-2.5 ${timer.isWarning ? "bg-error-500" : "bg-primary-950"
                             }`}
                     >
-                        <Timer className="size-5 text-neutral-50 sm:size-6" />
-                        <span className="text-xl leading-6 tracking-[-0.32px] text-neutral-50 sm:text-[32px] sm:leading-9.5">
+                        <Timer className="size-4 text-neutral-50" />
+                        <span className="text-xl leading-6 tabular-nums text-neutral-50">
                             {timer.formatted}
                         </span>
                     </div>
                 </div>
             </div>
-            <main className="mx-auto flex w-full max-w-300 flex-col items-center px-4 pb-[calc(5rem+var(--answer-dock-height,0px))] pt-24 sm:px-5 sm:pt-26 lg:pt-28">
-                <div className="flex w-full max-w-246.5 flex-col gap-6 rounded-3xl bg-white p-5 shadow-[0px_4px_10px_rgba(16,24,40,0.05)] sm:gap-10 sm:p-10">
+            <main className="mx-auto flex w-full max-w-[1600px] flex-col items-center px-4 pb-6 pt-18 sm:px-5">
+                <AnswerDock><div className="flex w-full flex-col gap-6">
                     <div className="flex w-full items-center justify-between">
                         <p className="text-[16px] text-primary-500">Task {runStore.currentTaskIndex + 1}</p>
                     </div>
 
                     <div className="flex flex-col gap-2">
                         <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-primary-950">{task.title}</h1>
+                        <div className="prose max-w-none text-[15px] leading-relaxed text-neutral-950"><ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown></div>
                         <div className="prose max-w-none text-[15px] leading-relaxed text-neutral-700 prose-p:my-1.5">
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.scenarioDescription}</ReactMarkdown>
                         </div>
@@ -404,7 +401,7 @@ export default function TaskRunner() {
                     <div className="flex w-full flex-col gap-6">
                         {task.interfaceType === "STAGED_CHAT" ? (
                             runStore.submissionId ? (
-                                <StagedChatTask submissionId={runStore.submissionId} taskId={task.id} question={task.questionPrompt} />
+                                <StagedChatTask submissionId={runStore.submissionId} taskId={task.id} />
                             ) : (
                                 <p role="alert" className="text-sm text-error-600">
                                     This conversation can't start yet. Refresh the page to try again.
@@ -455,7 +452,7 @@ export default function TaskRunner() {
                                 : "Next Task"}
                         </ActionButton>
                     </div>
-                </div>
+                </div></AnswerDock>
             </main>
         </div>
     );

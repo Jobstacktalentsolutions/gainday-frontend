@@ -65,9 +65,9 @@ const ClassificationAnswer = ({ component, response, onChange, readOnly }: Props
                 {!readOnly && <p className="text-sm text-neutral-600">Drag each item into a bucket, or choose a bucket from the list.</p>}
                 {unassigned.length > 0 && <div className="flex flex-col gap-2">
                     <h3 className="text-sm font-medium text-neutral-700">Unassigned <span className="text-neutral-500">({unassigned.length})</span></h3>
-                    <div className="grid gap-2 sm:grid-cols-2">{unassigned.map((item) => renderItem(item))}</div>
+                    <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,18rem),1fr))] gap-2">{unassigned.map((item) => renderItem(item))}</div>
                 </div>}
-                <div className="grid gap-3 md:grid-cols-3">
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,12rem),1fr))] gap-3">
                     {component.buckets.map((bucket) => {
                         const items = component.items.filter((item) => mapping[item] === bucket);
                         return <Bucket key={bucket} name={bucket} count={items.length} readOnly={readOnly}>{items.map((item) => renderItem(item, true))}</Bucket>;

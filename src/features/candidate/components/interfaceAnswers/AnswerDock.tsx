@@ -1,75 +1,83 @@
-import { createContext, useContext, useId, useLayoutEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
+import { createContext, useContext, useId, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { ChevronDown, ChevronUp, FileText } from "@/components/ui/icons";
 
-const DockTarget = createContext<HTMLElement | null>(null);
-
-/** Render once: the same editor moves into the dock without duplicating its state. */
+const AnswerTarget = createContext<HTMLElement | null>(null);
 export function DockedAnswer({ children }: { children: ReactNode }) {
-    const target = useContext(DockTarget);
+    const target = useContext(AnswerTarget);
     return target ? createPortal(children, target) : children;
 }
 
-export function AnswerDock({ question, children }: { question: string; children: ReactNode }) {
+const MIN_PERCENT = 25;
+const MAX_PERCENT = 75;
+const COLLAPSE_THRESHOLD = 15;
+const RAIL_WIDTH = 48;
+
+function ExpandIcon({ restore }: { restore: boolean }) {
+    return <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="size-4">
+        {restore ? <path d="M4 9h5V4M20 9h-5V4M4 15h5v5M20 15h-5v5" /> : <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />}
+    </svg>;
+}
+
+export function AnswerDock({ children }: { children: ReactNode }) {
     const [target, setTarget] = useState<HTMLDivElement | null>(null);
-    const [expanded, setExpanded] = useState(true);
-    const [showQuestion, setShowQuestion] = useState(false);
-    const [height, setHeight] = useState(220);
-    const panelId = useId();
-    const dockRef = useRef<HTMLElement | null>(null);
-    const drag = useRef<{ startY: number; startHeight: number } | null>(null);
-    useLayoutEffect(() => {
-        const dock = dockRef.current;
-        const main = dock?.closest("main");
-        if (!dock || !main) return;
-        const update = () => main.style.setProperty("--answer-dock-height", `${dock.getBoundingClientRect().height}px`);
-        update();
-        const observer = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(update);
-        observer?.observe(dock);
-        return () => {
-            observer?.disconnect();
-            main.style.removeProperty("--answer-dock-height");
-        };
-    }, [expanded, height, showQuestion]);
-    const maxHeight = () => Math.max(140, Math.min(560, window.innerHeight - 220));
-    const resize = (next: number) => setHeight(Math.max(140, Math.min(maxHeight(), next)));
+    const [leftPercent, setLeftPercent] = useState(55);
+    const [dragPercent, setDragPercent] = useState<number | null>(null);
+    const [expanded, setExpanded] = useState<"task" | "answer" | null>(null);
+    const workspace = useRef<HTMLDivElement | null>(null);
+    const dragValue = useRef<number | null>(null);
+    const leftId = useId();
+    const resize = (next: number) => setLeftPercent(Math.max(MIN_PERCENT, Math.min(MAX_PERCENT, next)));
     const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
-        if (!expanded || event.button !== 0) return;
-        drag.current = { startY: event.clientY, startHeight: height };
+        if (event.button !== 0) return;
+        dragValue.current = leftPercent;
         event.currentTarget.setPointerCapture(event.pointerId);
     };
     const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
-        if (drag.current) resize(drag.current.startHeight + drag.current.startY - event.clientY);
+        if (dragValue.current === null || !workspace.current) return;
+        const bounds = workspace.current.getBoundingClientRect();
+        const next = Math.max(4, Math.min(96, ((event.clientX - bounds.left) / bounds.width) * 100));
+        dragValue.current = next;
+        setDragPercent(next);
+    };
+    const finishDrag = (cancelled = false) => {
+        const value = dragValue.current;
+        dragValue.current = null;
+        setDragPercent(null);
+        if (value === null || cancelled) return;
+        if (value <= COLLAPSE_THRESHOLD) setExpanded("answer");
+        else if (value >= 100 - COLLAPSE_THRESHOLD) setExpanded("task");
+        else resize(value);
     };
     const onResizeKey = (event: KeyboardEvent<HTMLDivElement>) => {
-        if (event.key === "ArrowUp") resize(height + 20);
-        else if (event.key === "ArrowDown") resize(height - 20);
-        else if (event.key === "Home") resize(140);
-        else if (event.key === "End") resize(maxHeight());
+        if (event.key === "ArrowLeft") resize(leftPercent - 5);
+        else if (event.key === "ArrowRight") resize(leftPercent + 5);
+        else if (event.key === "Home") setExpanded("answer");
+        else if (event.key === "End") setExpanded("task");
         else return;
         event.preventDefault();
     };
-    return <DockTarget.Provider value={target}>
-        {children}
-        <section ref={dockRef} aria-label="Answer panel" onClick={() => { if (!expanded) setExpanded(true); }} className={`fixed inset-x-0 bottom-0 z-20 border-t border-neutral-200 bg-white shadow-[0_-8px_24px_rgba(16,24,40,0.10)] ${expanded ? "" : "cursor-pointer"}`}>
-            {expanded && <div role="separator" tabIndex={0} aria-label="Resize answer panel" aria-orientation="horizontal" aria-controls={panelId} aria-valuemin={140} aria-valuemax={typeof window === "undefined" ? 560 : maxHeight()} aria-valuenow={height}
-                onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={() => { drag.current = null; }} onPointerCancel={() => { drag.current = null; }} onLostPointerCapture={() => { drag.current = null; }} onKeyDown={onResizeKey}
-                className="group flex h-4 cursor-ns-resize touch-none items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-500">
-                <span className="h-1 w-12 rounded-full bg-neutral-300 transition-colors group-hover:bg-primary-500 group-focus-visible:bg-primary-500" />
-            </div>}
-            <div className="mx-auto max-w-300 px-4 sm:px-6">
-                <div className="flex items-center justify-between gap-3 pb-2 pt-1">
-                    <span className="text-sm font-semibold text-neutral-950">Your answer</span>
-                    <div className="flex items-center gap-2">
-                        <button type="button" aria-expanded={showQuestion} onClick={() => setShowQuestion(!showQuestion)} className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-primary-600 hover:bg-primary-50 focus-visible:outline-2 focus-visible:outline-primary-500"><FileText className="size-4" aria-hidden="true" />{showQuestion ? "Hide question" : "View question"}</button>
-                        <button type="button" aria-label={expanded ? "Collapse answer" : "Expand answer"} title={expanded ? "Collapse answer" : "Expand answer"} aria-expanded={expanded} aria-controls={panelId} onClick={() => setExpanded(!expanded)} className="inline-flex size-9 items-center justify-center rounded-lg border border-neutral-200 text-neutral-700 hover:bg-neutral-50 focus-visible:outline-2 focus-visible:outline-primary-500">{expanded ? <ChevronDown className="size-4" aria-hidden="true" /> : <ChevronUp className="size-4" aria-hidden="true" />}</button>
-                    </div>
+    const toggle = (pane: "task" | "answer") => setExpanded(expanded === pane ? null : pane);
+    const percent = dragPercent ?? leftPercent;
+    const taskRail = expanded === "answer";
+    const answerRail = expanded === "task";
+    const panelClass = `flex min-w-0 flex-col overflow-hidden lg:min-h-0 ${dragPercent === null ? "transition-[flex-basis] duration-300 ease-out motion-reduce:transition-none" : ""}`;
+    return <AnswerTarget.Provider value={target}>
+        <div ref={workspace} className="flex min-h-0 w-full flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm lg:h-[calc(100dvh-5rem)] lg:flex-row">
+            <section id={leftId} aria-label="Task" style={{ flexBasis: taskRail ? `${RAIL_WIDTH}px` : answerRail ? `calc(100% - ${RAIL_WIDTH}px)` : `${percent}%` }} className={panelClass}>
+                {taskRail && <button type="button" onClick={() => setExpanded(null)} aria-label="Restore task question" className="flex h-full min-h-32 w-full items-center justify-center bg-neutral-50 text-sm font-medium text-neutral-700 hover:bg-primary-50 focus-visible:outline-2 focus-visible:outline-primary-500"><span style={{ writingMode: "vertical-rl" }}>Task question</span></button>}
+                <div hidden={taskRail} className={`${taskRail ? "hidden" : "flex"} min-h-0 flex-1 flex-col`}>
+                    <div className="flex shrink-0 items-center justify-between border-b border-neutral-200 px-5 py-3"><span className="text-sm font-semibold text-neutral-950">Task</span><button type="button" aria-label={answerRail ? "Restore task and answer" : "Expand task"} title={answerRail ? "Restore panes" : "Expand task"} onClick={() => toggle("task")} className="rounded-lg p-2 text-neutral-600 hover:bg-neutral-50 focus-visible:outline-2 focus-visible:outline-primary-500"><ExpandIcon restore={answerRail} /></button></div>
+                    <div className="min-h-0 flex-1 overflow-auto p-5 sm:p-6">{children}</div>
                 </div>
-                {showQuestion && <div className="prose max-h-[25vh] max-w-none overflow-y-auto border-t border-neutral-200 py-3 text-sm"><ReactMarkdown remarkPlugins={[remarkGfm]}>{question}</ReactMarkdown></div>}
-                <div id={panelId} ref={setTarget} hidden={!expanded} style={{ height: expanded ? height : undefined }} className={`${expanded ? "flex" : "hidden"} max-h-[calc(100dvh-220px)] flex-col gap-2 overflow-y-auto pb-3 [&>textarea]:min-h-0 [&>textarea]:flex-1 [&>label]:min-h-0 [&>label]:flex-1 [&>label>textarea]:min-h-0 [&>label>textarea]:flex-1`} />
-            </div>
-        </section>
-    </DockTarget.Provider>;
+            </section>
+            {!expanded && <div role="separator" aria-label="Resize task and answer" aria-orientation="vertical" aria-controls={leftId} aria-valuemin={MIN_PERCENT} aria-valuemax={MAX_PERCENT} aria-valuenow={Math.round(Math.max(MIN_PERCENT, Math.min(MAX_PERCENT, percent)))} tabIndex={0} onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={() => finishDrag()} onPointerCancel={() => finishDrag(true)} onLostPointerCapture={() => finishDrag(true)} onKeyDown={onResizeKey} className="group hidden w-3 shrink-0 cursor-col-resize touch-none items-center justify-center border-x border-neutral-100 bg-neutral-50 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-500 lg:flex"><span className="h-10 w-1 rounded-full bg-neutral-300 group-hover:bg-primary-500" /></div>}
+            <section aria-label="Answer panel" style={{ flexBasis: answerRail ? `${RAIL_WIDTH}px` : taskRail ? `calc(100% - ${RAIL_WIDTH}px)` : `${100 - percent}%` }} className={`${panelClass} border-t border-neutral-200 lg:border-t-0`}>
+                {answerRail && <button type="button" onClick={() => setExpanded(null)} aria-label="Restore task answer" className="flex h-full min-h-32 w-full items-center justify-center bg-neutral-50 text-sm font-medium text-neutral-700 hover:bg-primary-50 focus-visible:outline-2 focus-visible:outline-primary-500"><span style={{ writingMode: "vertical-rl" }}>Task answer</span></button>}
+                <div hidden={answerRail} className={`${answerRail ? "hidden" : "flex"} min-h-0 flex-1 flex-col`}>
+                    <div className="flex shrink-0 items-center justify-between border-b border-neutral-200 px-5 py-3"><span className="text-sm font-semibold text-neutral-950">Your answer</span><button type="button" aria-label={taskRail ? "Restore task and answer" : "Expand answer"} title={taskRail ? "Restore panes" : "Expand answer"} onClick={() => toggle("answer")} className="rounded-lg p-2 text-neutral-600 hover:bg-neutral-50 focus-visible:outline-2 focus-visible:outline-primary-500"><ExpandIcon restore={taskRail} /></button></div>
+                    <div ref={setTarget} className="flex min-h-0 flex-1 flex-col gap-4 overflow-auto p-5 sm:p-6 [&>textarea]:min-h-40 [&>label>textarea]:min-h-40" />
+                </div>
+            </section>
+        </div>
+    </AnswerTarget.Provider>;
 }
