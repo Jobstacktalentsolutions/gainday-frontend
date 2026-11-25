@@ -4,9 +4,8 @@ import { cn } from "@/lib/utils";
 import { INTERFACE_ANSWER_RENDERERS } from "./interfaceAnswers/registry";
 import { TaskObjectiveOptions } from "./TaskObjectiveOptions";
 import { ItemReasons } from "./objectiveAnswers/ItemReasons";
-import type { ClassificationAnswerState } from "./interfaceAnswers/types";
+import { AnswerDock, DockedAnswer } from "./interfaceAnswers/AnswerDock";
 import type { CandidateSimulationTask } from "../types/simulation";
-import { InterfaceType } from "@/features/simulation-tasks/types";
 import {
     capResponse,
     countWords,
@@ -54,23 +53,12 @@ export function TaskResponseInput({
     const setResponse = (next: string) => onChange(capResponse(next, wordLimit.max));
 
     const objectiveSlot = (
-        <TaskObjectiveOptions task={task} response={objectiveResponse} onChange={onObjectiveChange} />
+        <DockedAnswer><TaskObjectiveOptions task={task} response={objectiveResponse} onChange={onObjectiveChange} /></DockedAnswer>
     );
 
     const objective = task.objectiveComponent;
-    const classification: ClassificationAnswerState | undefined =
-        objective?.componentType === "CLASSIFICATION"
-            ? {
-                  component: objective,
-                  response: objectiveResponse as Record<string, string> | null,
-                  onChange: onObjectiveChange,
-                  reasons: itemReasons,
-                  onReasonsChange: onItemReasonsChange,
-              }
-            : undefined;
-
     return (
-        <div className="flex w-full flex-col gap-2">
+        <AnswerDock question={task.questionPrompt}><div className="flex w-full flex-col gap-2">
             <div className="flex w-full flex-col gap-1.5">
                 <div className="prose max-w-none text-[15px] font-normal leading-relaxed text-neutral-950 prose-p:my-1">
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown>
@@ -83,7 +71,6 @@ export function TaskResponseInput({
                     value={value}
                     onChange={setResponse}
                     objectiveSlot={objectiveSlot}
-                    classification={classification}
                 />
             ) : (
                 <>
@@ -94,13 +81,13 @@ export function TaskResponseInput({
                 </>
             )}
 
-            {objective && !(classification && ([InterfaceType.TABLE_VIEW_RESPONSE_PANEL, InterfaceType.CSV_DATA_PANEL, InterfaceType.TABLE_VIEW_WITH_CHART] as InterfaceType[]).includes(task.interfaceType)) && <ItemReasons component={objective} reasons={itemReasons} onChange={onItemReasonsChange} />}
+            {objective && <DockedAnswer><ItemReasons component={objective} reasons={itemReasons} onChange={onItemReasonsChange} /></DockedAnswer>}
 
-            <div className="flex w-full items-center justify-end text-[14px] text-neutral-950">
+            <DockedAnswer><div className="flex w-full items-center justify-end text-[14px] text-neutral-950">
                 <span className={cn(limitTextClass(wordState))}>
                     {wordCount} / {wordLimit.max} words
                 </span>
-            </div>
-        </div>
+            </div></DockedAnswer>
+        </div></AnswerDock>
     );
 }

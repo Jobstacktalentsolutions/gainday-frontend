@@ -346,8 +346,7 @@ export default function TaskRunner() {
                 />
             )}
 
-            {/* Simulation header. Compact on phones, full 117px layout from lg. */}
-            <div className="fixed left-0 top-0 z-10 flex h-16 w-full items-center justify-between gap-3 border-b-[0.5px] border-neutral-300 bg-white/10 px-4 backdrop-blur-[100px] sm:h-20 sm:px-8 lg:h-29.25 lg:px-12 lg:py-5 xl:px-30">
+            <div className="fixed left-0 top-0 z-10 flex h-16 w-full items-center justify-between gap-3 border-b-[0.5px] border-neutral-300 bg-white/90 px-4 backdrop-blur-xl sm:h-18 sm:px-8 lg:h-20 lg:px-12 xl:px-30">
                 <div className="flex min-w-0 flex-1 flex-col gap-1 lg:w-50.5 lg:flex-none">
                     <p className="inline-flex items-center gap-1.5 text-sm text-primary-950 sm:text-base">
                         <span className="whitespace-nowrap">
@@ -369,8 +368,8 @@ export default function TaskRunner() {
                 </div>
 
                 <div className="hidden min-w-0 flex-col items-center gap-1 text-center lg:flex">
-                    <p className="max-w-[40ch] truncate text-[28px] leading-[1.2] text-neutral-950">{job.title}</p>
-                    <p className="text-[16px] text-neutral-400">{job.employer.companyName}</p>
+                    <p className="max-w-[40ch] truncate text-xl font-medium leading-tight text-neutral-950">{job.title}</p>
+                    <p className="text-sm text-neutral-400">{job.employer.companyName}</p>
                 </div>
 
                 <div className="flex shrink-0 items-center gap-3 lg:gap-4">
@@ -389,7 +388,7 @@ export default function TaskRunner() {
                     </div>
                 </div>
             </div>
-            <main className="mx-auto flex w-full max-w-300 flex-col items-center px-4 pb-20 pt-24 sm:px-5 sm:pt-28 lg:pt-34.25">
+            <main className="mx-auto flex w-full max-w-300 flex-col items-center px-4 pb-[calc(5rem+var(--answer-dock-height,0px))] pt-24 sm:px-5 sm:pt-26 lg:pt-28">
                 <div className="flex w-full max-w-246.5 flex-col gap-6 rounded-3xl bg-white p-5 shadow-[0px_4px_10px_rgba(16,24,40,0.05)] sm:gap-10 sm:p-10">
                     <div className="flex w-full items-center justify-between">
                         <p className="text-[16px] text-primary-500">Task {runStore.currentTaskIndex + 1}</p>
@@ -405,7 +404,7 @@ export default function TaskRunner() {
                     <div className="flex w-full flex-col gap-6">
                         {task.interfaceType === "STAGED_CHAT" ? (
                             runStore.submissionId ? (
-                                <StagedChatTask submissionId={runStore.submissionId} taskId={task.id} />
+                                <StagedChatTask submissionId={runStore.submissionId} taskId={task.id} question={task.questionPrompt} />
                             ) : (
                                 <p role="alert" className="text-sm text-error-600">
                                     This conversation can't start yet. Refresh the page to try again.

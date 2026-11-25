@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import type { CaseFileTextAreaPayload } from "@/features/simulation-tasks/types";
 import ReadOnlyAnswerText from "./ReadOnlyAnswerText";
 import type { InterfaceAnswerProps } from "./types";
+import { DockedAnswer } from "./AnswerDock";
 
 interface Props extends Omit<InterfaceAnswerProps, "payload"> {
     payload: CaseFileTextAreaPayload;
@@ -51,12 +52,12 @@ const CaseFileTextAreaAnswer = ({ payload, value, onChange, objectiveSlot, readO
             {readOnly ? (
                 <ReadOnlyAnswerText value={value} />
             ) : (
-                <textarea
+                <DockedAnswer><textarea
                     value={value}
                     onChange={(event) => onChange(event.target.value)}
                     placeholder={payload.placeholder ?? "Type your response here..."}
                     className="h-38.25 w-full resize-none rounded-lg border border-neutral-200 px-3.5 py-2.5 text-[16px] text-neutral-700 shadow-[0px_1px_1px_rgba(10,13,18,0.05)] outline-none placeholder:text-neutral-400 focus:border-primary-500"
-                />
+                /></DockedAnswer>
             )}
         </div>
     );

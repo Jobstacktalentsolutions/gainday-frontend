@@ -1,0 +1,59 @@
+- main [ref=e3]:
+  - heading "Review events" [level=1] [ref=e4]
+  - generic [ref=e5]:
+    - paragraph [ref=e8]: Classify each event and explain your choice.
+    - table [ref=e11]:
+      - rowgroup [ref=e12]:
+        - row [ref=e13]:
+          - columnheader "Event" [ref=e14]
+          - columnheader "Type" [ref=e15]
+          - columnheader "Status" [ref=e16]
+          - columnheader "Processed" [ref=e17]
+          - columnheader "Classification" [ref=e18]
+          - columnheader "Reason" [ref=e19]
+      - rowgroup [ref=e20]:
+        - row [ref=e21]:
+          - cell "evt_001" [ref=e22]
+          - cell "payment_intent.succeeded" [ref=e23]
+          - cell "200" [ref=e24]
+          - cell "true" [ref=e25]
+          - cell "Choose a bucket" [ref=e26]:
+            - combobox "Classification for evt_001" [ref=e27]:
+              - option "Choose a bucket" [disabled] [selected]
+              - option "Duplicate"
+              - option "Retry"
+              - option "Investigate"
+          - cell [ref=e28]:
+            - textbox "Reason for evt_001" [ref=e29]
+        - row [ref=e30]:
+          - cell "evt_002" [ref=e31]
+          - cell "charge.refunded" [ref=e32]
+          - cell "500" [ref=e33]
+          - cell "false" [ref=e34]
+          - cell "Choose a bucket" [ref=e35]:
+            - combobox "Classification for evt_002" [ref=e36]:
+              - option "Choose a bucket" [disabled] [selected]
+              - option "Duplicate"
+              - option "Retry"
+              - option "Investigate"
+          - cell [ref=e37]:
+            - textbox "Reason for evt_002" [ref=e38]
+        - row [ref=e39]:
+          - cell "evt_003" [ref=e40]
+          - cell "charge.dispute.created" [ref=e41]
+          - cell "200" [ref=e42]
+          - cell "false" [ref=e43]
+          - cell "Choose a bucket" [ref=e44]:
+            - combobox "Classification for evt_003" [ref=e45]:
+              - option "Choose a bucket" [disabled] [selected]
+              - option "Duplicate"
+              - option "Retry"
+              - option "Investigate"
+          - cell [ref=e46]:
+            - textbox "Reason for evt_003" [ref=e47]
+  - region "Answer panel" [ref=e48]:
+    - generic [ref=e50]:
+      - generic [ref=e51]: Your answer
+      - generic [ref=e52]:
+        - button "View question" [ref=e53]
+        - button "Expand answer" [active] [ref=e63]

@@ -5,6 +5,7 @@ import TaskChart from "@/features/simulation-tasks/charts/TaskChart";
 import ClassificationAnswer from "../objectiveAnswers/ClassificationAnswer";
 import BucketSelect from "../objectiveAnswers/BucketSelect";
 import { ItemReasons } from "../objectiveAnswers/ItemReasons";
+import { DockedAnswer } from "./AnswerDock";
 import ReadOnlyAnswerText from "./ReadOnlyAnswerText";
 import type { ClassificationAnswerState } from "./types";
 
@@ -89,7 +90,7 @@ const TableViewResponsePanelAnswer = ({
             {readOnly ? (
                 <ReadOnlyAnswerText value={value} />
             ) : (
-                <label className="flex flex-col gap-2 text-sm font-medium text-neutral-700">
+                <DockedAnswer><label className="flex flex-col gap-2 text-sm font-medium text-neutral-700">
                 {classification ? "Additional response" : "Your response"}
                 <textarea
                     value={value}
@@ -97,7 +98,7 @@ const TableViewResponsePanelAnswer = ({
                     placeholder={payload.placeholder ?? "Type your response here..."}
                     className="h-38.25 w-full resize-none rounded-lg border border-neutral-200 px-3.5 py-2.5 text-[16px] text-neutral-700 shadow-[0px_1px_1px_rgba(10,13,18,0.05)] outline-none placeholder:text-neutral-400 focus:border-primary-500"
                 />
-                </label>
+                </label></DockedAnswer>
             )}
         </div>
     );
