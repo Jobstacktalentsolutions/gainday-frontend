@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import type { TableViewResponsePanelPayload } from "@/features/simulation-tasks/types";
+import TaskChart from "@/features/simulation-tasks/charts/TaskChart";
 import ClassificationAnswer from "../objectiveAnswers/ClassificationAnswer";
 import BucketSelect from "../objectiveAnswers/BucketSelect";
 import ReadOnlyAnswerText from "./ReadOnlyAnswerText";
@@ -46,6 +47,7 @@ const TableViewResponsePanelAnswer = ({
                                 </th>
                             ))}
                             {inlineClassification && <th className="px-3.5 py-2.5 font-medium text-neutral-700">Classification</th>}
+                            {inlineClassification && <th className="px-3.5 py-2.5 font-medium text-neutral-700">Reason (optional)</th>}
 
                         </tr>
                     </thead>
@@ -62,6 +64,9 @@ const TableViewResponsePanelAnswer = ({
                                     onChange={(bucket) => classification.onChange({ ...classification.response, [row[0]]: bucket })}
                                     readOnly={readOnly}
                                 /></td>}
+                                {inlineClassification && classification && <td className="px-3.5 py-2.5">{readOnly
+                                    ? classification.reasons?.[row[0]]
+                                    : <input aria-label={`Reason for ${row[0]}`} value={classification.reasons?.[row[0]] ?? ""} onChange={(event) => classification.onReasonsChange?.({ ...classification.reasons, [row[0]]: event.target.value })} className="w-full min-w-32 rounded-lg border border-neutral-200 p-2" />}</td>}
                             </tr>
                         ))}
                     </tbody>
@@ -71,6 +76,11 @@ const TableViewResponsePanelAnswer = ({
             {inlineClassification ? null : classification ? (
                 <ClassificationAnswer component={classification.component} response={classification.response} onChange={classification.onChange} readOnly={readOnly} />
             ) : objectiveSlot}
+
+            {classification && classification.response && Object.keys(classification.response).length > 0 && <details className="rounded-lg border border-neutral-200 p-3">
+                <summary className="cursor-pointer text-sm font-medium text-neutral-700">Preview your classifications</summary>
+                <TaskChart chart={{ type: "bar", categories: classification.component.buckets, series: [{ name: "Items", values: classification.component.buckets.map((bucket) => classification.component.items.filter((item) => classification.response?.[item] === bucket).length) }] }} />
+            </details>}
 
             {readOnly ? (
                 <ReadOnlyAnswerText value={value} />

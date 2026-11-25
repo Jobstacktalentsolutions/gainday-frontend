@@ -251,7 +251,7 @@ export const SubmissionDetailModal = ({
                         task={task}
                         answer={
                           answer
-                            ? { objectiveResponse: answer.objectiveResponse, textResponse: answer.textResponse }
+                            ? { objectiveResponse: answer.objectiveResponse, textResponse: answer.textResponse, itemReasons: answer.itemReasons }
                             : null
                         }
                       />

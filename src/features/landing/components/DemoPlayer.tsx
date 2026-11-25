@@ -231,7 +231,7 @@ export const DemoPlayer = ({
             ref={containerRef}
             role="group"
             aria-label={label}
-            className={cn("relative overflow-hidden bg-black", isFullscreen && "flex h-full w-full items-center justify-center")}
+            className={cn("relative bg-black", isFullscreen && "flex h-full w-full items-center justify-center")}
         >
             <video
                 ref={videoRef}
@@ -273,7 +273,7 @@ export const DemoPlayer = ({
                 </div>
             )}
 
-            <div className="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-black/35 text-white backdrop-blur-sm">
+            <div className={cn("absolute right-2 z-10 flex items-center gap-1 rounded-full bg-black/35 text-white backdrop-blur-sm", isFullscreen ? "top-0" : "-top-6")}>
                 <button
                     type="button"
                     aria-label={muted ? "Unmute" : "Mute"}

@@ -1,8 +1,9 @@
 import { OBJECTIVE_ANSWER_RENDERERS } from "./objectiveAnswers/registry";
 import type { CandidateSimulationTask } from "../types/simulation";
+import { InterfaceType, type TableViewResponsePanelPayload, type TableViewWithChartPayload } from "@/features/simulation-tasks/types";
 
 interface TaskObjectiveOptionsProps {
-    task: Pick<CandidateSimulationTask, "objectiveComponent">;
+    task: Pick<CandidateSimulationTask, "objectiveComponent" | "interfaceType" | "interfacePayload">;
     response: unknown;
     onChange: (response: unknown) => void;
     /** Show the submitted answer, not an editable one. Ordering widgets hide their controls; the
@@ -30,8 +31,11 @@ export function TaskObjectiveOptions({ task, response, onChange, readOnly }: Tas
         );
     }
 
+    const referenceTable = task.interfaceType === InterfaceType.TABLE_VIEW_RESPONSE_PANEL || task.interfaceType === InterfaceType.TABLE_VIEW_WITH_CHART
+        ? (task.interfacePayload as unknown as TableViewResponsePanelPayload | TableViewWithChartPayload).table
+        : undefined;
     const widget = (
-        <Renderer component={task.objectiveComponent} response={response} onChange={onChange} readOnly={readOnly} />
+        <Renderer component={task.objectiveComponent} response={response} onChange={onChange} readOnly={readOnly} referenceTable={referenceTable} />
     );
     return readOnly ? (
         <fieldset disabled className="m-0 min-w-0 border-0 p-0">

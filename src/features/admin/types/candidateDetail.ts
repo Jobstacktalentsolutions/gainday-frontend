@@ -43,6 +43,7 @@ export interface CandidateSubmission {
     responseBody: string;
     objectiveResponse: unknown;
     textResponse: string;
+    itemReasons?: Record<string, string>;
     timeSpentSeconds: number;
   }>;
   timeTakenSeconds: number | null;

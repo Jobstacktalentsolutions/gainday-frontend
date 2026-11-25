@@ -17,4 +17,15 @@ describe("table classification", () => {
         fireEvent.change(choice, { target: { value: "Review" } });
         expect(choice).toHaveValue("Review");
     });
+
+    it("keeps each reason beside its item", () => {
+        const component: ClassificationCandidateComponent = { componentType: "CLASSIFICATION", items: ["A", "B"], buckets: ["Review", "Accept"] };
+        function Example() {
+            const [reasons, setReasons] = useState<Record<string, string>>({});
+            return <TableViewResponsePanelAnswer payload={{ interfaceType: InterfaceType.TABLE_VIEW_RESPONSE_PANEL, table: { columns: ["Item"], rows: [["A"], ["B"]] }, placeholder: null }} value="" onChange={() => undefined} classification={{ component, response: null, onChange: () => undefined, reasons, onReasonsChange: setReasons }} />;
+        }
+        render(<Example />);
+        fireEvent.change(screen.getByRole("textbox", { name: "Reason for A" }), { target: { value: "Needs review" } });
+        expect(screen.getByRole("textbox", { name: "Reason for A" })).toHaveValue("Needs review");
+    });
 });

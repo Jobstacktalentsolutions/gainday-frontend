@@ -6,6 +6,7 @@ import { TaskObjectiveOptions } from "./TaskObjectiveOptions";
 import { ItemReasons } from "./objectiveAnswers/ItemReasons";
 import type { ClassificationAnswerState } from "./interfaceAnswers/types";
 import type { CandidateSimulationTask } from "../types/simulation";
+import { InterfaceType } from "@/features/simulation-tasks/types";
 import {
     capResponse,
     countWords,
@@ -63,6 +64,8 @@ export function TaskResponseInput({
                   component: objective,
                   response: objectiveResponse as Record<string, string> | null,
                   onChange: onObjectiveChange,
+                  reasons: itemReasons,
+                  onReasonsChange: onItemReasonsChange,
               }
             : undefined;
 
@@ -91,7 +94,7 @@ export function TaskResponseInput({
                 </>
             )}
 
-            {objective && <ItemReasons component={objective} reasons={itemReasons} onChange={onItemReasonsChange} />}
+            {objective && !(classification && ([InterfaceType.TABLE_VIEW_RESPONSE_PANEL, InterfaceType.CSV_DATA_PANEL, InterfaceType.TABLE_VIEW_WITH_CHART] as InterfaceType[]).includes(task.interfaceType)) && <ItemReasons component={objective} reasons={itemReasons} onChange={onItemReasonsChange} />}
 
             <div className="flex w-full items-center justify-end text-[14px] text-neutral-950">
                 <span className={cn(limitTextClass(wordState))}>

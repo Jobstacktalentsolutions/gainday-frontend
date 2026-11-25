@@ -6,6 +6,7 @@ import { TaskObjectiveOptions } from "./TaskObjectiveOptions";
 import { ItemReasons } from "./objectiveAnswers/ItemReasons";
 import type { ClassificationAnswerState } from "./interfaceAnswers/types";
 import type { CandidateSimulationTask } from "../types/simulation";
+import { InterfaceType } from "@/features/simulation-tasks/types";
 
 export interface SubmittedAnswerValue {
     objectiveResponse: unknown;
@@ -41,6 +42,7 @@ export function SubmittedAnswer({ task, answer }: SubmittedAnswerProps) {
                   component: objective,
                   response: answer.objectiveResponse as Record<string, string> | null,
                   onChange: noop,
+                  reasons: answer.itemReasons,
               }
             : undefined;
 
@@ -78,7 +80,7 @@ export function SubmittedAnswer({ task, answer }: SubmittedAnswerProps) {
                         This answer's interface ("{task.interfaceType}") can't be shown.
                     </p>
                 ))}
-            {isOpen && objective && <ItemReasons component={objective} reasons={answer.itemReasons} onChange={noop} readOnly />}
+            {isOpen && objective && !(classification && ([InterfaceType.TABLE_VIEW_RESPONSE_PANEL, InterfaceType.CSV_DATA_PANEL, InterfaceType.TABLE_VIEW_WITH_CHART] as InterfaceType[]).includes(task.interfaceType)) && <ItemReasons component={objective} reasons={answer.itemReasons} onChange={noop} readOnly />}
         </div>
     );
 }

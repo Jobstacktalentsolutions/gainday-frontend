@@ -79,6 +79,7 @@ export interface AdminJobSubmission {
     responseBody: string;
     objectiveResponse: unknown;
     textResponse: string;
+    itemReasons?: Record<string, string>;
     timeSpentSeconds: number;
   }>;
   completedAt: string | null;

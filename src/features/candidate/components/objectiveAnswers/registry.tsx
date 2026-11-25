@@ -36,6 +36,7 @@ export interface ObjectiveAnswerProps {
     onChange: (response: unknown) => void;
     /** Show a submitted answer instead of collecting one (employer and admin review pages). */
     readOnly?: boolean;
+    referenceTable?: { columns: string[]; rows: string[][] };
 }
 
 const cast = <T,>(value: unknown) => value as T;
@@ -120,11 +121,13 @@ export const OBJECTIVE_ANSWER_RENDERERS: Record<
             onChange={castOnChange<Record<string, string>>(onChange)}
         />
     ),
-    NUMERIC_TABLE: ({ component, response, onChange }) => (
+    NUMERIC_TABLE: ({ component, response, onChange, readOnly, referenceTable }) => (
         <NumericTableAnswer
             component={cast<NumericTableCandidateComponent>(component)}
             response={cast<NumericTableResponse | null>(response)}
             onChange={castOnChange<NumericTableResponse>(onChange)}
+            readOnly={readOnly}
+            referenceTable={referenceTable}
         />
     ),
 };

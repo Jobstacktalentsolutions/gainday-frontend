@@ -65,7 +65,7 @@ export interface TaskResult {
     interfacePayload: Record<string, unknown>;
     objectiveComponent: CandidateObjectiveComponent | null;
     /** What the candidate submitted for this task; null when they submitted nothing for it. */
-    answer: { objectiveResponse: unknown; textResponse: string } | null;
+    answer: { objectiveResponse: unknown; textResponse: string; itemReasons?: Record<string, string> } | null;
     /** 0-100. Null when this task has not been graded. */
     score: number | null;
     weight?: number;
