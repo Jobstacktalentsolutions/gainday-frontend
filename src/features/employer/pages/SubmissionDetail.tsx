@@ -70,7 +70,6 @@ const SubmissionDetail = () => {
         unlockCandidates.mutate([submissionId], {
             onSuccess: () => {
                 setConfirmUnlock(false);
-                toast.success("Contact unlocked");
                 finishUnlock();
             },
             onError: (error) => {

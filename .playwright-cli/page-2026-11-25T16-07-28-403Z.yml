@@ -1,0 +1,53 @@
+- main [ref=e3]:
+  - heading "Classify each event and explain your choice." [level=2] [ref=e4]
+  - generic [ref=e5]:
+    - table [ref=e7]:
+      - rowgroup [ref=e8]:
+        - row [ref=e9]:
+          - columnheader "Event" [ref=e10]
+          - columnheader "Type" [ref=e11]
+          - columnheader "Status" [ref=e12]
+          - columnheader "Processed" [ref=e13]
+          - columnheader "Classification" [ref=e14]
+          - columnheader "Reason (optional)" [ref=e15]
+      - rowgroup [ref=e16]:
+        - row [ref=e17]:
+          - cell "evt_001" [ref=e18]
+          - cell "payment_intent.succeeded" [ref=e19]
+          - cell "200" [ref=e20]
+          - cell "true" [ref=e21]
+          - cell "Choose a bucket" [ref=e22]:
+            - combobox "Classification for evt_001" [ref=e23]:
+              - option "Choose a bucket" [disabled] [selected]
+              - option "Duplicate"
+              - option "Retry"
+              - option "Investigate"
+          - cell [ref=e24]:
+            - textbox "Reason for evt_001" [ref=e25]
+        - row [ref=e26]:
+          - cell "evt_002" [ref=e27]
+          - cell "charge.refunded" [ref=e28]
+          - cell "500" [ref=e29]
+          - cell "false" [ref=e30]
+          - cell "Choose a bucket" [ref=e31]:
+            - combobox "Classification for evt_002" [ref=e32]:
+              - option "Choose a bucket" [disabled] [selected]
+              - option "Duplicate"
+              - option "Retry"
+              - option "Investigate"
+          - cell [ref=e33]:
+            - textbox "Reason for evt_002" [ref=e34]
+        - row [ref=e35]:
+          - cell "evt_003" [ref=e36]
+          - cell "charge.dispute.created" [ref=e37]
+          - cell "200" [ref=e38]
+          - cell "false" [ref=e39]
+          - cell "Choose a bucket" [ref=e40]:
+            - combobox "Classification for evt_003" [ref=e41]:
+              - option "Choose a bucket" [disabled] [selected]
+              - option "Duplicate"
+              - option "Retry"
+              - option "Investigate"
+          - cell [ref=e42]:
+            - textbox "Reason for evt_003" [ref=e43]
+    - textbox "Type your response here..." [ref=e44]

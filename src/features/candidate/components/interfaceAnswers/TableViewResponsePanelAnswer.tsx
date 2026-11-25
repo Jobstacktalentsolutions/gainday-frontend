@@ -4,6 +4,7 @@ import type { TableViewResponsePanelPayload } from "@/features/simulation-tasks/
 import TaskChart from "@/features/simulation-tasks/charts/TaskChart";
 import ClassificationAnswer from "../objectiveAnswers/ClassificationAnswer";
 import BucketSelect from "../objectiveAnswers/BucketSelect";
+import { ItemReasons } from "../objectiveAnswers/ItemReasons";
 import ReadOnlyAnswerText from "./ReadOnlyAnswerText";
 import type { ClassificationAnswerState } from "./types";
 
@@ -47,7 +48,7 @@ const TableViewResponsePanelAnswer = ({
                                 </th>
                             ))}
                             {inlineClassification && <th className="px-3.5 py-2.5 font-medium text-neutral-700">Classification</th>}
-                            {inlineClassification && <th className="px-3.5 py-2.5 font-medium text-neutral-700">Reason (optional)</th>}
+                            {inlineClassification && <th className="min-w-64 px-3.5 py-2.5 font-medium text-neutral-700">Reason</th>}
 
                         </tr>
                     </thead>
@@ -66,7 +67,7 @@ const TableViewResponsePanelAnswer = ({
                                 /></td>}
                                 {inlineClassification && classification && <td className="px-3.5 py-2.5">{readOnly
                                     ? classification.reasons?.[row[0]]
-                                    : <input aria-label={`Reason for ${row[0]}`} value={classification.reasons?.[row[0]] ?? ""} onChange={(event) => classification.onReasonsChange?.({ ...classification.reasons, [row[0]]: event.target.value })} className="w-full min-w-32 rounded-lg border border-neutral-200 p-2" />}</td>}
+                                    : <textarea aria-label={`Reason for ${row[0]}`} rows={2} value={classification.reasons?.[row[0]] ?? ""} onChange={(event) => classification.onReasonsChange?.({ ...classification.reasons, [row[0]]: event.target.value })} className="w-full min-w-64 resize-y rounded-lg border border-neutral-200 p-2 text-sm outline-none focus:border-primary-500" />}</td>}
                             </tr>
                         ))}
                     </tbody>
@@ -74,7 +75,10 @@ const TableViewResponsePanelAnswer = ({
             </div>
 
             {inlineClassification ? null : classification ? (
-                <ClassificationAnswer component={classification.component} response={classification.response} onChange={classification.onChange} readOnly={readOnly} />
+                <>
+                    <ClassificationAnswer component={classification.component} response={classification.response} onChange={classification.onChange} readOnly={readOnly} />
+                    <ItemReasons component={classification.component} reasons={classification.reasons} onChange={classification.onReasonsChange ?? (() => undefined)} readOnly={readOnly} />
+                </>
             ) : objectiveSlot}
 
             {classification && classification.response && Object.keys(classification.response).length > 0 && <details className="rounded-lg border border-neutral-200 p-3">
@@ -85,12 +89,15 @@ const TableViewResponsePanelAnswer = ({
             {readOnly ? (
                 <ReadOnlyAnswerText value={value} />
             ) : (
+                <label className="flex flex-col gap-2 text-sm font-medium text-neutral-700">
+                {classification ? "Additional response" : "Your response"}
                 <textarea
                     value={value}
                     onChange={(event) => onChange(event.target.value)}
                     placeholder={payload.placeholder ?? "Type your response here..."}
                     className="h-38.25 w-full resize-none rounded-lg border border-neutral-200 px-3.5 py-2.5 text-[16px] text-neutral-700 shadow-[0px_1px_1px_rgba(10,13,18,0.05)] outline-none placeholder:text-neutral-400 focus:border-primary-500"
                 />
+                </label>
             )}
         </div>
     );

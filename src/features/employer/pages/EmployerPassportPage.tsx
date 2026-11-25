@@ -30,7 +30,7 @@ const EmployerPassportPage = () => {
     const unlock = () => {
         if (!submissionId) return;
         unlockCandidates.mutate([submissionId], {
-            onSuccess: () => { setConfirmOpen(false); toast.success("Contact unlocked"); submissionQuery.refetch(); },
+            onSuccess: () => { setConfirmOpen(false); submissionQuery.refetch(); },
             onError: (error) => {
                 if (isAxiosError<PaymentRequiredBody>(error) && error.response?.status === 402) {
                     setConfirmOpen(false);

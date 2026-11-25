@@ -68,11 +68,9 @@ const JobSubmissions = () => {
     };
 
     const unlockSelected = (submissionIds: string[]) => {
-        const count = submissionIds.length;
         unlockCandidates.mutate(submissionIds, {
             onSuccess: () => {
                 setConfirmOpen(false);
-                toast.success(count === 1 ? "Candidate unlocked" : `${count} candidates unlocked`);
                 setSelectedIds([]);
                 refetch();
             },
