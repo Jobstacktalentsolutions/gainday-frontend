@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { AxiosError } from "axios";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { TaskQuestion } from "../components/TaskQuestion";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Timer, Clock } from "@/components/ui/icons";
 
@@ -390,7 +391,7 @@ export default function TaskRunner() {
                         <div className="prose max-w-none text-[15px] leading-relaxed text-neutral-700 prose-p:my-1.5">
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.scenarioDescription}</ReactMarkdown>
                         </div>
-                        <div className="prose max-w-none text-[15px] leading-relaxed text-neutral-950"><ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown></div>
+                        <TaskQuestion markdown={task.questionPrompt} />
                     </div>
 
                     <div className="flex w-full flex-col gap-6">
