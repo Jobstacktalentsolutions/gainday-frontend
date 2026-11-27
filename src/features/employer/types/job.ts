@@ -49,4 +49,6 @@ export interface BackendJobWithSimulation {
         tasks: SimulationTask[];
         timeLimitMinutes: number;
     } | null;
+    /** Tasks a complete simulation has (one per generation slot). Fewer saved means it is incomplete. */
+    expectedTaskCount: number;
 }

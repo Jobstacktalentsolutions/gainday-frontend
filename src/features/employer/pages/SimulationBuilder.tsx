@@ -68,6 +68,10 @@ const SimulationBuilder = () => {
     const { state: navState } = useLocation();
     const generationQueued = (navState as GenerationNavState | null)?.generationQueued === true;
     const isJobGenerating = generationQueued || jobSimulation?.status === "GENERATING";
+    const savedTaskCount = jobSimulation?.simulation?.tasks.length ?? 0;
+    const expectedTaskCount = jobSimulation?.expectedTaskCount ?? 0;
+    // A simulation with fewer saved tasks than slots is incomplete; the employer can retry it.
+    const isIncomplete = Boolean(jobSimulation?.simulation) && !isJobGenerating && savedTaskCount < expectedTaskCount;
     const generation = useGenerationProgress(jobId, isJobGenerating);
     const triggerGeneration = useTriggerGeneration();
     const { regenerate } = useRegenerateTask();
@@ -276,6 +280,22 @@ const SimulationBuilder = () => {
             </div>
 
             {/* Challenge content */}
+            {isIncomplete && (
+                <div role="alert" className="flex flex-col gap-3 rounded-2xl border border-warning-200 bg-warning-50 p-4 text-left sm:flex-row sm:items-center sm:justify-between">
+                    <p className="text-sm text-warning-700">
+                        Only {savedTaskCount} of {expectedTaskCount} tasks were generated. Retrying rebuilds the whole simulation, so edits to its tasks are replaced.
+                    </p>
+                    <button
+                        type="button"
+                        onClick={() => void handleRetryGeneration()}
+                        disabled={triggerGeneration.isPending}
+                        className="shrink-0 rounded-lg bg-primary-500 px-4 py-2 text-sm text-white disabled:opacity-50"
+                    >
+                        Retry generation
+                    </button>
+                </div>
+            )}
+
             <div className="flex w-full flex-col gap-10 rounded-3xl border border-dashed shadow-sm bg-white/70 px-3 py-10 text-center">
                 <div className="flex flex-col gap-3 text-left">
                     <p className="text-sm text-primary-500">WORK SIMULATION GENERATION</p>

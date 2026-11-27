@@ -4,6 +4,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import { JobFormInput } from "@/components/form/JobFormInput";
 import { FormSelect } from "@/components/form/FormSelect";
 import { FormTextarea } from "@/components/form/FormTextarea";
+import { SalaryField } from "@/components/form/SalaryField";
 import TagInput from "@/components/ui/tagInput";
 import TaskPromptEditor from "./TaskPromptEditor";
 import { cn } from "@/lib/utils";
@@ -102,17 +103,17 @@ const JobDetailsEditForm = ({ onDone, isSaving }: JobDetailsEditFormProps) => {
 
       {/* Salary */}
       <div className="grid grid-cols-2 gap-4">
-        <JobFormInput
+        <SalaryField
+          control={control}
+          name="salaryFrom"
           label="Salary from (£)"
-          type="number"
           error={errors.salaryFrom?.message}
-          {...register("salaryFrom")}
         />
-        <JobFormInput
+        <SalaryField
+          control={control}
+          name="salaryTo"
           label="Salary to (£)"
-          type="number"
           error={errors.salaryTo?.message}
-          {...register("salaryTo")}
         />
       </div>
 

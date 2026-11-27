@@ -27,6 +27,7 @@ import { wizardPath } from "../utils/wizardPath";
 import { FormSelect } from "@/components/form/FormSelect";
 import { FormTextarea } from "@/components/form/FormTextarea";
 import { JobFormInput } from "@/components/form/JobFormInput";
+import { SalaryField } from "@/components/form/SalaryField";
 import { StepSecondaryButton, StepContinueButton } from "@/components/ui/StepNavigationButtons";
 
 // The roles the engine has modules for. A role is a top-level domain; a sub-role is written after it
@@ -412,19 +413,17 @@ const JobDetailsStep = () => {
                 </div>
 
                 {/* Salary from + Salary to — side by side */}
-                <JobFormInput
+                <SalaryField
+                    control={control}
+                    name="salaryFrom"
                     label="Salary from (£)"
-                    type="number"
-                    startIcon={<span>£</span>}
                     error={errors.salaryFrom?.message}
-                    {...register("salaryFrom")}
                 />
-                <JobFormInput
+                <SalaryField
+                    control={control}
+                    name="salaryTo"
                     label="Salary to (£)"
-                    type="number"
-                    startIcon={<span>£</span>}
                     error={errors.salaryTo?.message}
-                    {...register("salaryTo")}
                 />
 
                 {/* What your company does — full width */}
