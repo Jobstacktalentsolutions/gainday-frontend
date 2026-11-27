@@ -38,7 +38,7 @@ const ToolbarButton = ({
             aria-label={label}
             aria-pressed={active}
             className={cn(
-                "flex size-8 cursor-pointer items-center justify-center rounded-md text-neutral-500 transition-colors duration-150",
+                "flex size-6 cursor-pointer items-center justify-center rounded text-neutral-500 transition-colors duration-150",
                 "hover:bg-neutral-100 hover:text-neutral-900",
                 active && "bg-primary-50 text-primary-600",
                 className
@@ -101,7 +101,7 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder, contentClassNam
                     hasError && "border-error-400 ring-3 ring-error-400/20"
                 )}
             >
-                <div className="flex flex-wrap items-center gap-1 border-b border-neutral-200 bg-neutral-50/50 p-2">
+                <div className="flex flex-wrap items-center gap-0.5 border-b border-neutral-200 bg-neutral-50/50 px-1.5 py-1">
                     {/* H1 / H2 / H3 — each button independently toggles its heading level */}
                     <ToolbarButton
                         label="Heading 1"
@@ -112,7 +112,7 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder, contentClassNam
                                 : editor?.chain().focus().setHeading({ level: 1 }).run()
                         }
                     >
-                        <Heading1 className="size-3.5" />
+                        <Heading1 className="size-3" />
                     </ToolbarButton>
                     <ToolbarButton
                         label="Heading 2"
@@ -123,7 +123,7 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder, contentClassNam
                                 : editor?.chain().focus().setHeading({ level: 2 }).run()
                         }
                     >
-                        <Heading2 className="size-3.5" />
+                        <Heading2 className="size-3" />
                     </ToolbarButton>
                     <ToolbarButton
                         label="Heading 3"
@@ -134,27 +134,27 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder, contentClassNam
                                 : editor?.chain().focus().setHeading({ level: 3 }).run()
                         }
                     >
-                        <Heading3 className="size-3.5" />
+                        <Heading3 className="size-3" />
                     </ToolbarButton>
 
-                    <span className="mx-1 h-4 w-px bg-neutral-200" aria-hidden="true" />
+                    <span className="mx-0.5 h-3 w-px bg-neutral-200" aria-hidden="true" />
 
                     <ToolbarButton
                         label="Bold"
                         active={editor?.isActive("bold")}
                         onClick={() => editor?.chain().focus().toggleBold().run()}
                     >
-                        <Bold className="size-3.5" />
+                        <Bold className="size-3" />
                     </ToolbarButton>
                     <ToolbarButton
                         label="Italic"
                         active={editor?.isActive("italic")}
                         onClick={() => editor?.chain().focus().toggleItalic().run()}
                     >
-                        <Italic className="size-3.5" />
+                        <Italic className="size-3" />
                     </ToolbarButton>
 
-                    <span className="mx-1 h-4 w-px bg-neutral-200" aria-hidden="true" />
+                    <span className="mx-0.5 h-3 w-px bg-neutral-200" aria-hidden="true" />
 
                     <ToolbarButton
                         label="Link"
@@ -168,7 +168,7 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder, contentClassNam
                             editor?.chain().focus().setLink({ href }).run();
                         }}
                     >
-                        <LinkIcon className="size-3.5" />
+                        <LinkIcon className="size-3" />
                     </ToolbarButton>
 
                     {/* Bullet list: toggles disc-bullet list on the selected lines,
@@ -178,12 +178,12 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder, contentClassNam
                         active={editor?.isActive("bulletList")}
                         onClick={() => editor?.chain().focus().toggleBulletList().run()}
                     >
-                        <List className="size-3.5" />
+                        <List className="size-3" />
                     </ToolbarButton>
 
                     {/* Tables toolbar: hidden on mobile, visible on sm and up */}
-                    <div className="hidden sm:flex sm:items-center sm:gap-1">
-                        <span className="mx-1 h-4 w-px bg-neutral-200" aria-hidden="true" />
+                    <div className="hidden sm:flex sm:items-center sm:gap-0.5">
+                        <span className="mx-0.5 h-3 w-px bg-neutral-200" aria-hidden="true" />
 
                         {/* Tables. The row/column/delete buttons do nothing unless the cursor is
                             inside a table, so they need no active state. */}
@@ -193,25 +193,25 @@ const TaskPromptEditor = ({ value, onChange, error, placeholder, contentClassNam
                                 editor?.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
                             }
                         >
-                            <Table2 className="size-3.5" />
+                            <Table2 className="size-3" />
                         </ToolbarButton>
                         <ToolbarButton
                             label="Add row below"
-                            className="w-auto px-2 text-xs"
+                            className="w-auto px-1.5 text-[11px]"
                             onClick={() => editor?.chain().focus().addRowAfter().run()}
                         >
                             + Row
                         </ToolbarButton>
                         <ToolbarButton
                             label="Add column to the right"
-                            className="w-auto px-2 text-xs"
+                            className="w-auto px-1.5 text-[11px]"
                             onClick={() => editor?.chain().focus().addColumnAfter().run()}
                         >
                             + Column
                         </ToolbarButton>
                         <ToolbarButton
                             label="Delete table"
-                            className="w-auto px-2 text-xs"
+                            className="w-auto px-1.5 text-[11px]"
                             onClick={() => editor?.chain().focus().deleteTable().run()}
                         >
                             Delete table
