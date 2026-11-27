@@ -13,6 +13,7 @@ import {
     type CsvDataPanelPayload,
     type TableViewWithChartPayload,
     type CaseFileTextAreaPayload,
+    type CaseFileRichTextComposerPayload,
 } from "../types";
 
 interface InterfaceRendererProps {
@@ -69,6 +70,9 @@ const INTERFACE_RENDERERS: Record<
     ),
     [InterfaceType.CASE_FILE_TEXT_AREA]: ({ payload, mode }) => (
         <CaseFileTextAreaView payload={payload as unknown as CaseFileTextAreaPayload} mode={mode} />
+    ),
+    [InterfaceType.CASE_FILE_RICH_TEXT_COMPOSER]: ({ payload, mode }) => (
+        <CaseFileTextAreaView payload={payload as unknown as CaseFileRichTextComposerPayload} mode={mode} />
     ),
 };
 

@@ -1,9 +1,9 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import type { CaseFileTextAreaPayload } from "../types";
+import type { CaseFileTextAreaPayload, CaseFileRichTextComposerPayload } from "../types";
 
 interface Props {
-    payload: CaseFileTextAreaPayload;
+    payload: CaseFileTextAreaPayload | CaseFileRichTextComposerPayload;
     mode: "preview" | "edit";
 }
 

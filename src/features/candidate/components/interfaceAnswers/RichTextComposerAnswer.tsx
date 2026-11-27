@@ -2,11 +2,11 @@ import type { ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import TaskPromptEditor from "@/features/employer/components/TaskPromptEditor";
-import type { RichTextComposerPayload } from "@/features/simulation-tasks/types";
+import type { RichTextComposerPayload, CaseFileRichTextComposerPayload } from "@/features/simulation-tasks/types";
 import { WrittenAnswer } from "./AnswerDock";
 
 interface Props {
-    payload: RichTextComposerPayload;
+    payload: RichTextComposerPayload | CaseFileRichTextComposerPayload;
     value: string;
     onChange: (value: string) => void;
     /** The task's structured answer widget, shown above the written response. */
@@ -28,7 +28,7 @@ const RichTextComposerAnswer = ({ payload, value, onChange, objectiveSlot, readO
                 value={value}
                 onChange={onChange}
                 placeholder={payload.placeholder ?? "Write your response..."}
-                contentClassName="min-h-40 max-h-96 overflow-y-auto"
+                contentClassName="min-h-40 max-h-[60dvh] resize-y overflow-auto"
             /></WrittenAnswer>
         )}
     </div>

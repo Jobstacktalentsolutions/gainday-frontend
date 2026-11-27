@@ -13,6 +13,7 @@ import {
     type CsvDataPanelPayload,
     type TableViewWithChartPayload,
     type CaseFileTextAreaPayload,
+    type CaseFileRichTextComposerPayload,
 } from "@/features/simulation-tasks/types";
 
 const cast = <T,>(value: Record<string, unknown>) => value as unknown as T;
@@ -85,5 +86,8 @@ export const INTERFACE_ANSWER_RENDERERS: Record<
             objectiveSlot={objectiveSlot}
             readOnly={readOnly}
         />
+    ),
+    [InterfaceType.CASE_FILE_RICH_TEXT_COMPOSER]: ({ payload, value, onChange, objectiveSlot, readOnly }) => (
+        <CaseFileTextAreaAnswer payload={cast<CaseFileRichTextComposerPayload>(payload)} value={value} onChange={onChange} objectiveSlot={objectiveSlot} readOnly={readOnly} />
     ),
 };

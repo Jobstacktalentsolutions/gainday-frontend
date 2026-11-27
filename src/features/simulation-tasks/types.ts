@@ -9,6 +9,7 @@ export const InterfaceType = {
   CSV_DATA_PANEL: "CSV_DATA_PANEL",
   TABLE_VIEW_WITH_CHART: "TABLE_VIEW_WITH_CHART",
   CASE_FILE_TEXT_AREA: "CASE_FILE_TEXT_AREA",
+  CASE_FILE_RICH_TEXT_COMPOSER: "CASE_FILE_RICH_TEXT_COMPOSER",
   STAGED_CHAT: "STAGED_CHAT",
 } as const;
 export type InterfaceType = (typeof InterfaceType)[keyof typeof InterfaceType];
@@ -63,6 +64,10 @@ export interface CaseFileTextAreaPayload {
   placeholder: string | null;
 }
 
+export interface CaseFileRichTextComposerPayload extends Omit<CaseFileTextAreaPayload, "interfaceType"> {
+  interfaceType: typeof InterfaceType.CASE_FILE_RICH_TEXT_COMPOSER;
+}
+
 /** The candidate-visible part of a staged chat. The script is server-only and never present here. */
 export interface StagedChatPayload {
   interfaceType: typeof InterfaceType.STAGED_CHAT;
@@ -80,6 +85,7 @@ export type InterfacePayload =
   | CsvDataPanelPayload
   | TableViewWithChartPayload
   | CaseFileTextAreaPayload
+  | CaseFileRichTextComposerPayload
   | StagedChatPayload;
 
 export type ObjectiveComponentType =

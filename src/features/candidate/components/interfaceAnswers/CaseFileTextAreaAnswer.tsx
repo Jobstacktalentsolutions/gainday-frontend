@@ -2,14 +2,15 @@ import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
-import type { CaseFileTextAreaPayload } from "@/features/simulation-tasks/types";
+import { InterfaceType, type CaseFileTextAreaPayload, type CaseFileRichTextComposerPayload } from "@/features/simulation-tasks/types";
 import ReadOnlyAnswerText from "./ReadOnlyAnswerText";
 import type { InterfaceAnswerProps } from "./types";
 import { WrittenAnswer } from "./AnswerDock";
 import { answerBoxHeight } from "./answerBoxSizing";
+import RichTextComposerAnswer from "./RichTextComposerAnswer";
 
 interface Props extends Omit<InterfaceAnswerProps, "payload"> {
-    payload: CaseFileTextAreaPayload;
+    payload: CaseFileTextAreaPayload | CaseFileRichTextComposerPayload;
 }
 
 // The case file is reference material: read-only tabs (customer record, ticket, policy) the
@@ -50,7 +51,9 @@ const CaseFileTextAreaAnswer = ({ payload, value, onChange, objectiveSlot, readO
 
             {objectiveSlot}
 
-            {readOnly ? (
+            {payload.interfaceType === InterfaceType.CASE_FILE_RICH_TEXT_COMPOSER ? (
+                <RichTextComposerAnswer payload={payload} value={value} onChange={onChange} readOnly={readOnly} />
+            ) : readOnly ? (
                 <ReadOnlyAnswerText value={value} />
             ) : (
                 <WrittenAnswer><textarea
