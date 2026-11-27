@@ -9,7 +9,7 @@ const classification: ClassificationCandidateComponent = { componentType: "CLASS
 const ranking: PriorityRankingCandidateComponent = { componentType: "PRIORITY_RANKING", items: [{ label: "First", description: "First item" }, { label: "Second", description: "Second item" }] };
 
 describe("structured answer interactions", () => {
-    it("moves items between buckets and updates counts using the accessible picker", () => {
+    it("assigns an unassigned item with the picker and shows it in its bucket without a picker", () => {
         function Harness() {
             const [answer, setAnswer] = useState<Record<string, string>>({});
             return <ClassificationAnswer component={classification} response={answer} onChange={setAnswer} />;
@@ -17,10 +17,9 @@ describe("structured answer interactions", () => {
         render(<Harness />);
         fireEvent.change(screen.getByRole("combobox", { name: "Bucket for Alpha" }), { target: { value: "High" } });
         expect(screen.getByLabelText("1 item in High")).toBeInTheDocument();
-        expect(within(screen.getByRole("region", { name: "High" })).getByText("Alpha")).toBeInTheDocument();
-        fireEvent.change(screen.getByRole("combobox", { name: "Bucket for Alpha" }), { target: { value: "Low" } });
-        expect(screen.getByLabelText("0 items in High")).toBeInTheDocument();
-        expect(screen.getByLabelText("1 item in Low")).toBeInTheDocument();
+        const high = within(screen.getByRole("region", { name: "High" }));
+        expect(high.getByText("Alpha")).toBeInTheDocument();
+        expect(high.queryByRole("combobox")).not.toBeInTheDocument();
     });
 
     it("reorders the saved ranking and shows the new positions", () => {
