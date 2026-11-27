@@ -13,6 +13,7 @@ import {
     getTomorrowDateString,
     type JobPostingFormValues,
 } from "../schemas/jobPosting";
+import { EMPLOYMENT_TYPES, SKILL_LEVELS } from "../constants/jobPostingOptions";
 import TaskGenerationModal from "../components/TaskGenerationModal";
 import ImportJobDescriptionModal from "../components/ImportJobDescriptionModal";
 import TaskPromptEditor from "../components/TaskPromptEditor";
@@ -47,8 +48,6 @@ const normaliseRole = (value: string | undefined | null): string =>
 // purpose-built role module if one's registered for it, otherwise a generic fallback — see
 // backend's RoleRegistry.resolve), so a custom role here is a first-class value, not a workaround.
 const CUSTOM_ROLE_VALUE = "__custom__";
-const SKILL_LEVELS = ["Junior", "Mid level", "Senior level"];
-const EMPLOYMENT_TYPES = ["Full-time", "Part-time", "Contract"];
 
 interface JobPostingOutletContext {
     onSaveAndExit: () => void;
