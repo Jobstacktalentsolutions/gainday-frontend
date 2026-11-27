@@ -23,7 +23,7 @@ import {
   ChevronDown,
 } from "@/components/ui/icons";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { MARKDOWN_PLUGINS } from "@/lib/markdown";
 import { toast } from "sonner";
 import { AdminButton } from "@/components/ui/AdminButton";
 import RemoveJobPostDialog from "../components/RemoveJobPostDialog";
@@ -473,7 +473,7 @@ const JobModerationDetailPage = () => {
                 Job Description
               </h2>
               <div className="prose prose-sm max-w-none text-neutral-700 max-h-60 overflow-y-auto pr-1">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                <ReactMarkdown remarkPlugins={MARKDOWN_PLUGINS}>
                   {job.description}
                 </ReactMarkdown>
               </div>
@@ -548,7 +548,7 @@ const JobModerationDetailPage = () => {
                                 Scenario & Context
                               </span>
                               <div className="prose prose-sm max-w-none text-neutral-700 prose-p:my-1 rounded-lg bg-white border border-neutral-200 p-3">
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                <ReactMarkdown remarkPlugins={MARKDOWN_PLUGINS}>
                                   {task.scenarioDescription}
                                 </ReactMarkdown>
                               </div>
@@ -561,7 +561,7 @@ const JobModerationDetailPage = () => {
                                 Question Prompt
                               </span>
                               <div className="prose prose-sm max-w-none text-neutral-800 prose-p:my-1 rounded-lg bg-white border border-neutral-200 p-3">
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                <ReactMarkdown remarkPlugins={MARKDOWN_PLUGINS}>
                                   {task.questionPrompt}
                                 </ReactMarkdown>
                               </div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { MARKDOWN_PLUGINS } from "@/lib/markdown";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -36,7 +36,7 @@ const CaseFilePanel = ({ tabs }: Props) => {
                 role="tabpanel"
                 className="prose max-w-none overflow-y-auto p-4 text-[15px] leading-relaxed text-neutral-950 prose-p:my-2 prose-table:my-2 prose-table:w-full prose-table:text-[14px] prose-th:text-[14px] prose-th:font-semibold prose-th:py-2.5 prose-th:px-3.5 prose-th:text-neutral-900 prose-td:text-[14px] prose-td:py-2.5 prose-td:px-3.5 prose-td:text-neutral-800"
             >
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{active.content}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={MARKDOWN_PLUGINS}>{active.content}</ReactMarkdown>
             </div>
         </section>
     );

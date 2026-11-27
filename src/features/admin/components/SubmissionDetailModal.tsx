@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { CheckCircle2, AlertTriangle, AlertOctagon, Clock, Calendar, Building2, Briefcase, Award, ShieldAlert, ShieldCheck } from "@/components/ui/icons";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { MARKDOWN_PLUGINS } from "@/lib/markdown";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -245,7 +245,7 @@ export const SubmissionDetailModal = ({
                         Task {idx + 1}: {task.title}
                       </span>
                       <div className="prose prose-sm max-w-none text-xs text-neutral-600 prose-p:my-0.5">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown>
+                        <ReactMarkdown remarkPlugins={MARKDOWN_PLUGINS}>{task.questionPrompt}</ReactMarkdown>
                       </div>
                       <SubmittedAnswer
                         task={task}
@@ -329,7 +329,7 @@ export const SubmissionDetailModal = ({
                     </div>
                     {task.summary && (
                       <div className="prose prose-sm max-w-none text-xs text-neutral-700 bg-white p-2.5 rounded border border-neutral-200 prose-p:my-0.5">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        <ReactMarkdown remarkPlugins={MARKDOWN_PLUGINS}>
                           {task.summary}
                         </ReactMarkdown>
                       </div>

@@ -35,7 +35,7 @@ const TableViewResponsePanelAnswer = ({
     return (
         <div className="flex w-full flex-col gap-4">
             <div className="w-full overflow-x-auto rounded-xl border border-neutral-200">
-                <table className="w-full text-left text-[14px]">
+                <table className="w-full text-left text-[13px]">
                     <thead className="bg-neutral-50">
                         <tr>
                             {columns.map((column, columnIndex) => (

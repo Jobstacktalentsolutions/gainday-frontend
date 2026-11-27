@@ -1,5 +1,5 @@
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { MARKDOWN_PLUGINS } from "@/lib/markdown";
 import { cn } from "@/lib/utils";
 
 export interface MarkdownProps {
@@ -40,7 +40,7 @@ export const Markdown = ({
         className
       )}
     >
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>{text}</ReactMarkdown>
+      <ReactMarkdown remarkPlugins={MARKDOWN_PLUGINS}>{text}</ReactMarkdown>
     </div>
   );
 };

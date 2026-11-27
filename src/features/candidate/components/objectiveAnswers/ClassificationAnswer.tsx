@@ -72,7 +72,8 @@ const ClassificationAnswer = ({ component, response, onChange, readOnly }: Props
                     <h3 className="text-xs font-medium text-neutral-700">Unassigned <span className="text-neutral-500">({unassigned.length})</span></h3>
                     <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,14rem),1fr))] gap-1.5">{unassigned.map((item) => renderItem(item))}</div>
                 </div>}
-                <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,10rem),1fr))] gap-2">
+                {/* At most two buckets per row, so the board stays readable and does not crowd. */}
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                     {component.buckets.map((bucket) => {
                         const items = component.items.filter((item) => mapping[item] === bucket);
                         return <Bucket key={bucket} name={bucket} count={items.length} readOnly={readOnly}>{items.map((item) => renderItem(item, true))}</Bucket>;

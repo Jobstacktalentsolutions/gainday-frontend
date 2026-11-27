@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Clock, MapPin, Wallet, Share2, ArrowUpRight } from "@/components/ui/icons";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { MARKDOWN_PLUGINS } from "@/lib/markdown";
 import { JobBoardHeader } from "../components/JobBoardHeader";
 import { JobNotFoundState } from "../components/JobNotFoundState";
 import { ApplyDialog } from "../components/ApplyDialog";
@@ -183,7 +183,7 @@ export default function JobDetailsPage() {
                             <section className="flex flex-col gap-3">
                                 <h2 className="text-[16px] text-primary-500">ABOUT THIS ROLE</h2>
                                 <div className="prose prose-sm max-w-none text-[16px] text-primary-950 prose-headings:font-semibold prose-headings:text-primary-950 prose-p:my-1.5 prose-ul:my-1.5 prose-li:my-0.5 prose-strong:text-primary-950">
-                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{job.description}</ReactMarkdown>
+                                    <ReactMarkdown remarkPlugins={MARKDOWN_PLUGINS}>{job.description}</ReactMarkdown>
                                 </div>
                             </section>
                             <div className="h-px w-full bg-neutral-200" />

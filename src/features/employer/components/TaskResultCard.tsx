@@ -1,5 +1,5 @@
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { MARKDOWN_PLUGINS } from "@/lib/markdown";
 import Skeleton from "@/components/ui/skeleton";
 import ScoreBar from "@/components/ui/ScoreBar";
 import { SubmittedAnswer } from "@/features/candidate/components/SubmittedAnswer";
@@ -25,7 +25,7 @@ const TaskResultCard = ({ task }: { task: TaskResult }) => {
             {score !== null && <ScoreBar score={score} label={`${task.title} score`} />}
 
             <div className="prose prose-sm max-w-none text-neutral-700 prose-p:my-1">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{task.questionPrompt}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={MARKDOWN_PLUGINS}>{task.questionPrompt}</ReactMarkdown>
             </div>
 
             <SubmittedAnswer task={task} answer={task.answer} />

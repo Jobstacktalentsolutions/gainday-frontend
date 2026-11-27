@@ -24,7 +24,7 @@ const NumericTableAnswer = ({ component, response, onChange, readOnly, reference
     return (
         <div className="w-full">
         <div className="w-full overflow-x-auto rounded-xl border border-neutral-200">
-            <table className="w-full text-left text-[14px]">
+            <table className="w-full text-left text-[13px]">
                 <thead className="bg-neutral-50">
                     <tr>
                         <th className="px-3.5 py-2.5 font-medium text-neutral-700" />
