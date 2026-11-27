@@ -2,7 +2,7 @@ import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, us
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { motion } from "motion/react";
-import { ChevronDown, ChevronUp, GripVertical } from "@/components/ui/icons";
+import { ChevronDown, ChevronUp } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 const LAYOUT_TRANSITION = { type: "spring", stiffness: 420, damping: 34, mass: 0.8 } as const;
@@ -55,7 +55,6 @@ function OrderedRow({ item, itemIndex, position, total, readOnly, compact, move 
                     isDragging && "z-10 border-primary-500 shadow-lg",
                 )}
             >
-                {!readOnly && <GripVertical aria-hidden="true" className="size-5 shrink-0 text-neutral-400" />}
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary-50 text-[16px] text-primary-500">{position + 1}</span>
                 <div className="flex min-w-0 flex-1 flex-col">
                     <span className={cn(compact ? "text-[16px]" : "text-[18px]", "text-primary-950")}>{item.label}</span>

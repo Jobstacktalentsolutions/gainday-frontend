@@ -6,6 +6,7 @@ export interface FormSelectProps extends SelectHTMLAttributes<HTMLSelectElement>
     label: string;
     error?: string;
     hint?: string;
+    hintClassName?: string;
     hideLabel?: boolean;
     placeholder?: string;
     children: ReactNode;
@@ -19,6 +20,7 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
             id,
             className,
             hint,
+            hintClassName,
             hideLabel,
             required,
             placeholder,
@@ -43,7 +45,7 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
                     !hideLabel && (
                         <label htmlFor={selectId} className="flex items-center gap-1 text-base font-medium text-neutral-800 select-none">
                             {label}
-                            
+
                             {required && <span aria-hidden="true" className="text-error-500">*</span>}
                         </label>
                     )
@@ -83,7 +85,7 @@ export const FormSelect = forwardRef<HTMLSelectElement, FormSelectProps>(
                     </span>
                 </div>
                 {hint && !hasError && (
-                    <p id={hintId} className="text-sm text-neutral-400">
+                    <p id={hintId} className={cn("text-sm text-neutral-400", hintClassName)}>
                         {hint}
                     </p>
                 )}

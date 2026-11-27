@@ -299,7 +299,7 @@ const JobDetailsStep = () => {
                     />
                 </div>
 
-                {/* Role + Skill level — side by side */}
+                {/* Role + Seniority — side by side */}
                 {isCustomRole ? (
                     <div className="flex flex-col gap-1.5">
                         <JobFormInput
@@ -345,9 +345,11 @@ const JobDetailsStep = () => {
                 )}
 
                 <FormSelect
-                    label="Skill level"
+                    label="Seniority"
                     required
-                    placeholder="Select a skill level"
+                    hint="Match the job description to this seniority for better results."
+                    hintClassName="text-xs"
+                    placeholder="Select a seniority"
                     error={errors.skillLevel?.message}
                     {...register("skillLevel")}
                 >

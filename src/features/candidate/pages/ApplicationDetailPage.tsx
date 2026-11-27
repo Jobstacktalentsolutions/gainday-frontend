@@ -113,7 +113,7 @@ const ApplicationDetailContent = ({ application }: { application: ApplicationDet
                     {job.location && <DetailRow label="Location" value={job.location} />}
                     {job.employmentType && <DetailRow label="Employment type" value={job.employmentType} />}
                     <DetailRow label="Remote" value={job.isRemoteFriendly ? "Remote friendly" : "On-site"} />
-                    {job.skillLevel && <DetailRow label="Skill level" value={job.skillLevel} />}
+                    {job.skillLevel && <DetailRow label="Seniority" value={job.skillLevel} />}
                     {job.salaryRange && hasSalary(job.salaryRange) && (
                         <DetailRow label="Salary" value={formatSalaryRange(job.salaryRange)} />
                     )}
