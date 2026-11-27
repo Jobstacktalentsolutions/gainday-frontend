@@ -49,7 +49,7 @@ export function JobCard({
                 }
             }}
             aria-label={`View job details for ${job.title}`}
-            className="flex flex-1 flex-col gap-3 rounded-3xl bg-white p-5 transition-all duration-150 cursor-pointer hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99] sm:p-6"
+            className="flex flex-1 flex-col gap-2 rounded-3xl bg-white p-3 transition-all duration-150 cursor-pointer hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99] sm:p-4"
         >
             <div className="flex w-full flex-col items-start gap-2">
                 <div className="flex flex-wrap items-center gap-2">
@@ -60,7 +60,7 @@ export function JobCard({
                         </span>
                     )}
                 </div>
-                <h3 className="break-words text-[18px] leading-[1.2] text-black">{job.title}</h3>
+                <h3 className="break-words text-[20px] leading-[1.2] text-black">{job.title}</h3>
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[16px] text-neutral-700">
                     <span>{job.location}</span>
                     <span className="size-1 shrink-0 rounded-full bg-neutral-700" aria-hidden="true" />
@@ -89,7 +89,7 @@ export function JobCard({
 
 export function JobCardSkeleton() {
     return (
-        <div className="flex flex-1 flex-col gap-3 rounded-3xl bg-white p-6 shadow-sm">
+        <div className="flex flex-1 flex-col gap-2 rounded-3xl bg-white p-3 shadow-sm sm:p-4">
             <div className="flex w-full flex-col items-start gap-2.5">
                 <div className="h-5 w-16 animate-pulse rounded-full bg-neutral-200" />
                 <div className="h-6 w-3/4 animate-pulse rounded-lg bg-neutral-200" />

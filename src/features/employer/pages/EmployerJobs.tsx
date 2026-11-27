@@ -110,9 +110,9 @@ const EmployerJobs = () => {
     const hasAnyJobs = totalAll > 0 || search.trim().length > 0 || statusFilter !== "all";
 
     return (
-        <div className="min-h-screen bg-neutral-50 px-4 pb-10 pt-28 sm:px-6 md:px-7.5 lg:px-12 lg:pt-32 xl:px-20">
+        <div className="min-h-screen bg-neutral-50 px-4 pb-8 pt-24 sm:px-6 md:px-7.5 lg:px-8 lg:pt-28 xl:px-12">
             <div className="mx-auto flex w-full max-w-85.5 flex-col md:max-w-none lg:max-w-4xl xl:max-w-6xl">
-                <div className="flex flex-col gap-4 lg:gap-6">
+                <div className="flex flex-col gap-3 lg:gap-4">
                     <div className="flex items-start justify-between gap-3 lg:items-end">
                         <div className="flex flex-col items-start">
                             <h1 className="text-2xl text-black lg:text-3xl">Your jobs</h1>
@@ -148,7 +148,7 @@ const EmployerJobs = () => {
                             <JobStatusTabs value={statusFilter} onChange={handleStatusChange} />
 
                             {showSkeletons && (
-                                <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                                <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
                                     {Array.from({ length: 3 }).map((_, index) => (
                                         <JobCardSkeleton key={index} />
                                     ))}
@@ -164,7 +164,7 @@ const EmployerJobs = () => {
                             {!showSkeletons && !isError && (
                                 jobs.length > 0 ? (
                                     <>
-                                        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+                                        <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
                                             {jobs.map((job) => (
                                                 <JobCard
                                                     key={job.id}

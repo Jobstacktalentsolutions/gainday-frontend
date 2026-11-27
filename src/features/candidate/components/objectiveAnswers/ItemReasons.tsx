@@ -11,19 +11,18 @@ function itemsFor(component: CandidateObjectiveComponent): string[] {
     }
 }
 
-export function ItemReasons({ component, reasons, onChange, readOnly }: {
+/** Read-only view of per-item reasons on answers submitted before the candidate editor was removed. */
+export function ItemReasons({ component, reasons }: {
     component: CandidateObjectiveComponent;
     reasons?: Record<string, string>;
-    onChange: (reasons: Record<string, string>) => void;
-    readOnly?: boolean;
 }) {
     const items = itemsFor(component);
-    if (!items.length || (readOnly && !reasons)) return null;
+    if (!items.length || !reasons) return null;
     return <details className="rounded-lg border border-neutral-200 p-3">
-        <summary className="cursor-pointer text-sm font-medium text-neutral-700">Reasons for individual items (optional)</summary>
-        <div className="mt-3 flex flex-col gap-3">{items.map((item) => <label key={item} className="flex flex-col gap-1 text-sm text-neutral-700">
+        <summary className="cursor-pointer text-sm font-medium text-neutral-700">Reasons for individual items</summary>
+        <div className="mt-3 flex flex-col gap-3">{items.map((item) => <div key={item} className="flex flex-col gap-1 text-sm text-neutral-700">
             <span>{item}</span>
-            {readOnly ? <span>{reasons?.[item] || "-"}</span> : <textarea value={reasons?.[item] ?? ""} onChange={(event) => onChange({ ...reasons, [item]: event.target.value })} className="w-full rounded-lg border border-neutral-200 p-2" />}
-        </label>)}</div>
+            <span>{reasons[item] || "-"}</span>
+        </div>)}</div>
     </details>;
 }

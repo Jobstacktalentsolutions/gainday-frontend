@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 import { INTERFACE_ANSWER_RENDERERS } from "./interfaceAnswers/registry";
 import { TaskObjectiveOptions } from "./TaskObjectiveOptions";
-import { ItemReasons } from "./objectiveAnswers/ItemReasons";
 import { AnswerCounter, DockedAnswer } from "./interfaceAnswers/AnswerDock";
 import type { CandidateSimulationTask } from "../types/simulation";
 import {
@@ -18,8 +17,6 @@ interface TaskResponseInputProps {
     /** The candidate's answer to the task's structured (objective) part, if it has one. */
     objectiveResponse: unknown;
     onObjectiveChange: (response: unknown) => void;
-    itemReasons?: Record<string, string>;
-    onItemReasonsChange: (reasons: Record<string, string>) => void;
 }
 
 const DEFAULT_MAX_WORDS = 250;
@@ -41,8 +38,6 @@ export function TaskResponseInput({
     onChange,
     objectiveResponse,
     onObjectiveChange,
-    itemReasons,
-    onItemReasonsChange,
 }: TaskResponseInputProps) {
     const Renderer = INTERFACE_ANSWER_RENDERERS[task.interfaceType];
     const wordCount = countWords(value);
@@ -73,7 +68,6 @@ export function TaskResponseInput({
                 </>
             )}
 
-            {objective && <DockedAnswer><ItemReasons component={objective} reasons={itemReasons} onChange={onItemReasonsChange} /></DockedAnswer>}
 
         </div></AnswerCounter.Provider>
     );

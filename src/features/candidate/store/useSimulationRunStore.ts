@@ -8,7 +8,6 @@ export interface TaskAnswer {
      *  candidate answers. See objectiveAnswers/registry.tsx. */
     objectiveResponse: unknown;
     textResponse: string;
-    itemReasons?: Record<string, string>;
 }
 
 function accrueTaskTime(

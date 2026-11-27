@@ -80,7 +80,7 @@ export function SubmittedAnswer({ task, answer }: SubmittedAnswerProps) {
                         This answer's interface ("{task.interfaceType}") can't be shown.
                     </p>
                 ))}
-            {isOpen && objective && !(classification && ([InterfaceType.TABLE_VIEW_RESPONSE_PANEL, InterfaceType.CSV_DATA_PANEL, InterfaceType.TABLE_VIEW_WITH_CHART] as InterfaceType[]).includes(task.interfaceType)) && <ItemReasons component={objective} reasons={answer.itemReasons} onChange={noop} readOnly />}
+            {isOpen && objective && !(classification && ([InterfaceType.TABLE_VIEW_RESPONSE_PANEL, InterfaceType.CSV_DATA_PANEL, InterfaceType.TABLE_VIEW_WITH_CHART] as InterfaceType[]).includes(task.interfaceType)) && <ItemReasons component={objective} reasons={answer.itemReasons} />}
         </div>
     );
 }
