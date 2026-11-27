@@ -18,14 +18,10 @@ describe("table classification", () => {
         expect(choice).toHaveValue("Review");
     });
 
-    it("keeps each reason beside its item", () => {
+    it("shows reasons beside their item on review pages, without a candidate editor", () => {
         const component: ClassificationCandidateComponent = { componentType: "CLASSIFICATION", items: ["A", "B"], buckets: ["Review", "Accept"] };
-        function Example() {
-            const [reasons, setReasons] = useState<Record<string, string>>({});
-            return <TableViewResponsePanelAnswer payload={{ interfaceType: InterfaceType.TABLE_VIEW_RESPONSE_PANEL, table: { columns: ["Item"], rows: [["A"], ["B"]] }, placeholder: null }} value="" onChange={() => undefined} classification={{ component, response: null, onChange: () => undefined, reasons, onReasonsChange: setReasons }} />;
-        }
-        render(<Example />);
-        fireEvent.change(screen.getByRole("textbox", { name: "Reason for A" }), { target: { value: "Needs review" } });
-        expect(screen.getByRole("textbox", { name: "Reason for A" })).toHaveValue("Needs review");
+        render(<TableViewResponsePanelAnswer payload={{ interfaceType: InterfaceType.TABLE_VIEW_RESPONSE_PANEL, table: { columns: ["Item"], rows: [["A"], ["B"]] }, placeholder: null }} value="" onChange={() => undefined} readOnly classification={{ component, response: null, onChange: () => undefined, reasons: { A: "Needs review" } }} />);
+        expect(screen.getByText("Needs review")).toBeInTheDocument();
+        expect(screen.queryByRole("textbox", { name: "Reason for A" })).toBeNull();
     });
 });

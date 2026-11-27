@@ -49,7 +49,6 @@ export function TaskResponseInput({
         <DockedAnswer><TaskObjectiveOptions task={task} response={objectiveResponse} onChange={onObjectiveChange} /></DockedAnswer>
     );
 
-    const objective = task.objectiveComponent;
     return (
         <AnswerCounter.Provider value={<div className="flex justify-end text-sm"><span className={cn(limitTextClass(wordState))}>{wordCount} / {wordLimit.max} words</span></div>}><div className="flex w-full flex-col gap-2">
             {Renderer ? (

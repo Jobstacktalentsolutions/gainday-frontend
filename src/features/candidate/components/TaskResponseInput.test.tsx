@@ -11,7 +11,7 @@ describe("task answer panel", () => {
         const task: CandidateSimulationTask = { id: "task", questionBankId: null, taskType: "GENERIC_PRIORITIZE_ITEMS", category: "Engineering", title: "Prioritise", scenarioDescription: "A scenario", questionPrompt: "Rank the items.", objectiveComponent: { componentType: "PRIORITY_RANKING", items: [{ label: "First", description: "First item" }, { label: "Second", description: "Second item" }] }, businessProblemDerived: false, interfaceType: InterfaceType.TEXT_AREA, interfacePayload: { interfaceType: InterfaceType.TEXT_AREA, placeholder: null } };
         function Workspace() {
             const [objective, setObjective] = useState<unknown>(null);
-            return <AnswerDock><TaskResponseInput task={task} value="" onChange={() => undefined} objectiveResponse={objective} onObjectiveChange={setObjective} onItemReasonsChange={() => undefined} /></AnswerDock>;
+            return <AnswerDock><TaskResponseInput task={task} value="" onChange={() => undefined} objectiveResponse={objective} onObjectiveChange={setObjective} /></AnswerDock>;
         }
         render(<Workspace />);
         const panel = screen.getByRole("region", { name: "Answer panel" });

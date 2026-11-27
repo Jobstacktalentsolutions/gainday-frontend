@@ -7,8 +7,8 @@ export interface ClassificationAnswerState {
     component: ClassificationCandidateComponent;
     response: Record<string, string> | null;
     onChange: (response: Record<string, string>) => void;
+    /** Per-item reasons, shown on read-only review pages only. */
     reasons?: Record<string, string>;
-    onReasonsChange?: (reasons: Record<string, string>) => void;
 }
 
 export interface InterfaceAnswerProps {

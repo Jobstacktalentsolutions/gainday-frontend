@@ -50,7 +50,7 @@ const TableViewResponsePanelAnswer = ({
                                 </th>
                             ))}
                             {inlineClassification && <th className="px-3.5 py-2.5 font-medium text-neutral-700">Classification</th>}
-                            {inlineClassification && <th className="min-w-64 px-3.5 py-2.5 font-medium text-neutral-700">Reason</th>}
+                            {inlineClassification && readOnly && <th className="min-w-64 px-3.5 py-2.5 font-medium text-neutral-700">Reason</th>}
 
                         </tr>
                     </thead>
@@ -67,9 +67,7 @@ const TableViewResponsePanelAnswer = ({
                                     onChange={(bucket) => classification.onChange({ ...classification.response, [row[0]]: bucket })}
                                     readOnly={readOnly}
                                 /></td>}
-                                {inlineClassification && classification && <td className="px-3.5 py-2.5">{readOnly
-                                    ? classification.reasons?.[row[0]]
-                                    : <textarea aria-label={`Reason for ${row[0]}`} rows={2} value={classification.reasons?.[row[0]] ?? ""} onChange={(event) => classification.onReasonsChange?.({ ...classification.reasons, [row[0]]: event.target.value })} className="w-full min-w-64 resize-y rounded-lg border border-neutral-200 p-2 text-sm outline-none focus:border-primary-500" />}</td>}
+                                {inlineClassification && classification && readOnly && <td className="px-3.5 py-2.5">{classification.reasons?.[row[0]]}</td>}
                             </tr>
                         ))}
                     </tbody>
@@ -79,7 +77,7 @@ const TableViewResponsePanelAnswer = ({
             {inlineClassification ? null : classification ? (
                 <>
                     <ClassificationAnswer component={classification.component} response={classification.response} onChange={classification.onChange} readOnly={readOnly} />
-                    <ItemReasons component={classification.component} reasons={classification.reasons} onChange={classification.onReasonsChange ?? (() => undefined)} readOnly={readOnly} />
+                    {readOnly && <ItemReasons component={classification.component} reasons={classification.reasons} />}
                 </>
             ) : objectiveSlot}
 
