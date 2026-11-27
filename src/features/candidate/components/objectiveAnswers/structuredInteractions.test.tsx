@@ -2,7 +2,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import ClassificationAnswer from "./ClassificationAnswer";
-import PriorityRankingAnswer from "./PriorityRankingAnswer";
+import OrderedList from "./OrderedList";
 import type { ClassificationCandidateComponent, PriorityRankingCandidateComponent } from "../../types/simulation";
 
 const classification: ClassificationCandidateComponent = { componentType: "CLASSIFICATION", items: ["Alpha", "Bravo"], buckets: ["High", "Medium", "Low"] };
@@ -26,7 +26,7 @@ describe("structured answer interactions", () => {
     it("reorders the saved ranking and shows the new positions", () => {
         function Harness() {
             const [answer, setAnswer] = useState<number[] | null>(null);
-            return <PriorityRankingAnswer component={ranking} response={answer} onChange={setAnswer} />;
+            return <OrderedList items={ranking.items} response={answer} onChange={setAnswer} instruction="Drag to rank from highest to lowest priority." />;
         }
         render(<Harness />);
         fireEvent.click(screen.getByRole("button", { name: "Move Second up" }));

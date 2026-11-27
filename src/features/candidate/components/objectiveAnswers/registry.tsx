@@ -2,8 +2,7 @@ import SingleBestActionAnswer from "./SingleBestActionAnswer";
 import MultiSelectUnderConstraintAnswer from "./MultiSelectUnderConstraintAnswer";
 import NumericInputAnswer from "./NumericInputAnswer";
 import ClassificationAnswer from "./ClassificationAnswer";
-import ProceduralSequencingAnswer from "./ProceduralSequencingAnswer";
-import PriorityRankingAnswer from "./PriorityRankingAnswer";
+import OrderedList from "./OrderedList";
 import ReconciliationAnswer from "./ReconciliationAnswer";
 import JournalEntryAnswer from "./JournalEntryAnswer";
 import NumericTableAnswer from "./NumericTableAnswer";
@@ -26,6 +25,8 @@ import type {
     NumericTableCandidateComponent,
     NumericTableResponse,
     ObjectiveComponentType,
+    PriorityRankingCandidateComponent,
+    ProceduralSequencingCandidateComponent,
     ReconciliationCandidateComponent,
     ReconciliationResponse,
 } from "../../types/simulation";
@@ -84,19 +85,22 @@ export const OBJECTIVE_ANSWER_RENDERERS: Record<
         />
     ),
     PROCEDURAL_SEQUENCING: ({ component, response, onChange, readOnly }) => (
-        <ProceduralSequencingAnswer
+        <OrderedList
             readOnly={readOnly}
-            component={cast(component)}
+            items={cast<ProceduralSequencingCandidateComponent>(component).steps.map((label) => ({ label }))}
             response={cast(response)}
             onChange={castOnChange<number[]>(onChange)}
+            instruction="Drag the steps into the correct order."
+            compact
         />
     ),
     PRIORITY_RANKING: ({ component, response, onChange, readOnly }) => (
-        <PriorityRankingAnswer
+        <OrderedList
             readOnly={readOnly}
-            component={cast(component)}
+            items={cast<PriorityRankingCandidateComponent>(component).items}
             response={cast(response)}
             onChange={castOnChange<number[]>(onChange)}
+            instruction="Drag to rank from highest to lowest priority."
         />
     ),
     RECONCILIATION: ({ component, response, onChange }) => (
