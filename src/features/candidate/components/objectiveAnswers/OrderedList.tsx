@@ -55,7 +55,6 @@ function OrderedRow({ item, itemIndex, position, total, readOnly, compact, move 
                     isDragging && "z-10 border-primary-500 shadow-lg",
                 )}
             >
-                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary-50 text-[16px] text-primary-500">{position + 1}</span>
                 <div className="flex min-w-0 flex-1 flex-col">
                     <span className={cn(compact ? "text-[16px]" : "text-[18px]", "text-primary-950")}>{item.label}</span>
                     {item.description && <span className="text-[14px] text-neutral-500">{item.description}</span>}
